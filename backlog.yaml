@@ -1,0 +1,758 @@
+backlog:
+- id: 11
+  slug: spectral-clustering-and-image-segmentation
+  status: backlog
+  short_title: Spectral clustering and image segmentation
+  nav_field: Machine Learning & Data
+  field: Computer Science
+  subfield: Machine learning/vision
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: spectral graph theory; Cheeger inequality
+  scalar_field: R
+  vector_space: R^n over graph nodes
+  core_la_object: Graph Laplacian eigenvectors
+  la_concepts: Laplacian; Fiedler vector; normalized cuts
+  primary_method: Sparse symmetric eigensolve
+  matrix_structure: sparse symmetric PSD
+  typical_size: 1e4-1e7
+  worked_example_size: ''
+- id: 12
+  slug: resistor-networks-and-kirchhoff-s-laws
+  status: backlog
+  short_title: Resistor networks and Kirchhoff's laws
+  nav_field: Electrical Engineering
+  field: Physics
+  subfield: Circuit theory
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^n node potentials, R^m edge currents
+  core_la_object: Graph Laplacian as a physical operator
+  la_concepts: Laplacian; effective resistance; pseudoinverse
+  primary_method: Sparse solve
+  matrix_structure: sparse symmetric PSD, rank n-1
+  typical_size: 1e3-1e6
+  worked_example_size: ''
+- id: 13
+  slug: poisson-and-navier-stokes-discretization
+  status: backlog
+  short_title: Poisson and Navier-Stokes discretization
+  nav_field: Mathematics & Numerical Analysis
+  field: Mathematics
+  subfield: Numerical PDE/CFD
+  tier: 3
+  tier_ceiling: 3
+  prereq_beyond_la: partial differential equations
+  scalar_field: R
+  vector_space: R^N over grid points
+  core_la_object: Large sparse structured system
+  la_concepts: Krylov methods; preconditioning; multigrid
+  primary_method: CG/GMRES with multigrid
+  matrix_structure: sparse, structured, often SPD
+  typical_size: 1e6-1e9
+  worked_example_size: ''
+- id: 14
+  slug: power-grid-load-flow-and-state-estimation
+  status: backlog
+  short_title: Power-grid load flow and state estimation
+  nav_field: Electrical Engineering
+  field: Engineering
+  subfield: Electrical power systems
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: nonlinear systems; Newton methods
+  scalar_field: R (complex phasors underneath)
+  vector_space: 'R^2n: voltage magnitudes and angles'
+  core_la_object: Sparse Newton Jacobian
+  la_concepts: sparse LU; weighted least squares; Sherman-Morrison
+  primary_method: Newton-Raphson; WLS
+  matrix_structure: very sparse, network-structured
+  typical_size: 1e4-1e5 buses
+  worked_example_size: ''
+- id: 15
+  slug: linear-programming-and-the-simplex-method
+  status: backlog
+  short_title: Linear programming and the simplex method
+  nav_field: Economics, Finance & Operations Research
+  field: Mathematics
+  subfield: Operations research
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: convex duality; polyhedral theory
+  scalar_field: R
+  vector_space: R^n with nonnegativity constraints
+  core_la_object: Basis matrices and rank-one updates
+  la_concepts: basis exchange; duality; total unimodularity
+  primary_method: Revised simplex; interior point
+  matrix_structure: sparse constraint matrix
+  typical_size: 1e5-1e7 variables
+  worked_example_size: ''
+- id: 16
+  slug: portfolio-optimization
+  status: backlog
+  short_title: Portfolio optimization
+  nav_field: Economics, Finance & Operations Research
+  field: Economics
+  subfield: Quantitative finance
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: probability; convex optimization
+  scalar_field: R
+  vector_space: R^n portfolio weights on the simplex
+  core_la_object: Covariance matrix
+  la_concepts: positive definiteness; conditioning; shrinkage estimation
+  primary_method: Quadratic programming
+  matrix_structure: dense symmetric PSD, ill-conditioned
+  typical_size: 1e2-1e3 assets
+  worked_example_size: ''
+- id: 17
+  slug: the-fft-as-a-matrix-factorization
+  status: backlog
+  short_title: The FFT as a matrix factorization
+  nav_field: Signal Processing
+  field: Mathematics
+  subfield: Signal processing
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: complex analysis; algorithmic complexity
+  scalar_field: C
+  vector_space: C^n
+  core_la_object: Factorization of the DFT matrix
+  la_concepts: unitary matrices; structured factorization; complexity from structure
+  primary_method: Cooley-Tukey
+  matrix_structure: dense unitary with recursive sparse factorization
+  typical_size: 1e3-1e9
+  worked_example_size: ''
+- id: 18
+  slug: beamforming-and-music-direction-finding
+  status: backlog
+  short_title: Beamforming and MUSIC direction finding
+  nav_field: Signal Processing
+  field: Engineering
+  subfield: Radar/sonar/wireless
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: random processes; estimation theory
+  scalar_field: C
+  vector_space: C^m sensor snapshots
+  core_la_object: Signal and noise subspaces
+  la_concepts: eigendecomposition of covariance; subspace separation
+  primary_method: Eigendecomposition
+  matrix_structure: small dense Hermitian
+  typical_size: 1e1-1e2 sensors
+  worked_example_size: ''
+- id: 19
+  slug: jpeg-and-video-compression
+  status: backlog
+  short_title: JPEG and video compression
+  nav_field: Signal Processing
+  field: Computer Science
+  subfield: Multimedia
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^64, each 8x8 pixel block
+  core_la_object: Fixed orthogonal transform
+  la_concepts: orthogonal bases; energy compaction; quantization
+  primary_method: DCT
+  matrix_structure: dense orthogonal 8x8 blocks
+  typical_size: 8x8 blocks
+  worked_example_size: ''
+- id: 20
+  slug: least-squares-regression-and-the-hat-matrix
+  status: backlog
+  short_title: Least squares regression and the hat matrix
+  nav_field: Statistics
+  field: Statistics
+  subfield: Applied statistics
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: statistical inference for the diagnostics
+  scalar_field: R
+  vector_space: observations in R^n, coefficients in R^k
+  core_la_object: Orthogonal projection onto a column space
+  la_concepts: QR vs normal equations; leverage; collinearity
+  primary_method: QR/householder
+  matrix_structure: dense or sparse design matrix
+  typical_size: 1e2-1e7 rows
+  worked_example_size: ''
+- id: 21
+  slug: matrix-completion-and-recommender-systems
+  status: backlog
+  short_title: Matrix completion and recommender systems
+  nav_field: Machine Learning & Data
+  field: Computer Science
+  subfield: Machine learning
+  tier: 3
+  tier_ceiling: 3
+  prereq_beyond_la: convex optimization; nuclear-norm theory
+  scalar_field: R
+  vector_space: the matrix space R^(m x n) itself
+  core_la_object: Low-rank matrix recovery
+  la_concepts: nuclear norm; low-rank factorization; missing data
+  primary_method: ALS; SVD-based methods
+  matrix_structure: very sparse observations of a low-rank matrix
+  typical_size: 1e6 x 1e5
+  worked_example_size: ''
+- id: 22
+  slug: word-embeddings-and-latent-semantic-analysis
+  status: backlog
+  short_title: Word embeddings and latent semantic analysis
+  nav_field: Machine Learning & Data
+  field: Computer Science
+  subfield: NLP
+  tier: 2
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^V over vocabulary
+  core_la_object: Factorization of a co-occurrence matrix
+  la_concepts: SVD; implicit matrix factorization
+  primary_method: Truncated SVD; SGD factorization
+  matrix_structure: sparse counts, low-rank structure
+  typical_size: 1e5 x 1e5
+  worked_example_size: ''
+- id: 23
+  slug: attention-and-low-rank-adapters-in-transformers
+  status: backlog
+  short_title: Attention and low-rank adapters in transformers
+  nav_field: Machine Learning & Data
+  field: Computer Science
+  subfield: Deep learning
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: deep learning; optimization
+  scalar_field: R
+  vector_space: R^d token embeddings
+  core_la_object: Learned bilinear forms and rank-constrained updates
+  la_concepts: bilinear forms; low-rank parameterization
+  primary_method: Dense GEMM
+  matrix_structure: dense
+  typical_size: 1e3-1e4 per head
+  worked_example_size: ''
+- id: 24
+  slug: geodetic-network-adjustment
+  status: backlog
+  short_title: Geodetic network adjustment
+  nav_field: Earth & Climate Science
+  field: Earth Science
+  subfield: Geodesy/surveying
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^3n station coordinates
+  core_la_object: Rank-deficient least squares
+  la_concepts: datum defect; constrained least squares; historical origin of LS
+  primary_method: Constrained normal equations
+  matrix_structure: sparse, rank-deficient by datum
+  typical_size: 1e3-1e6
+  worked_example_size: ''
+- id: 25
+  slug: seismic-tomography
+  status: backlog
+  short_title: Seismic tomography
+  nav_field: Earth & Climate Science
+  field: Earth Science
+  subfield: Geophysics
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: wave physics; inverse-problem theory
+  scalar_field: R
+  vector_space: R^N over model cells
+  core_la_object: Ill-posed sparse inverse problem
+  la_concepts: regularization; ray coverage and null space
+  primary_method: LSQR; regularized iterative solve
+  matrix_structure: sparse, poorly conditioned, uneven coverage
+  typical_size: 1e5-1e8
+  worked_example_size: ''
+- id: 26
+  slug: distance-geometry-for-nmr-structures
+  status: backlog
+  short_title: Distance geometry for NMR structures
+  nav_field: Life Sciences
+  field: Biology
+  subfield: Structural biology
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: semidefinite programming
+  scalar_field: R
+  vector_space: R^3n coordinates; the Gram matrix lives in Sym_n
+  core_la_object: Low-rank Gram matrix recovery
+  la_concepts: Cayley-Menger; classical MDS; PSD completion
+  primary_method: Eigendecomposition; SDP relaxation
+  matrix_structure: dense PSD Gram matrix
+  typical_size: 1e2-1e4 atoms
+  worked_example_size: ''
+- id: 27
+  slug: x-ray-crystallography-and-the-phase-problem
+  status: backlog
+  short_title: X-ray crystallography and the phase problem
+  nav_field: Chemistry & Chemical Engineering
+  field: Chemistry
+  subfield: Structural chemistry
+  tier: 3
+  tier_ceiling: 3
+  prereq_beyond_la: Fourier analysis; crystallographic group theory
+  scalar_field: C
+  vector_space: C^R over measured reflections
+  core_la_object: Fourier coefficients with missing phase
+  la_concepts: Fourier transform as a linear map; Patterson maps; direct methods
+  primary_method: Direct methods; molecular replacement
+  matrix_structure: dense complex Fourier operator
+  typical_size: 1e4-1e6 reflections
+  worked_example_size: ''
+- id: 28
+  slug: markov-decision-processes
+  status: backlog
+  short_title: Markov decision processes
+  nav_field: Machine Learning & Data
+  field: Computer Science
+  subfield: Reinforcement learning
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: probability; contraction mappings
+  scalar_field: R
+  vector_space: R^|S| over states
+  core_la_object: Linear system for policy evaluation
+  la_concepts: fixed point; stochastic matrices; contraction mapping
+  primary_method: Policy/value iteration; linear solve
+  matrix_structure: sparse stochastic
+  typical_size: 1e3-1e9 states
+  worked_example_size: ''
+- id: 29
+  slug: sports-and-citation-ranking-massey-colley
+  status: backlog
+  short_title: Sports and citation ranking (Massey/Colley)
+  nav_field: Statistics
+  field: Statistics
+  subfield: Ranking systems
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^T over teams
+  core_la_object: Least squares on pairwise comparisons
+  la_concepts: least squares; rank deficiency from disconnected graphs
+  primary_method: Normal equations
+  matrix_structure: sparse, graph-structured
+  typical_size: 1e2-1e4 teams
+  worked_example_size: ''
+- id: 30
+  slug: sparse-gf-2-nullspace-in-the-number-field-sieve
+  status: backlog
+  short_title: Sparse GF(2) nullspace in the number field sieve
+  nav_field: Cryptography & Security
+  field: Mathematics
+  subfield: Cryptanalysis
+  tier: 3
+  tier_ceiling: 3
+  prereq_beyond_la: number theory; algebraic number fields
+  scalar_field: GF(2)
+  vector_space: GF(2)^n
+  core_la_object: Nullspace of a huge sparse GF(2) matrix
+  la_concepts: linear algebra over finite fields at scale
+  primary_method: Block Lanczos; Wiedemann
+  matrix_structure: extremely sparse GF(2)
+  typical_size: 1e8 x 1e8
+  worked_example_size: ''
+- id: 31
+  slug: normal-mode-analysis-and-elastic-network-models
+  status: backlog
+  short_title: Normal mode analysis and elastic network models
+  nav_field: Life Sciences
+  field: Biology
+  subfield: Biophysics
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: ordinary differential equations; statistical mechanics
+  scalar_field: R
+  vector_space: R^3n atomic displacements
+  core_la_object: Hessian eigenproblem
+  la_concepts: generalized eigenproblem; low-frequency modes; coarse graining
+  primary_method: Sparse eigensolve
+  matrix_structure: sparse symmetric PSD from contact graph
+  typical_size: 1e3-1e5 DOF
+  worked_example_size: ''
+- id: 32
+  slug: flux-balance-analysis-at-genome-scale
+  status: backlog
+  short_title: Flux balance analysis at genome scale
+  nav_field: Life Sciences
+  field: Biology
+  subfield: Systems biology
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: linear programming duality
+  scalar_field: R
+  vector_space: R^r flux space
+  core_la_object: Linear program over a null space
+  la_concepts: null space; linear programming; duality
+  primary_method: Simplex/interior point
+  matrix_structure: sparse integer stoichiometry
+  typical_size: 2e3 x 3e3
+  worked_example_size: ''
+- id: 33
+  slug: population-genetics-pca
+  status: backlog
+  short_title: Population genetics PCA
+  nav_field: Life Sciences
+  field: Biology
+  subfield: Genomics
+  tier: 2
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^M over genetic markers
+  core_la_object: Low-rank structure in a genotype matrix
+  la_concepts: SVD; interpretability limits; ascertainment bias
+  primary_method: Randomized SVD
+  matrix_structure: dense or sparse 0/1/2 genotype matrix
+  typical_size: 1e4 x 1e6
+  worked_example_size: ''
+- id: 34
+  slug: phylogenetic-invariants
+  status: backlog
+  short_title: Phylogenetic invariants
+  nav_field: Life Sciences
+  field: Biology
+  subfield: Phylogenetics
+  tier: 3
+  tier_ceiling: 3
+  prereq_beyond_la: algebraic geometry; commutative algebra
+  scalar_field: R or C
+  vector_space: the tensor product space (R^4)^(x)n of site patterns
+  core_la_object: Polynomial relations among tensor entries
+  la_concepts: multilinear algebra; tensor rank; algebraic geometry
+  primary_method: Grobner bases; tensor methods
+  matrix_structure: tensors of site-pattern frequencies
+  typical_size: 4^n patterns
+  worked_example_size: ''
+- id: 35
+  slug: consensus-and-opinion-dynamics
+  status: backlog
+  short_title: Consensus and opinion dynamics
+  nav_field: Computer Science & Networks
+  field: Mathematics
+  subfield: Network dynamics
+  tier: 2
+  tier_ceiling: 3
+  prereq_beyond_la: ordinary differential equations
+  scalar_field: R
+  vector_space: R^n over agents
+  core_la_object: Averaging with a stochastic matrix
+  la_concepts: convergence rate from algebraic connectivity; Perron-Frobenius
+  primary_method: Power iteration; ODE integration
+  matrix_structure: sparse row-stochastic
+  typical_size: 1e2-1e6
+  worked_example_size: ''
+- id: 36
+  slug: 2d-affine-transforms-in-vector-graphics
+  status: backlog
+  short_title: 2D affine transforms in vector graphics
+  nav_field: Computer Graphics & Vision
+  field: Computer Science
+  subfield: Computer graphics
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^2 points, embedded in homogeneous R^3
+  core_la_object: Homogeneous coordinates and matrix composition
+  la_concepts: homogeneous coordinates; composition; noncommutativity; inverse transforms
+  primary_method: Dense 3x3 products
+  matrix_structure: dense 3x3
+  typical_size: 3x3
+  worked_example_size: SVG/CSS transform stack applied to a polygon
+- id: 37
+  slug: 3d-viewing-and-perspective-projection-pipeline
+  status: backlog
+  short_title: 3D viewing and perspective projection pipeline
+  nav_field: Computer Graphics & Vision
+  field: Computer Science
+  subfield: Computer graphics
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^3 points, embedded in homogeneous R^4
+  core_la_object: Model-view-projection chain
+  la_concepts: change of basis; homogeneous coordinates; projective division
+  primary_method: Dense 4x4 products
+  matrix_structure: dense 4x4
+  typical_size: 4x4
+  worked_example_size: wireframe cube through the full MVP chain
+- id: 38
+  slug: 3d-rotations-and-rigid-body-pose
+  status: backlog
+  short_title: 3D rotations and rigid-body pose
+  nav_field: Control & Robotics
+  field: Engineering
+  subfield: Robotics/graphics
+  tier: 1
+  tier_ceiling: 3
+  prereq_beyond_la: Lie groups and quaternions if pushed further
+  scalar_field: R
+  vector_space: R^3; rotations form SO(3), a group, not a subspace
+  core_la_object: Orthogonal matrices with determinant +1
+  la_concepts: orthogonality; determinant; composition; change of basis
+  primary_method: Dense small products
+  matrix_structure: orthogonal 3x3; SE(3) 4x4
+  typical_size: 3x3-4x4
+  worked_example_size: robot wrist pose composition and a gimbal-lock demonstration
+- id: 39
+  slug: barycentric-coordinates-and-triangle-rasterization
+  status: backlog
+  short_title: Barycentric coordinates and triangle rasterization
+  nav_field: Computer Graphics & Vision
+  field: Computer Science
+  subfield: Computer graphics
+  tier: 1
+  tier_ceiling: 1
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: R^3 barycentric coefficients for a triangle in R^2
+  core_la_object: Coordinates relative to a simplex basis
+  la_concepts: coordinates w.r.t. a basis; affine combinations; interpolation
+  primary_method: Small dense solve per pixel
+  matrix_structure: dense 3x3
+  typical_size: 3x3
+  worked_example_size: Gouraud-shaded triangle with depth interpolation
+- id: 40
+  slug: color-spaces-as-change-of-basis
+  status: backlog
+  short_title: Color spaces as change of basis
+  nav_field: Computer Graphics & Vision
+  field: Computer Science
+  subfield: Color science/imaging
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: colorimetry conventions
+  scalar_field: R
+  vector_space: R^3 tristimulus values
+  core_la_object: 3x3 change of basis between primary sets
+  la_concepts: change of basis; conditioning; convex cones for gamut
+  primary_method: Dense 3x3 solve
+  matrix_structure: dense 3x3
+  typical_size: 3x3
+  worked_example_size: sRGB to XYZ to LMS with a white-point adaptation
+- id: 41
+  slug: polynomial-interpolation-and-change-of-basis
+  status: backlog
+  short_title: Polynomial interpolation and change of basis
+  nav_field: Mathematics & Numerical Analysis
+  field: Mathematics
+  subfield: Numerical analysis
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: P_n, polynomials of degree at most n, dimension n+1
+  core_la_object: Vandermonde system in a polynomial vector space
+  la_concepts: basis and dimension; change of basis; conditioning
+  primary_method: Dense solve; Lagrange/Newton forms
+  matrix_structure: dense Vandermonde, ill-conditioned
+  typical_size: 8x8
+  worked_example_size: monomial vs Lagrange vs Chebyshev basis on 8 nodes
+- id: 42
+  slug: bezier-curves-and-font-rendering
+  status: backlog
+  short_title: Bezier curves and font rendering
+  nav_field: Computer Graphics & Vision
+  field: Computer Science
+  subfield: Typography/vector graphics
+  tier: 1
+  tier_ceiling: 1
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: P_3, cubic polynomials, dimension 4 per coordinate
+  core_la_object: Bernstein basis of a polynomial space
+  la_concepts: basis change; linear operators on function spaces
+  primary_method: Basis-change matrix; de Casteljau
+  matrix_structure: dense 4x4
+  typical_size: 4x4
+  worked_example_size: cubic Bezier glyph segment; monomial-Bernstein conversion
+- id: 43
+  slug: finite-difference-stencils-by-undetermined-coefficients
+  status: backlog
+  short_title: Finite-difference stencils by undetermined coefficients
+  nav_field: Mathematics & Numerical Analysis
+  field: Mathematics
+  subfield: Numerical analysis
+  tier: 1
+  tier_ceiling: 3
+  prereq_beyond_la: Taylor series; PDE discretization downstream
+  scalar_field: R
+  vector_space: R^k stencil weights acting on function samples
+  core_la_object: Small Vandermonde solve for derivative weights
+  la_concepts: linear operators; Taylor constraints as linear equations
+  primary_method: Dense small solve
+  matrix_structure: dense Vandermonde
+  typical_size: 5x5
+  worked_example_size: 5-point second-derivative stencil derived from scratch
+- id: 44
+  slug: fourier-series-as-orthogonal-projection
+  status: backlog
+  short_title: Fourier series as orthogonal projection
+  nav_field: Mathematics & Numerical Analysis
+  field: Mathematics
+  subfield: Applied analysis
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: integration
+  scalar_field: R
+  vector_space: C[0,1], continuous real functions on [0,1], with inner product <f,g> = integral of f g
+    - an infinite-dimensional space approximated in a finite subspace
+  core_la_object: Inner-product space of functions
+  la_concepts: inner products; orthogonal bases; best approximation
+  primary_method: Projection via orthogonality
+  matrix_structure: diagonal Gram matrix
+  typical_size: 8 harmonics
+  worked_example_size: square wave projected onto its first 8 harmonics
+- id: 45
+  slug: least-squares-fitting-in-a-chosen-function-basis
+  status: backlog
+  short_title: Least-squares fitting in a chosen function basis
+  nav_field: Statistics
+  field: Statistics
+  subfield: Applied modeling
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R
+  vector_space: the span of k chosen basis functions, a k-dimensional subspace of a function space
+  core_la_object: Design matrix built from basis functions
+  la_concepts: column space; projection; normal equations; basis choice
+  primary_method: QR least squares
+  matrix_structure: dense tall design matrix
+  typical_size: 50x6
+  worked_example_size: same data fit in polynomial, spline, and Fourier bases
+- id: 46
+  slug: ac-circuit-analysis-with-complex-impedance
+  status: backlog
+  short_title: AC circuit analysis with complex impedance
+  nav_field: Electrical Engineering
+  field: Engineering
+  subfield: Electrical engineering
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: complex exponentials
+  scalar_field: C
+  vector_space: C^m mesh currents
+  core_la_object: Complex-valued linear system
+  la_concepts: complex scalars; mesh analysis; phasors
+  primary_method: Dense complex solve
+  matrix_structure: dense complex 3x3
+  typical_size: 3x3
+  worked_example_size: three-mesh RLC network at a single frequency
+- id: 47
+  slug: the-small-dft-as-a-complex-unitary-matrix
+  status: backlog
+  short_title: The small DFT as a complex unitary matrix
+  nav_field: Signal Processing
+  field: Mathematics
+  subfield: Signal processing
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: C
+  vector_space: C^8
+  core_la_object: Explicit DFT matrix
+  la_concepts: complex inner products; unitary matrices; orthogonal bases
+  primary_method: Direct matrix-vector product
+  matrix_structure: dense complex unitary
+  typical_size: 8x8
+  worked_example_size: 8-point DFT written out, applied, and inverted
+- id: 48
+  slug: shamir-secret-sharing
+  status: backlog
+  short_title: Shamir secret sharing
+  nav_field: Cryptography & Security
+  field: Computer Science
+  subfield: Cryptography
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: modular arithmetic
+  scalar_field: GF(p) for a prime p
+  vector_space: polynomials of degree < k over GF(p), a k-dimensional space
+  core_la_object: Polynomial interpolation over GF(p)
+  la_concepts: vector spaces over a finite field; Lagrange interpolation; uniqueness from rank
+  primary_method: Interpolation over GF(p)
+  matrix_structure: small Vandermonde over GF(p)
+  typical_size: 3x3 over GF(251)
+  worked_example_size: 3-of-5 threshold split and reconstruction of a secret
+- id: 49
+  slug: raid-5-parity-and-xor-recovery
+  status: backlog
+  short_title: RAID-5 parity and XOR recovery
+  nav_field: Computer Science & Networks
+  field: Computer Science
+  subfield: Storage systems
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: GF(2)
+  vector_space: GF(2)^n, one coordinate per stripe unit
+  core_la_object: Single parity equation over GF(2)
+  la_concepts: GF(2) arithmetic; rank; solving one linear equation
+  primary_method: XOR reconstruction
+  matrix_structure: 1 x n over GF(2)
+  typical_size: 1x5
+  worked_example_size: recover a failed stripe unit from the surviving units
+- id: 50
+  slug: crc-checksums-as-polynomial-arithmetic-over-gf-2
+  status: backlog
+  short_title: CRC checksums as polynomial arithmetic over GF(2)
+  nav_field: Communications & Information Theory
+  field: Engineering
+  subfield: Communications
+  tier: 1
+  tier_ceiling: 3
+  prereq_beyond_la: quotient rings
+  scalar_field: GF(2)
+  vector_space: GF(2)[x]/(g(x)), polynomials modulo the generator - a quotient space of dimension deg(g)
+  core_la_object: Polynomials over GF(2) modulo a generator
+  la_concepts: polynomials over a finite field; linear maps; modular reduction
+  primary_method: Shift-register or matrix form
+  matrix_structure: sparse GF(2) companion matrix
+  typical_size: 8-32 bit
+  worked_example_size: CRC-8 of a short message, computed both ways
+- id: 51
+  slug: traffic-flow-conservation-at-intersections
+  status: backlog
+  short_title: Traffic flow conservation at intersections
+  nav_field: Civil & Mechanical Engineering
+  field: Engineering
+  subfield: Transportation
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R (nonnegative)
+  vector_space: R^E over road segments
+  core_la_object: Underdetermined system with free variables
+  la_concepts: null space; particular plus homogeneous solution; nonnegativity
+  primary_method: Gaussian elimination; parametrized solution
+  matrix_structure: sparse incidence-like
+  typical_size: 5x7
+  worked_example_size: one-way grid of four intersections
+- id: 52
+  slug: mass-balance-in-a-chemical-process-flowsheet
+  status: backlog
+  short_title: Mass balance in a chemical process flowsheet
+  nav_field: Chemistry & Chemical Engineering
+  field: Engineering
+  subfield: Chemical engineering
+  tier: 1
+  tier_ceiling: 2
+  prereq_beyond_la: ''
+  scalar_field: R (nonnegative)
+  vector_space: R^S over process streams
+  core_la_object: Small dense linear system with recycle coupling
+  la_concepts: linear systems; rank; consistency
+  primary_method: Dense solve
+  matrix_structure: dense 6x6
+  typical_size: 6x6
+  worked_example_size: mixer-reactor-separator loop with recycle

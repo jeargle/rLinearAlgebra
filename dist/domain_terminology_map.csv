@@ -1,0 +1,85 @@
+domain_term,entry_id,linear_algebra_meaning,entry_title,field,subfield
+ART / SIRT,3,Kaczmarz row-action and related simultaneous iterations,Computed tomography reconstruction,Medicine,Medical imaging
+DLT (direct linear transform),8,stacking constraints into A and taking the smallest right singular vector,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+EOF,9,a left singular vector — one spatial pattern,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+Hamiltonian,10,the Hermitian matrix H in H psi = E psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+Kalman gain,2,the projection weight matrix that blends prediction and measurement,Kalman filtering for navigation,Engineering,Aerospace/control
+Leontief inverse,5,(I - A)^-1,Leontief input-output economics,Economics,Macroeconomics/EEIO
+North's rule of thumb,9,a test for whether two singular values are too close to separate the modes,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+SCF iteration,10,fixed-point iteration on an eigenproblem whose matrix depends on its own solution,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+anomaly field,9,the mean-centered data matrix,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+assembly,1,summing small element matrices into the global matrix at shared DOF indices,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+attenuation coefficient,3,"the unknown x, one value per voxel",Computed tomography reconstruction,Medicine,Medical imaging
+backprojection,3,applying A transpose to the data,Computed tomography reconstruction,Medicine,Medical imaging
+balancing an equation,4,finding an integer null vector of the element-by-species matrix,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+bandwidth / skyline,1,the sparsity pattern induced by node numbering,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+basis set (quantum chemistry),10,the chosen basis in which H is expressed,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+bundle adjustment,8,sparse nonlinear least squares over all cameras and points at once,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+centrality,6,"a score defined as an eigenvector, or a function, of the graph matrix",PageRank and network centrality,Computer Science,Network science
+code rate,7,"k/n, the subspace dimension over the ambient dimension",Linear error-correcting codes,Engineering,Communications/information theory
+codeword,7,an element of the k-dimensional subspace of GF(2)^n,Linear error-correcting codes,Engineering,Communications/information theory
+conserved moiety,4,a left null vector y; y^T c is constant for all time,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+covariance matrix P,2,the uncertainty ellipsoid; symmetric positive semidefinite,Kalman filtering for navigation,Engineering,Aerospace/control
+damping factor (alpha),6,the weight on P versus the uniform teleportation term,PageRank and network centrality,Computer Science,Network science
+dangling node,6,"a zero column, which breaks stochasticity",PageRank and network centrality,Computer Science,Network science
+degenerate configuration,8,"point placement that makes A rank-deficient, so the solution is not unique",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+degree of freedom (DOF),1,one scalar unknown — one component of the displacement vector,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+degrees of freedom of the network,4,the nullity of S,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+density matrix,10,a positive semidefinite matrix with trace 1,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+direct vs indirect requirements,5,"the successive terms A, A^2, A^3 of the Neumann series",Leontief input-output economics,Economics,Macroeconomics/EEIO
+eigenstate / energy level,10,eigenvector and eigenvalue of the Hamiltonian,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+elementary flux mode,4,an extreme ray of the nonnegative part of the null space,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+embodied / Scope 3 emissions,5,an appended satellite row multiplied through the same inverse,Leontief input-output economics,Economics,Macroeconomics/EEIO
+entangled state,10,a vector that does not factor as a tensor product,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+epipolar constraint,8,the bilinear equation relating corresponding points in two views,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+erasure vs error,7,known vs unknown error position — a column selection vs a search,Linear error-correcting codes,Engineering,Communications/information theory
+essential / fundamental matrix,8,the rank-2 bilinear form satisfying x'^T E x = 0,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+expectation value,10,the quadratic form psi^* A psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+explained variance,9,sigma_i^2 as a fraction of the total,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+extrinsic parameters [R|t],8,the rigid transform from world to camera frame,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+filter divergence,2,"P losing positive definiteness in finite precision, or an unobservable direction growing without bound",Kalman filtering for navigation,Engineering,Aerospace/control
+filtered backprojection (FBP),3,an analytic spectral inverse of the forward operator,Computed tomography reconstruction,Medicine,Medical imaging
+final demand,5,the right-hand side d,Leontief input-output economics,Economics,Macroeconomics/EEIO
+flux,4,"v, the vector of reaction rates",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+generator matrix G,7,"a basis of the code, written as rows",Linear error-correcting codes,Engineering,Communications/information theory
+gross / total output,5,the unknown x,Leontief input-output economics,Economics,Macroeconomics/EEIO
+homogeneous coordinates,8,an added coordinate that turns perspective division into a linear map plus a normalization,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+innovation / residual,2,"z - Hx, the part of the measurement the prediction did not explain",Kalman filtering for navigation,Engineering,Aerospace/control
+intrinsic matrix K,8,"the camera's internal calibration, an upper-triangular 3x3",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+ket / state vector,10,a unit vector in a complex inner-product space,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+link matrix,6,the column-stochastic matrix P built from the graph,PageRank and network centrality,Computer Science,Network science
+load vector,1,the right-hand side b,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+loading,9,"one entry of an EOF, i.e. one grid point's weight in that pattern",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+mechanism,1,a nontrivial null space of K — the structure can move with no restoring force,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+minimum distance,7,the smallest weight of a nonzero codeword,Linear error-correcting codes,Engineering,Communications/information theory
+mode shape,1,an eigenvector of K phi = lambda M phi,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+multiplier,5,a single entry of the Leontief inverse,Leontief input-output economics,Economics,Macroeconomics/EEIO
+natural frequency,1,square root of the corresponding eigenvalue,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+observability,2,rank of the stacked matrix [H; HF; HF^2; ...],Kalman filtering for navigation,Engineering,Aerospace/control
+observable,10,a Hermitian operator; its eigenvalues are the measurable values,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+observation model H,2,the linear map from state space to measurement space,Kalman filtering for navigation,Engineering,Aerospace/control
+parity-check matrix H,7,a basis of the code's orthogonal complement; codewords are its null space,Linear error-correcting codes,Engineering,Communications/information theory
+power iteration,6,repeated multiplication by the matrix,PageRank and network centrality,Computer Science,Network science
+principal component time series,9,"the corresponding right singular vector, scaled",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+process noise / measurement noise,2,the covariance matrices Q and R,Kalman filtering for navigation,Engineering,Aerospace/control
+productive economy,5,"spectral radius of A below 1, so the Neumann series converges",Leontief input-output economics,Economics,Macroeconomics/EEIO
+projection / ray sum,3,one row of A applied to x — a line integral through the object,Computed tomography reconstruction,Medicine,Medical imaging
+regularization strength,3,the Tikhonov parameter lambda trading data fit against smoothness,Computed tomography reconstruction,Medicine,Medical imaging
+reprojection error,8,the nonlinear least-squares objective minimized in refinement,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+restraint / boundary condition,1,"deleting the corresponding rows and columns, or adding constraint rows",Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+rotated EOF (varimax),9,a deliberately non-orthogonal re-basis of the leading subspace,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+sinogram,3,"the measurement vector b, arranged by angle and detector position",Computed tomography reconstruction,Medicine,Medical imaging
+square-root filter,2,propagating a Cholesky factor of P instead of P,Kalman filtering for navigation,Engineering,Aerospace/control
+state vector,2,the unknown x being estimated,Kalman filtering for navigation,Engineering,Aerospace/control
+stationary distribution,6,"the dominant eigenvector, normalized",PageRank and network centrality,Computer Science,Network science
+steady state,4,Sv = 0 — v lies in the right null space,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+stiffness matrix,1,the coefficient matrix K; symmetric positive definite once restraints are applied,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+stoichiometric matrix S,4,"species by reactions, signed integer coefficients",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+streak artifact,3,the visible signature of undersampling — energy in the near-null space,Computed tomography reconstruction,Medicine,Medical imaging
+syndrome,7,"H y^T — depends only on the error, not the message",Linear error-correcting codes,Engineering,Communications/information theory
+system matrix / forward projector,3,"A, the discretized Radon transform",Computed tomography reconstruction,Medicine,Medical imaging
+systematic form,7,"G = [I | P], so the message appears verbatim in the codeword",Linear error-correcting codes,Engineering,Communications/information theory
+technical coefficient matrix A,5,input from sector i per unit output of sector j,Leontief input-output economics,Economics,Macroeconomics/EEIO
+teleportation,6,the rank-one correction that makes the chain irreducible,PageRank and network centrality,Computer Science,Network science
+tensor product,10,the Kronecker product; why n qubits need dimension 2^n,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+unitary gate,10,a norm-preserving complex linear map — the complex analogue of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information

@@ -1,0 +1,10 @@
+| 1 | Civil / mechanical engineering | Sparse SPD system; generalized eigenproblem | Sparse Cholesky; Lanczos |
+| 2 | Aerospace / control | Covariance projection; Riccati recursion | Recursive weighted least squares |
+| 3 | Medical imaging | Ill-posed sparse system | Regularized iterative solve; Kaczmarz |
+| 4 | Chemistry / systems biology | Null space (both sides); rank | Nullspace basis; rational arithmetic |
+| 5 | Economics | Nonnegative matrix; spectral radius | Matrix inverse; Neumann series |
+| 6 | Computer science / networks | Stochastic matrix; dominant eigenvector | Power iteration |
+| 7 | Communications | Subspace over GF(2); rank conditions | Syndrome decoding; belief propagation |
+| 8 | Computer vision | Homogeneous least squares; rank truncation | SVD; sparse Levenberg–Marquardt |
+| 9 | Climate science | Low-rank approximation | Truncated / randomized SVD |
+| 10 | Physics / quantum chemistry | Hermitian eigenproblem; tensor products | Lanczos, Davidson; SCF |
