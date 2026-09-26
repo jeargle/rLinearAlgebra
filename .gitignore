@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+
+# marimo WASM export target (generated; deployed from CI, not committed)
+site/
+
+# macOS
+.DS_Store
