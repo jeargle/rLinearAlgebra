@@ -1,0 +1,69 @@
+name: publish-wiki
+
+# Pushes dist/reddit_wiki/ to the subreddit wiki. Manual only, and guarded by a
+# typed confirmation, because this writes to a live community surface.
+#
+# Repository secrets required:
+#   REDDIT_CLIENT_ID      script-type OAuth app id
+#   REDDIT_CLIENT_SECRET  that app's secret
+#   REDDIT_USERNAME       the moderating account
+#   REDDIT_PASSWORD       that account's password
+# Repository variable (optional):
+#   REDDIT_SUBREDDIT      defaults to LinearAlgebra
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "publish" to write to the live subreddit wiki'
+        required: true
+        default: ''
+      dry_run:
+        description: 'Render only, do not push'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation
+        if: ${{ !inputs.dry_run && inputs.confirm != 'publish' }}
+        run: |
+          echo "::error::confirm must be exactly 'publish' for a live push"
+          exit 1
+
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: uv sync --locked --group publish
+
+      - name: Regenerate from sources
+        run: uv run python build/build_all.py
+
+      - name: Render wiki pages (dry run)
+        if: ${{ inputs.dry_run }}
+        run: |
+          uv run python build/build_wiki.py
+          echo "### Rendered pages" >> "$GITHUB_STEP_SUMMARY"
+          for f in dist/reddit_wiki/*.md; do
+            echo "- \`$(basename "$f")\` — $(wc -c < "$f") bytes" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Publish to the subreddit wiki
+        if: ${{ !inputs.dry_run }}
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+          REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+          REDDIT_SUBREDDIT: ${{ vars.REDDIT_SUBREDDIT || 'LinearAlgebra' }}
+        run: uv run --group publish python build/build_wiki.py --push

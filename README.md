@@ -27,27 +27,67 @@ An entry graduates from `backlog.yaml` into `entries/` when someone writes it up
 
 ## Building
 
+Dependencies are managed with [uv](https://docs.astral.sh/uv/). `uv run` creates and syncs the
+environment on demand, so there is no activation step:
+
 ```sh
-python build/build_all.py        # everything
+uv run python build/build_all.py        # everything
 ```
 
 or individually:
 
 | Command | Output |
 |---|---|
-| `python build/build_index.py` | `dist/index.csv` — every entry, all metadata columns |
-| `python build/build_glossary.py` | `dist/domain_terminology_map.csv` — domain term → linear-algebra meaning |
-| `python build/build_catalog.py` | `dist/applied_linear_algebra_catalog.md` — the single-document catalog |
-| `python build/build_wiki.py` | `dist/reddit_wiki/*.md` — one page per entry plus index and glossary |
+| `uv run python build/build_index.py` | `dist/index.csv` — every entry, all metadata columns |
+| `uv run python build/build_glossary.py` | `dist/domain_terminology_map.csv` — domain term → linear-algebra meaning |
+| `uv run python build/build_catalog.py` | `dist/applied_linear_algebra_catalog.md` — the single-document catalog |
+| `uv run python build/build_wiki.py` | `dist/reddit_wiki/*.md` — one page per entry plus index and glossary |
+| `uv run python build/build_site.py` | `site/` — static HTML, deployable to GitHub Pages (not committed) |
 
-Requires `pyyaml`; `build_wiki.py --push` additionally requires `praw`.
+`pyproject.toml` declares the dependencies and `uv.lock` pins exact versions; both are committed, and
+CI installs with `uv sync --locked` so it fails rather than silently re-resolving if they disagree.
+`praw` is in a separate `publish` dependency group, so an ordinary build never installs it:
+
+```sh
+uv sync --group publish        # only needed to push to the wiki
+```
+
+To preview the site exactly as it will be served:
+
+```sh
+uv run python build/build_site.py
+uv run python -m http.server --directory site 8000
+```
+
+Opening the files directly from disk is not equivalent — serve over HTTP.
+
+## Continuous integration
+
+`.github/workflows/build.yml` runs on every push to `main` and on pull requests:
+
+1. installs with `uv sync --locked` and regenerates `dist/` from `entries/` and `backlog.yaml`;
+2. **fails if the committed `dist/` differs from what the sources produce** — this is what makes
+   "`dist/` is generated" an enforced rule rather than a convention. If it fails, run
+   `uv run python build/build_all.py` locally and commit the result;
+3. builds `site/` and checks that no link is absolute (an absolute path breaks a project site served
+   under `/rLinearAlgebra/`) and that `site/.nojekyll` exists;
+4. on `main` only, deploys `site/` to GitHub Pages.
+
+**One-time setup:** Settings → Pages → Build and deployment → Source → **GitHub Actions**. Without
+this the deploy step fails.
+
+`.github/workflows/publish-wiki.yml` is manual (`workflow_dispatch`) and defaults to a dry run that
+renders the pages and lists them in the job summary. A live push requires unchecking *dry run* and
+typing `publish` in the confirmation field, and reads these repository secrets: `REDDIT_CLIENT_ID`,
+`REDDIT_CLIENT_SECRET`, `REDDIT_USERNAME`, `REDDIT_PASSWORD`, plus an optional `REDDIT_SUBREDDIT`
+repository variable.
 
 ## Publishing to the subreddit wiki
 
 `build_wiki.py` renders only. Publishing is a separate explicit flag so a build never posts by accident:
 
 ```sh
-python build/build_wiki.py --push
+uv run --group publish python build/build_wiki.py --push
 ```
 
 It reads `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USERNAME`, `REDDIT_PASSWORD`, and
@@ -79,4 +119,4 @@ Pipes inside table cells are escaped at render time, so terminology entries like
    `## Why linear algebra is the right tool`, `## Pitfall worth teaching`, `## Extensions`.
    The build fails if any is missing.
 4. Add a `terminology:` mapping — this is the collection's most-used asset.
-5. Run `python build/build_all.py`.
+5. Run `uv run python build/build_all.py`.

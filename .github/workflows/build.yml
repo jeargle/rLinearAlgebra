@@ -1,0 +1,82 @@
+name: build
+
+# Regenerates everything from entries/ and backlog.yaml, fails if the committed
+# dist/ has drifted from its sources, then publishes site/ to GitHub Pages.
+#
+# One-time setup: Settings -> Pages -> Build and deployment -> Source: GitHub Actions.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it midway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          python-version: '3.12'
+
+      - name: Install dependencies
+        # --locked fails rather than silently re-resolving if uv.lock is out of date.
+        run: uv sync --locked
+
+      - name: Regenerate dist/
+        run: uv run python build/build_all.py
+
+      - name: Fail if dist/ is stale
+        run: |
+          if ! git diff --quiet -- dist; then
+            echo "::error::dist/ does not match its sources."
+            echo "Run 'uv run python build/build_all.py' locally and commit the result."
+            git --no-pager diff --stat -- dist
+            exit 1
+          fi
+          echo "dist/ is up to date with entries/ and backlog.yaml"
+
+      - name: Build static site
+        run: uv run python build/build_site.py
+
+      - name: Verify the site has no absolute links
+        # An absolute path breaks a project site served under /<repo>/.
+        run: |
+          if grep -rn 'href="/' site/ ; then
+            echo "::error::absolute href found; use relative links so the site works under a path prefix"
+            exit 1
+          fi
+          test -f site/.nojekyll || { echo "::error::site/.nojekyll missing"; exit 1; }
+          echo "site/ links are relative and .nojekyll is present"
+
+      - uses: actions/configure-pages@v6
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+
+      - uses: actions/upload-pages-artifact@v5
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
