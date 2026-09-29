@@ -21,21 +21,47 @@ of two unrelated physical processes.
 **Field:** Atmospheric and ocean science, climatology  
 **Tier:** 2 — truncated SVD and the Eckart–Young optimality statement.  
 **Scalar field:** R  
-**Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps)
+**Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps)  
+**Underlying equations:** None used: a statistical decomposition of observed data (the ocean itself obeys PDEs that the method ignores)
 
 ### The problem
 
 A century of monthly sea-surface temperatures on a global grid is a matrix with 10⁴–10⁵ spatial points and 10³ time steps. Extract the few spatial patterns that account for most of the variability — the objects a climatologist can actually reason about, like El Niño.
 
+### Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| s | number of grid points | spatial locations with data | integer | — |
+| t | number of time steps | months in the record | integer | — |
+| T_gk | sea-surface temperature | temperature at grid point g in month k | scalar | °C |
+| X | anomaly matrix | x_gk = T_gk minus the long-term average for that calendar month at that grid point | s × t | K (a temperature difference, so K and °C agree) |
+| W | area weights | diagonal matrix of √cos(latitude), so small high-latitude grid cells do not count as much as large tropical ones | s × s | dimensionless |
+| U | EOFs | columns u_i are spatial patterns of unit length | s × ρ | dimensionless |
+| Σ | singular values | diagonal σ_1 ≥ σ_2 ≥ … ≥ 0: the strength of each pattern | ρ × ρ | K |
+| V | normalized time series | columns v_i of unit length | t × ρ | dimensionless |
+| a_i | principal-component time series | a_i = σ_i v_i: how strongly pattern i is present each month | t × 1 | K |
+| ρ | rank | number of nonzero singular values, at most min(s, t) | integer | — |
+| q | modes retained | how many patterns are kept after truncation | integer | — |
+| C | spatial covariance | C = X Xᵀ / (t − 1) | s × s | K² |
+
 ### Formulation
 
-Center the data matrix `X` (space × time) and take the SVD:
+**Where the equations come from.** No differential equation is used. The ocean and atmosphere obey partial differential equations of fluid flow and heat transport, but EOF analysis ignores them entirely: it is a statistical decomposition of observed data. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
+
+**The decomposition.**
 
 ```
-X = U Σ Vᵀ
+X = U Σ Vᵀ = Σ_i σ_i u_i v_iᵀ
 ```
 
-Columns of `U` are the empirical orthogonal functions (spatial patterns), rows of `Vᵀ` are their principal-component time series, and `σᵢ²` is the variance each pattern explains.
+This models the anomaly field as a sum of rank-one pieces, each a fixed spatial pattern u_i multiplied by a time series σ_i v_i. Read by columns: the map for month k is Σ_i u_i (σ_i v_ik), a weighted combination of the patterns with weights that change month by month.
+
+**Truncation.** Keeping the first q terms gives the best possible rank-q approximation of X, and pattern i accounts for the fraction σ_i² / Σ_j σ_j² of the total variance. Equivalently, the u_i are the eigenvectors of the covariance matrix C, with eigenvalues σ_i² / (t − 1). That is why EOFs are called principal components.
+
+**Area weighting.** On a latitude–longitude grid, cells shrink toward the poles. The SVD is therefore applied to W X, and the resulting patterns are divided by the weights before they are plotted.
+
+**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
 ### Matrix structure
 

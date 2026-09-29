@@ -16,6 +16,8 @@ prereq_beyond_la: ''
 scalar_field: R
 vector_space: R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and
   forces live in the same space
+underlying_equations: Linear second-order ODE system M ü + K u = f, from the PDE of linear elasticity;
+  statics sets ü = 0
 core_la_object: Sparse SPD linear system and generalized eigenproblem
 la_concepts: linear solve; symmetric positive definite; generalized eigenproblem; conditioning
 primary_method: Sparse Cholesky; Lanczos
@@ -55,21 +57,55 @@ marching feet and wind.
 
 Given a structure — truss, bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
 
+## Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of degrees of freedom (DOFs) | count of unrestrained displacement components: 2 per free joint in a planar truss, 3 in a space truss | scalar (integer) | — |
+| u | displacement vector | how far each joint moves, in each coordinate direction, from its unloaded position | n × 1 | m |
+| f | load vector | external force applied at each joint in each direction: gravity, traffic, wind | n × 1 | N |
+| K | global stiffness matrix | k_ij is the force that appears at DOF i when DOF j alone is displaced by one unit | n × n | N/m |
+| k_e | element stiffness | stiffness of one bar along its axis, k_e = E A / L | scalar | N/m |
+| E, A, L | Young's modulus, cross-sectional area, length | material stiffness and geometry of one bar | scalars | Pa (N/m²), m², m |
+| M | mass matrix | how the structure's mass is distributed over the DOFs | n × n | kg |
+| ü | acceleration vector | second time derivative of u | n × 1 | m/s² |
+| φ | mode shape | the relative pattern of motion in one mode of vibration; only its shape matters, so it is normalized | n × 1 | dimensionless |
+| ω | natural angular frequency | how fast a mode oscillates; the frequency in hertz is ω / 2π | scalar | rad/s |
+| λ | eigenvalue | λ = ω² | scalar | s⁻² |
+
+In a truss every DOF is a translation, so every entry of u is in metres. Frames and beams add rotational DOFs, and then u mixes metres with radians and f mixes newtons with newton-metres. The equations are unchanged, but entries of K then carry different units, which is one reason raw entry sizes of K should not be compared directly.
+
 ## Formulation
 
-Assemble a global stiffness matrix `K` from per-element contributions. Static equilibrium is
+**Where the equations come from.** The underlying physics is linear elasticity: for small deformations, stress in a solid is proportional to strain, and the motion obeys a partial differential equation in space and time. The finite element method replaces the continuous structure by its n joint displacements, which turns that PDE into a system of n linear second-order ordinary differential equations in time:
+
+```
+M ü(t) + K u(t) = f(t)
+```
+
+Row i is Newton's second law for DOF i: mass times acceleration equals the applied force minus the elastic restoring force from the bars attached there. (Damping is omitted here; it adds a term C u̇.)
+
+**Statics.** If loads are applied slowly and held, the structure comes to rest, ü = 0, and the ODE reduces to a linear system:
 
 ```
 K u = f
 ```
 
-with `u` nodal displacements and `f` applied forces. Free vibration is the generalized symmetric eigenproblem
+This models force balance at every joint: row i says that the elastic forces from all the bars meeting at DOF i sum to the external load there. The solution u is the deformed shape. The force in each bar then follows from its change in length, k_e times elongation. The system has a unique solution only if the supports prevent every rigid-body motion; otherwise K is singular (see the pitfall below).
+
+**Free vibration.** With no load, f = 0, look for solutions in which every DOF oscillates in step at one frequency, u(t) = φ cos(ωt). Then ü = −ω² φ cos(ωt), and substituting gives
 
 ```
-K φ = λ M φ,     ω = √λ
+K φ = λ M φ,     λ = ω²
 ```
 
-with `M` the mass matrix; eigenvectors `φ` are mode shapes.
+A nonzero φ exists only for special values of λ, the eigenvalues. This is what the eigenproblem means for the ODE: there are exactly n such synchronized motions, the modes, and because the equations are linear, every free vibration is a superposition of them,
+
+```
+u(t) = Σ_i φ_i (a_i cos ω_i t + b_i sin ω_i t)
+```
+
+with the constants a_i, b_i fixed by the initial displacement and velocity. A load that oscillates near one of the ω_i drives that mode into resonance.
 
 ## Matrix structure
 

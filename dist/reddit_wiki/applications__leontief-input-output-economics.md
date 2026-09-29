@@ -19,19 +19,47 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 **Field:** Economics (and, in its modern form, environmental footprint accounting)  
 **Tier:** 1 — posing and solving `(I − A)x = d` needs only a linear solve. The Perron–Frobenius convergence condition lifts it to Tier 2.  
 **Scalar field:** R (nonnegative)  
-**Vectors:** outputs and demands in R^n, n = number of sectors
+**Vectors:** outputs and demands in R^n, n = number of sectors  
+**Underlying equations:** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE)
 
 ### The problem
 
 Industries consume each other's output. Making a car needs steel; making steel needs electricity; making electricity needs steel. Given final consumer demand, find the total production every sector must run.
 
+### Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of sectors | industries in the table | integer | — |
+| Z | inter-industry flow matrix | z_ij is the value of sector i's output bought by sector j during the year | n × n | currency per year ($/yr) |
+| x | gross output | total output of each sector during the year | n × 1 | $/yr |
+| d | final demand | output delivered to final users: households, government, investment, exports | n × 1 | $/yr |
+| A | technical-coefficient matrix | a_ij = z_ij / x_j, the input from sector i per dollar of sector j's output | n × n | dimensionless ($ per $) |
+| I | identity matrix |  | n × n | — |
+| L | Leontief inverse | L = (I − A)⁻¹; l_ij is the total output of sector i required per dollar of final demand for sector j, all rounds of the supply chain included | n × n | dimensionless |
+| e | emission intensities (row vector) | direct emissions per dollar of each sector's output | 1 × n | kg CO₂e per $ |
+
+Everything is measured in money at base-year prices, which is why a_ij is dimensionless. Physical tables in tonnes or joules exist, but then A carries mixed units and the coefficients are no longer comparable across rows.
+
 ### Formulation
 
-Let `A` be the technical-coefficient matrix, where `a_ij` is the input from sector `i` needed per unit of sector `j` output. Total output `x` satisfies
+**Where the equations come from.** There is no differential equation here. The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
 
 ```
-x = A x + d      ⟹      (I − A) x = d
+x_i = Σ_j z_ij + d_i
 ```
+
+**The modelling assumption.** Leontief's assumption is that each industry uses inputs in fixed proportion to its output: z_ij = a_ij x_j. It is a fixed recipe, with no substitution between inputs and constant returns to scale. Substituting it into the identity:
+
+```
+x = A x + d      ⟹      (I − A) x = d      ⟹      x = L d
+```
+
+This models, for any given final demand, the gross output each industry must produce. The solution x is the level of production that exactly meets final demand plus all of the intermediate demand that meeting it induces.
+
+**Footprints.** Multiplying by emission intensities gives total emissions, e L d, in kg CO₂e per year. The row vector e L gives emissions per dollar of final demand for each product, including every upstream supplier.
+
+**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 
 ### Matrix structure
 

@@ -20,21 +20,50 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 **Field:** Computer science, network science  
 **Tier:** 2 — a dominant-eigenvector problem by construction.  
 **Scalar field:** R  
-**Vectors:** R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace
+**Vectors:** R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace  
+**Underlying equations:** None; a linear difference equation π_{t+1} = G π_t, i.e. a discrete-time Markov chain
 
 ### The problem
 
 Order the pages of the web (or papers in a citation graph, or proteins in an interaction network) by importance, where importance is recursive: a page is important if important pages link to it.
 
+### Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of pages |  | integer | — |
+| outdeg(j) | out-degree | number of links on page j | integer | — |
+| P | link (transition) matrix | p_ij = 1 / outdeg(j) if page j links to page i, else 0; column j says where a surfer on page j goes next | n × n | dimensionless (probabilities) |
+| α | damping factor | probability that the surfer follows a link rather than jumping to a random page; conventionally 0.85 | scalar | dimensionless |
+| 1 | all-ones vector |  | n × 1 | — |
+| G | Google matrix | G = α P + ((1 − α)/n) 1 1ᵀ | n × n | dimensionless |
+| t | step index | number of clicks so far | integer | — |
+| π_t | distribution after t clicks | probability that the surfer is on each page after t clicks; entries are nonnegative and sum to 1 | n × 1 | dimensionless |
+| r | PageRank vector | long-run fraction of time spent on each page | n × 1 | dimensionless; entries sum to 1 |
+
 ### Formulation
 
-Let `P` be the column-stochastic link matrix. PageRank is the stationary distribution
+**Where the equations come from.** There is no differential equation, but there is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
 
 ```
-r = α P r + (1 − α)/n · 1,      equivalently     G r = r
+π_{t+1} = G π_t
 ```
 
-with `G = α P + (1 − α)/n · 11ᵀ` the Google matrix and `α ≈ 0.85`.
+Row i reads: the probability of being on page i next equals the sum over pages j of (probability of being on j now) × (probability of moving from j to i).
+
+**What a solution means.** The difference equation's solution is π_t = Gᵗ π_0. Because α < 1 every entry of G is positive, and the Perron–Frobenius theorem then guarantees that π_t converges to the same limit r for every starting distribution π_0. That limit is the stationary distribution:
+
+```
+G r = r,     r ≥ 0,     1ᵀ r = 1
+```
+
+r is the eigenvector of G with eigenvalue 1, scaled to sum to one. Using 1ᵀ r = 1, the same equation can be written without forming the dense matrix G:
+
+```
+r = α P r + ((1 − α)/n) 1
+```
+
+This models importance as long-run visit frequency: a page ranks highly if a surfer wandering indefinitely spends a large fraction of time there. P is stochastic only if every page has at least one outgoing link; pages without links (dangling nodes) must be patched first.
 
 ### Matrix structure
 

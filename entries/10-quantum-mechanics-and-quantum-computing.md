@@ -16,6 +16,8 @@ scalar_field: C (real symmetric in the Huckel special case)
 vector_space: unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n.
   Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices,
   which form a REAL vector space of dimension d^2
+underlying_equations: Linear Schrödinger equation iħ dψ/dt = H ψ; separation of variables gives the eigenproblem
+  H φ = E φ
 core_la_object: Hermitian eigenproblem on a tensor-product space
 la_concepts: Hermitian operators; unitary evolution; tensor products; low-rank/tensor networks
 primary_method: Lanczos; Davidson; SCF iteration
@@ -58,15 +60,55 @@ that actually occur in nature occupy a very thin slice of that enormous space.
 
 Two versions. (a) Compute the energy levels and spectra of a molecule. (b) Simulate or design a quantum circuit.
 
+## Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| ħ | reduced Planck constant | sets the time scale of quantum evolution | scalar | J·s |
+| d | basis size | number of basis functions; for Hückel benzene, 6 (one carbon p orbital per atom) | integer | — |
+| ψ(t) | state vector | complex coefficient of each basis function at time t; in an orthonormal basis, the squared magnitude of ψ_j is the probability of finding the system in basis state j | d × 1, complex | dimensionless; ‖ψ‖ = 1 |
+| H | Hamiltonian matrix | h_ij is the energy coupling between basis states i and j; Hermitian | d × d | energy (eV or hartree) |
+| E | energy eigenvalue | an allowed energy level | scalar | energy |
+| φ | stationary state | eigenvector of H | d × 1 | dimensionless, normalized |
+| U(t) | time-evolution operator | U(t) = exp(−iHt/ħ): maps the initial state to the state at time t; unitary | d × d | dimensionless |
+| α | Coulomb integral | energy of an electron in an isolated carbon p orbital | scalar | eV (negative) |
+| β | resonance integral | energy coupling between p orbitals on bonded neighbours | scalar | eV (negative) |
+| Aᴳ | adjacency matrix | entry 1 if carbons i and j are bonded, else 0; for benzene, a 6-cycle | d × d | dimensionless |
+| n | number of qubits |  | integer | — |
+
+A dagger (†) denotes the conjugate transpose, so φ† ψ is the complex inner product.
+
 ## Formulation
 
-A state is a unit vector in a complex Hilbert space. Observables are Hermitian operators; measurable values are their eigenvalues. The time-independent Schrödinger equation is an eigenproblem
+**Where the equations come from.** The dynamics are the time-dependent Schrödinger equation, a linear partial differential equation that is first order in time. Written in a finite basis it becomes a system of d linear ordinary differential equations with complex coefficients:
 
 ```
-H ψ = E ψ
+iħ dψ/dt = H ψ(t)
 ```
 
-Quantum gates are unitary matrices, and composite systems combine by tensor product, so `n` qubits live in `C^{2ⁿ}`.
+**Stationary states.** Look for solutions whose shape does not change, ψ(t) = φ e^{−iEt/ħ}. Substituting gives the time-independent Schrödinger equation:
+
+```
+H φ = E φ
+```
+
+That is what the eigenproblem means for the ODE. An eigenvector is a stationary state: only its complex phase rotates in time, so every measured probability is constant. Because the equation is linear and H is Hermitian (real eigenvalues, orthonormal eigenvectors), every solution is a superposition of stationary states:
+
+```
+ψ(t) = Σ_k (φ_k† ψ(0)) φ_k e^{−iE_k t/ħ}      equivalently     ψ(t) = U(t) ψ(0)
+```
+
+U(t) is unitary, which is why time evolution preserves ‖ψ‖ = 1, and why quantum gates are unitary matrices.
+
+**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The Hamiltonian is then
+
+```
+H = α I + β Aᴳ
+```
+
+so its eigenvectors are exactly those of the ring's adjacency matrix, and its energies are E = α + β μ_k, where μ_k are the adjacency eigenvalues. For a 6-cycle, μ_k = 2 cos(2πk/6), giving 2, 1, 1, −1, −1, −2. Since β < 0 the lowest level is α + 2β, then α + β twice, α − β twice, and α − 2β. Benzene's six π electrons fill the three lowest orbitals, two per orbital. Dropping the orthonormality assumption turns this into a generalized eigenproblem, H φ = E S φ, where S is the orbital overlap matrix.
+
+**Many particles.** n qubits (or n two-level systems) live in the tensor product (ℂ²)^⊗n, of dimension d = 2ⁿ. Combining systems multiplies dimensions rather than adding them.
 
 ## Matrix structure
 
@@ -86,4 +128,4 @@ The tensor-product structure means the state space grows as 2ⁿ, which makes ex
 
 ## Extensions
 
-Hückel molecular orbital theory, where the Hamiltonian is literally the adjacency matrix of the molecular graph and orbital energies are its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: density matrices as positive semidefinite operators, quantum channels as completely positive maps, and variational quantum eigensolvers.
+Hückel molecular orbital theory, where the Hamiltonian is α I + β A for the molecular graph's adjacency matrix A, so the orbitals are exactly A's eigenvectors and the orbital energies are an affine function of its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: density matrices as positive semidefinite operators, quantum channels as completely positive maps, and variational quantum eigensolvers.

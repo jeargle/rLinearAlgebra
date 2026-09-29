@@ -16,6 +16,7 @@ prereq_beyond_la: field extensions GF(2^m) for Reed-Solomon
 scalar_field: GF(2) = {0,1} with XOR as addition; GF(2^m) for Reed-Solomon
 vector_space: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here -
   Hamming weight is a metric, not a norm from an inner product
+underlying_equations: 'None: algebraic constraints over GF(2)'
 core_la_object: Subspace over a finite field
 la_concepts: linear algebra over GF(2); null space; rank conditions; Vandermonde structure
 primary_method: Syndrome decoding; belief propagation
@@ -55,27 +56,53 @@ does.
 
 Send bits over a channel that flips some of them. Detect and correct the errors without retransmission.
 
+## Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| k | message length | information bits per block | integer | — |
+| n | block length | bits actually transmitted per block | integer | — |
+| m | message | the k data bits to send | 1 × k row vector over GF(2) | bits |
+| G | generator matrix | its rows are a basis of the code | k × n | bits |
+| c | codeword | the n bits transmitted, c = m G | 1 × n | bits |
+| H | parity-check matrix | each row is one parity check; its rows span the code's orthogonal complement | (n − k) × n | bits |
+| e | error pattern | 1 in each position the channel flipped | 1 × n | bits |
+| y | received word | y = c + e | 1 × n | bits |
+| s | syndrome | which parity checks fail | (n − k) × 1 | bits |
+| d | minimum distance | fewest positions in which two distinct codewords differ | integer | — |
+| t | correctable errors | t = ⌊(d − 1)/2⌋ | integer | — |
+
+There are no physical units: every entry is a bit, and all arithmetic is modulo 2, so 1 + 1 = 0 and subtraction is the same as addition. Coding theory conventionally writes messages and codewords as row vectors; that convention is used throughout this entry.
+
 ## Formulation
 
-Work over the field GF(2), where arithmetic is XOR. A linear `[n, k]` code is a `k`-dimensional subspace of GF(2)ⁿ. Encoding is
+**Where the equations come from.** There is no differential equation; the model is a set of linear constraints over the two-element field GF(2).
+
+**Encoding.**
 
 ```
-c = G m        (G: k × n generator matrix)
+c = m G
 ```
 
-Every valid codeword lies in the null space of the parity-check matrix `H`:
+This models the transmitted block as a combination of the rows of G, with the message bits choosing which rows to add. The dimensions are 1 × k times k × n, giving 1 × n. A common choice is systematic form, G = [I_k  B] with B a k × (n − k) matrix, so the first k bits of c are the message itself and the rest are check bits.
+
+**Parity checks.** With H = [Bᵀ  I_{n−k}], every codeword satisfies
 
 ```
 H cᵀ = 0
 ```
 
-A received word `y = c + e` gives the syndrome
+because G Hᵀ = B + B = 0 in GF(2). Each row of H is one parity check: the bits it selects must XOR to zero. The code is exactly the null space of H.
+
+**Receiving and decoding.** If the channel flips the bits marked by e, the receiver gets y = c + e and computes
 
 ```
-s = H yᵀ = H eᵀ
+s = H yᵀ = H cᵀ + H eᵀ = H eᵀ
 ```
 
-which depends only on the error pattern, not on the message.
+The syndrome depends only on the error pattern, not on the message. Decoding means finding the error pattern with the fewest 1s that satisfies H eᵀ = s, and then recovering c = y + e.
+
+**Worked case: Hamming(7,4).** Here k = 4, n = 7, d = 3, and t = 1. The seven columns of H are the seven nonzero 3-bit vectors. A single flipped bit in position i produces a syndrome equal to column i of H, so the syndrome directly names the position of the error.
 
 ## Matrix structure
 

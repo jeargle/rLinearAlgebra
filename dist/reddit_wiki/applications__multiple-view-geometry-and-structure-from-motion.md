@@ -20,27 +20,62 @@ why graphics hardware is built the way it is.
 **Field:** Computer vision, photogrammetry, robotics  
 **Tier:** 2 — the SVD does the work. The 2D homography and the transformation pipeline behind it sit at Tier 1; pose refinement on SE(3) is Tier 3.  
 **Scalar field:** R  
-**Vectors:** scene points in R^3, written in homogeneous R^4 up to scale (projective space P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown essential matrix is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8
+**Vectors:** scene points in R^3, written in homogeneous R^4 up to scale (projective space P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown essential matrix is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8  
+**Underlying equations:** None: projective geometry of the pinhole camera
 
 ### The problem
 
 Given photographs of a scene from unknown viewpoints, recover both the camera positions and the 3D geometry. This is the engine behind phone panorama stitching, drone mapping, visual SLAM, and photogrammetric reconstruction.
 
+### Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| X̃ | homogeneous world point | [X, Y, Z, 1]ᵀ: a scene point's position in world coordinates, with a 1 appended | 4 × 1 | m (last entry dimensionless) |
+| R | rotation matrix | the camera's orientation relative to the world; orthogonal with determinant +1 | 3 × 3 | dimensionless |
+| t | translation | the world origin expressed in camera coordinates | 3 × 1 | m |
+| K | intrinsic (calibration) matrix | [[f_x, γ, c_x], [0, f_y, c_y], [0, 0, 1]]: converts camera-frame directions into pixels | 3 × 3 | pixels (last row dimensionless) |
+| f_x, f_y | focal length | focal length measured in pixel widths and heights | scalars | pixels |
+| c_x, c_y | principal point | the pixel where the optical axis meets the image | scalars | pixels |
+| γ | skew | non-perpendicular pixel axes; essentially 0 for modern sensors | scalar | pixels |
+| (u, v) | pixel coordinates | where the point appears in the image | scalars | pixels |
+| x̃ | homogeneous image point | [u, v, 1]ᵀ | 3 × 1 | pixels (last entry dimensionless) |
+| λ | projective depth | the point's depth along the camera's viewing axis (its Z coordinate in the camera frame) | scalar | m |
+| x̂ | normalized image coordinates | x̂ = K⁻¹ x̃: the direction of the viewing ray, scaled so its last entry is 1 | 3 × 1 | dimensionless |
+| [t]ₓ | cross-product matrix | the skew-symmetric matrix with [t]ₓ a = t × a for every a | 3 × 3 | m |
+| E | essential matrix | E = [t]ₓ R: encodes the relative pose of two calibrated cameras | 3 × 3 | defined only up to scale |
+| F | fundamental matrix | F = K′⁻ᵀ E K⁻¹: the same constraint written in pixel coordinates | 3 × 3 | defined only up to scale |
+| N | number of correspondences | matched points visible in both images; at least 8 here | integer | — |
+| A | constraint matrix | one row per correspondence, built from the products of their coordinates | N × 9 | dimensionless |
+| e | vectorized E | the nine entries of E stacked into a column | 9 × 1 | dimensionless |
+
+Primes mark the second view: x̂′ is the same scene point seen by the second camera, and K′ is that camera's intrinsic matrix.
+
 ### Formulation
 
-Homogeneous coordinates turn the nonlinear perspective projection into a linear map:
+**Where the equations come from.** There is no differential equation; the model is the geometry of an ideal pinhole camera.
+
+**Projection.**
 
 ```
-λ [u, v, 1]ᵀ = K [R | t] [X, Y, Z, 1]ᵀ
+λ x̃ = K [R | t] X̃
 ```
 
-Two views of the same rigid scene are related by the essential matrix `E` through the epipolar constraint
+Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in metres). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. Homogeneous coordinates isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × metres on the right, λ in metres on the left, leaving pixels.
+
+**Two views.** Place the first camera at the world origin (R = I, t = 0) and the second at an unknown R, t. A scene point appears at x̂ in the first image and x̂′ in the second, both in normalized coordinates. The two viewing rays and the baseline t between the cameras lie in one plane, and that coplanarity is the epipolar constraint:
 
 ```
-x'ᵀ E x = 0
+x̂′ᵀ E x̂ = 0,      E = [t]ₓ R
 ```
 
-Stacking that constraint over ≥8 point correspondences gives a homogeneous system `A e = 0`; the solution is the right singular vector of `A` with the smallest singular value.
+In pixel coordinates the same constraint reads x̃′ᵀ F x̃ = 0. Each correspondence gives one equation that is linear in the nine unknown entries of E, and stacking N of them gives
+
+```
+A e = 0
+```
+
+**What a solution means.** The equation is homogeneous, so if e solves it, so does any multiple of e. E, and therefore t, is recovered only up to scale: from images alone, a building and an accurate scale model of it are indistinguishable. The estimate is the unit vector that minimizes ‖A e‖, which is the right singular vector of A with the smallest singular value. Decomposing E then yields R and the direction of t; of the four candidate decompositions, the right one places the scene points in front of both cameras.
 
 ### Matrix structure
 

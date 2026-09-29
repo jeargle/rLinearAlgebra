@@ -25,10 +25,23 @@ Each entry follows the same template so the collection can grow uniformly.
    concentration vectors inhabit *different* spaces, that a probability distribution is not a subspace,
    that a covariance matrix is a vector in the space of symmetric matrices, that an essential matrix is
    determined only up to scale. Both values are also index columns (`scalar_field`, `vector_space`).
-4. **The problem**, **Formulation**, **Matrix structure**, **What is computed**, **Why linear algebra is
-   the right tool**, **Pitfall worth teaching**.
-5. **Terminology map** — the field's vocabulary against the linear-algebra object each word names.
-6. **Extensions**.
+4. **Underlying equations** — one line saying whether a differential equation sits underneath the
+   linear algebra, and which kind: ordinary or partial, deterministic or stochastic, linear or not. When
+   there is none, the entry says so and names what the model is instead (an accounting identity, a
+   difference equation, projective geometry, a statistical decomposition). Also an index column.
+5. **The problem**.
+6. **Variables** — a table introducing every scalar, vector, and matrix before it is used: its symbol,
+   its name in the field, what information it holds, its shape, and its physical units (or
+   "dimensionless", or a note when units are mixed). No symbol appears in an equation before it appears
+   here.
+7. **Formulation** — the equations, each followed by a statement of what it models. When the linear
+   algebra comes from a differential equation, the formulation starts from that equation, shows the step
+   that produces the matrix problem (discretization, a steady-state assumption, separation of
+   variables), and says what the matrix solution means for the solutions of the differential equation.
+8. **Matrix structure**, **What is computed**, **Why linear algebra is the right tool**, **Pitfall worth
+   teaching**.
+9. **Terminology map** — the field's vocabulary against the linear-algebra object each word names.
+10. **Extensions**.
 
 **A rendering caveat.** The "Start here" block uses `<details>`/`<summary>`, which collapses on GitHub,
 in Quarto and Jupyter Book output, and in most static site generators — but **not on a Reddit wiki**,
@@ -176,21 +189,56 @@ marching feet and wind.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and forces live in the same space.
 
+**Underlying equations.** Linear second-order ODE system M ü + K u = f, from the PDE of linear elasticity; statics sets ü = 0.
+
 **The problem.** Given a structure — truss, bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
 
-**Formulation.** Assemble a global stiffness matrix `K` from per-element contributions. Static equilibrium is
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of degrees of freedom (DOFs) | count of unrestrained displacement components: 2 per free joint in a planar truss, 3 in a space truss | scalar (integer) | — |
+| u | displacement vector | how far each joint moves, in each coordinate direction, from its unloaded position | n × 1 | m |
+| f | load vector | external force applied at each joint in each direction: gravity, traffic, wind | n × 1 | N |
+| K | global stiffness matrix | k_ij is the force that appears at DOF i when DOF j alone is displaced by one unit | n × n | N/m |
+| k_e | element stiffness | stiffness of one bar along its axis, k_e = E A / L | scalar | N/m |
+| E, A, L | Young's modulus, cross-sectional area, length | material stiffness and geometry of one bar | scalars | Pa (N/m²), m², m |
+| M | mass matrix | how the structure's mass is distributed over the DOFs | n × n | kg |
+| ü | acceleration vector | second time derivative of u | n × 1 | m/s² |
+| φ | mode shape | the relative pattern of motion in one mode of vibration; only its shape matters, so it is normalized | n × 1 | dimensionless |
+| ω | natural angular frequency | how fast a mode oscillates; the frequency in hertz is ω / 2π | scalar | rad/s |
+| λ | eigenvalue | λ = ω² | scalar | s⁻² |
+
+In a truss every DOF is a translation, so every entry of u is in metres. Frames and beams add rotational DOFs, and then u mixes metres with radians and f mixes newtons with newton-metres. The equations are unchanged, but entries of K then carry different units, which is one reason raw entry sizes of K should not be compared directly.
+
+**Formulation.** **Where the equations come from.** The underlying physics is linear elasticity: for small deformations, stress in a solid is proportional to strain, and the motion obeys a partial differential equation in space and time. The finite element method replaces the continuous structure by its n joint displacements, which turns that PDE into a system of n linear second-order ordinary differential equations in time:
+
+```
+M ü(t) + K u(t) = f(t)
+```
+
+Row i is Newton's second law for DOF i: mass times acceleration equals the applied force minus the elastic restoring force from the bars attached there. (Damping is omitted here; it adds a term C u̇.)
+
+**Statics.** If loads are applied slowly and held, the structure comes to rest, ü = 0, and the ODE reduces to a linear system:
 
 ```
 K u = f
 ```
 
-with `u` nodal displacements and `f` applied forces. Free vibration is the generalized symmetric eigenproblem
+This models force balance at every joint: row i says that the elastic forces from all the bars meeting at DOF i sum to the external load there. The solution u is the deformed shape. The force in each bar then follows from its change in length, k_e times elongation. The system has a unique solution only if the supports prevent every rigid-body motion; otherwise K is singular (see the pitfall below).
+
+**Free vibration.** With no load, f = 0, look for solutions in which every DOF oscillates in step at one frequency, u(t) = φ cos(ωt). Then ü = −ω² φ cos(ωt), and substituting gives
 
 ```
-K φ = λ M φ,     ω = √λ
+K φ = λ M φ,     λ = ω²
 ```
 
-with `M` the mass matrix; eigenvectors `φ` are mode shapes.
+A nonzero φ exists only for special values of λ, the eigenvalues. This is what the eigenproblem means for the ODE: there are exactly n such synchronized motions, the modes, and because the equations are linear, every free vibration is a superposition of them,
+
+```
+u(t) = Σ_i φ_i (a_i cos ω_i t + b_i sin ω_i t)
+```
+
+with the constants a_i, b_i fixed by the initial displacement and velocity. A load that oscillates near one of the ω_i drives that mode into resonance.
 
 **Matrix structure.** `K` is symmetric positive definite (after boundary conditions are applied), extremely sparse — each node couples only to its mesh neighbors — and often banded or block-structured. Industrial models run 10⁶–10⁸ degrees of freedom.
 
@@ -246,22 +294,62 @@ uncertainties interact.
 
 **Scalars and vectors.** Scalar field: R. Vectors: state in R^n (n = 6-50); measurements in R^m; covariances live in Sym_n, the real vector space of symmetric n x n matrices, dimension n(n+1)/2.
 
+**Underlying equations.** Linear ODE driven by random noise (a stochastic differential equation), dx/dt = A x + noise, discretized exactly to x_{k+1} = F x_k + w_k.
+
 **The problem.** A vehicle carries an inertial measurement unit that drifts, plus a GNSS receiver that is accurate but intermittent and noisy. Produce a continuously updated best estimate of position, velocity, and attitude — with an honest uncertainty attached.
 
-**Formulation.** Linear-Gaussian state-space model:
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| k | time-step index | which update we are on | integer | — |
+| Δt | time step | interval between updates | scalar | s |
+| x_k | state vector | the quantities being estimated at step k; in the running example, position p and velocity v along one axis, x = [p, v]ᵀ | n × 1 (n = 2 here) | mixed: m and m/s |
+| A | continuous-time system matrix | how the state changes instantaneously; [[0, 1], [0, 0]] says dp/dt = v and dv/dt = 0 apart from noise | n × n | entries in s⁻¹ |
+| F | state-transition matrix | how the state at step k predicts the state at step k+1; here [[1, Δt], [0, 1]] | n × n | mixed: dimensionless and s |
+| w_k | process noise | what the model leaves out over one step: unknown accelerations, gusts, wheel slip | n × 1 | same as x |
+| Q | process-noise covariance | how large and how correlated w_k is | n × n | products of state units: m², m²/s, m²/s² |
+| z_k | measurement vector | what the sensor reports at step k; for GNSS, a measured position | m × 1 (m = 1 here) | m |
+| H | observation matrix | which combination of the state the sensor sees; [1, 0] when it measures position only | m × n | measurement units per state unit |
+| η_k | measurement noise | sensor error at step k | m × 1 | m |
+| R | measurement-noise covariance | spread of the sensor error; a few metres squared for a consumer GNSS fix | m × m | m² |
+| x̂⁻, x̂⁺ | state estimate | the filter's best estimate before and after using z_k | n × 1 | same as x |
+| P⁻, P⁺ | estimate covariance | uncertainty of the estimate before and after using z_k; diagonal entries are variances (squared standard deviations), off-diagonal entries say how errors in different components move together | n × n | products of state units |
+| ỹ | innovation | measured minus predicted measurement | m × 1 | m |
+| K | Kalman gain | how much to correct each state component per unit of innovation | n × m | state units per measurement unit: dimensionless for p, s⁻¹ for v |
+| N(0, Q) | Gaussian distribution | mean zero, covariance Q | — | — |
+
+**Formulation.** **Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modelled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
+
+Integrating the ODE exactly over one step gives the discrete model. For this A the matrix exponential is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
+
+**The model.**
 
 ```
-x_{k+1} = F x_k + w_k,    w ~ N(0, Q)      (dynamics)
-z_k     = H x_k + v_k,    v ~ N(0, R)      (measurement)
+x_{k+1} = F x_k + w_k,     w_k ~ N(0, Q)      (dynamics)
+z_k     = H x_k + η_k,     η_k ~ N(0, R)      (measurement)
 ```
 
-The filter propagates a mean and a covariance matrix:
+The first line models how the true state evolves between measurements; the second models what the sensor reports about it. Both are linear, and both noises are Gaussian.
+
+**The filter.** Each step has two stages. *Predict* pushes the estimate and its uncertainty forward through the dynamics:
 
 ```
-P⁻ = F P Fᵀ + Q
-K  = P⁻ Hᵀ (H P⁻ Hᵀ + R)⁻¹        (Kalman gain)
+x̂⁻ = F x̂⁺_{k−1}
+P⁻ = F P⁺_{k−1} Fᵀ + Q
+```
+
+F P Fᵀ is how a covariance transforms under the linear map F, and adding Q makes uncertainty grow by what the model leaves out. *Update* blends the prediction with the new measurement, weighted by their uncertainties:
+
+```
+ỹ  = z_k − H x̂⁻                      (innovation)
+K  = P⁻ Hᵀ (H P⁻ Hᵀ + R)⁻¹           (Kalman gain)
+x̂⁺ = x̂⁻ + K ỹ
 P⁺ = (I − K H) P⁻
 ```
+
+H P⁻ Hᵀ + R is the covariance of the innovation: prediction uncertainty seen through the sensor, plus sensor noise. When R is large relative to H P⁻ Hᵀ the gain is small and the filter mostly trusts its prediction; when R is small it mostly trusts the sensor.
+
+**What a solution means.** At each step the output is a Gaussian distribution with mean x̂⁺ and covariance P⁺. For a linear model with Gaussian noise this is exact: it is the distribution of the true state given every measurement so far, and x̂⁺ is the minimum-mean-squared-error estimate.
 
 **Matrix structure.** Small and dense (state dimension 6–50 for navigation, thousands for SLAM). `P`, `Q`, `R` are symmetric positive semidefinite. The covariance recursion is a discrete Riccati equation.
 
@@ -316,15 +404,51 @@ one point to the next, and that assumption is doing real work in the picture a r
 
 **Scalars and vectors.** Scalar field: R (nonnegative in practice). Vectors: image in R^N (N voxels); measurements in R^M (M rays); A maps R^N to R^M with M != N.
 
+**Underlying equations.** First-order linear ODE along each ray (Beer–Lambert law), dI/ds = −μ I; the logarithm of its solution is linear in μ.
+
 **The problem.** An X-ray source and detector rotate around a patient. Each measurement is the total attenuation along one line through the body. Recover the 3D attenuation field.
 
-**Formulation.** Discretize the body into voxels `x`; each ray `i` gives
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| μ(r) | linear attenuation coefficient | fraction of X-ray photons removed per unit path length at location r; this is what the image shows | function of position | m⁻¹ (clinically often cm⁻¹) |
+| s | path length | distance travelled along a ray | scalar | m |
+| I(s) | beam intensity | photon flux remaining after travelling distance s | scalar | photon counts |
+| I₀ | unattenuated intensity | detector reading with nothing in the beam (from calibration) | scalar per ray | photon counts |
+| I_i | measured intensity | detector reading for ray i | scalar | photon counts |
+| N | number of voxels | the image is divided into N small cubes (pixels in 2D) | integer | — |
+| M | number of rays | detector elements × projection angles | integer | — |
+| x | image vector | x_j is μ inside voxel j, voxels listed in a fixed order | N × 1 | m⁻¹ |
+| b | measurement vector (sinogram) | b_i = −ln(I_i / I₀), total attenuation along ray i | M × 1 | dimensionless |
+| A | system matrix (forward projector) | a_ij is the length of ray i inside voxel j; zero for the vast majority of pairs | M × N | m |
+| λ | regularization weight | how strongly smoothness is favoured over fitting the data (used in What is computed) | scalar | chosen so the two terms are comparable |
+| L | regularization operator | typically differences between neighbouring voxels, so ‖L x‖ measures roughness | p × N | depends on the choice |
+
+**Formulation.** **Where the equations come from.** As a beam travels a short distance ds through material, the fraction of photons removed is μ ds. The intensity along a ray therefore obeys a first-order linear ordinary differential equation, the Beer–Lambert law:
 
 ```
-∑_j a_ij x_j = b_i,     A x = b
+dI/ds = −μ(s) I(s)
 ```
 
-where `a_ij` is the length of ray `i` inside voxel `j`. `A` is a discretized Radon transform.
+Its solution is I = I₀ exp(−∫ μ(s) ds). Taking the logarithm:
+
+```
+b_i = −ln(I_i / I₀) = ∫_{ray i} μ(s) ds
+```
+
+This is the step that makes CT a linear problem. The raw reading depends exponentially on μ, but the log-transformed reading is a line integral of μ, which is linear in μ. The set of all such line integrals is the Radon transform of μ.
+
+**Discretization.** Assume μ is constant inside each voxel. The integral along ray i then becomes a sum over the voxels it crosses, each term being the length inside the voxel times the value there:
+
+```
+b_i = Σ_j a_ij x_j      for every ray i,      i.e.   A x = b
+```
+
+Units check: metres times m⁻¹ is dimensionless, matching b. This models each measurement as the total attenuation met by one ray, and it defines M equations in N unknowns.
+
+**What a solution means.** x is an estimate of μ, one value per voxel. For display it is converted to Hounsfield units, HU = 1000 (μ − μ_water) / μ_water, which puts water at 0 and air at −1000. The system is not solved exactly: photon counts are noisy, M and N differ, and A is badly conditioned, so the reconstruction is posed as regularized least squares (see What is computed).
+
+**Where the model is approximate.** The ODE assumes a single X-ray energy. Real tubes emit a spectrum, low-energy photons are absorbed first, and μ in fact depends on energy. That mismatch, called beam hardening, is a standard source of artifacts precisely because it violates the linearity above.
 
 **Matrix structure.** Enormous (10⁶–10⁹ rows and columns), very sparse — a ray touches only O(n^{1/3}) of n voxels — and severely ill-conditioned. Singular values decay smoothly toward zero with no gap, which is the signature of an ill-posed inverse problem.
 
@@ -385,15 +509,50 @@ You get real conclusions from the cheap information.
 
 **Scalars and vectors.** Scalar field: Q or R (S itself has integer entries). Vectors: fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate.
 
+**Underlying equations.** Nonlinear ODE system dc/dt = S v(c); every linear-algebra conclusion uses only the constant matrix S.
+
 **The problem.** Given a network of chemical reactions, determine which combinations of reaction rates are compatible with steady state, which quantities are conserved no matter what the kinetics are, and how many reactions are genuinely independent.
 
-**Formulation.** Build the stoichiometric matrix `S` with one row per species and one column per reaction, entries being signed stoichiometric coefficients. Species concentrations evolve as
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| m | number of species | distinct chemicals in the network | integer | — |
+| r | number of reactions |  | integer | — |
+| c(t) | concentration vector | amount of each species per unit volume at time t | m × 1 | mol/L (M), often mM |
+| v | flux (rate) vector | how many times per unit time, per unit volume, each reaction occurs | r × 1 | mol L⁻¹ s⁻¹; genome-scale models use mmol per gram dry weight per hour |
+| S | stoichiometric matrix | s_ij is the number of molecules of species i produced (positive) or consumed (negative) each time reaction j occurs | m × r | dimensionless (molecules per reaction event) |
+| k | rate constants | kinetic parameters inside v(c) | varies | depend on reaction order |
+| y | conservation vector | weights for which yᵀc never changes, such as the number of phosphate groups in each species | m × 1 | dimensionless |
+| Z | atom-count matrix | z_ei is the number of atoms of element e in one molecule of species i | (number of elements) × m | atoms per molecule |
+| s | a single reaction's coefficients | the column being solved for when balancing one equation | m × 1 | molecules |
+
+Flux vectors live in ℝʳ, one entry per reaction; concentration vectors live in ℝᵐ, one entry per species. S maps the first space into the second. Keeping the two apart is most of the work of reading this entry.
+
+**Formulation.** **Where the equations come from.** Each species' concentration changes at a rate equal to the sum over reactions of (molecules produced or consumed per event) × (events per unit time). That is a system of m ordinary differential equations:
 
 ```
-dc/dt = S v
+dc/dt = S v(c)
 ```
 
-with `v` the flux vector. Steady state means `S v = 0`.
+S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics, and they are generally nonlinear. For example, under mass action the reaction A + B → C runs at v = k c_A c_B. So the ODE itself is nonlinear, and solving it requires rate constants that are rarely known. The linear algebra here extracts what holds for every possible choice of kinetics.
+
+**Steady state.** A cell in steady operation has dc/dt = 0:
+
+```
+S v = 0
+```
+
+This models every species being produced exactly as fast as it is consumed. Whatever the kinetics are, any steady-state flux vector lies in the null space of S.
+
+**Conservation laws.** If a vector y satisfies yᵀS = 0, then
+
+```
+d(yᵀc)/dt = yᵀ S v = 0      ⟹      yᵀc(t) = yᵀc(0)   for all t
+```
+
+This is a statement about the solutions of the nonlinear ODE, obtained without knowing v. Each independent left-null vector removes one degree of freedom, and every trajectory stays on the affine subspace c(0) + range(S) (the stoichiometric compatibility class), whose dimension is rank(S).
+
+**Balancing a single reaction.** Atoms are neither created nor destroyed, so a reaction's coefficients s must satisfy Z s = 0: for each element, atoms consumed equal atoms produced. Balancing an equation means finding an integer vector in the null space of Z.
 
 **Matrix structure.** Sparse, integer-valued, typically rank-deficient in both directions. Genome-scale metabolic models reach ~2,000 species × ~3,000 reactions.
 
@@ -449,13 +608,41 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Scalars and vectors.** Scalar field: R (nonnegative). Vectors: outputs and demands in R^n, n = number of sectors.
 
+**Underlying equations.** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE).
+
 **The problem.** Industries consume each other's output. Making a car needs steel; making steel needs electricity; making electricity needs steel. Given final consumer demand, find the total production every sector must run.
 
-**Formulation.** Let `A` be the technical-coefficient matrix, where `a_ij` is the input from sector `i` needed per unit of sector `j` output. Total output `x` satisfies
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of sectors | industries in the table | integer | — |
+| Z | inter-industry flow matrix | z_ij is the value of sector i's output bought by sector j during the year | n × n | currency per year ($/yr) |
+| x | gross output | total output of each sector during the year | n × 1 | $/yr |
+| d | final demand | output delivered to final users: households, government, investment, exports | n × 1 | $/yr |
+| A | technical-coefficient matrix | a_ij = z_ij / x_j, the input from sector i per dollar of sector j's output | n × n | dimensionless ($ per $) |
+| I | identity matrix |  | n × n | — |
+| L | Leontief inverse | L = (I − A)⁻¹; l_ij is the total output of sector i required per dollar of final demand for sector j, all rounds of the supply chain included | n × n | dimensionless |
+| e | emission intensities (row vector) | direct emissions per dollar of each sector's output | 1 × n | kg CO₂e per $ |
+
+Everything is measured in money at base-year prices, which is why a_ij is dimensionless. Physical tables in tonnes or joules exist, but then A carries mixed units and the coefficients are no longer comparable across rows.
+
+**Formulation.** **Where the equations come from.** There is no differential equation here. The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
 
 ```
-x = A x + d      ⟹      (I − A) x = d
+x_i = Σ_j z_ij + d_i
 ```
+
+**The modelling assumption.** Leontief's assumption is that each industry uses inputs in fixed proportion to its output: z_ij = a_ij x_j. It is a fixed recipe, with no substitution between inputs and constant returns to scale. Substituting it into the identity:
+
+```
+x = A x + d      ⟹      (I − A) x = d      ⟹      x = L d
+```
+
+This models, for any given final demand, the gross output each industry must produce. The solution x is the level of production that exactly meets final demand plus all of the intermediate demand that meeting it induces.
+
+**Footprints.** Multiplying by emission intensities gives total emissions, e L d, in kg CO₂e per year. The row vector e L gives emissions per dollar of final demand for each product, including every upstream supplier.
+
+**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 
 **Matrix structure.** Square, entrywise nonnegative, dense-ish, with column sums below 1 for a productive economy. National tables run 400–500 sectors; the global multi-region tables (EXIOBASE, WIOD) reach tens of thousands.
 
@@ -516,15 +703,44 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace.
 
+**Underlying equations.** None; a linear difference equation π_{t+1} = G π_t, i.e. a discrete-time Markov chain.
+
 **The problem.** Order the pages of the web (or papers in a citation graph, or proteins in an interaction network) by importance, where importance is recursive: a page is important if important pages link to it.
 
-**Formulation.** Let `P` be the column-stochastic link matrix. PageRank is the stationary distribution
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of pages |  | integer | — |
+| outdeg(j) | out-degree | number of links on page j | integer | — |
+| P | link (transition) matrix | p_ij = 1 / outdeg(j) if page j links to page i, else 0; column j says where a surfer on page j goes next | n × n | dimensionless (probabilities) |
+| α | damping factor | probability that the surfer follows a link rather than jumping to a random page; conventionally 0.85 | scalar | dimensionless |
+| 1 | all-ones vector |  | n × 1 | — |
+| G | Google matrix | G = α P + ((1 − α)/n) 1 1ᵀ | n × n | dimensionless |
+| t | step index | number of clicks so far | integer | — |
+| π_t | distribution after t clicks | probability that the surfer is on each page after t clicks; entries are nonnegative and sum to 1 | n × 1 | dimensionless |
+| r | PageRank vector | long-run fraction of time spent on each page | n × 1 | dimensionless; entries sum to 1 |
+
+**Formulation.** **Where the equations come from.** There is no differential equation, but there is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
 
 ```
-r = α P r + (1 − α)/n · 1,      equivalently     G r = r
+π_{t+1} = G π_t
 ```
 
-with `G = α P + (1 − α)/n · 11ᵀ` the Google matrix and `α ≈ 0.85`.
+Row i reads: the probability of being on page i next equals the sum over pages j of (probability of being on j now) × (probability of moving from j to i).
+
+**What a solution means.** The difference equation's solution is π_t = Gᵗ π_0. Because α < 1 every entry of G is positive, and the Perron–Frobenius theorem then guarantees that π_t converges to the same limit r for every starting distribution π_0. That limit is the stationary distribution:
+
+```
+G r = r,     r ≥ 0,     1ᵀ r = 1
+```
+
+r is the eigenvector of G with eigenvalue 1, scaled to sum to one. Using 1ᵀ r = 1, the same equation can be written without forming the dense matrix G:
+
+```
+r = α P r + ((1 − α)/n) 1
+```
+
+This models importance as long-run visit frequency: a page ranks highly if a surfer wandering indefinitely spends a large fraction of time there. P is stochastic only if every page has at least one outgoing link; pages without links (dangling nodes) must be patched first.
 
 **Matrix structure.** `P` is sparse (average out-degree in the tens) and stochastic; `G` is dense but never formed — the damping term is a rank-one update applied on the fly, so each matrix–vector product still costs O(nnz).
 
@@ -579,27 +795,54 @@ does.
 
 **Scalars and vectors.** Scalar field: GF(2) = {0,1} with XOR as addition; GF(2^m) for Reed-Solomon. Vectors: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - Hamming weight is a metric, not a norm from an inner product.
 
+**Underlying equations.** None: algebraic constraints over GF(2).
+
 **The problem.** Send bits over a channel that flips some of them. Detect and correct the errors without retransmission.
 
-**Formulation.** Work over the field GF(2), where arithmetic is XOR. A linear `[n, k]` code is a `k`-dimensional subspace of GF(2)ⁿ. Encoding is
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| k | message length | information bits per block | integer | — |
+| n | block length | bits actually transmitted per block | integer | — |
+| m | message | the k data bits to send | 1 × k row vector over GF(2) | bits |
+| G | generator matrix | its rows are a basis of the code | k × n | bits |
+| c | codeword | the n bits transmitted, c = m G | 1 × n | bits |
+| H | parity-check matrix | each row is one parity check; its rows span the code's orthogonal complement | (n − k) × n | bits |
+| e | error pattern | 1 in each position the channel flipped | 1 × n | bits |
+| y | received word | y = c + e | 1 × n | bits |
+| s | syndrome | which parity checks fail | (n − k) × 1 | bits |
+| d | minimum distance | fewest positions in which two distinct codewords differ | integer | — |
+| t | correctable errors | t = ⌊(d − 1)/2⌋ | integer | — |
+
+There are no physical units: every entry is a bit, and all arithmetic is modulo 2, so 1 + 1 = 0 and subtraction is the same as addition. Coding theory conventionally writes messages and codewords as row vectors; that convention is used throughout this entry.
+
+**Formulation.** **Where the equations come from.** There is no differential equation; the model is a set of linear constraints over the two-element field GF(2).
+
+**Encoding.**
 
 ```
-c = G m        (G: k × n generator matrix)
+c = m G
 ```
 
-Every valid codeword lies in the null space of the parity-check matrix `H`:
+This models the transmitted block as a combination of the rows of G, with the message bits choosing which rows to add. The dimensions are 1 × k times k × n, giving 1 × n. A common choice is systematic form, G = [I_k  B] with B a k × (n − k) matrix, so the first k bits of c are the message itself and the rest are check bits.
+
+**Parity checks.** With H = [Bᵀ  I_{n−k}], every codeword satisfies
 
 ```
 H cᵀ = 0
 ```
 
-A received word `y = c + e` gives the syndrome
+because G Hᵀ = B + B = 0 in GF(2). Each row of H is one parity check: the bits it selects must XOR to zero. The code is exactly the null space of H.
+
+**Receiving and decoding.** If the channel flips the bits marked by e, the receiver gets y = c + e and computes
 
 ```
-s = H yᵀ = H eᵀ
+s = H yᵀ = H cᵀ + H eᵀ = H eᵀ
 ```
 
-which depends only on the error pattern, not on the message.
+The syndrome depends only on the error pattern, not on the message. Decoding means finding the error pattern with the fewest 1s that satisfies H eᵀ = s, and then recovering c = y + e.
+
+**Worked case: Hamming(7,4).** Here k = 4, n = 7, d = 3, and t = 1. The seven columns of H are the seven nonzero 3-bit vectors. A single flipped bit in position i produces a syndrome equal to column i of H, so the syndrome directly names the position of the error.
 
 **Matrix structure.** Entries in GF(2); LDPC codes use very sparse `H`; Reed–Solomon works over GF(2^m) with a Vandermonde-structured generator.
 
@@ -654,21 +897,56 @@ why graphics hardware is built the way it is.
 
 **Scalars and vectors.** Scalar field: R. Vectors: scene points in R^3, written in homogeneous R^4 up to scale (projective space P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown essential matrix is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8.
 
+**Underlying equations.** None: projective geometry of the pinhole camera.
+
 **The problem.** Given photographs of a scene from unknown viewpoints, recover both the camera positions and the 3D geometry. This is the engine behind phone panorama stitching, drone mapping, visual SLAM, and photogrammetric reconstruction.
 
-**Formulation.** Homogeneous coordinates turn the nonlinear perspective projection into a linear map:
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| X̃ | homogeneous world point | [X, Y, Z, 1]ᵀ: a scene point's position in world coordinates, with a 1 appended | 4 × 1 | m (last entry dimensionless) |
+| R | rotation matrix | the camera's orientation relative to the world; orthogonal with determinant +1 | 3 × 3 | dimensionless |
+| t | translation | the world origin expressed in camera coordinates | 3 × 1 | m |
+| K | intrinsic (calibration) matrix | [[f_x, γ, c_x], [0, f_y, c_y], [0, 0, 1]]: converts camera-frame directions into pixels | 3 × 3 | pixels (last row dimensionless) |
+| f_x, f_y | focal length | focal length measured in pixel widths and heights | scalars | pixels |
+| c_x, c_y | principal point | the pixel where the optical axis meets the image | scalars | pixels |
+| γ | skew | non-perpendicular pixel axes; essentially 0 for modern sensors | scalar | pixels |
+| (u, v) | pixel coordinates | where the point appears in the image | scalars | pixels |
+| x̃ | homogeneous image point | [u, v, 1]ᵀ | 3 × 1 | pixels (last entry dimensionless) |
+| λ | projective depth | the point's depth along the camera's viewing axis (its Z coordinate in the camera frame) | scalar | m |
+| x̂ | normalized image coordinates | x̂ = K⁻¹ x̃: the direction of the viewing ray, scaled so its last entry is 1 | 3 × 1 | dimensionless |
+| [t]ₓ | cross-product matrix | the skew-symmetric matrix with [t]ₓ a = t × a for every a | 3 × 3 | m |
+| E | essential matrix | E = [t]ₓ R: encodes the relative pose of two calibrated cameras | 3 × 3 | defined only up to scale |
+| F | fundamental matrix | F = K′⁻ᵀ E K⁻¹: the same constraint written in pixel coordinates | 3 × 3 | defined only up to scale |
+| N | number of correspondences | matched points visible in both images; at least 8 here | integer | — |
+| A | constraint matrix | one row per correspondence, built from the products of their coordinates | N × 9 | dimensionless |
+| e | vectorized E | the nine entries of E stacked into a column | 9 × 1 | dimensionless |
+
+Primes mark the second view: x̂′ is the same scene point seen by the second camera, and K′ is that camera's intrinsic matrix.
+
+**Formulation.** **Where the equations come from.** There is no differential equation; the model is the geometry of an ideal pinhole camera.
+
+**Projection.**
 
 ```
-λ [u, v, 1]ᵀ = K [R | t] [X, Y, Z, 1]ᵀ
+λ x̃ = K [R | t] X̃
 ```
 
-Two views of the same rigid scene are related by the essential matrix `E` through the epipolar constraint
+Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in metres). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. Homogeneous coordinates isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × metres on the right, λ in metres on the left, leaving pixels.
+
+**Two views.** Place the first camera at the world origin (R = I, t = 0) and the second at an unknown R, t. A scene point appears at x̂ in the first image and x̂′ in the second, both in normalized coordinates. The two viewing rays and the baseline t between the cameras lie in one plane, and that coplanarity is the epipolar constraint:
 
 ```
-x'ᵀ E x = 0
+x̂′ᵀ E x̂ = 0,      E = [t]ₓ R
 ```
 
-Stacking that constraint over ≥8 point correspondences gives a homogeneous system `A e = 0`; the solution is the right singular vector of `A` with the smallest singular value.
+In pixel coordinates the same constraint reads x̃′ᵀ F x̃ = 0. Each correspondence gives one equation that is linear in the nine unknown entries of E, and stacking N of them gives
+
+```
+A e = 0
+```
+
+**What a solution means.** The equation is homogeneous, so if e solves it, so does any multiple of e. E, and therefore t, is recovered only up to scale: from images alone, a building and an accurate scale model of it are indistinguishable. The estimate is the unit vector that minimizes ‖A e‖, which is the right singular vector of A with the smallest singular value. Decomposing E then yields R and the direction of t; of the four candidate decompositions, the right one places the scene points in front of both cameras.
 
 **Matrix structure.** `A` is small and dense (n × 9). The later bundle-adjustment stage produces a large, sparse, highly structured Jacobian with the characteristic "arrowhead" block pattern from cameras and points.
 
@@ -725,15 +1003,41 @@ of two unrelated physical processes.
 
 **Scalars and vectors.** Scalar field: R. Vectors: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps).
 
+**Underlying equations.** None used: a statistical decomposition of observed data (the ocean itself obeys PDEs that the method ignores).
+
 **The problem.** A century of monthly sea-surface temperatures on a global grid is a matrix with 10⁴–10⁵ spatial points and 10³ time steps. Extract the few spatial patterns that account for most of the variability — the objects a climatologist can actually reason about, like El Niño.
 
-**Formulation.** Center the data matrix `X` (space × time) and take the SVD:
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| s | number of grid points | spatial locations with data | integer | — |
+| t | number of time steps | months in the record | integer | — |
+| T_gk | sea-surface temperature | temperature at grid point g in month k | scalar | °C |
+| X | anomaly matrix | x_gk = T_gk minus the long-term average for that calendar month at that grid point | s × t | K (a temperature difference, so K and °C agree) |
+| W | area weights | diagonal matrix of √cos(latitude), so small high-latitude grid cells do not count as much as large tropical ones | s × s | dimensionless |
+| U | EOFs | columns u_i are spatial patterns of unit length | s × ρ | dimensionless |
+| Σ | singular values | diagonal σ_1 ≥ σ_2 ≥ … ≥ 0: the strength of each pattern | ρ × ρ | K |
+| V | normalized time series | columns v_i of unit length | t × ρ | dimensionless |
+| a_i | principal-component time series | a_i = σ_i v_i: how strongly pattern i is present each month | t × 1 | K |
+| ρ | rank | number of nonzero singular values, at most min(s, t) | integer | — |
+| q | modes retained | how many patterns are kept after truncation | integer | — |
+| C | spatial covariance | C = X Xᵀ / (t − 1) | s × s | K² |
+
+**Formulation.** **Where the equations come from.** No differential equation is used. The ocean and atmosphere obey partial differential equations of fluid flow and heat transport, but EOF analysis ignores them entirely: it is a statistical decomposition of observed data. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
+
+**The decomposition.**
 
 ```
-X = U Σ Vᵀ
+X = U Σ Vᵀ = Σ_i σ_i u_i v_iᵀ
 ```
 
-Columns of `U` are the empirical orthogonal functions (spatial patterns), rows of `Vᵀ` are their principal-component time series, and `σᵢ²` is the variance each pattern explains.
+This models the anomaly field as a sum of rank-one pieces, each a fixed spatial pattern u_i multiplied by a time series σ_i v_i. Read by columns: the map for month k is Σ_i u_i (σ_i v_ik), a weighted combination of the patterns with weights that change month by month.
+
+**Truncation.** Keeping the first q terms gives the best possible rank-q approximation of X, and pattern i accounts for the fraction σ_i² / Σ_j σ_j² of the total variance. Equivalently, the u_i are the eigenvectors of the covariance matrix C, with eigenvalues σ_i² / (t − 1). That is why EOFs are called principal components.
+
+**Area weighting.** On a latitude–longitude grid, cells shrink toward the poles. The SVD is therefore applied to W X, and the resulting patterns are divided by the weights before they are plotted.
+
+**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
 **Matrix structure.** Tall or wide but dense; the effective rank is low — typically 5–10 modes capture most of the variance, which is why the technique works at all.
 
@@ -788,15 +1092,56 @@ that actually occur in nature occupy a very thin slice of that enormous space.
 
 **Scalars and vectors.** Scalar field: C (real symmetric in the Huckel special case). Vectors: unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n. Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices, which form a REAL vector space of dimension d^2.
 
+**Underlying equations.** Linear Schrödinger equation iħ dψ/dt = H ψ; separation of variables gives the eigenproblem H φ = E φ.
+
 **The problem.** Two versions. (a) Compute the energy levels and spectra of a molecule. (b) Simulate or design a quantum circuit.
 
-**Formulation.** A state is a unit vector in a complex Hilbert space. Observables are Hermitian operators; measurable values are their eigenvalues. The time-independent Schrödinger equation is an eigenproblem
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| ħ | reduced Planck constant | sets the time scale of quantum evolution | scalar | J·s |
+| d | basis size | number of basis functions; for Hückel benzene, 6 (one carbon p orbital per atom) | integer | — |
+| ψ(t) | state vector | complex coefficient of each basis function at time t; in an orthonormal basis, the squared magnitude of ψ_j is the probability of finding the system in basis state j | d × 1, complex | dimensionless; ‖ψ‖ = 1 |
+| H | Hamiltonian matrix | h_ij is the energy coupling between basis states i and j; Hermitian | d × d | energy (eV or hartree) |
+| E | energy eigenvalue | an allowed energy level | scalar | energy |
+| φ | stationary state | eigenvector of H | d × 1 | dimensionless, normalized |
+| U(t) | time-evolution operator | U(t) = exp(−iHt/ħ): maps the initial state to the state at time t; unitary | d × d | dimensionless |
+| α | Coulomb integral | energy of an electron in an isolated carbon p orbital | scalar | eV (negative) |
+| β | resonance integral | energy coupling between p orbitals on bonded neighbours | scalar | eV (negative) |
+| Aᴳ | adjacency matrix | entry 1 if carbons i and j are bonded, else 0; for benzene, a 6-cycle | d × d | dimensionless |
+| n | number of qubits |  | integer | — |
+
+A dagger (†) denotes the conjugate transpose, so φ† ψ is the complex inner product.
+
+**Formulation.** **Where the equations come from.** The dynamics are the time-dependent Schrödinger equation, a linear partial differential equation that is first order in time. Written in a finite basis it becomes a system of d linear ordinary differential equations with complex coefficients:
 
 ```
-H ψ = E ψ
+iħ dψ/dt = H ψ(t)
 ```
 
-Quantum gates are unitary matrices, and composite systems combine by tensor product, so `n` qubits live in `C^{2ⁿ}`.
+**Stationary states.** Look for solutions whose shape does not change, ψ(t) = φ e^{−iEt/ħ}. Substituting gives the time-independent Schrödinger equation:
+
+```
+H φ = E φ
+```
+
+That is what the eigenproblem means for the ODE. An eigenvector is a stationary state: only its complex phase rotates in time, so every measured probability is constant. Because the equation is linear and H is Hermitian (real eigenvalues, orthonormal eigenvectors), every solution is a superposition of stationary states:
+
+```
+ψ(t) = Σ_k (φ_k† ψ(0)) φ_k e^{−iE_k t/ħ}      equivalently     ψ(t) = U(t) ψ(0)
+```
+
+U(t) is unitary, which is why time evolution preserves ‖ψ‖ = 1, and why quantum gates are unitary matrices.
+
+**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The Hamiltonian is then
+
+```
+H = α I + β Aᴳ
+```
+
+so its eigenvectors are exactly those of the ring's adjacency matrix, and its energies are E = α + β μ_k, where μ_k are the adjacency eigenvalues. For a 6-cycle, μ_k = 2 cos(2πk/6), giving 2, 1, 1, −1, −1, −2. Since β < 0 the lowest level is α + 2β, then α + β twice, α − β twice, and α − 2β. Benzene's six π electrons fill the three lowest orbitals, two per orbital. Dropping the orthonormality assumption turns this into a generalized eigenproblem, H φ = E S φ, where S is the orbital overlap matrix.
+
+**Many particles.** n qubits (or n two-level systems) live in the tensor product (ℂ²)^⊗n, of dimension d = 2ⁿ. Combining systems multiplies dimensions rather than adding them.
 
 **Matrix structure.** Hermitian (hence real eigenvalues, orthogonal eigenvectors) and, in a local basis, sparse — Hamiltonians typically couple only nearby sites or orbitals. The dimension is the problem: it grows exponentially in system size.
 
@@ -822,7 +1167,7 @@ Quantum gates are unitary matrices, and composite systems combine by tensor prod
 | SCF iteration | fixed-point iteration on an eigenproblem whose matrix depends on its own solution |
 | density matrix | a positive semidefinite matrix with trace 1 |
 
-**Extensions.** Hückel molecular orbital theory, where the Hamiltonian is literally the adjacency matrix of the molecular graph and orbital energies are its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: density matrices as positive semidefinite operators, quantum channels as completely positive maps, and variational quantum eigensolvers.
+**Extensions.** Hückel molecular orbital theory, where the Hamiltonian is α I + β A for the molecular graph's adjacency matrix A, so the orbitals are exactly A's eigenvectors and the orbital energies are an affine function of its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: density matrices as positive semidefinite operators, quantum channels as completely positive maps, and variational quantum eigensolvers.
 
 ---
 

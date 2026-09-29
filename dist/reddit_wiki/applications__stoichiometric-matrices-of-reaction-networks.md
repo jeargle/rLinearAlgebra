@@ -19,21 +19,56 @@ You get real conclusions from the cheap information.
 **Field:** Chemistry, chemical engineering, systems biology  
 **Tier:** 1 — null spaces and rank, nothing more. Chemical-equation balancing is the Tier 1 entry point; flux balance analysis is Tier 2.  
 **Scalar field:** Q or R (S itself has integer entries)  
-**Vectors:** fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate
+**Vectors:** fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate  
+**Underlying equations:** Nonlinear ODE system dc/dt = S v(c); every linear-algebra conclusion uses only the constant matrix S
 
 ### The problem
 
 Given a network of chemical reactions, determine which combinations of reaction rates are compatible with steady state, which quantities are conserved no matter what the kinetics are, and how many reactions are genuinely independent.
 
+### Variables
+
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| m | number of species | distinct chemicals in the network | integer | — |
+| r | number of reactions |  | integer | — |
+| c(t) | concentration vector | amount of each species per unit volume at time t | m × 1 | mol/L (M), often mM |
+| v | flux (rate) vector | how many times per unit time, per unit volume, each reaction occurs | r × 1 | mol L⁻¹ s⁻¹; genome-scale models use mmol per gram dry weight per hour |
+| S | stoichiometric matrix | s_ij is the number of molecules of species i produced (positive) or consumed (negative) each time reaction j occurs | m × r | dimensionless (molecules per reaction event) |
+| k | rate constants | kinetic parameters inside v(c) | varies | depend on reaction order |
+| y | conservation vector | weights for which yᵀc never changes, such as the number of phosphate groups in each species | m × 1 | dimensionless |
+| Z | atom-count matrix | z_ei is the number of atoms of element e in one molecule of species i | (number of elements) × m | atoms per molecule |
+| s | a single reaction's coefficients | the column being solved for when balancing one equation | m × 1 | molecules |
+
+Flux vectors live in ℝʳ, one entry per reaction; concentration vectors live in ℝᵐ, one entry per species. S maps the first space into the second. Keeping the two apart is most of the work of reading this entry.
+
 ### Formulation
 
-Build the stoichiometric matrix `S` with one row per species and one column per reaction, entries being signed stoichiometric coefficients. Species concentrations evolve as
+**Where the equations come from.** Each species' concentration changes at a rate equal to the sum over reactions of (molecules produced or consumed per event) × (events per unit time). That is a system of m ordinary differential equations:
 
 ```
-dc/dt = S v
+dc/dt = S v(c)
 ```
 
-with `v` the flux vector. Steady state means `S v = 0`.
+S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics, and they are generally nonlinear. For example, under mass action the reaction A + B → C runs at v = k c_A c_B. So the ODE itself is nonlinear, and solving it requires rate constants that are rarely known. The linear algebra here extracts what holds for every possible choice of kinetics.
+
+**Steady state.** A cell in steady operation has dc/dt = 0:
+
+```
+S v = 0
+```
+
+This models every species being produced exactly as fast as it is consumed. Whatever the kinetics are, any steady-state flux vector lies in the null space of S.
+
+**Conservation laws.** If a vector y satisfies yᵀS = 0, then
+
+```
+d(yᵀc)/dt = yᵀ S v = 0      ⟹      yᵀc(t) = yᵀc(0)   for all t
+```
+
+This is a statement about the solutions of the nonlinear ODE, obtained without knowing v. Each independent left-null vector removes one degree of freedom, and every trajectory stays on the affine subspace c(0) + range(S) (the stoichiometric compatibility class), whose dimension is rank(S).
+
+**Balancing a single reaction.** Atoms are neither created nor destroyed, so a reaction's coefficients s must satisfy Z s = 0: for each element, atoms consumed equal atoms produced. Balancing an equation means finding an integer vector in the null space of Z.
 
 ### Matrix structure
 
