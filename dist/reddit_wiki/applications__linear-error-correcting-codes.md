@@ -19,8 +19,8 @@ One thing to adjust up front. The arithmetic here is not ordinary addition — i
 does.
 
 **Field:** Communications, information theory, storage systems  
-**Tier:** 1 — rank and null space over GF(2), using the finite-field material this collection wants at Tier 1. Reed–Solomon over GF(2^m) is Tier 3.  
-**Scalar field:** GF(2) = {0,1} with XOR as addition; GF(2^m) for Reed-Solomon  
+**Tier:** 1 — rank and null space over GF(2), the smallest finite field: just the numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. Reed–Solomon codes use the larger fields GF(2^m), which are Tier 3.  
+**Scalar field:** GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is AND); Reed–Solomon codes use GF(2^m)  
 **Vectors:** GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - Hamming weight is a metric, not a norm from an inner product  
 **Underlying equations:** None: algebraic constraints over GF(2)
 

@@ -121,6 +121,11 @@ Pipes inside table cells are escaped at render time, so terminology entries like
    `## Extensions`. The build fails if any is missing.
    - **Variables** is a table with columns *Symbol, Name, What it holds, Shape, Units*. Every symbol
      used in an equation must appear here first. Do not put a raw `|` inside a cell; it splits the row.
+   - **GF(2) must be defined at its first use** on every page except Tier 3 entry pages, because few
+     readers have taken abstract algebra. "First use" includes the tier note and the scalar-field
+     line, which render near the top of the page. The build fails if "modulo 2" (or "mod 2") does not
+     appear near the first "GF(2)". The shared wording lives in `build/common.py` (`GF2_DEF`,
+     `GF2_SHORT`, `FIELD_DEF`); the index and glossary pages insert it automatically.
    - **Formulation** states what each equation models. If the matrix problem comes from a differential
      equation, start from that equation, show the step that produces the matrix problem, and say what a
      matrix solution means for the differential equation's solutions.

@@ -16,7 +16,8 @@ from pathlib import Path
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import BLOCKS, ROOT, escape_cell, load_all, load_entries
+from common import (BLOCKS, FIELD_DEF, GF2_DEF, GF2_SHORT, ROOT, escape_cell, load_all,
+                    load_entries, require_gf2_definition)
 
 try:
     import markdown
@@ -50,6 +51,7 @@ summary { cursor:pointer; font-weight:600; }
 .tier { display:inline-block; font-size:.75rem; font-weight:600; padding:.1rem .45rem;
   border-radius:3px; background:#eceff3; color:var(--dim); vertical-align:.08rem; }
 .planned { color:var(--dim); }
+.def { font-size:.85rem; color:var(--dim); font-style:italic; }
 nav.crumb { font-size:.9rem; margin-bottom:1.5rem; }
 ul.entries { list-style:none; padding-left:0; }
 ul.entries li { margin:.35rem 0; }
@@ -121,17 +123,22 @@ def index_page(entries, rows):
              "written up.</p>",
              "<p><a href=\"glossary.html\">Domain terminology, translated</a> — one unfamiliar word "
              "from a question, and what it means mathematically.</p>"]
+    gf2_defined = False
     for field in sorted(by_field):
         parts.append(f"<h2>{html.escape(field)}</h2>\n<ul class=\"entries\">")
         for row in sorted(by_field[field], key=lambda r: r["id"]):
             badge = f"<span class=\"tier\">Tier {row['tier']}</span>"
+            note = ""
+            if not gf2_defined and "GF(2)" in row["short_title"]:
+                note = f" <span class=\"def\">({html.escape(GF2_SHORT)})</span>"  # first use
+                gf2_defined = True
             if row["id"] in written:
                 meta = written[row["id"]]
                 parts.append(f"<li><a href=\"entries/{meta['slug']}.html\">"
-                             f"{inline(meta['short_title'])}</a> {badge}</li>")
+                             f"{inline(meta['short_title'])}</a> {badge}{note}</li>")
             else:
                 parts.append(f"<li class=\"planned\">{inline(row['short_title'])} "
-                             f"{badge} planned</li>")
+                             f"{badge} planned{note}</li>")
         parts.append("</ul>")
     return page("Applied Linear Algebra", "\n".join(parts))
 
@@ -146,7 +153,11 @@ def glossary_page(entries):
     table = "| Domain term | In linear algebra | Entry |\n|---|---|---|\n" + body
     parts = ["<nav class=\"crumb\"><a href=\"index.html\">← All fields</a></nav>",
              "<h1>Domain terminology, translated</h1>",
-             f"<p>{len(rows)} terms from {len(entries)} entries.</p>", md(table)]
+             "<h2>Two general terms</h2>", md(FIELD_DEF)]
+    if any("GF(2)" in v for _, v, _ in rows):
+        parts.append(md(GF2_DEF))
+    parts += ["<h2>By field</h2>",
+              f"<p>{len(rows)} terms from {len(entries)} entries.</p>", md(table)]
     return page("Domain terminology", "\n".join(parts))
 
 
@@ -160,10 +171,14 @@ def main():
 
     (SITE / "style.css").write_text(CSS)
     (SITE / ".nojekyll").write_text("")  # or GitHub runs Jekyll and drops _-prefixed paths
-    (SITE / "index.html").write_text(index_page(entries, rows))
-    (SITE / "glossary.html").write_text(glossary_page(entries))
+    pages = {SITE / "index.html": (index_page(entries, rows), 0),
+             SITE / "glossary.html": (glossary_page(entries), 0)}
     for meta in entries:
-        (SITE / "entries" / f"{meta['slug']}.html").write_text(entry_page(meta))
+        pages[SITE / "entries" / f"{meta['slug']}.html"] = (entry_page(meta), meta["tier"])
+    for path, (text, tier) in pages.items():
+        if tier != 3:
+            require_gf2_definition(text, f"site:{path.relative_to(SITE)}")
+        path.write_text(text)
 
     count = sum(1 for _ in SITE.rglob("*") if _.is_file())
     print(f"wrote site/: {count} files ({len(entries)} entry pages, "

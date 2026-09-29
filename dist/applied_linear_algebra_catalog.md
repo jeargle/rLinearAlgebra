@@ -5,9 +5,9 @@
 Selection criteria for this first pass:
 
 1. **One application domain each.** No two entries come from the same subfield or community of practice. At the coarse level used in the companion index, three entries fall under Engineering (civil/mechanical FEA, aerospace/control, communications) and two under Computer Science (network science, computer vision); these are distinct disciplines in practice, sharing only a top-level bucket. The set spans seven coarse fields and ten distinct subfields.
-2. **One distinct linear-algebra concept each.** Entry 1 is a sparse SPD solve; entry 5 is a nonnegative-matrix spectral radius; entry 7 is linear algebra over a finite field. If two problems reduce to the same mathematical object, only one is in the seed set and the other is in the backlog.
+2. **One distinct linear-algebra concept each.** Entry 1 is a sparse SPD solve; entry 5 is a nonnegative-matrix spectral radius; entry 7 is linear algebra over a finite field, a number system with finitely many elements (defined under Difficulty tiers). If two problems reduce to the same mathematical object, only one is in the seed set and the other is in the backlog.
 3. **Deployed, not illustrative.** Every entry is something an engineer, scientist, or company actually runs in production or in published research — not a textbook exercise dressed in application clothing.
-4. **The matrix structure is the point.** In each case, *what kind of matrix it is* (sparse, symmetric, stochastic, rank-deficient, over GF(2)) determines which algorithm is viable. That is the through-line worth teaching.
+4. **The matrix structure is the point.** In each case, *what kind of matrix it is* (sparse, symmetric, stochastic, rank-deficient, over GF(2), the numbers 0 and 1 with arithmetic modulo 2) determines which algorithm is viable. That is the through-line worth teaching.
 
 ## Entry template
 
@@ -129,6 +129,19 @@ complex-valued vectors, finite fields such as GF(2) and GF(p), and function spac
 inner product all belong here, because each of them exercises the *definition* of a vector space rather
 than any machinery beyond a first course. So do the 2D and 3D graphics transformations, which are pure
 change-of-basis and composition problems in small dimension.
+
+Few readers arrive having taken abstract algebra, so the collection defines its one piece of algebraic
+vocabulary here, in plain terms, rather than assuming it:
+
+A **field** is a number system in which addition, subtraction, multiplication, and division by any nonzero number all behave the way they do for ordinary numbers. The rational numbers ℚ, the real numbers ℝ, the complex numbers ℂ, and the integers modulo a prime p all qualify. The integers modulo 6 do not: there 2 × 3 = 0, so 2 has no reciprocal and nothing can be divided by 2. The scalars of every vector space come from a field, which is why each entry names its scalar field.
+
+**GF(2)** is the smallest field: just the two numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Addition is the same as XOR, and multiplication is the same as AND. GF(p) is the same construction using the integers modulo a prime p. Everything about subspaces, bases, rank, and null spaces works over GF(2) exactly as over the
+real numbers. Lengths, angles, and least squares do not. They depend on a vector's dot product with
+itself being positive, which fails over GF(2): the nonzero vector (1, 1) has (1, 1)·(1, 1) = 1 + 1 = 0,
+so it is orthogonal to itself.
+
+Larger finite fields such as GF(2ᵐ), which Reed–Solomon codes need, are built as polynomials modulo an
+irreducible polynomial. That construction requires quotient rings and is Tier 3.
 
 ### Tier 2 — eigenvalues, eigenvectors, and later-course material
 
@@ -817,9 +830,9 @@ does.
 
 **Field:** Communications, information theory, storage systems
 
-**Tier:** 1 — rank and null space over GF(2), using the finite-field material this collection wants at Tier 1. Reed–Solomon over GF(2^m) is Tier 3.
+**Tier:** 1 — rank and null space over GF(2), the smallest finite field: just the numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. Reed–Solomon codes use the larger fields GF(2^m), which are Tier 3.
 
-**Scalars and vectors.** Scalar field: GF(2) = {0,1} with XOR as addition; GF(2^m) for Reed-Solomon. Vectors: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - Hamming weight is a metric, not a norm from an inner product.
+**Scalars and vectors.** Scalar field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is AND); Reed–Solomon codes use GF(2^m). Vectors: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - Hamming weight is a metric, not a norm from an inner product.
 
 **Underlying equations.** None: algebraic constraints over GF(2).
 

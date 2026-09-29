@@ -25,7 +25,8 @@ from collections import defaultdict
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import BLOCKS, DIST, escape_cell, load_all, load_entries
+from common import (BLOCKS, DIST, FIELD_DEF, GF2_DEF, GF2_SHORT, escape_cell, load_all,
+                    load_entries, require_gf2_definition)
 
 WIKI_ROOT = "applications"
 
@@ -66,15 +67,20 @@ def render_index(entries, rows):
     out = ["# Applied linear algebra, by field", "",
            "Real problems from each field, with the domain vocabulary translated into "
            "linear algebra. Entries marked *(planned)* are catalogued but not yet written up.", ""]
+    gf2_defined = False
     for field in sorted(by_field):
         out += [f"## {field}", ""]
         for row in sorted(by_field[field], key=lambda r: r["id"]):
             label = f"Tier {row['tier']}"
             if row["id"] in written:
                 meta = written[row["id"]]
-                out.append(f"* [{meta['short_title']}]({page_path(meta)}) — {label}")
+                line = f"* [{meta['short_title']}]({page_path(meta)}) — {label}"
             else:
-                out.append(f"* {row['short_title']} — {label} *(planned)*")
+                line = f"* {row['short_title']} — {label} *(planned)*"
+            if not gf2_defined and "GF(2)" in row["short_title"]:
+                line += f" ({GF2_SHORT})"   # define at the page's first use
+                gf2_defined = True
+            out.append(line)
         out += [""]
     return "\n".join(out)
 
@@ -87,7 +93,11 @@ def render_glossary(entries):
     rows.sort(key=lambda r: r[0].lower())
     out = ["# Domain terminology, translated", "",
            "One unfamiliar word from a question, and what it means mathematically.", "",
-           "| Domain term | In linear algebra | Entry |", "|---|---|---|"]
+           "### Two general terms", "", FIELD_DEF, ""]
+    if any("GF(2)" in m for _, m, _ in rows):
+        out += [GF2_DEF, ""]
+    out += ["### By field", "",
+            "| Domain term | In linear algebra | Entry |", "|---|---|---|"]
     out += [f"| {escape_cell(t)} | {escape_cell(m)} | [{meta['short_title']}]({page_path(meta)}) |"
             for t, m, meta in rows]
     return "\n".join(out + [""])
@@ -101,10 +111,15 @@ def build():
 
     pages = {WIKI_ROOT: render_index(entries, rows),
              f"{WIKI_ROOT}/glossary": render_glossary(entries)}
+    tier3 = set()
     for meta in entries:
         pages[page_path(meta)] = render_entry(meta)
+        if meta["tier"] == 3:
+            tier3.add(page_path(meta))
 
     for name, text in pages.items():
+        if name not in tier3:
+            require_gf2_definition(text, f"wiki:{name}")
         path = outdir / (name.replace("/", "__") + ".md")
         path.write_text(text)
         if "<details>" in text or "<summary>" in text:

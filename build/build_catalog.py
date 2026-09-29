@@ -18,7 +18,8 @@ from collections import Counter
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import BLOCKS, DIST, DOCS, escape_cell, load_all, load_entries
+from common import (BLOCKS, DIST, DOCS, FIELD_DEF, GF2_DEF, escape_cell, load_all,
+                    load_entries, require_gf2_definition)
 
 SUMMARY = "Start here — the problem in plain terms"
 
@@ -97,6 +98,8 @@ def main():
         "TIER_SPLIT": f"{tiers[1]} / {tiers[2]} / {tiers[3]}",
         "N_TERMS": str(sum(len(m.get("terminology") or {}) for m in entries)),
         "N_FIELDS": str(len({r["nav_field"] for r in rows})),
+        "FIELD_DEF": FIELD_DEF,
+        "GF2_DEF": GF2_DEF,
     }
 
     pieces = [(DOCS / "00-front.md").read_text().rstrip("\n")]
@@ -111,6 +114,8 @@ def main():
     if leftover:
         print(f"error: unresolved placeholders {leftover}", file=sys.stderr)
         return 1
+
+    require_gf2_definition(text, "catalog")
 
     DIST.mkdir(exist_ok=True)
     path = DIST / "applied_linear_algebra_catalog.md"

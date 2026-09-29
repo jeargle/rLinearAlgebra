@@ -5,15 +5,17 @@ status: seed
 title: 'Error-correcting codes: linear algebra over a finite field'
 short_title: Linear error-correcting codes
 field_label: Communications, information theory, storage systems
-tier_note: rank and null space over GF(2), using the finite-field material this collection wants at Tier
-  1. Reed–Solomon over GF(2^m) is Tier 3.
+tier_note: 'rank and null space over GF(2), the smallest finite field: just the numbers 0 and 1, added
+  and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. Reed–Solomon
+  codes use the larger fields GF(2^m), which are Tier 3.'
 nav_field: Communications & Information Theory
 field: Engineering
 subfield: Communications/information theory
 tier: 1
 tier_ceiling: 3
 prereq_beyond_la: field extensions GF(2^m) for Reed-Solomon
-scalar_field: GF(2) = {0,1} with XOR as addition; GF(2^m) for Reed-Solomon
+scalar_field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is
+  AND); Reed–Solomon codes use GF(2^m)
 vector_space: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here -
   Hamming weight is a metric, not a norm from an inner product
 underlying_equations: 'None: algebraic constraints over GF(2)'

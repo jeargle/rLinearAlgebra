@@ -16,7 +16,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Communications & Information Theory
 
 * [Linear error-correcting codes](applications/linear-error-correcting-codes) — Tier 1
-* CRC checksums as polynomial arithmetic over GF(2) — Tier 1 *(planned)*
+* CRC checksums as polynomial arithmetic over GF(2) — Tier 1 *(planned)* (GF(2) is the number system {0, 1} with arithmetic modulo 2, so 1 + 1 = 0)
 
 ## Computer Graphics & Vision
 
