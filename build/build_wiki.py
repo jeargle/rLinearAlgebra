@@ -41,7 +41,8 @@ def render_entry(meta):
     out += [f"**Field:** {meta['field_label']}  ",
             f"**Tier:** {meta['tier']} — {meta['tier_note']}  ",
             f"**Scalar field:** {meta['scalar_field']}  ",
-            f"**Vectors:** {meta['vector_space']}", ""]
+            f"**Vectors:** {meta['vector_space']}  ",
+            f"**Underlying equations:** {meta.get('underlying_equations') or 'not yet recorded'}", ""]
     for name in BLOCKS:
         out += [f"### {name}", "", sections[name], ""]
     terms = meta.get("terminology") or {}

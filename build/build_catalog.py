@@ -56,6 +56,8 @@ def render_entry(meta):
     out += [f"**Tier:** {meta['tier']} — {meta['tier_note']}", ""]
     out += [f"**Scalars and vectors.** Scalar field: {meta['scalar_field']}. "
             f"Vectors: {meta['vector_space']}.", ""]
+    if meta.get("underlying_equations"):
+        out += [f"**Underlying equations.** {meta['underlying_equations']}.", ""]
     for name in BLOCKS:
         if name == "Extensions":
             out += ["**Terminology map.** How this field's vocabulary reads as linear algebra.", "",

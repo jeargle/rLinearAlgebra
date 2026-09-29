@@ -95,6 +95,7 @@ def entry_page(meta):
         f"<div><b>Tier:</b> {meta['tier']} — {inline(meta['tier_note'])}</div>"
         f"<div><b>Scalar field:</b> {inline(meta['scalar_field'])}</div>"
         f"<div><b>Vectors:</b> {inline(meta['vector_space'])}</div>"
+        f"<div><b>Underlying equations:</b> {inline(meta.get('underlying_equations') or 'not yet recorded')}</div>"
         "</div>")
     for name in BLOCKS:
         parts.append(f"<h2>{html.escape(name)}</h2>\n" + md(s[name]))

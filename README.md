@@ -113,10 +113,15 @@ Pipes inside table cells are escaped at render time, so terminology entries like
 1. Move its row out of `backlog.yaml` and create `entries/NN-slug.md`.
 2. Frontmatter needs at minimum: `id`, `slug`, `status`, `title`, `short_title`, `field_label`,
    `tier`, `tier_note`, `tier_ceiling`, `nav_field`, `field`, `subfield`, `scalar_field`,
-   `vector_space`, and the remaining index columns.
+   `vector_space`, `underlying_equations`, and the remaining index columns.
 3. The body needs these sections, in order:
-   `## Start here`, `## The problem`, `## Formulation`, `## Matrix structure`, `## What is computed`,
-   `## Why linear algebra is the right tool`, `## Pitfall worth teaching`, `## Extensions`.
-   The build fails if any is missing.
+   `## Start here`, `## The problem`, `## Variables`, `## Formulation`, `## Matrix structure`,
+   `## What is computed`, `## Why linear algebra is the right tool`, `## Pitfall worth teaching`,
+   `## Extensions`. The build fails if any is missing.
+   - **Variables** is a table with columns *Symbol, Name, What it holds, Shape, Units*. Every symbol
+     used in an equation must appear here first. Do not put a raw `|` inside a cell; it splits the row.
+   - **Formulation** states what each equation models. If the matrix problem comes from a differential
+     equation, start from that equation, show the step that produces the matrix problem, and say what a
+     matrix solution means for the differential equation's solutions.
 4. Add a `terminology:` mapping — this is the collection's most-used asset.
 5. Run `uv run python build/build_all.py`.

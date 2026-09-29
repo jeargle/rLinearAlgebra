@@ -25,10 +25,23 @@ Each entry follows the same template so the collection can grow uniformly.
    concentration vectors inhabit *different* spaces, that a probability distribution is not a subspace,
    that a covariance matrix is a vector in the space of symmetric matrices, that an essential matrix is
    determined only up to scale. Both values are also index columns (`scalar_field`, `vector_space`).
-4. **The problem**, **Formulation**, **Matrix structure**, **What is computed**, **Why linear algebra is
-   the right tool**, **Pitfall worth teaching**.
-5. **Terminology map** — the field's vocabulary against the linear-algebra object each word names.
-6. **Extensions**.
+4. **Underlying equations** — one line saying whether a differential equation sits underneath the
+   linear algebra, and which kind: ordinary or partial, deterministic or stochastic, linear or not. When
+   there is none, the entry says so and names what the model is instead (an accounting identity, a
+   difference equation, projective geometry, a statistical decomposition). Also an index column.
+5. **The problem**.
+6. **Variables** — a table introducing every scalar, vector, and matrix before it is used: its symbol,
+   its name in the field, what information it holds, its shape, and its physical units (or
+   "dimensionless", or a note when units are mixed). No symbol appears in an equation before it appears
+   here.
+7. **Formulation** — the equations, each followed by a statement of what it models. When the linear
+   algebra comes from a differential equation, the formulation starts from that equation, shows the step
+   that produces the matrix problem (discretization, a steady-state assumption, separation of
+   variables), and says what the matrix solution means for the solutions of the differential equation.
+8. **Matrix structure**, **What is computed**, **Why linear algebra is the right tool**, **Pitfall worth
+   teaching**.
+9. **Terminology map** — the field's vocabulary against the linear-algebra object each word names.
+10. **Extensions**.
 
 **A rendering caveat.** The "Start here" block uses `<details>`/`<summary>`, which collapses on GitHub,
 in Quarto and Jupyter Book output, and in most static site generators — but **not on a Reddit wiki**,

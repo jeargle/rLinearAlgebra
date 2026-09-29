@@ -19,6 +19,7 @@ DIST = ROOT / "dist"
 # Order of the analytical blocks in a rendered entry.
 BLOCKS = [
     "The problem",
+    "Variables",
     "Formulation",
     "Matrix structure",
     "What is computed",
@@ -32,7 +33,7 @@ INDEX_COLUMNS = [
     "id", "status", "title", "nav_field", "field", "subfield", "core_la_object",
     "la_concepts", "primary_method", "matrix_structure", "typical_size",
     "worked_example_size", "tier", "tier_ceiling", "prereq_beyond_la",
-    "scalar_field", "vector_space",
+    "scalar_field", "vector_space", "underlying_equations",
 ]
 
 FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n\n?(.*)\Z", re.S)
