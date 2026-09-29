@@ -90,13 +90,13 @@ original coarse `field` column is retained for coarse filtering.
 | Machine Learning & Data | 5 | 0 |
 | Mathematics & Numerical Analysis | 4 | 3 |
 | Signal Processing | 4 | 2 |
-| Chemistry & Chemical Engineering | 3 | 2 |
+| Chemistry & Chemical Engineering | 3 | 1 |
 | Computer Science & Networks | 3 | 1 |
 | Earth & Climate Science | 3 | 1 |
 | Economics, Finance & Operations Research | 3 | 1 |
-| Electrical Engineering | 3 | 2 |
+| Electrical Engineering | 3 | 1 |
 | Statistics | 3 | 3 |
-| Civil & Mechanical Engineering | 2 | 2 |
+| Civil & Mechanical Engineering | 2 | 1 |
 | Communications & Information Theory | 2 | 2 |
 | Control & Robotics | 2 | 1 |
 | Cryptography & Security | 2 | 1 |
@@ -144,6 +144,21 @@ finite fields (field extensions, quotient rings, group representations), measure
 or stochastic processes, convex analysis and duality, functional analysis, or algebraic geometry. The
 index records the specific prerequisite per entry in `prereq_beyond_la`.
 
+**Differential equations always mean Tier 3.** If a differential equation appears anywhere in how an
+entry is posed — ordinary or partial, deterministic or stochastic, linear or not — the entry is Tier 3,
+even when the matrix problem it produces is first-course linear algebra. "How an entry is posed" means
+its Formulation: if the Formulation derives the matrix problem from a differential equation, the entry
+is Tier 3, even when the equation's only role is that derivation, as with a steady state (setting a
+time derivative to zero) or separation of variables. Reading such an entry still requires understanding
+the equation and what its solutions are. Each entry's `underlying_equations` field says which equation
+is involved, or states that there is none.
+
+The test is whether the entry *uses* the equation, not whether some equation *exists*. Many static
+models are special cases of a dynamic one. The static Leontief model, for instance, is the steady state
+of the dynamic Leontief ODE. When an entry derives its matrix problem without the differential equation
+and mentions the dynamic model only in Extensions, the equation is not part of how the entry is posed.
+In that case it raises the entry's ceiling, as described in the next section.
+
 ### Boundary conventions
 
 - An entry is tiered by **how it is posed in this collection**, not by the deepest treatment that
@@ -152,12 +167,23 @@ index records the specific prerequisite per entry in `prereq_beyond_la`.
 - Where a Tier 2 or Tier 3 entry has a genuine Tier 1 entry point — static GNSS trilateration under
   Kalman filtering, chemical-equation balancing under stoichiometric matrices, the 2D homography under
   multiple-view geometry — that on-ramp is named in the entry rather than split into a separate row.
-- Calculus is assumed throughout and does not by itself raise an entry to Tier 3; the Fourier-series
-  projection entry needs integration but stays at Tier 1.
+- A differential equation that appears only in an entry's **Extensions**, and that the Formulation
+  does not use, raises the entry's `tier_ceiling` but not its tier. The Leontief entry is the example.
+  Its Formulation derives (I − A) x = d from an accounting identity and a fixed-proportions assumption,
+  with no time derivative anywhere, so it is Tier 1. The dynamic model, whose steady state gives the same
+  equation, is an ODE noted under Extensions, so its ceiling is 3. The EOF entry is treated the same way.
+  If an entry's Formulation instead reached its matrix problem by setting the ODE's time derivative to
+  zero, the entry would be Tier 3.
+- Calculus is assumed throughout and does not by itself raise an entry to Tier 3. Derivatives and
+  integrals are not differential equations: the Fourier-series projection needs integration, and the
+  finite-difference stencil entry approximates derivatives, but neither poses an equation whose unknown
+  is a function, and both stay at Tier 1.
+- Difference equations are not differential equations. PageRank's random-surfer recurrence,
+  π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 10 seed entries, 4 are Tier 1 (structural statics, stoichiometric
-matrices, Leontief, error-correcting codes) and 6 are Tier 2; none is Tier 3 as posed, though 5 have a
-Tier 3 ceiling. Across all 52 catalogued problems the split is 26 / 21 / 5.
+**Current distribution.** Of the 10 seed entries, 2 are Tier 1
+(Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
+52 catalogued problems the split is 23 / 14 / 15.
 
 ---
 
@@ -185,7 +211,7 @@ marching feet and wind.
 
 **Field:** Civil and mechanical engineering (finite element analysis)
 
-**Tier:** 1 — equilibrium is a plain `Ax = b` solve; rank and conditioning carry the insight. Modal analysis (Tier 2) is an extension.
+**Tier:** 3 — the matrix problem comes from the ODE system M ü + K u = f: statics sets ü = 0, vibration assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and forces live in the same space.
 
@@ -290,7 +316,7 @@ uncertainties interact.
 
 **Field:** Aerospace, robotics, control engineering
 
-**Tier:** 2 — the covariance recursion needs positive definiteness and observability rank; the static GNSS special case is a Tier 1 on-ramp. Full stochastic treatment is Tier 3.
+**Tier:** 3 — the model is a stochastic ODE discretized in time, and the filter propagates a probability distribution. On-ramp: static GNSS trilateration, a plain least-squares problem.
 
 **Scalars and vectors.** Scalar field: R. Vectors: state in R^n (n = 6-50); measurements in R^m; covariances live in Sym_n, the real vector space of symmetric n x n matrices, dimension n(n+1)/2.
 
@@ -400,7 +426,7 @@ one point to the next, and that assumption is doing real work in the picture a r
 
 **Field:** Medical imaging (and, with different physics, seismic tomography and electron microscopy)
 
-**Tier:** 2 — ill-posedness is explained through the singular-value spectrum. A small noisy system solved two ways (naive vs regularized) works at Tier 1; the Radon-transform theory is Tier 3.
+**Tier:** 3 — the linearity comes from solving the Beer–Lambert ODE along each ray and taking a logarithm; ill-posedness is read from the singular-value spectrum. On-ramp: a small noisy A x = b solved naively and with regularization.
 
 **Scalars and vectors.** Scalar field: R (nonnegative in practice). Vectors: image in R^N (N voxels); measurements in R^M (M rays); A maps R^N to R^M with M != N.
 
@@ -505,7 +531,7 @@ You get real conclusions from the cheap information.
 
 **Field:** Chemistry, chemical engineering, systems biology
 
-**Tier:** 1 — null spaces and rank, nothing more. Chemical-equation balancing is the Tier 1 entry point; flux balance analysis is Tier 2.
+**Tier:** 3 — the matrix S is read out of the ODE dc/dt = S v(c), and conservation laws are statements about that ODE's solutions. On-ramp: chemical-equation balancing, a null-space problem with no ODE.
 
 **Scalars and vectors.** Scalar field: Q or R (S itself has integer entries). Vectors: fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate.
 
@@ -604,7 +630,7 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Field:** Economics (and, in its modern form, environmental footprint accounting)
 
-**Tier:** 1 — posing and solving `(I − A)x = d` needs only a linear solve. The Perron–Frobenius convergence condition lifts it to Tier 2.
+**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The Perron–Frobenius convergence condition is Tier 2; the dynamic Leontief model, an ODE, is Tier 3.
 
 **Scalars and vectors.** Scalar field: R (nonnegative). Vectors: outputs and demands in R^n, n = number of sectors.
 
@@ -642,8 +668,6 @@ This models, for any given final demand, the gross output each industry must pro
 
 **Footprints.** Multiplying by emission intensities gives total emissions, e L d, in kg CO₂e per year. The row vector e L gives emissions per dollar of final demand for each product, including every upstream supplier.
 
-**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
-
 **Matrix structure.** Square, entrywise nonnegative, dense-ish, with column sums below 1 for a productive economy. National tables run 400–500 sectors; the global multi-region tables (EXIOBASE, WIOD) reach tens of thousands.
 
 **What is computed.** `(I − A)⁻¹`, the Leontief inverse, is the object of interest itself — entry `(i,j)` is the total output of `i` required per unit of final demand for `j`, summed over all supply-chain depths. The Neumann series
@@ -672,6 +696,8 @@ has a direct reading: direct requirements, then requirements of requirements, an
 | embodied / Scope 3 emissions | an appended satellite row multiplied through the same inverse |
 
 **Extensions.** Environmentally-extended I/O appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate Scope 3 emissions are estimated. Same mathematics: Markov chain fundamental matrices, and structural path analysis.
+
+**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 
 ---
 
@@ -999,7 +1025,7 @@ of two unrelated physical processes.
 
 **Field:** Atmospheric and ocean science, climatology
 
-**Tier:** 2 — truncated SVD and the Eckart–Young optimality statement.
+**Tier:** 2 — truncated SVD and the Eckart–Young optimality statement; no differential equation is used. Relating EOFs to the dynamics through a stochastic ODE is a Tier 3 extension.
 
 **Scalars and vectors.** Scalar field: R. Vectors: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps).
 
@@ -1037,8 +1063,6 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 
 **Area weighting.** On a latitude–longitude grid, cells shrink toward the poles. The SVD is therefore applied to W X, and the resulting patterns are divided by the weights before they are plotted.
 
-**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
-
 **Matrix structure.** Tall or wide but dense; the effective rank is low — typically 5–10 modes capture most of the variance, which is why the technique works at all.
 
 **What is computed.** Truncated SVD (randomized SVD or Lanczos bidiagonalization for large grids). The Eckart–Young theorem guarantees that the rank-k truncation is the best possible rank-k approximation in both the Frobenius and spectral norms — an optimality statement, not a heuristic.
@@ -1060,6 +1084,8 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 | North's rule of thumb | a test for whether two singular values are too close to separate the modes |
 
 **Extensions.** Proper orthogonal decomposition and reduced-order models in fluid dynamics; dynamic mode decomposition, which extracts an approximate linear operator (Koopman) rather than just a basis; the same SVD machinery in latent semantic analysis, recommender systems, and matrix completion.
+
+**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
 ---
 
@@ -1088,7 +1114,7 @@ that actually occur in nature occupy a very thin slice of that enormous space.
 
 **Field:** Physics, quantum chemistry, quantum information
 
-**Tier:** 2 — as posed (benzene's 6×6 Hückel eigenproblem). The full quantum formalism is Tier 3.
+**Tier:** 3 — the eigenproblem comes from separating variables in the Schrödinger equation, and its meaning is a statement about that ODE's solutions. On-ramp: benzene's 6×6 Hückel matrix can be diagonalized with no quantum background at all.
 
 **Scalars and vectors.** Scalar field: C (real symmetric in the Huckel special case). Vectors: unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n. Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices, which form a REAL vector space of dimension d^2.
 
@@ -1199,7 +1225,8 @@ Grouped by what they would add that the seed set does not have.
 ### Would add: Tier 1 coverage — 2D/3D graphics and scalars beyond the reals
 
 This group exists because the seed set is thin at Tier 1 and silent on vector spaces whose scalars are
-not real numbers. Every entry here is small-dimension and needs nothing past a first course.
+not real numbers. Every entry here is small-dimension and needs nothing past a first course, with
+the one exception marked below.
 
 *Graphics and small-dimension geometry (index 36–40)*
 - **2D affine transforms in vector graphics** — the SVG/CSS/Canvas transform stack; composition order as a
@@ -1222,7 +1249,10 @@ not real numbers. Every entry here is small-dimension and needs nothing past a f
 
 *Complex scalars (index 46–47)*
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
-  equation into an algebraic one
+  equation into an algebraic one. *Tier 3, not Tier 1:* the phasor method is a technique for solving
+  linear ODEs with sinusoidal forcing, so reading the entry requires the ODE. It stays in this group
+  because it is the clearest example of complex scalars doing real work; the small DFT below is the
+  Tier 1 complex-scalar entry.
 - **The small DFT as a complex unitary matrix** — the 8-point transform written out; complex inner products
 
 *Finite fields (index 48–50)*
@@ -1241,6 +1271,8 @@ not real numbers. Every entry here is small-dimension and needs nothing past a f
 - **Resistor networks and Kirchhoff's laws** — the Laplacian as a physical object; effective resistance and commute times
 - **Laplacian eigenmaps and diffusion maps** — nonlinear dimensionality reduction with a linear core
 - **Consensus and opinion dynamics (DeGroot models)** — convergence rate set by the algebraic connectivity
+  (Tier 2 in its discrete-time DeGroot form, a difference equation; the continuous-time version,
+  dx/dt = −L x, is an ODE and would be Tier 3)
 
 ### Would add: large-scale iterative methods as the subject
 - **Poisson/Navier–Stokes discretization** — finite differences or finite volumes, conjugate gradient, multigrid, preconditioner design
@@ -1288,8 +1320,9 @@ not real numbers. Every entry here is small-dimension and needs nothing past a f
 1. **Add a runnable notebook per entry.** Each of these can be posed at a size that runs in seconds and still shows the real phenomenon — a 12-bar truss, a 32×32 tomographic phantom, a 10-sector I/O table, a Hamming(7,4) code. The pedagogical payload is usually in the failure mode (ill-conditioning, rank deficiency, slow convergence), which small examples show faithfully.
 2. ~~Standardize a difficulty tier per entry.~~ **Decided:** the three-tier scheme above, recorded per
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Remaining work is to
-   promote a Tier 1 entry into the seed set — the seed set currently reads as a Tier 2 collection with
-   four Tier 1 entries, which is the wrong first impression for a general audience.
+   promote Tier 1 entries into the seed set. Under the rule that any differential equation means Tier 3,
+   only 2 of the 10 seed entries are Tier 1, which is the wrong first impression for a
+   general audience. The Tier 1 backlog group above is the natural source.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map beyond the ten seed entries — it

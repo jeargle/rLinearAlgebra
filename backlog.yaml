@@ -60,9 +60,9 @@ backlog:
   nav_field: Electrical Engineering
   field: Engineering
   subfield: Electrical power systems
-  tier: 2
+  tier: 3
   tier_ceiling: 3
-  prereq_beyond_la: nonlinear systems; Newton methods
+  prereq_beyond_la: differential equations (AC phasors); nonlinear systems; Newton methods
   scalar_field: R (complex phasors underneath)
   vector_space: 'R^2n: voltage magnitudes and angles'
   core_la_object: Sparse Newton Jacobian
@@ -258,9 +258,9 @@ backlog:
   nav_field: Earth & Climate Science
   field: Earth Science
   subfield: Geophysics
-  tier: 2
+  tier: 3
   tier_ceiling: 3
-  prereq_beyond_la: wave physics; inverse-problem theory
+  prereq_beyond_la: partial differential equations (wave equation, ray theory); inverse-problem theory
   scalar_field: R
   vector_space: R^N over model cells
   core_la_object: Ill-posed sparse inverse problem
@@ -366,7 +366,7 @@ backlog:
   nav_field: Life Sciences
   field: Biology
   subfield: Biophysics
-  tier: 2
+  tier: 3
   tier_ceiling: 3
   prereq_beyond_la: ordinary differential equations; statistical mechanics
   scalar_field: R
@@ -384,9 +384,10 @@ backlog:
   nav_field: Life Sciences
   field: Biology
   subfield: Systems biology
-  tier: 2
+  tier: 3
   tier_ceiling: 3
-  prereq_beyond_la: linear programming duality
+  prereq_beyond_la: ordinary differential equations (steady state of dc/dt = S v); linear programming
+    duality
   scalar_field: R
   vector_space: R^r flux space
   core_la_object: Linear program over a null space
@@ -440,7 +441,8 @@ backlog:
   subfield: Network dynamics
   tier: 2
   tier_ceiling: 3
-  prereq_beyond_la: ordinary differential equations
+  prereq_beyond_la: none for the discrete-time DeGroot model; continuous-time consensus, dx/dt = −L x,
+    is an ODE (Tier 3)
   scalar_field: R
   vector_space: R^n over agents
   core_la_object: Averaging with a stochastic matrix
@@ -637,9 +639,10 @@ backlog:
   nav_field: Electrical Engineering
   field: Engineering
   subfield: Electrical engineering
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: complex exponentials
+  tier: 3
+  tier_ceiling: 3
+  prereq_beyond_la: ordinary differential equations (phasors solve linear ODEs with sinusoidal forcing);
+    complex exponentials
   scalar_field: C
   vector_space: C^m mesh currents
   core_la_object: Complex-valued linear system

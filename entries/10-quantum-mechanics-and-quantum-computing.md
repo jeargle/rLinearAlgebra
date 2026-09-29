@@ -5,13 +5,15 @@ status: seed
 title: 'Quantum mechanics and quantum computing: when the vector space *is* the physics'
 short_title: Quantum mechanics and quantum computing
 field_label: Physics, quantum chemistry, quantum information
-tier_note: as posed (benzene's 6×6 Hückel eigenproblem). The full quantum formalism is Tier 3.
+tier_note: 'the eigenproblem comes from separating variables in the Schrödinger equation, and its meaning
+  is a statement about that ODE''s solutions. On-ramp: benzene''s 6×6 Hückel matrix can be diagonalized
+  with no quantum background at all.'
 nav_field: Physics & Quantum Chemistry
 field: Physics
 subfield: Quantum chemistry/quantum information
-tier: 2
+tier: 3
 tier_ceiling: 3
-prereq_beyond_la: differential equations; quantum formalism
+prereq_beyond_la: differential equations (Schrödinger); quantum formalism
 scalar_field: C (real symmetric in the Huckel special case)
 vector_space: unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n.
   Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices,

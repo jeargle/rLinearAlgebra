@@ -17,7 +17,7 @@ The same computation, with pollution added as an extra row, is how the carbon fo
 usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Field:** Economics (and, in its modern form, environmental footprint accounting)  
-**Tier:** 1 — posing and solving `(I − A)x = d` needs only a linear solve. The Perron–Frobenius convergence condition lifts it to Tier 2.  
+**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The Perron–Frobenius convergence condition is Tier 2; the dynamic Leontief model, an ODE, is Tier 3.  
 **Scalar field:** R (nonnegative)  
 **Vectors:** outputs and demands in R^n, n = number of sectors  
 **Underlying equations:** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE)
@@ -59,8 +59,6 @@ This models, for any given final demand, the gross output each industry must pro
 
 **Footprints.** Multiplying by emission intensities gives total emissions, e L d, in kg CO₂e per year. The row vector e L gives emissions per dollar of final demand for each product, including every upstream supplier.
 
-**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
-
 ### Matrix structure
 
 Square, entrywise nonnegative, dense-ish, with column sums below 1 for a productive economy. National tables run 400–500 sectors; the global multi-region tables (EXIOBASE, WIOD) reach tens of thousands.
@@ -86,6 +84,8 @@ By Perron–Frobenius, the series converges exactly when the spectral radius of 
 ### Extensions
 
 Environmentally-extended I/O appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate Scope 3 emissions are estimated. Same mathematics: Markov chain fundamental matrices, and structural path analysis.
+
+**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 
 ### Terminology
 

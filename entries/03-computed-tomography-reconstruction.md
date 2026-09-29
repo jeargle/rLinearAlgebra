@@ -5,14 +5,15 @@ status: seed
 title: 'Computed tomography: reconstructing an interior from its shadows'
 short_title: Computed tomography reconstruction
 field_label: Medical imaging (and, with different physics, seismic tomography and electron microscopy)
-tier_note: ill-posedness is explained through the singular-value spectrum. A small noisy system solved
-  two ways (naive vs regularized) works at Tier 1; the Radon-transform theory is Tier 3.
+tier_note: 'the linearity comes from solving the Beer–Lambert ODE along each ray and taking a logarithm;
+  ill-posedness is read from the singular-value spectrum. On-ramp: a small noisy A x = b solved naively
+  and with regularization.'
 nav_field: Medicine & Imaging
 field: Medicine
 subfield: Medical imaging
-tier: 2
+tier: 3
 tier_ceiling: 3
-prereq_beyond_la: integral transforms; inverse-problem theory
+prereq_beyond_la: ordinary differential equations (Beer–Lambert); inverse-problem theory
 scalar_field: R (nonnegative in practice)
 vector_space: image in R^N (N voxels); measurements in R^M (M rays); A maps R^N to R^M with M != N
 underlying_equations: First-order linear ODE along each ray (Beer–Lambert law), dI/ds = −μ I; the logarithm

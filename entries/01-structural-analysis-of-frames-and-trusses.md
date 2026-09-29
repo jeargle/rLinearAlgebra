@@ -5,14 +5,14 @@ status: seed
 title: 'Structural analysis: will the bridge hold, and at what frequency does it ring?'
 short_title: Structural analysis of frames and trusses
 field_label: Civil and mechanical engineering (finite element analysis)
-tier_note: equilibrium is a plain `Ax = b` solve; rank and conditioning carry the insight. Modal analysis
-  (Tier 2) is an extension.
+tier_note: 'the matrix problem comes from the ODE system M ü + K u = f: statics sets ü = 0, vibration
+  assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.'
 nav_field: Civil & Mechanical Engineering
 field: Engineering
 subfield: Civil/mechanical FEA
-tier: 1
-tier_ceiling: 2
-prereq_beyond_la: ''
+tier: 3
+tier_ceiling: 3
+prereq_beyond_la: ordinary differential equations (second order, from the PDE of linear elasticity)
 scalar_field: R
 vector_space: R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and
   forces live in the same space

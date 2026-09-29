@@ -5,12 +5,13 @@ status: seed
 title: 'Empirical orthogonal functions: finding the dominant patterns in climate data'
 short_title: Empirical orthogonal functions in climate data
 field_label: Atmospheric and ocean science, climatology
-tier_note: truncated SVD and the Eckart–Young optimality statement.
+tier_note: truncated SVD and the Eckart–Young optimality statement; no differential equation is used.
+  Relating EOFs to the dynamics through a stochastic ODE is a Tier 3 extension.
 nav_field: Earth & Climate Science
 field: Earth Science
 subfield: Climatology/oceanography
 tier: 2
-tier_ceiling: 2
+tier_ceiling: 3
 prereq_beyond_la: ''
 scalar_field: R
 vector_space: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component
@@ -73,7 +74,6 @@ A century of monthly sea-surface temperatures on a global grid is a matrix with 
 | C | spatial covariance | C = X Xᵀ / (t − 1) | s × s | K² |
 
 ## Formulation
-
 **Where the equations come from.** No differential equation is used. The ocean and atmosphere obey partial differential equations of fluid flow and heat transport, but EOF analysis ignores them entirely: it is a statistical decomposition of observed data. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
 
 **The decomposition.**
@@ -87,8 +87,6 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 **Truncation.** Keeping the first q terms gives the best possible rank-q approximation of X, and pattern i accounts for the fraction σ_i² / Σ_j σ_j² of the total variance. Equivalently, the u_i are the eigenvectors of the covariance matrix C, with eigenvalues σ_i² / (t − 1). That is why EOFs are called principal components.
 
 **Area weighting.** On a latitude–longitude grid, cells shrink toward the poles. The SVD is therefore applied to W X, and the resulting patterns are divided by the weights before they are plotted.
-
-**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
 ## Matrix structure
 
@@ -109,3 +107,5 @@ EOFs are constrained to be orthogonal, and physical modes are generally not. A l
 ## Extensions
 
 Proper orthogonal decomposition and reduced-order models in fluid dynamics; dynamic mode decomposition, which extracts an approximate linear operator (Koopman) rather than just a basis; the same SVD machinery in latent semantic analysis, recommender systems, and matrix completion.
+
+**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.

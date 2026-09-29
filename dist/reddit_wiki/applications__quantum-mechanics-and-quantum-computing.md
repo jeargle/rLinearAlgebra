@@ -19,7 +19,7 @@ Much of modern quantum chemistry and quantum computing is about exploiting the f
 that actually occur in nature occupy a very thin slice of that enormous space.
 
 **Field:** Physics, quantum chemistry, quantum information  
-**Tier:** 2 — as posed (benzene's 6×6 Hückel eigenproblem). The full quantum formalism is Tier 3.  
+**Tier:** 3 — the eigenproblem comes from separating variables in the Schrödinger equation, and its meaning is a statement about that ODE's solutions. On-ramp: benzene's 6×6 Hückel matrix can be diagonalized with no quantum background at all.  
 **Scalar field:** C (real symmetric in the Huckel special case)  
 **Vectors:** unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n. Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices, which form a REAL vector space of dimension d^2  
 **Underlying equations:** Linear Schrödinger equation iħ dψ/dt = H ψ; separation of variables gives the eigenproblem H φ = E φ

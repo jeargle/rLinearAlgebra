@@ -4,13 +4,13 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Chemistry & Chemical Engineering
 
-* [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) — Tier 1
+* [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) — Tier 3
 * X-ray crystallography and the phase problem — Tier 3 *(planned)*
 * Mass balance in a chemical process flowsheet — Tier 1 *(planned)*
 
 ## Civil & Mechanical Engineering
 
-* [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) — Tier 1
+* [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) — Tier 3
 * Traffic flow conservation at intersections — Tier 1 *(planned)*
 
 ## Communications & Information Theory
@@ -35,7 +35,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Control & Robotics
 
-* [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) — Tier 2
+* [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) — Tier 3
 * 3D rotations and rigid-body pose — Tier 1 *(planned)*
 
 ## Cryptography & Security
@@ -47,7 +47,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 * [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) — Tier 2
 * Geodetic network adjustment — Tier 1 *(planned)*
-* Seismic tomography — Tier 2 *(planned)*
+* Seismic tomography — Tier 3 *(planned)*
 
 ## Economics, Finance & Operations Research
 
@@ -58,14 +58,14 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Electrical Engineering
 
 * Resistor networks and Kirchhoff's laws — Tier 1 *(planned)*
-* Power-grid load flow and state estimation — Tier 2 *(planned)*
-* AC circuit analysis with complex impedance — Tier 1 *(planned)*
+* Power-grid load flow and state estimation — Tier 3 *(planned)*
+* AC circuit analysis with complex impedance — Tier 3 *(planned)*
 
 ## Life Sciences
 
 * Distance geometry for NMR structures — Tier 2 *(planned)*
-* Normal mode analysis and elastic network models — Tier 2 *(planned)*
-* Flux balance analysis at genome scale — Tier 2 *(planned)*
+* Normal mode analysis and elastic network models — Tier 3 *(planned)*
+* Flux balance analysis at genome scale — Tier 3 *(planned)*
 * Population genetics PCA — Tier 2 *(planned)*
 * Phylogenetic invariants — Tier 3 *(planned)*
 
@@ -86,11 +86,11 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Medicine & Imaging
 
-* [Computed tomography reconstruction](applications/computed-tomography-reconstruction) — Tier 2
+* [Computed tomography reconstruction](applications/computed-tomography-reconstruction) — Tier 3
 
 ## Physics & Quantum Chemistry
 
-* [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) — Tier 2
+* [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) — Tier 3
 
 ## Signal Processing
 

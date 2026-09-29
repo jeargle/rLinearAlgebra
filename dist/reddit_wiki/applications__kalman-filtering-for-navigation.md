@@ -18,7 +18,7 @@ because being unsure about north-south position is different from being unsure a
 uncertainties interact.
 
 **Field:** Aerospace, robotics, control engineering  
-**Tier:** 2 — the covariance recursion needs positive definiteness and observability rank; the static GNSS special case is a Tier 1 on-ramp. Full stochastic treatment is Tier 3.  
+**Tier:** 3 — the model is a stochastic ODE discretized in time, and the filter propagates a probability distribution. On-ramp: static GNSS trilateration, a plain least-squares problem.  
 **Scalar field:** R  
 **Vectors:** state in R^n (n = 6-50); measurements in R^m; covariances live in Sym_n, the real vector space of symmetric n x n matrices, dimension n(n+1)/2  
 **Underlying equations:** Linear ODE driven by random noise (a stochastic differential equation), dx/dt = A x + noise, discretized exactly to x_{k+1} = F x_k + w_k

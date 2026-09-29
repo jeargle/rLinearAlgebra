@@ -126,6 +126,21 @@ finite fields (field extensions, quotient rings, group representations), measure
 or stochastic processes, convex analysis and duality, functional analysis, or algebraic geometry. The
 index records the specific prerequisite per entry in `prereq_beyond_la`.
 
+**Differential equations always mean Tier 3.** If a differential equation appears anywhere in how an
+entry is posed — ordinary or partial, deterministic or stochastic, linear or not — the entry is Tier 3,
+even when the matrix problem it produces is first-course linear algebra. "How an entry is posed" means
+its Formulation: if the Formulation derives the matrix problem from a differential equation, the entry
+is Tier 3, even when the equation's only role is that derivation, as with a steady state (setting a
+time derivative to zero) or separation of variables. Reading such an entry still requires understanding
+the equation and what its solutions are. Each entry's `underlying_equations` field says which equation
+is involved, or states that there is none.
+
+The test is whether the entry *uses* the equation, not whether some equation *exists*. Many static
+models are special cases of a dynamic one. The static Leontief model, for instance, is the steady state
+of the dynamic Leontief ODE. When an entry derives its matrix problem without the differential equation
+and mentions the dynamic model only in Extensions, the equation is not part of how the entry is posed.
+In that case it raises the entry's ceiling, as described in the next section.
+
 ### Boundary conventions
 
 - An entry is tiered by **how it is posed in this collection**, not by the deepest treatment that
@@ -134,11 +149,22 @@ index records the specific prerequisite per entry in `prereq_beyond_la`.
 - Where a Tier 2 or Tier 3 entry has a genuine Tier 1 entry point — static GNSS trilateration under
   Kalman filtering, chemical-equation balancing under stoichiometric matrices, the 2D homography under
   multiple-view geometry — that on-ramp is named in the entry rather than split into a separate row.
-- Calculus is assumed throughout and does not by itself raise an entry to Tier 3; the Fourier-series
-  projection entry needs integration but stays at Tier 1.
+- A differential equation that appears only in an entry's **Extensions**, and that the Formulation
+  does not use, raises the entry's `tier_ceiling` but not its tier. The Leontief entry is the example.
+  Its Formulation derives (I − A) x = d from an accounting identity and a fixed-proportions assumption,
+  with no time derivative anywhere, so it is Tier 1. The dynamic model, whose steady state gives the same
+  equation, is an ODE noted under Extensions, so its ceiling is 3. The EOF entry is treated the same way.
+  If an entry's Formulation instead reached its matrix problem by setting the ODE's time derivative to
+  zero, the entry would be Tier 3.
+- Calculus is assumed throughout and does not by itself raise an entry to Tier 3. Derivatives and
+  integrals are not differential equations: the Fourier-series projection needs integration, and the
+  finite-difference stencil entry approximates derivatives, but neither poses an equation whose unknown
+  is a function, and both stay at Tier 1.
+- Difference equations are not differential equations. PageRank's random-surfer recurrence,
+  π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the {{N_SEED}} seed entries, {{N_SEED_TIER1}} are Tier 1 (structural statics, stoichiometric
-matrices, Leontief, error-correcting codes) and {{N_SEED_TIER2}} are Tier 2; none is Tier 3 as posed, though {{N_SEED_CEIL3}} have a
-Tier 3 ceiling. Across all {{N_TOTAL}} catalogued problems the split is {{TIER_SPLIT}}.
+**Current distribution.** Of the {{N_SEED}} seed entries, {{N_SEED_TIER1}} are Tier 1
+({{SEED_TIER1_TITLES}}), {{N_SEED_TIER2}} are Tier 2, and {{N_SEED_TIER3}} are Tier 3. Across all
+{{N_TOTAL}} catalogued problems the split is {{TIER_SPLIT}}.
 
 ---

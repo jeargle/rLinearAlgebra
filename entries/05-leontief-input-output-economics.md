@@ -5,13 +5,13 @@ status: seed
 title: 'Leontief input–output: how much steel does a car actually take?'
 short_title: Leontief input-output economics
 field_label: Economics (and, in its modern form, environmental footprint accounting)
-tier_note: posing and solving `(I − A)x = d` needs only a linear solve. The Perron–Frobenius convergence
-  condition lifts it to Tier 2.
+tier_note: posing and solving (I − A) x = d needs only a linear solve, with no differential equation.
+  The Perron–Frobenius convergence condition is Tier 2; the dynamic Leontief model, an ODE, is Tier 3.
 nav_field: Economics, Finance & Operations Research
 field: Economics
 subfield: Macroeconomics/EEIO
 tier: 1
-tier_ceiling: 2
+tier_ceiling: 3
 prereq_beyond_la: ''
 scalar_field: R (nonnegative)
 vector_space: outputs and demands in R^n, n = number of sectors
@@ -70,7 +70,6 @@ Industries consume each other's output. Making a car needs steel; making steel n
 Everything is measured in money at base-year prices, which is why a_ij is dimensionless. Physical tables in tonnes or joules exist, but then A carries mixed units and the coefficients are no longer comparable across rows.
 
 ## Formulation
-
 **Where the equations come from.** There is no differential equation here. The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
 
 ```
@@ -86,8 +85,6 @@ x = A x + d      ⟹      (I − A) x = d      ⟹      x = L d
 This models, for any given final demand, the gross output each industry must produce. The solution x is the level of production that exactly meets final demand plus all of the intermediate demand that meeting it induces.
 
 **Footprints.** Multiplying by emission intensities gives total emissions, e L d, in kg CO₂e per year. The row vector e L gives emissions per dollar of final demand for each product, including every upstream supplier.
-
-**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 
 ## Matrix structure
 
@@ -114,3 +111,5 @@ By Perron–Frobenius, the series converges exactly when the spectral radius of 
 ## Extensions
 
 Environmentally-extended I/O appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate Scope 3 emissions are estimated. Same mathematics: Markov chain fundamental matrices, and structural path analysis.
+
+**The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.

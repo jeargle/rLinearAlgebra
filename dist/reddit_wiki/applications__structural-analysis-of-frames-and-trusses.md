@@ -18,7 +18,7 @@ shapes is what eigenvalues are for, and it is why bridges are checked against th
 marching feet and wind.
 
 **Field:** Civil and mechanical engineering (finite element analysis)  
-**Tier:** 1 — equilibrium is a plain `Ax = b` solve; rank and conditioning carry the insight. Modal analysis (Tier 2) is an extension.  
+**Tier:** 3 — the matrix problem comes from the ODE system M ü + K u = f: statics sets ü = 0, vibration assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.  
 **Scalar field:** R  
 **Vectors:** R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and forces live in the same space  
 **Underlying equations:** Linear second-order ODE system M ü + K u = f, from the PDE of linear elasticity; statics sets ü = 0

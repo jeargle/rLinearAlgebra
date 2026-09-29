@@ -76,7 +76,8 @@ Opening the files directly from disk is not equivalent — serve over HTTP.
 **One-time setup:** Settings → Pages → Build and deployment → Source → **GitHub Actions**. Without
 this the deploy step fails.
 
-`.github/workflows/publish-wiki.yml` is manual (`workflow_dispatch`) and defaults to a dry run that
+`.github/workflows/wiki.yml` (shown as *publish-wiki* in the Actions tab) is manual
+(`workflow_dispatch`) and defaults to a dry run that
 renders the pages and lists them in the job summary. A live push requires unchecking *dry run* and
 typing `publish` in the confirmation field, and reads these repository secrets: `REDDIT_CLIENT_ID`,
 `REDDIT_CLIENT_SECRET`, `REDDIT_USERNAME`, `REDDIT_PASSWORD`, plus an optional `REDDIT_SUBREDDIT`

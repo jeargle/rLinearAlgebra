@@ -90,6 +90,9 @@ def main():
         "N_SEED": str(len(entries)),
         "N_SEED_TIER1": str(seed_tiers[1]),
         "N_SEED_TIER2": str(seed_tiers[2]),
+        "N_SEED_TIER3": str(seed_tiers[3]),
+        "SEED_TIER1_TITLES": "; ".join(
+            m["short_title"] for m in entries if m["tier"] == 1) or "none",
         "N_SEED_CEIL3": str(ceiling3),
         "TIER_SPLIT": f"{tiers[1]} / {tiers[2]} / {tiers[3]}",
         "N_TERMS": str(sum(len(m.get("terminology") or {}) for m in entries)),

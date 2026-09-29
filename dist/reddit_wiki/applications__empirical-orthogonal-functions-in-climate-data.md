@@ -19,7 +19,7 @@ nature is under no obligation to comply. A pattern that is optimal mathematicall
 of two unrelated physical processes.
 
 **Field:** Atmospheric and ocean science, climatology  
-**Tier:** 2 — truncated SVD and the Eckart–Young optimality statement.  
+**Tier:** 2 — truncated SVD and the Eckart–Young optimality statement; no differential equation is used. Relating EOFs to the dynamics through a stochastic ODE is a Tier 3 extension.  
 **Scalar field:** R  
 **Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps)  
 **Underlying equations:** None used: a statistical decomposition of observed data (the ocean itself obeys PDEs that the method ignores)
@@ -61,8 +61,6 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 
 **Area weighting.** On a latitude–longitude grid, cells shrink toward the poles. The SVD is therefore applied to W X, and the resulting patterns are divided by the weights before they are plotted.
 
-**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
-
 ### Matrix structure
 
 Tall or wide but dense; the effective rank is low — typically 5–10 modes capture most of the variance, which is why the technique works at all.
@@ -82,6 +80,8 @@ EOFs are constrained to be orthogonal, and physical modes are generally not. A l
 ### Extensions
 
 Proper orthogonal decomposition and reduced-order models in fluid dynamics; dynamic mode decomposition, which extracts an approximate linear operator (Koopman) rather than just a basis; the same SVD machinery in latent semantic analysis, recommender systems, and matrix completion.
+
+**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
 ### Terminology
 

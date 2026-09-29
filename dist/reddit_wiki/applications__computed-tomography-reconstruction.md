@@ -17,7 +17,7 @@ sensitive to noise. The fix is to add an assumption, usually that real tissue do
 one point to the next, and that assumption is doing real work in the picture a radiologist reads.
 
 **Field:** Medical imaging (and, with different physics, seismic tomography and electron microscopy)  
-**Tier:** 2 — ill-posedness is explained through the singular-value spectrum. A small noisy system solved two ways (naive vs regularized) works at Tier 1; the Radon-transform theory is Tier 3.  
+**Tier:** 3 — the linearity comes from solving the Beer–Lambert ODE along each ray and taking a logarithm; ill-posedness is read from the singular-value spectrum. On-ramp: a small noisy A x = b solved naively and with regularization.  
 **Scalar field:** R (nonnegative in practice)  
 **Vectors:** image in R^N (N voxels); measurements in R^M (M rays); A maps R^N to R^M with M != N  
 **Underlying equations:** First-order linear ODE along each ray (Beer–Lambert law), dI/ds = −μ I; the logarithm of its solution is linear in μ

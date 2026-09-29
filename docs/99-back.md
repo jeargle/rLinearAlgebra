@@ -16,7 +16,8 @@ Grouped by what they would add that the seed set does not have.
 ### Would add: Tier 1 coverage — 2D/3D graphics and scalars beyond the reals
 
 This group exists because the seed set is thin at Tier 1 and silent on vector spaces whose scalars are
-not real numbers. Every entry here is small-dimension and needs nothing past a first course.
+not real numbers. Every entry here is small-dimension and needs nothing past a first course, with
+the one exception marked below.
 
 *Graphics and small-dimension geometry (index 36–40)*
 - **2D affine transforms in vector graphics** — the SVG/CSS/Canvas transform stack; composition order as a
@@ -39,7 +40,10 @@ not real numbers. Every entry here is small-dimension and needs nothing past a f
 
 *Complex scalars (index 46–47)*
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
-  equation into an algebraic one
+  equation into an algebraic one. *Tier 3, not Tier 1:* the phasor method is a technique for solving
+  linear ODEs with sinusoidal forcing, so reading the entry requires the ODE. It stays in this group
+  because it is the clearest example of complex scalars doing real work; the small DFT below is the
+  Tier 1 complex-scalar entry.
 - **The small DFT as a complex unitary matrix** — the 8-point transform written out; complex inner products
 
 *Finite fields (index 48–50)*
@@ -58,6 +62,8 @@ not real numbers. Every entry here is small-dimension and needs nothing past a f
 - **Resistor networks and Kirchhoff's laws** — the Laplacian as a physical object; effective resistance and commute times
 - **Laplacian eigenmaps and diffusion maps** — nonlinear dimensionality reduction with a linear core
 - **Consensus and opinion dynamics (DeGroot models)** — convergence rate set by the algebraic connectivity
+  (Tier 2 in its discrete-time DeGroot form, a difference equation; the continuous-time version,
+  dx/dt = −L x, is an ODE and would be Tier 3)
 
 ### Would add: large-scale iterative methods as the subject
 - **Poisson/Navier–Stokes discretization** — finite differences or finite volumes, conjugate gradient, multigrid, preconditioner design
@@ -105,8 +111,9 @@ not real numbers. Every entry here is small-dimension and needs nothing past a f
 1. **Add a runnable notebook per entry.** Each of these can be posed at a size that runs in seconds and still shows the real phenomenon — a 12-bar truss, a 32×32 tomographic phantom, a 10-sector I/O table, a Hamming(7,4) code. The pedagogical payload is usually in the failure mode (ill-conditioning, rank deficiency, slow convergence), which small examples show faithfully.
 2. ~~Standardize a difficulty tier per entry.~~ **Decided:** the three-tier scheme above, recorded per
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Remaining work is to
-   promote a Tier 1 entry into the seed set — the seed set currently reads as a Tier 2 collection with
-   four Tier 1 entries, which is the wrong first impression for a general audience.
+   promote Tier 1 entries into the seed set. Under the rule that any differential equation means Tier 3,
+   only {{N_SEED_TIER1}} of the {{N_SEED}} seed entries are Tier 1, which is the wrong first impression for a
+   general audience. The Tier 1 backlog group above is the natural source.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map beyond the ten seed entries — it

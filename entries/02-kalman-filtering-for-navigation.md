@@ -5,14 +5,14 @@ status: seed
 title: 'Kalman filtering: where is the vehicle, given noisy and incomplete measurements?'
 short_title: Kalman filtering for navigation
 field_label: Aerospace, robotics, control engineering
-tier_note: the covariance recursion needs positive definiteness and observability rank; the static GNSS
-  special case is a Tier 1 on-ramp. Full stochastic treatment is Tier 3.
+tier_note: 'the model is a stochastic ODE discretized in time, and the filter propagates a probability
+  distribution. On-ramp: static GNSS trilateration, a plain least-squares problem.'
 nav_field: Control & Robotics
 field: Engineering
 subfield: Aerospace/control
-tier: 2
+tier: 3
 tier_ceiling: 3
-prereq_beyond_la: probability; stochastic processes
+prereq_beyond_la: stochastic differential equations; probability
 scalar_field: R
 vector_space: state in R^n (n = 6-50); measurements in R^m; covariances live in Sym_n, the real vector
   space of symmetric n x n matrices, dimension n(n+1)/2

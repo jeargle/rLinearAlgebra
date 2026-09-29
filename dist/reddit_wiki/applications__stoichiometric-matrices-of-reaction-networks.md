@@ -17,7 +17,7 @@ This matters because reaction rates are extremely hard to measure and the table 
 You get real conclusions from the cheap information.
 
 **Field:** Chemistry, chemical engineering, systems biology  
-**Tier:** 1 — null spaces and rank, nothing more. Chemical-equation balancing is the Tier 1 entry point; flux balance analysis is Tier 2.  
+**Tier:** 3 — the matrix S is read out of the ODE dc/dt = S v(c), and conservation laws are statements about that ODE's solutions. On-ramp: chemical-equation balancing, a null-space problem with no ODE.  
 **Scalar field:** Q or R (S itself has integer entries)  
 **Vectors:** fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate  
 **Underlying equations:** Nonlinear ODE system dc/dt = S v(c); every linear-algebra conclusion uses only the constant matrix S

@@ -5,14 +5,14 @@ status: seed
 title: 'Stoichiometric matrices: what a reaction network can and cannot do at steady state'
 short_title: Stoichiometric matrices of reaction networks
 field_label: Chemistry, chemical engineering, systems biology
-tier_note: null spaces and rank, nothing more. Chemical-equation balancing is the Tier 1 entry point;
-  flux balance analysis is Tier 2.
+tier_note: 'the matrix S is read out of the ODE dc/dt = S v(c), and conservation laws are statements about
+  that ODE''s solutions. On-ramp: chemical-equation balancing, a null-space problem with no ODE.'
 nav_field: Chemistry & Chemical Engineering
 field: Chemistry
 subfield: Chem-eng/systems biology
-tier: 1
-tier_ceiling: 2
-prereq_beyond_la: ''
+tier: 3
+tier_ceiling: 3
+prereq_beyond_la: ordinary differential equations (nonlinear kinetics)
 scalar_field: Q or R (S itself has integer entries)
 vector_space: fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species
   space - two different spaces that are easy to conflate
