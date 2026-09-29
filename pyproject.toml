@@ -1,0 +1,23 @@
+[project]
+name = "rlinearalgebra"
+version = "0.1.0"
+description = "Applied linear algebra: real problems by field, with each domain's vocabulary translated into linear algebra."
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "pyyaml>=6.0",   # entry frontmatter and backlog.yaml
+    "markdown>=3.5", # build_site.py: markdown -> HTML
+]
+
+[dependency-groups]
+# Needed only by `build_wiki.py --push`, so an ordinary build never installs it.
+#   uv sync --group publish
+publish = [
+    "praw>=7.7",     # subreddit wiki sync
+]
+
+[tool.uv]
+# The build/ scripts are run directly, not imported as an installed package,
+# so there is nothing to build or install for this project itself.
+package = false
