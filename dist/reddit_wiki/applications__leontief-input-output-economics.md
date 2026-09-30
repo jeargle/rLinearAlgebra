@@ -17,7 +17,7 @@ The same computation, with pollution added as an extra row, is how the carbon fo
 usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Field:** Economics (and, in its modern form, environmental footprint accounting)  
-**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The Perron–Frobenius convergence condition is Tier 2; the dynamic Leontief model, an ODE, is Tier 3.  
+**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The [Perron–Frobenius](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) convergence condition is Tier 2; the dynamic [Leontief](https://en.wikipedia.org/wiki/Input%E2%80%93output_model) model, an [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation), is Tier 3.  
 **Scalar field:** R (nonnegative)  
 **Vectors:** outputs and demands in R^n, n = number of sectors  
 **Underlying equations:** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE)
@@ -65,7 +65,7 @@ Square, entrywise nonnegative, dense-ish, with column sums below 1 for a product
 
 ### What is computed
 
-`(I − A)⁻¹`, the Leontief inverse, is the object of interest itself — entry `(i,j)` is the total output of `i` required per unit of final demand for `j`, summed over all supply-chain depths. The Neumann series
+`(I − A)⁻¹`, the Leontief inverse, is the object of interest itself — entry `(i,j)` is the total output of `i` required per unit of final demand for `j`, summed over all supply-chain depths. The [Neumann series](https://en.wikipedia.org/wiki/Neumann_series)
 
 ```
 (I − A)⁻¹ = I + A + A² + A³ + …
@@ -79,11 +79,11 @@ The circularity that makes the accounting hard by hand — steel needs electrici
 
 ### Pitfall worth teaching
 
-By Perron–Frobenius, the series converges exactly when the spectral radius of `A` is below 1. That is not a technical condition: it is the statement that the economy produces more than it consumes in production. A nonnegative matrix's dominant eigenvalue carries economic meaning.
+By Perron–Frobenius, the series converges exactly when the [spectral radius](https://en.wikipedia.org/wiki/Spectral_radius) of `A` is below 1. That is not a technical condition: it is the statement that the economy produces more than it consumes in production. A nonnegative matrix's dominant [eigenvalue](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) carries economic meaning.
 
 ### Extensions
 
-Environmentally-extended I/O appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate Scope 3 emissions are estimated. Same mathematics: Markov chain fundamental matrices, and structural path analysis.
+[Environmentally-extended I/O](https://en.wikipedia.org/wiki/Environmentally_extended_input%E2%80%93output_analysis) appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate [Scope 3](https://en.wikipedia.org/wiki/Carbon_accounting) emissions are estimated. Same mathematics: [Markov chain](https://en.wikipedia.org/wiki/Markov_chain) fundamental matrices, and structural path analysis.
 
 **The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 

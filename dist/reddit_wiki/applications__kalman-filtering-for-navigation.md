@@ -4,7 +4,7 @@
 
 You are trying to work out where a moving vehicle is, and you have two unreliable sources. One is dead
 reckoning: start from a known point and add up your measured motion. It is smooth but drifts, because
-small errors accumulate. The other is GPS: it does not drift, but each individual reading is noisy and
+small errors accumulate. The other is [GPS](https://en.wikipedia.org/wiki/Satellite_navigation): it does not drift, but each individual reading is noisy and
 sometimes missing entirely.
 
 Neither is right. The sensible thing is a compromise, weighted by how much you trust each — and the
@@ -12,20 +12,20 @@ trick is that "how much you trust each" is something you can compute rather than
 reckoning has been running unchecked for a while, trust it less. If GPS has just given three consistent
 readings, trust it more.
 
-A Kalman filter does exactly this, once per time step, forever. What makes it more than a rule of thumb
+A [Kalman filter](https://en.wikipedia.org/wiki/Kalman_filter) does exactly this, once per time step, forever. What makes it more than a rule of thumb
 is that it carries an explicit bookkeeping of its own uncertainty — not one number but a whole table,
 because being unsure about north-south position is different from being unsure about speed, and the two
 uncertainties interact.
 
 **Field:** Aerospace, robotics, control engineering  
-**Tier:** 3 — the model is a stochastic ODE discretized in time, and the filter propagates a probability distribution. On-ramp: static GNSS trilateration, a plain least-squares problem.  
+**Tier:** 3 — the model is a stochastic [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) discretized in time, and the filter propagates a probability distribution. On-ramp: static GNSS [trilateration](https://en.wikipedia.org/wiki/True-range_multilateration), a plain [least-squares](https://en.wikipedia.org/wiki/Least_squares) problem.  
 **Scalar field:** R  
-**Vectors:** state in R^n (n = 6-50); measurements in R^m; covariances live in Sym_n, the real vector space of symmetric n x n matrices, dimension n(n+1)/2  
-**Underlying equations:** Linear ODE driven by random noise (a stochastic differential equation), dx/dt = A x + noise, discretized exactly to x_{k+1} = F x_k + w_k
+**Vectors:** state in R^n (n = 6-50); measurements in R^m; [covariances](https://en.wikipedia.org/wiki/Covariance_matrix) live in Sym_n, the real vector space of [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) n x n matrices, dimension n(n+1)/2  
+**Underlying equations:** Linear ODE driven by random noise (a [stochastic differential equation](https://en.wikipedia.org/wiki/Stochastic_differential_equation)), dx/dt = A x + noise, discretized exactly to x_{k+1} = F x_k + w_k
 
 ### The problem
 
-A vehicle carries an inertial measurement unit that drifts, plus a GNSS receiver that is accurate but intermittent and noisy. Produce a continuously updated best estimate of position, velocity, and attitude — with an honest uncertainty attached.
+A vehicle carries an [inertial measurement unit](https://en.wikipedia.org/wiki/Inertial_measurement_unit) that drifts, plus a GNSS receiver that is accurate but intermittent and noisy. Produce a continuously updated best estimate of position, velocity, and attitude — with an honest uncertainty attached.
 
 ### Variables
 
@@ -52,7 +52,7 @@ A vehicle carries an inertial measurement unit that drifts, plus a GNSS receiver
 
 **Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modelled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
 
-Integrating the ODE exactly over one step gives the discrete model. For this A the matrix exponential is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
+Integrating the ODE exactly over one step gives the discrete model. For this A the [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential) is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
 
 **The model.**
 
@@ -61,7 +61,7 @@ x_{k+1} = F x_k + w_k,     w_k ~ N(0, Q)      (dynamics)
 z_k     = H x_k + η_k,     η_k ~ N(0, R)      (measurement)
 ```
 
-The first line models how the true state evolves between measurements; the second models what the sensor reports about it. Both are linear, and both noises are Gaussian.
+The first line models how the true state evolves between measurements; the second models what the sensor reports about it. Both are linear, and both noises are [Gaussian](https://en.wikipedia.org/wiki/Multivariate_normal_distribution).
 
 **The filter.** Each step has two stages. *Predict* pushes the estimate and its uncertainty forward through the dynamics:
 
@@ -85,23 +85,23 @@ H P⁻ Hᵀ + R is the covariance of the innovation: prediction uncertainty seen
 
 ### Matrix structure
 
-Small and dense (state dimension 6–50 for navigation, thousands for SLAM). `P`, `Q`, `R` are symmetric positive semidefinite. The covariance recursion is a discrete Riccati equation.
+Small and dense (state dimension 6–50 for navigation, thousands for [SLAM](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping)). `P`, `Q`, `R` are symmetric [positive semidefinite](https://en.wikipedia.org/wiki/Definite_matrix). The covariance recursion is a [discrete Riccati equation](https://en.wikipedia.org/wiki/Algebraic_Riccati_equation).
 
 ### What is computed
 
-A weighted least-squares update, done recursively so no measurement history is stored. Square-root and UD-factored forms (Potter, Bierman–Thornton) propagate a Cholesky factor of `P` instead of `P` itself to guarantee the covariance stays positive definite in finite precision — this is why Apollo's navigation filter was implemented in square-root form.
+A weighted least-squares update, done recursively so no measurement history is stored. Square-root and UD-factored forms (Potter, Bierman–Thornton) propagate a [Cholesky factor](https://en.wikipedia.org/wiki/Cholesky_decomposition) of `P` instead of `P` itself to guarantee the covariance stays positive definite in finite precision — this is why Apollo's navigation filter was implemented in square-root form.
 
 ### Why linear algebra is the right tool
 
-The Kalman gain is an orthogonal-projection operator in a metric defined by the noise covariances. "Optimal fusion of uncertain information" turns out to be a projection, which is why the formula is a matrix expression and not a heuristic.
+The Kalman gain is an [orthogonal-projection](https://en.wikipedia.org/wiki/Projection_%28linear_algebra%29) operator in a metric defined by the noise covariances. "Optimal fusion of uncertain information" turns out to be a projection, which is why the formula is a matrix expression and not a heuristic.
 
 ### Pitfall worth teaching
 
-Rank of the observability matrix `[H; HF; HF²; …]` tells you which state directions the sensors can ever pin down. An unobservable direction shows up as a covariance that grows without bound — the filter tells you honestly that it does not know.
+[Rank](https://en.wikipedia.org/wiki/Rank_%28linear_algebra%29) of the [observability](https://en.wikipedia.org/wiki/Observability) matrix `[H; HF; HF²; …]` tells you which state directions the sensors can ever pin down. An unobservable direction shows up as a covariance that grows without bound — the filter tells you honestly that it does not know.
 
 ### Extensions
 
-Static GNSS trilateration as the nonrecursive special case (Gauss–Newton on an overdetermined system); extended and unscented filters for nonlinear dynamics; ensemble Kalman filters for weather data assimilation at 10⁸ state dimensions.
+Static GNSS trilateration as the nonrecursive special case ([Gauss–Newton](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm) on an overdetermined system); [extended and unscented](https://en.wikipedia.org/wiki/Extended_Kalman_filter) filters for nonlinear dynamics; [ensemble Kalman](https://en.wikipedia.org/wiki/Ensemble_Kalman_filter) filters for weather [data assimilation](https://en.wikipedia.org/wiki/Data_assimilation) at 10⁸ state dimensions.
 
 ### Terminology
 

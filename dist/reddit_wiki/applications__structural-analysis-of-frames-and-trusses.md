@@ -14,18 +14,18 @@ deforms.
 
 The second question engineers ask is what happens with no load at all: let the structure wobble freely
 and only certain shapes of wobble sustain themselves, each at its own frequency. Finding those special
-shapes is what eigenvalues are for, and it is why bridges are checked against the frequencies of
+shapes is what [eigenvalues](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) are for, and it is why bridges are checked against the frequencies of
 marching feet and wind.
 
-**Field:** Civil and mechanical engineering (finite element analysis)  
-**Tier:** 3 — the matrix problem comes from the ODE system M ü + K u = f: statics sets ü = 0, vibration assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.  
+**Field:** Civil and mechanical engineering ([finite element](https://en.wikipedia.org/wiki/Finite_element_method) analysis)  
+**Tier:** 3 — the matrix problem comes from the [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) system M ü + K u = f: statics sets ü = 0, vibration assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.  
 **Scalar field:** R  
 **Vectors:** R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and forces live in the same space  
-**Underlying equations:** Linear second-order ODE system M ü + K u = f, from the PDE of linear elasticity; statics sets ü = 0
+**Underlying equations:** Linear second-order ODE system M ü + K u = f, from the [PDE](https://en.wikipedia.org/wiki/Partial_differential_equation) of [linear elasticity](https://en.wikipedia.org/wiki/Linear_elasticity); statics sets ü = 0
 
 ### The problem
 
-Given a structure — truss, bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
+Given a structure — [truss](https://en.wikipedia.org/wiki/Truss), bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
 
 ### Variables
 
@@ -75,15 +75,15 @@ A nonzero φ exists only for special values of λ, the eigenvalues. This is what
 u(t) = Σ_i φ_i (a_i cos ω_i t + b_i sin ω_i t)
 ```
 
-with the constants a_i, b_i fixed by the initial displacement and velocity. A load that oscillates near one of the ω_i drives that mode into resonance.
+with the constants a_i, b_i fixed by the initial displacement and velocity. A load that oscillates near one of the ω_i drives that mode into [resonance](https://en.wikipedia.org/wiki/Resonance).
 
 ### Matrix structure
 
-`K` is symmetric positive definite (after boundary conditions are applied), extremely sparse — each node couples only to its mesh neighbors — and often banded or block-structured. Industrial models run 10⁶–10⁸ degrees of freedom.
+`K` is [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) [positive definite](https://en.wikipedia.org/wiki/Definite_matrix) (after boundary conditions are applied), extremely [sparse](https://en.wikipedia.org/wiki/Sparse_matrix) — each node couples only to its mesh neighbors — and often banded or block-structured. Industrial models run 10⁶–10⁸ degrees of freedom.
 
 ### What is computed
 
-Sparse Cholesky with fill-reducing reordering (AMD, nested dissection) for the static solve; Lanczos or shift-and-invert Arnoldi for the lowest few dozen eigenpairs. Nobody forms `K⁻¹`.
+Sparse [Cholesky](https://en.wikipedia.org/wiki/Cholesky_decomposition) with fill-reducing reordering ([AMD](https://en.wikipedia.org/wiki/Minimum_degree_algorithm), [nested dissection](https://en.wikipedia.org/wiki/Nested_dissection)) for the static solve; [Lanczos](https://en.wikipedia.org/wiki/Lanczos_algorithm) or shift-and-invert [Arnoldi](https://en.wikipedia.org/wiki/Arnoldi_iteration) for the lowest few dozen eigenpairs. Nobody forms `K⁻¹`.
 
 ### Why linear algebra is the right tool
 
@@ -91,11 +91,11 @@ The underlying PDE (linear elasticity) is linear in the small-strain regime, so 
 
 ### Pitfall worth teaching
 
-A near-singular `K` is not a numerical accident — it means the structure has a near-mechanism, a direction in which it can deform with almost no restoring force. The condition number is a physical diagnostic, not just a numerical one.
+A near-singular `K` is not a numerical accident — it means the structure has a near-mechanism, a direction in which it can deform with almost no restoring force. The [condition number](https://en.wikipedia.org/wiki/Condition_number) is a physical diagnostic, not just a numerical one.
 
 ### Extensions
 
-Buckling as a different generalized eigenproblem (`K φ = λ K_geometric φ`); substructuring and domain decomposition; the same modal analysis applied to molecules gives normal-mode analysis and elastic network models.
+[Buckling](https://en.wikipedia.org/wiki/Buckling) as a different [generalized eigenproblem](https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix#Generalized_eigenvalue_problem) (`K φ = λ K_geometric φ`); substructuring and domain decomposition; the same [modal analysis](https://en.wikipedia.org/wiki/Normal_mode) applied to molecules gives normal-mode analysis and elastic network models.
 
 ### Terminology
 

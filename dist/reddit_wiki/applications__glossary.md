@@ -6,7 +6,7 @@ One unfamiliar word from a question, and what it means mathematically.
 
 A **field** is a number system in which addition, subtraction, multiplication, and division by any nonzero number all behave the way they do for ordinary numbers. The rational numbers ℚ, the real numbers ℝ, the complex numbers ℂ, and the integers modulo a prime p all qualify. The integers modulo 6 do not: there 2 × 3 = 0, so 2 has no reciprocal and nothing can be divided by 2. The scalars of every vector space come from a field, which is why each entry names its scalar field.
 
-**GF(2)** is the smallest field: just the two numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Addition is the same as XOR, and multiplication is the same as AND. GF(p) is the same construction using the integers modulo a prime p.
+**[GF(2)](https://en.wikipedia.org/wiki/GF%282%29)** is the smallest field: just the two numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Addition is the same as XOR, and multiplication is the same as AND. GF(p) is the same construction using the integers modulo a prime p.
 
 ### By field
 

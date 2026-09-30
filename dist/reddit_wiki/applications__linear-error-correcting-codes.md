@@ -19,9 +19,9 @@ One thing to adjust up front. The arithmetic here is not ordinary addition — i
 does.
 
 **Field:** Communications, information theory, storage systems  
-**Tier:** 1 — rank and null space over GF(2), the smallest finite field: just the numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. Reed–Solomon codes use the larger fields GF(2^m), which are Tier 3.  
+**Tier:** 1 — rank and [null space](https://en.wikipedia.org/wiki/Kernel_%28linear_algebra%29) over [GF(2)](https://en.wikipedia.org/wiki/GF%282%29), the smallest [finite field](https://en.wikipedia.org/wiki/Finite_field): just the numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. [Reed–Solomon](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) codes use the larger fields GF(2^m), which are Tier 3.  
 **Scalar field:** GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is AND); Reed–Solomon codes use GF(2^m)  
-**Vectors:** GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - Hamming weight is a metric, not a norm from an inner product  
+**Vectors:** GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - [Hamming weight](https://en.wikipedia.org/wiki/Hamming_distance) is a metric, not a norm from an inner product  
 **Underlying equations:** None: algebraic constraints over GF(2)
 
 ### The problem
@@ -72,17 +72,17 @@ because G Hᵀ = B + B = 0 in GF(2). Each row of H is one parity check: the bits
 s = H yᵀ = H cᵀ + H eᵀ = H eᵀ
 ```
 
-The syndrome depends only on the error pattern, not on the message. Decoding means finding the error pattern with the fewest 1s that satisfies H eᵀ = s, and then recovering c = y + e.
+The [syndrome](https://en.wikipedia.org/wiki/Decoding_methods#Syndrome_decoding) depends only on the error pattern, not on the message. Decoding means finding the error pattern with the fewest 1s that satisfies H eᵀ = s, and then recovering c = y + e.
 
-**Worked case: Hamming(7,4).** Here k = 4, n = 7, d = 3, and t = 1. The seven columns of H are the seven nonzero 3-bit vectors. A single flipped bit in position i produces a syndrome equal to column i of H, so the syndrome directly names the position of the error.
+**Worked case: [Hamming(7,4)](https://en.wikipedia.org/wiki/Hamming%287,4%29).** Here k = 4, n = 7, d = 3, and t = 1. The seven columns of H are the seven nonzero 3-bit vectors. A single flipped bit in position i produces a syndrome equal to column i of H, so the syndrome directly names the position of the error.
 
 ### Matrix structure
 
-Entries in GF(2); LDPC codes use very sparse `H`; Reed–Solomon works over GF(2^m) with a Vandermonde-structured generator.
+Entries in GF(2); [LDPC](https://en.wikipedia.org/wiki/Low-density_parity-check_code) codes use very [sparse](https://en.wikipedia.org/wiki/Sparse_matrix) `H`; Reed–Solomon works over GF(2^m) with a [Vandermonde](https://en.wikipedia.org/wiki/Vandermonde_matrix)-structured generator.
 
 ### What is computed
 
-Syndrome decoding: look up or infer the minimum-weight `e` consistent with `s`. For LDPC codes, belief propagation on the bipartite graph of `H`. For Reed–Solomon, polynomial interpolation, which is a structured linear solve.
+Syndrome decoding: look up or infer the minimum-weight `e` consistent with `s`. For LDPC codes, [belief propagation](https://en.wikipedia.org/wiki/Belief_propagation) on the bipartite graph of `H`. For Reed–Solomon, polynomial interpolation, which is a structured linear solve.
 
 ### Why linear algebra is the right tool
 
@@ -90,11 +90,11 @@ Distance properties — the whole point of a code — become rank conditions. A 
 
 ### Pitfall worth teaching
 
-This is where the abstraction of "field" earns its keep. Everything from linear algebra (rank, null space, dimension, bases) carries over unchanged; everything from geometry (angles, lengths, positive-definiteness, least squares) does not. A good exercise in what the axioms actually buy.
+This is where the abstraction of "field" earns its keep. Everything from linear algebra ([rank](https://en.wikipedia.org/wiki/Rank_%28linear_algebra%29), null space, dimension, bases) carries over unchanged; everything from geometry (angles, lengths, [positive-definiteness](https://en.wikipedia.org/wiki/Definite_matrix), [least squares](https://en.wikipedia.org/wiki/Least_squares)) does not. A good exercise in what the axioms actually buy.
 
 ### Extensions
 
-Reed–Solomon in QR codes, CDs, and RAID-6; LDPC in 5G and Wi-Fi 6; polar codes in 5G control channels. Separately, the same GF(2) linear algebra at massive scale — sparse nullspace via block Lanczos or Wiedemann — is the final stage of the number field sieve used to factor RSA moduli.
+Reed–Solomon in [QR codes](https://en.wikipedia.org/wiki/QR_code), CDs, and [RAID](https://en.wikipedia.org/wiki/Standard_RAID_levels)-6; LDPC in 5G and Wi-Fi 6; [polar codes](https://en.wikipedia.org/wiki/Polar_code_%28coding_theory%29) in 5G control channels. Separately, the same GF(2) linear algebra at massive scale — sparse nullspace via [block Lanczos](https://en.wikipedia.org/wiki/Block_Lanczos_algorithm) or [Wiedemann](https://en.wikipedia.org/wiki/Block_Wiedemann_algorithm) — is the final stage of the [number field sieve](https://en.wikipedia.org/wiki/General_number_field_sieve) used to factor RSA moduli.
 
 ### Terminology
 

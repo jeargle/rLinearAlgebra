@@ -17,7 +17,7 @@ This matters because reaction rates are extremely hard to measure and the table 
 You get real conclusions from the cheap information.
 
 **Field:** Chemistry, chemical engineering, systems biology  
-**Tier:** 3 — the matrix S is read out of the ODE dc/dt = S v(c), and conservation laws are statements about that ODE's solutions. On-ramp: chemical-equation balancing, a null-space problem with no ODE.  
+**Tier:** 3 — the matrix S is read out of the [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) dc/dt = S v(c), and conservation laws are statements about that ODE's solutions. On-ramp: chemical-equation balancing, a null-space problem with no ODE.  
 **Scalar field:** Q or R (S itself has integer entries)  
 **Vectors:** fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate  
 **Underlying equations:** Nonlinear ODE system dc/dt = S v(c); every linear-algebra conclusion uses only the constant matrix S
@@ -50,7 +50,7 @@ Flux vectors live in ℝʳ, one entry per reaction; concentration vectors live i
 dc/dt = S v(c)
 ```
 
-S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics, and they are generally nonlinear. For example, under mass action the reaction A + B → C runs at v = k c_A c_B. So the ODE itself is nonlinear, and solving it requires rate constants that are rarely known. The linear algebra here extracts what holds for every possible choice of kinetics.
+S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics, and they are generally nonlinear. For example, under [mass action](https://en.wikipedia.org/wiki/Law_of_mass_action) the reaction A + B → C runs at v = k c_A c_B. So the ODE itself is nonlinear, and solving it requires rate constants that are rarely known. The linear algebra here extracts what holds for every possible choice of kinetics.
 
 **Steady state.** A cell in steady operation has dc/dt = 0:
 
@@ -58,7 +58,7 @@ S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics,
 S v = 0
 ```
 
-This models every species being produced exactly as fast as it is consumed. Whatever the kinetics are, any steady-state flux vector lies in the null space of S.
+This models every species being produced exactly as fast as it is consumed. Whatever the kinetics are, any steady-state flux vector lies in the [null space](https://en.wikipedia.org/wiki/Kernel_%28linear_algebra%29) of S.
 
 **Conservation laws.** If a vector y satisfies yᵀS = 0, then
 
@@ -66,17 +66,17 @@ This models every species being produced exactly as fast as it is consumed. What
 d(yᵀc)/dt = yᵀ S v = 0      ⟹      yᵀc(t) = yᵀc(0)   for all t
 ```
 
-This is a statement about the solutions of the nonlinear ODE, obtained without knowing v. Each independent left-null vector removes one degree of freedom, and every trajectory stays on the affine subspace c(0) + range(S) (the stoichiometric compatibility class), whose dimension is rank(S).
+This is a statement about the solutions of the nonlinear ODE, obtained without knowing v. Each independent left-null vector removes one degree of freedom, and every trajectory stays on the affine subspace c(0) + range(S) (the [stoichiometric](https://en.wikipedia.org/wiki/Stoichiometry) compatibility class), whose dimension is [rank](https://en.wikipedia.org/wiki/Rank_%28linear_algebra%29)(S).
 
 **Balancing a single reaction.** Atoms are neither created nor destroyed, so a reaction's coefficients s must satisfy Z s = 0: for each element, atoms consumed equal atoms produced. Balancing an equation means finding an integer vector in the null space of Z.
 
 ### Matrix structure
 
-Sparse, integer-valued, typically rank-deficient in both directions. Genome-scale metabolic models reach ~2,000 species × ~3,000 reactions.
+[Sparse](https://en.wikipedia.org/wiki/Sparse_matrix), integer-valued, typically rank-deficient in both directions. Genome-scale metabolic models reach ~2,000 species × ~3,000 reactions.
 
 ### What is computed
 
-- **Right null space** of `S`: the space of steady-state flux distributions. Its dimension counts the network's degrees of freedom; its nonnegative extreme rays are the elementary flux modes.
+- **Right null space** of `S`: the space of steady-state flux distributions. Its dimension counts the network's degrees of freedom; its nonnegative extreme rays are the [elementary flux modes](https://en.wikipedia.org/wiki/Elementary_modes).
 - **Left null space** of `S`: conservation laws. A vector `y` with `yᵀS = 0` means `yᵀc` is constant for all time, independent of rate constants — conserved moieties like total ATP+ADP+AMP, or total enzyme.
 - **Rank** of `S`: the number of independent reactions, which is what distinguishes an overdetermined mechanism from an underdetermined one.
 
@@ -90,7 +90,7 @@ Balancing a chemical equation is finding an integer vector in the null space of 
 
 ### Extensions
 
-Flux balance analysis adds a linear objective and flux bounds, turning the null space into a linear program. Chemical reaction network theory (Feinberg) uses the *deficiency*, a rank-based integer, to predict whether multiple steady states are possible.
+[Flux balance analysis](https://en.wikipedia.org/wiki/Flux_balance_analysis) adds a linear objective and flux bounds, turning the null space into a linear program. [Chemical reaction network theory](https://en.wikipedia.org/wiki/Chemical_reaction_network_theory) (Feinberg) uses the *deficiency*, a rank-based integer, to predict whether multiple steady states are possible.
 
 ### Terminology
 

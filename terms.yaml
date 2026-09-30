@@ -1,0 +1,2116 @@
+# Term registry: candidate Wikipedia links for terms used in the seed entries.
+#
+# Read by build/common.py: every term with a url is linked at its first use on each page it belongs to.
+#
+# Every url was verified against the Wikipedia API on 2026-09-29: the article exists, redirects are
+# resolved to their final target, and no target is a disambiguation page. Section anchors (#...)
+# were checked against the article's current section list.
+#
+# recommend:  link      - a dedicated article that matches the sense used in the entry
+#             optional  - article exists, but the word is familiar or the article is broader or more
+#                         advanced than the entry needs
+#             none      - no suitable article; define the term inline instead
+# entries:     seed entry ids where the term appears (in the sense given)
+# lowest_tier: lowest tier among those entries; the first reader to meet the term
+# uses:        occurrences across those entries
+#
+# match:       regular expressions for this term's link text. A pattern containing a capital letter is
+#              case-sensitive; an all-lowercase pattern is not. A match is extended to the end of its
+#              word, so 'stoichiometr' links 'stoichiometric'. The first match on a page is linked.
+#              Patterns are applied only on pages for the term's own entries, so the same abbreviation
+#              can mean different things in different entries.
+#
+# URLs percent-encode parentheses, so they survive inside markdown links, including on Reddit.
+
+verified: '2026-09-29'
+terms:
+- term: adjacency matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Adjacency matrix
+  url: https://en.wikipedia.org/wiki/Adjacency_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 3
+  match:
+  - adjacency matri
+- term: complex projective space
+  aliases: []
+  kind: linear algebra
+  wikipedia: Complex projective space
+  url: https://en.wikipedia.org/wiki/Complex_projective_space
+  recommend: optional
+  note: Accurate but written for mathematicians. Linked at the symbol CP^(d-1), the only place entry 10 uses it.
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 1
+  match:
+  - complex projective space
+  - CP\^\(d[-−]1\)
+- term: condition number
+  aliases: []
+  kind: linear algebra
+  wikipedia: Condition number
+  url: https://en.wikipedia.org/wiki/Condition_number
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 3
+  - 8
+  lowest_tier: 2
+  uses: 6
+  match:
+  - condition number
+  - ill-conditioned
+  - conditioning
+  - badly conditioned
+- term: covariance matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Covariance matrix
+  url: https://en.wikipedia.org/wiki/Covariance_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  - 9
+  lowest_tier: 2
+  uses: 18
+  match:
+  - covariance
+- term: eigenvalues and eigenvectors
+  aliases: []
+  kind: linear algebra
+  wikipedia: Eigenvalues and eigenvectors
+  url: https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 5
+  - 6
+  - 9
+  - 10
+  lowest_tier: 1
+  uses: 35
+  match:
+  - eigenvalues?
+  - eigenvectors?
+  - eigenpairs?
+- term: finite field
+  aliases: []
+  kind: linear algebra
+  wikipedia: Finite field
+  url: https://en.wikipedia.org/wiki/Finite_field
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 2
+  match:
+  - finite field
+- term: generalized eigenvalue problem
+  aliases: []
+  kind: linear algebra
+  wikipedia: Eigendecomposition of a matrix#Generalized eigenvalue problem
+  url: https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix#Generalized_eigenvalue_problem
+  recommend: link
+  note: No standalone article; links to a section of Eigendecomposition of a matrix.
+  entries:
+  - 1
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - generalized (symmetric )?eigenproblem
+  - generalized eigenvalue
+- term: GF(2)
+  aliases: []
+  kind: linear algebra
+  wikipedia: GF(2)
+  url: https://en.wikipedia.org/wiki/GF%282%29
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 10
+  match:
+  - GF\(2\)
+- term: Hermitian matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Hermitian matrix
+  url: https://en.wikipedia.org/wiki/Hermitian_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 7
+  match:
+  - Hermitian
+- term: homogeneous coordinates
+  aliases: []
+  kind: linear algebra
+  wikipedia: Homogeneous coordinates
+  url: https://en.wikipedia.org/wiki/Homogeneous_coordinates
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 5
+  match:
+  - homogeneous coordinates
+  - homogeneous (world|image) point
+- term: Kronecker product
+  aliases: []
+  kind: linear algebra
+  wikipedia: Kronecker product
+  url: https://en.wikipedia.org/wiki/Kronecker_product
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Kronecker product
+  - Kronecker
+- term: least squares
+  aliases: []
+  kind: linear algebra
+  wikipedia: Least squares
+  url: https://en.wikipedia.org/wiki/Least_squares
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  - 3
+  - 7
+  - 8
+  lowest_tier: 1
+  uses: 8
+  match:
+  - least[- ]squares
+- term: low-rank approximation (Eckart–Young)
+  aliases: []
+  kind: linear algebra
+  wikipedia: Low-rank approximation
+  url: https://en.wikipedia.org/wiki/Low-rank_approximation
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  - 10
+  lowest_tier: 2
+  uses: 6
+  match:
+  - Eckart[–-]Young
+  - low-rank approximation
+- term: matrix exponential
+  aliases: []
+  kind: linear algebra
+  wikipedia: Matrix exponential
+  url: https://en.wikipedia.org/wiki/Matrix_exponential
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 2
+  match:
+  - matrix exponential
+- term: matrix norm (Frobenius, spectral)
+  aliases: []
+  kind: linear algebra
+  wikipedia: Matrix norm
+  url: https://en.wikipedia.org/wiki/Matrix_norm
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 2
+  match:
+  - Frobenius (and spectral )?norm
+  - spectral norm
+- term: Neumann series
+  aliases: []
+  kind: linear algebra
+  wikipedia: Neumann series
+  url: https://en.wikipedia.org/wiki/Neumann_series
+  recommend: link
+  note: ''
+  entries:
+  - 5
+  lowest_tier: 1
+  uses: 3
+  match:
+  - Neumann series
+- term: null space (kernel)
+  aliases:
+  - left null space
+  kind: linear algebra
+  wikipedia: Kernel (linear algebra)
+  url: https://en.wikipedia.org/wiki/Kernel_%28linear_algebra%29
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 3
+  - 4
+  - 7
+  lowest_tier: 1
+  uses: 20
+  match:
+  - null ?space
+  - nullity
+- term: orthogonal matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Orthogonal matrix
+  url: https://en.wikipedia.org/wiki/Orthogonal_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  - 10
+  lowest_tier: 2
+  uses: 2
+  match:
+  - orthogonal matri
+  - orthogonal with determinant
+- term: orthogonal projection
+  aliases: []
+  kind: linear algebra
+  wikipedia: Projection (linear algebra)
+  url: https://en.wikipedia.org/wiki/Projection_%28linear_algebra%29
+  recommend: link
+  note: Linear-algebra sense only in entry 2; 'projection' in entry 3 means an X-ray projection angle.
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 4
+  match:
+  - orthogonal[- ]projection
+  - \bprojection\b
+- term: positive definite matrix
+  aliases:
+  - SPD
+  - PSD
+  - positive semidefinite
+  kind: linear algebra
+  wikipedia: Definite matrix
+  url: https://en.wikipedia.org/wiki/Definite_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 2
+  - 7
+  - 10
+  lowest_tier: 1
+  uses: 9
+  match:
+  - positive[- ]definite
+  - positive semidefinite
+  - \bSPD\b
+  - \bPSD\b
+- term: projective space
+  aliases: []
+  kind: linear algebra
+  wikipedia: Projective space
+  url: https://en.wikipedia.org/wiki/Projective_space
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 4
+  match:
+  - projective space
+  - projective geometry
+  - projective depth
+- term: rank
+  aliases: []
+  kind: linear algebra
+  wikipedia: Rank (linear algebra)
+  url: https://en.wikipedia.org/wiki/Rank_%28linear_algebra%29
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  - 4
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  lowest_tier: 1
+  uses: 29
+  match:
+  - rank-deficient
+  - \brank(?=\([A-Za-z])
+  - \bfull rank
+  - \brank\b(?= of\b)
+  - \brank\b(?=[,.;)]| \d)
+- term: Riccati equation
+  aliases: []
+  kind: linear algebra
+  wikipedia: Algebraic Riccati equation
+  url: https://en.wikipedia.org/wiki/Algebraic_Riccati_equation
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 1
+  match:
+  - (?:discrete |algebraic )?Riccati equation
+  - Riccati
+- term: Schur complement
+  aliases: []
+  kind: linear algebra
+  wikipedia: Schur complement
+  url: https://en.wikipedia.org/wiki/Schur_complement
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Schur complement
+- term: singular value decomposition
+  aliases:
+  - SVD
+  kind: linear algebra
+  wikipedia: Singular value decomposition
+  url: https://en.wikipedia.org/wiki/Singular_value_decomposition
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  - 8
+  - 9
+  lowest_tier: 2
+  uses: 21
+  match:
+  - singular value decomposition
+  - \bSVD\b
+  - singular values?
+  - singular vectors?
+- term: skew-symmetric matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Skew-symmetric matrix
+  url: https://en.wikipedia.org/wiki/Skew-symmetric_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - skew-symmetric
+  - cross-product matrix
+- term: sparse matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Sparse matrix
+  url: https://en.wikipedia.org/wiki/Sparse_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 3
+  - 4
+  - 6
+  - 7
+  - 8
+  - 10
+  lowest_tier: 1
+  uses: 15
+  match:
+  - \bsparse\b
+  - sparsity
+- term: spectral radius
+  aliases: []
+  kind: linear algebra
+  wikipedia: Spectral radius
+  url: https://en.wikipedia.org/wiki/Spectral_radius
+  recommend: link
+  note: ''
+  entries:
+  - 5
+  - 6
+  lowest_tier: 1
+  uses: 3
+  match:
+  - spectral radius
+- term: stochastic matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Stochastic matrix
+  url: https://en.wikipedia.org/wiki/Stochastic_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 4
+  match:
+  - stochastic matri
+  - column-stochastic
+  - row-stochastic
+  - stochasticity
+- term: symmetric matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Symmetric matrix
+  url: https://en.wikipedia.org/wiki/Symmetric_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 2
+  - 9
+  - 10
+  lowest_tier: 2
+  uses: 7
+  match:
+  - symmetric matri
+  - \bsymmetric\b
+- term: tensor product
+  aliases: []
+  kind: linear algebra
+  wikipedia: Tensor product
+  url: https://en.wikipedia.org/wiki/Tensor_product
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 4
+  match:
+  - tensor product
+- term: unitary matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Unitary matrix
+  url: https://en.wikipedia.org/wiki/Unitary_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 5
+  match:
+  - \bunitary\b
+- term: Vandermonde matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Vandermonde matrix
+  url: https://en.wikipedia.org/wiki/Vandermonde_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Vandermonde
+- term: well-posed / ill-posed problem
+  aliases: []
+  kind: linear algebra
+  wikipedia: Well-posed problem
+  url: https://en.wikipedia.org/wiki/Well-posed_problem
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 3
+  match:
+  - ill-posed
+  - well-posed
+  - ill-posedness
+- term: Perron–Frobenius theorem
+  aliases: []
+  kind: named theorem
+  wikipedia: Perron–Frobenius theorem
+  url: https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem
+  recommend: link
+  note: ''
+  entries:
+  - 5
+  - 6
+  - 8
+  lowest_tier: 1
+  uses: 5
+  match:
+  - 'Perron[–-]Frobenius(?: theorem)?'
+- term: Arnoldi iteration
+  aliases: []
+  kind: numerical method
+  wikipedia: Arnoldi iteration
+  url: https://en.wikipedia.org/wiki/Arnoldi_iteration
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Arnoldi
+- term: belief propagation
+  aliases: []
+  kind: numerical method
+  wikipedia: Belief propagation
+  url: https://en.wikipedia.org/wiki/Belief_propagation
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - belief propagation
+- term: block Lanczos
+  aliases: []
+  kind: numerical method
+  wikipedia: Block Lanczos algorithm
+  url: https://en.wikipedia.org/wiki/Block_Lanczos_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - block Lanczos
+- term: block Wiedemann
+  aliases: []
+  kind: numerical method
+  wikipedia: Block Wiedemann algorithm
+  url: https://en.wikipedia.org/wiki/Block_Wiedemann_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Wiedemann
+- term: bundle adjustment
+  aliases: []
+  kind: numerical method
+  wikipedia: Bundle adjustment
+  url: https://en.wikipedia.org/wiki/Bundle_adjustment
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - bundle adjustment
+- term: Cholesky decomposition
+  aliases: []
+  kind: numerical method
+  wikipedia: Cholesky decomposition
+  url: https://en.wikipedia.org/wiki/Cholesky_decomposition
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 2
+  lowest_tier: 3
+  uses: 3
+  match:
+  - Cholesky (?:decomposition|factori[sz]ation|factor)
+  - Cholesky
+- term: compressed sensing
+  aliases: []
+  kind: numerical method
+  wikipedia: Compressed sensing
+  url: https://en.wikipedia.org/wiki/Compressed_sensing
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - compressed sensing
+- term: conjugate gradient method
+  aliases: []
+  kind: numerical method
+  wikipedia: Conjugate gradient method
+  url: https://en.wikipedia.org/wiki/Conjugate_gradient_method
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - conjugate gradient
+- term: Davidson method
+  aliases: []
+  kind: numerical method
+  wikipedia: null
+  url: null
+  recommend: none
+  note: No Wikipedia article; define inline.
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Davidson\b
+- term: density functional theory
+  aliases:
+  - DFT
+  kind: numerical method
+  wikipedia: Density functional theory
+  url: https://en.wikipedia.org/wiki/Density_functional_theory
+  recommend: link
+  note: 'Abbreviation clash: DFT means density functional theory in entry 10 but discrete Fourier transform in backlog
+    entry 47. Expand per entry, never globally.'
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 1
+  match:
+  - \bDFT\b(?! matrix)
+  - density functional
+- term: eight-point algorithm
+  aliases:
+  - 8-point algorithm
+  kind: numerical method
+  wikipedia: Eight-point algorithm
+  url: https://en.wikipedia.org/wiki/Eight-point_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 1
+  match:
+  - 8-point
+  - eight-point
+- term: filtered backprojection
+  aliases: []
+  kind: numerical method
+  wikipedia: Tomographic reconstruction
+  url: https://en.wikipedia.org/wiki/Tomographic_reconstruction
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 3
+  match:
+  - filtered backprojection
+  - \bFBP\b
+- term: Gauss–Newton algorithm
+  aliases: []
+  kind: numerical method
+  wikipedia: Gauss–Newton algorithm
+  url: https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Gauss[–-]Newton
+- term: Kaczmarz method
+  aliases: []
+  kind: numerical method
+  wikipedia: Kaczmarz method
+  url: https://en.wikipedia.org/wiki/Kaczmarz_method
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 2
+  match:
+  - Kaczmarz
+- term: Lanczos algorithm
+  aliases: []
+  kind: numerical method
+  wikipedia: Lanczos algorithm
+  url: https://en.wikipedia.org/wiki/Lanczos_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 7
+  - 9
+  - 10
+  lowest_tier: 1
+  uses: 4
+  match:
+  - Lanczos
+- term: Levenberg–Marquardt algorithm
+  aliases: []
+  kind: numerical method
+  wikipedia: Levenberg–Marquardt algorithm
+  url: https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Levenberg[–-]Marquardt
+- term: minimum degree ordering
+  aliases:
+  - AMD
+  kind: numerical method
+  wikipedia: Minimum degree algorithm
+  url: https://en.wikipedia.org/wiki/Minimum_degree_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - \bAMD\b
+- term: nested dissection
+  aliases: []
+  kind: numerical method
+  wikipedia: Nested dissection
+  url: https://en.wikipedia.org/wiki/Nested_dissection
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - nested dissection
+- term: power iteration
+  aliases: []
+  kind: numerical method
+  wikipedia: Power iteration
+  url: https://en.wikipedia.org/wiki/Power_iteration
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 2
+  match:
+  - power iteration
+- term: randomized SVD
+  aliases: []
+  kind: numerical method
+  wikipedia: null
+  url: null
+  recommend: none
+  note: No dedicated article; the SVD link already covers the idea.
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - randomized SVD
+- term: self-consistent field (Hartree–Fock)
+  aliases: []
+  kind: numerical method
+  wikipedia: Hartree–Fock method
+  url: https://en.wikipedia.org/wiki/Hartree%E2%80%93Fock_method
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - self-consistent field
+  - Hartree[–-]Fock
+- term: Tikhonov regularization
+  aliases: []
+  kind: numerical method
+  wikipedia: Ridge regression#Tikhonov regularization for linear equations
+  url: https://en.wikipedia.org/wiki/Ridge_regression#Tikhonov_regularization_for_linear_equations
+  recommend: link
+  note: No standalone article; links to the Tikhonov section of Ridge regression.
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 2
+  match:
+  - Tikhonov
+- term: total variation regularization
+  aliases: []
+  kind: numerical method
+  wikipedia: Total variation denoising
+  url: https://en.wikipedia.org/wiki/Total_variation_denoising
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - total[- ]variation
+- term: basic reproduction number
+  aliases:
+  - R₀
+  kind: domain concept
+  wikipedia: Basic reproduction number
+  url: https://en.wikipedia.org/wiki/Basic_reproduction_number
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 1
+  match:
+  - R₀
+  - reproduction number
+- term: beam hardening
+  aliases: []
+  kind: domain concept
+  wikipedia: null
+  url: null
+  recommend: none
+  note: No Wikipedia article; define inline.
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - beam hardening
+- term: Beer–Lambert law
+  aliases: []
+  kind: domain concept
+  wikipedia: Beer–Lambert law
+  url: https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 4
+  match:
+  - Beer[–-]Lambert
+- term: benzene
+  aliases: []
+  kind: domain concept
+  wikipedia: Benzene
+  url: https://en.wikipedia.org/wiki/Benzene
+  recommend: optional
+  note: Familiar to most readers.
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 5
+  match:
+  - benzene
+- term: buckling
+  aliases: []
+  kind: domain concept
+  wikipedia: Buckling
+  url: https://en.wikipedia.org/wiki/Buckling
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - '[Bb]uckling'
+- term: camera matrix / intrinsic parameters
+  aliases: []
+  kind: domain concept
+  wikipedia: Camera resectioning#Intrinsic parameters
+  url: https://en.wikipedia.org/wiki/Camera_resectioning#Intrinsic_parameters
+  recommend: link
+  note: Links to the Intrinsic parameters section.
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 3
+  match:
+  - intrinsic
+  - camera matrix
+- term: chemical reaction network theory
+  aliases: []
+  kind: domain concept
+  wikipedia: Chemical reaction network theory
+  url: https://en.wikipedia.org/wiki/Chemical_reaction_network_theory
+  recommend: link
+  note: ''
+  entries:
+  - 4
+  lowest_tier: 3
+  uses: 1
+  match:
+  - chemical reaction network theory
+  - reaction network theory
+- term: computed tomography
+  aliases:
+  - CT
+  kind: domain concept
+  wikipedia: CT scan
+  url: https://en.wikipedia.org/wiki/CT_scan
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 3
+  match:
+  - \bCT\b
+  - computed tomography
+- term: cryo-electron microscopy
+  aliases: []
+  kind: domain concept
+  wikipedia: Cryo-electron microscopy
+  url: https://en.wikipedia.org/wiki/Cryo-electron_microscopy
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - cryo-EM
+- term: data assimilation
+  aliases: []
+  kind: domain concept
+  wikipedia: Data assimilation
+  url: https://en.wikipedia.org/wiki/Data_assimilation
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 1
+  match:
+  - data assimilation
+- term: density matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Density matrix
+  url: https://en.wikipedia.org/wiki/Density_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - density matri
+- term: dynamic mode decomposition
+  aliases: []
+  kind: domain concept
+  wikipedia: Dynamic mode decomposition
+  url: https://en.wikipedia.org/wiki/Dynamic_mode_decomposition
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - dynamic mode decomposition
+- term: El Niño–Southern Oscillation
+  aliases: []
+  kind: domain concept
+  wikipedia: El Niño–Southern Oscillation
+  url: https://en.wikipedia.org/wiki/El_Ni%C3%B1o%E2%80%93Southern_Oscillation
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 2
+  match:
+  - El Ni
+- term: electrical impedance tomography
+  aliases: []
+  kind: domain concept
+  wikipedia: Electrical impedance tomography
+  url: https://en.wikipedia.org/wiki/Electrical_impedance_tomography
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - electrical impedance tomography
+  - impedance tomography
+- term: elementary flux mode
+  aliases: []
+  kind: domain concept
+  wikipedia: Elementary modes
+  url: https://en.wikipedia.org/wiki/Elementary_modes
+  recommend: link
+  note: The article is titled Elementary modes.
+  entries:
+  - 4
+  lowest_tier: 3
+  uses: 2
+  match:
+  - elementary flux mode
+- term: empirical orthogonal function
+  aliases:
+  - EOF
+  kind: domain concept
+  wikipedia: Empirical orthogonal functions
+  url: https://en.wikipedia.org/wiki/Empirical_orthogonal_functions
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 13
+  match:
+  - empirical orthogonal
+  - \bEOFs?\b
+- term: ensemble Kalman filter
+  aliases: []
+  kind: domain concept
+  wikipedia: Ensemble Kalman filter
+  url: https://en.wikipedia.org/wiki/Ensemble_Kalman_filter
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 1
+  match:
+  - ensemble Kalman
+- term: environmentally extended input–output analysis
+  aliases: []
+  kind: domain concept
+  wikipedia: Environmentally extended input–output analysis
+  url: https://en.wikipedia.org/wiki/Environmentally_extended_input%E2%80%93output_analysis
+  recommend: link
+  note: ''
+  entries:
+  - 5
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Ee]nvironmentally[- ]extended (?:I/O|input[–-]output)(?: analysis)?'
+  - '[Ee]nvironmentally[- ]extended'
+- term: epipolar geometry
+  aliases: []
+  kind: domain concept
+  wikipedia: Epipolar geometry
+  url: https://en.wikipedia.org/wiki/Epipolar_geometry
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - epipolar
+- term: error-correcting code
+  aliases: []
+  kind: domain concept
+  wikipedia: Error correction code
+  url: https://en.wikipedia.org/wiki/Error_correction_code
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - error-correcting
+  - error correction
+- term: essential matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Essential matrix
+  url: https://en.wikipedia.org/wiki/Essential_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 3
+  match:
+  - essential matri
+- term: extended / unscented Kalman filter
+  aliases: []
+  kind: domain concept
+  wikipedia: Extended Kalman filter
+  url: https://en.wikipedia.org/wiki/Extended_Kalman_filter
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 2
+  match:
+  - extended and unscented
+  - unscented
+- term: finite element method
+  aliases: []
+  kind: domain concept
+  wikipedia: Finite element method
+  url: https://en.wikipedia.org/wiki/Finite_element_method
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - finite element
+- term: flux balance analysis
+  aliases: []
+  kind: domain concept
+  wikipedia: Flux balance analysis
+  url: https://en.wikipedia.org/wiki/Flux_balance_analysis
+  recommend: link
+  note: ''
+  entries:
+  - 4
+  lowest_tier: 3
+  uses: 1
+  match:
+  - '[Ff]lux balance analysis'
+- term: fundamental matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Fundamental matrix (computer vision)
+  url: https://en.wikipedia.org/wiki/Fundamental_matrix_%28computer_vision%29
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 1
+  uses: 3
+  match:
+  - fundamental matri
+- term: general number field sieve
+  aliases: []
+  kind: domain concept
+  wikipedia: General number field sieve
+  url: https://en.wikipedia.org/wiki/General_number_field_sieve
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - number field sieve
+- term: generator matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Generator matrix
+  url: https://en.wikipedia.org/wiki/Generator_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 2
+  match:
+  - generator matri
+- term: Hamiltonian (quantum mechanics)
+  aliases: []
+  kind: domain concept
+  wikipedia: Hamiltonian (quantum mechanics)
+  url: https://en.wikipedia.org/wiki/Hamiltonian_%28quantum_mechanics%29
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 6
+  match:
+  - Hamiltonian
+- term: Hamming code
+  aliases:
+  - Hamming(7,4)
+  kind: domain concept
+  wikipedia: Hamming(7,4)
+  url: https://en.wikipedia.org/wiki/Hamming%287,4%29
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Hamming\(7,\s?4\)
+  - Hamming code
+- term: Hamming distance / weight
+  aliases: []
+  kind: domain concept
+  wikipedia: Hamming distance
+  url: https://en.wikipedia.org/wiki/Hamming_distance
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Hamming (weight|distance)
+- term: HITS algorithm
+  aliases: []
+  kind: domain concept
+  wikipedia: HITS algorithm
+  url: https://en.wikipedia.org/wiki/HITS_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 2
+  match:
+  - HITS
+  - hub/authority
+- term: homography
+  aliases: []
+  kind: domain concept
+  wikipedia: Homography (computer vision)
+  url: https://en.wikipedia.org/wiki/Homography_%28computer_vision%29
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - homography
+- term: Hounsfield scale
+  aliases: []
+  kind: domain concept
+  wikipedia: Hounsfield scale
+  url: https://en.wikipedia.org/wiki/Hounsfield_scale
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Hounsfield (?:scale|units?)
+  - Hounsfield
+- term: Hückel method
+  aliases: []
+  kind: domain concept
+  wikipedia: Hückel method
+  url: https://en.wikipedia.org/wiki/H%C3%BCckel_method
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 4
+  match:
+  - Hückel (?:method|theory)
+  - Hückel
+- term: image stitching
+  aliases: []
+  kind: domain concept
+  wikipedia: Image stitching
+  url: https://en.wikipedia.org/wiki/Image_stitching
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - (?:panorama |image )?stitching
+- term: inertial measurement unit
+  aliases:
+  - IMU
+  kind: domain concept
+  wikipedia: Inertial measurement unit
+  url: https://en.wikipedia.org/wiki/Inertial_measurement_unit
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 1
+  match:
+  - inertial measurement units?
+  - \bIMU\b
+- term: input–output model (Leontief)
+  aliases: []
+  kind: domain concept
+  wikipedia: Input–output model
+  url: https://en.wikipedia.org/wiki/Input%E2%80%93output_model
+  recommend: link
+  note: ''
+  entries:
+  - 5
+  lowest_tier: 1
+  uses: 10
+  match:
+  - Leontief
+  - input[–-]output
+- term: Kalman filter
+  aliases: []
+  kind: domain concept
+  wikipedia: Kalman filter
+  url: https://en.wikipedia.org/wiki/Kalman_filter
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 7
+  match:
+  - Kalman filter
+  - Kalman
+- term: Katz centrality
+  aliases: []
+  kind: domain concept
+  wikipedia: Katz centrality
+  url: https://en.wikipedia.org/wiki/Katz_centrality
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Katz centrality
+  - Katz
+- term: Koopman operator
+  aliases: []
+  kind: domain concept
+  wikipedia: Composition operator
+  url: https://en.wikipedia.org/wiki/Composition_operator
+  recommend: optional
+  note: Redirects to Composition operator, a pure-mathematics article; Koopman is covered only in passing.
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Koopman
+- term: latent semantic analysis
+  aliases: []
+  kind: domain concept
+  wikipedia: Latent semantic analysis
+  url: https://en.wikipedia.org/wiki/Latent_semantic_analysis
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - latent semantic analysis
+  - latent semantic
+- term: law of mass action
+  aliases: []
+  kind: domain concept
+  wikipedia: Law of mass action
+  url: https://en.wikipedia.org/wiki/Law_of_mass_action
+  recommend: link
+  note: ''
+  entries:
+  - 4
+  lowest_tier: 3
+  uses: 1
+  match:
+  - mass action
+- term: LDPC code
+  aliases:
+  - LDPC
+  kind: domain concept
+  wikipedia: Low-density parity-check code
+  url: https://en.wikipedia.org/wiki/Low-density_parity-check_code
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 3
+  match:
+  - \bLDPC\b
+- term: Leslie matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Leslie matrix
+  url: https://en.wikipedia.org/wiki/Leslie_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Leslie matri(?:x|ces)
+  - Leslie
+- term: linear elasticity
+  aliases: []
+  kind: domain concept
+  wikipedia: Linear elasticity
+  url: https://en.wikipedia.org/wiki/Linear_elasticity
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 3
+  match:
+  - linear elasticity
+- term: Markov chain
+  aliases: []
+  kind: domain concept
+  wikipedia: Markov chain
+  url: https://en.wikipedia.org/wiki/Markov_chain
+  recommend: link
+  note: ''
+  entries:
+  - 5
+  - 6
+  lowest_tier: 1
+  uses: 4
+  match:
+  - Markov chain
+  - Markov
+- term: matrix completion
+  aliases: []
+  kind: domain concept
+  wikipedia: Matrix completion
+  url: https://en.wikipedia.org/wiki/Matrix_completion
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - matrix completion
+- term: matrix product state / tensor network
+  aliases: []
+  kind: domain concept
+  wikipedia: Matrix product state
+  url: https://en.wikipedia.org/wiki/Matrix_product_state
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - matrix product state
+  - tensor network
+- term: multivariate normal distribution
+  aliases: []
+  kind: domain concept
+  wikipedia: Multivariate normal distribution
+  url: https://en.wikipedia.org/wiki/Multivariate_normal_distribution
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 4
+  match:
+  - Gaussian
+- term: next-generation matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Next-generation matrix
+  url: https://en.wikipedia.org/wiki/Next-generation_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 1
+  match:
+  - next-generation matrix
+- term: normal mode
+  aliases: []
+  kind: domain concept
+  wikipedia: Normal mode
+  url: https://en.wikipedia.org/wiki/Normal_mode
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 3
+  match:
+  - mode shapes?
+  - normal modes?
+  - modal analysis
+- term: observability
+  aliases: []
+  kind: domain concept
+  wikipedia: Observability
+  url: https://en.wikipedia.org/wiki/Observability
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 6
+  match:
+  - observabilit\w*
+- term: ordinary differential equation
+  aliases:
+  - ODE
+  kind: domain concept
+  wikipedia: Ordinary differential equation
+  url: https://en.wikipedia.org/wiki/Ordinary_differential_equation
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 9
+  - 10
+  lowest_tier: 1
+  uses: 29
+  match:
+  - ordinary differential equation
+  - \bODEs?\b
+- term: PageRank
+  aliases: []
+  kind: domain concept
+  wikipedia: PageRank
+  url: https://en.wikipedia.org/wiki/PageRank
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 3
+  match:
+  - PageRank
+- term: parity-check matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Parity-check matrix
+  url: https://en.wikipedia.org/wiki/Parity-check_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 2
+  match:
+  - parity-check matri
+- term: partial differential equation
+  aliases:
+  - PDE
+  kind: domain concept
+  wikipedia: Partial differential equation
+  url: https://en.wikipedia.org/wiki/Partial_differential_equation
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  - 9
+  - 10
+  lowest_tier: 2
+  uses: 7
+  match:
+  - partial differential equation
+  - \bPDEs?\b
+- term: perspective-n-point
+  aliases:
+  - PnP
+  kind: domain concept
+  wikipedia: Perspective-n-Point
+  url: https://en.wikipedia.org/wiki/Perspective-n-Point
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 1
+  match:
+  - \bPnP\b
+- term: photogrammetry
+  aliases: []
+  kind: domain concept
+  wikipedia: Photogrammetry
+  url: https://en.wikipedia.org/wiki/Photogrammetry
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 1
+  match:
+  - photogrammetr
+- term: pinhole camera model
+  aliases: []
+  kind: domain concept
+  wikipedia: Pinhole camera model
+  url: https://en.wikipedia.org/wiki/Pinhole_camera_model
+  recommend: link
+  note: ''
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - 'pinhole camera(?: model)?'
+  - pinhole
+- term: Planck constant
+  aliases: []
+  kind: domain concept
+  wikipedia: Planck constant
+  url: https://en.wikipedia.org/wiki/Planck_constant
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Planck
+- term: polar code
+  aliases: []
+  kind: domain concept
+  wikipedia: Polar code (coding theory)
+  url: https://en.wikipedia.org/wiki/Polar_code_%28coding_theory%29
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Pp]olar codes?'
+- term: principal component analysis
+  aliases:
+  - PCA
+  kind: domain concept
+  wikipedia: Principal component analysis
+  url: https://en.wikipedia.org/wiki/Principal_component_analysis
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 5
+  match:
+  - principal[- ]component
+  - \bPCA\b
+- term: proper orthogonal decomposition
+  aliases: []
+  kind: domain concept
+  wikipedia: Proper orthogonal decomposition
+  url: https://en.wikipedia.org/wiki/Proper_orthogonal_decomposition
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - proper orthogonal decomposition
+  - proper orthogonal
+- term: QR code
+  aliases: []
+  kind: domain concept
+  wikipedia: QR code
+  url: https://en.wikipedia.org/wiki/QR_code
+  recommend: optional
+  note: Familiar to most readers.
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - QR codes
+- term: quantum channel
+  aliases: []
+  kind: domain concept
+  wikipedia: Quantum channel
+  url: https://en.wikipedia.org/wiki/Quantum_channel
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - quantum channel
+  - completely positive
+- term: quantum entanglement
+  aliases: []
+  kind: domain concept
+  wikipedia: Quantum entanglement
+  url: https://en.wikipedia.org/wiki/Quantum_entanglement
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - entangle
+- term: quantum logic gate
+  aliases: []
+  kind: domain concept
+  wikipedia: Quantum logic gate
+  url: https://en.wikipedia.org/wiki/Quantum_logic_gate
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - quantum gates?
+  - unitary gate
+- term: qubit
+  aliases: []
+  kind: domain concept
+  wikipedia: Qubit
+  url: https://en.wikipedia.org/wiki/Qubit
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 5
+  match:
+  - qubits?
+- term: Radon transform
+  aliases: []
+  kind: domain concept
+  wikipedia: Radon transform
+  url: https://en.wikipedia.org/wiki/Radon_transform
+  recommend: link
+  note: ''
+  entries:
+  - 3
+  lowest_tier: 3
+  uses: 2
+  match:
+  - Radon transform
+  - Radon
+- term: RAID
+  aliases: []
+  kind: domain concept
+  wikipedia: Standard RAID levels
+  url: https://en.wikipedia.org/wiki/Standard_RAID_levels
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 1
+  match:
+  - RAID
+- term: recommender system
+  aliases: []
+  kind: domain concept
+  wikipedia: Recommender system
+  url: https://en.wikipedia.org/wiki/Recommender_system
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - recommender systems?
+  - recommender
+- term: recurrence relation (difference equation)
+  aliases: []
+  kind: domain concept
+  wikipedia: Recurrence relation
+  url: https://en.wikipedia.org/wiki/Recurrence_relation
+  recommend: link
+  note: ''
+  entries:
+  - 6
+  lowest_tier: 2
+  uses: 3
+  match:
+  - difference equation
+- term: Reed–Solomon code
+  aliases: []
+  kind: domain concept
+  wikipedia: Reed–Solomon error correction
+  url: https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction
+  recommend: link
+  note: ''
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 5
+  match:
+  - Reed[–-]Solomon
+- term: resonance
+  aliases: []
+  kind: domain concept
+  wikipedia: Resonance
+  url: https://en.wikipedia.org/wiki/Resonance
+  recommend: optional
+  note: Everyday word; the general article is broad.
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - resonan
+- term: rotation averaging / SE(3)
+  aliases: []
+  kind: domain concept
+  wikipedia: Rigid transformation
+  url: https://en.wikipedia.org/wiki/Rigid_transformation
+  recommend: optional
+  note: Rigid transformation covers SE(3) but not rotation averaging.
+  entries:
+  - 8
+  lowest_tier: 2
+  uses: 3
+  match:
+  - SE\(3\)
+  - rotation averaging
+- term: satellite navigation
+  aliases:
+  - GNSS
+  kind: domain concept
+  wikipedia: Satellite navigation
+  url: https://en.wikipedia.org/wiki/Satellite_navigation
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 7
+  match:
+  - \bGNSS\b
+  - \bGPS\b
+- term: Schrödinger equation
+  aliases: []
+  kind: domain concept
+  wikipedia: Schrödinger equation
+  url: https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 4
+  match:
+  - Schrödinger equation
+  - Schrödinger
+- term: Scope 3 emissions
+  aliases: []
+  kind: domain concept
+  wikipedia: Carbon accounting
+  url: https://en.wikipedia.org/wiki/Carbon_accounting
+  recommend: optional
+  note: No article on Scope 3 itself; Carbon accounting is broader.
+  entries:
+  - 5
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Scope 3
+- term: sea surface temperature
+  aliases:
+  - SST
+  kind: domain concept
+  wikipedia: Sea surface temperature
+  url: https://en.wikipedia.org/wiki/Sea_surface_temperature
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 3
+  match:
+  - sea[- ]surface temperature
+  - \bSST\b
+- term: separation of variables
+  aliases: []
+  kind: domain concept
+  wikipedia: Separation of variables
+  url: https://en.wikipedia.org/wiki/Separation_of_variables
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 2
+  match:
+  - separation of variables
+  - separating variables
+- term: SLAM
+  aliases: []
+  kind: domain concept
+  wikipedia: Simultaneous localization and mapping
+  url: https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  - 8
+  lowest_tier: 2
+  uses: 2
+  match:
+  - \bSLAM\b
+- term: stationary state
+  aliases: []
+  kind: domain concept
+  wikipedia: Stationary state
+  url: https://en.wikipedia.org/wiki/Stationary_state
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 4
+  match:
+  - stationary states?
+- term: stiffness matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Stiffness matrix
+  url: https://en.wikipedia.org/wiki/Stiffness_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 2
+  match:
+  - stiffness matri
+- term: stochastic differential equation
+  aliases: []
+  kind: domain concept
+  wikipedia: Stochastic differential equation
+  url: https://en.wikipedia.org/wiki/Stochastic_differential_equation
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 2
+  match:
+  - stochastic differential equations?
+  - stochastic differential
+- term: stoichiometry
+  aliases: []
+  kind: domain concept
+  wikipedia: Stoichiometry
+  url: https://en.wikipedia.org/wiki/Stoichiometry
+  recommend: link
+  note: ''
+  entries:
+  - 4
+  lowest_tier: 3
+  uses: 4
+  match:
+  - stoichiometr
+- term: syndrome decoding
+  aliases: []
+  kind: domain concept
+  wikipedia: Decoding methods#Syndrome decoding
+  url: https://en.wikipedia.org/wiki/Decoding_methods#Syndrome_decoding
+  recommend: link
+  note: Links to the Syndrome decoding section of a general article.
+  entries:
+  - 7
+  lowest_tier: 1
+  uses: 6
+  match:
+  - '[Ss]yndrome'
+- term: trilateration
+  aliases: []
+  kind: domain concept
+  wikipedia: True-range multilateration
+  url: https://en.wikipedia.org/wiki/True-range_multilateration
+  recommend: link
+  note: ''
+  entries:
+  - 2
+  lowest_tier: 3
+  uses: 2
+  match:
+  - trilateration
+- term: truss
+  aliases: []
+  kind: domain concept
+  wikipedia: Truss
+  url: https://en.wikipedia.org/wiki/Truss
+  recommend: optional
+  note: Familiar to most readers; useful mainly to non-engineers.
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 4
+  match:
+  - \btruss
+- term: variational quantum eigensolver
+  aliases: []
+  kind: domain concept
+  wikipedia: Variational quantum eigensolver
+  url: https://en.wikipedia.org/wiki/Variational_quantum_eigensolver
+  recommend: link
+  note: ''
+  entries:
+  - 10
+  lowest_tier: 3
+  uses: 1
+  match:
+  - variational quantum eigensolvers?
+  - variational quantum
+- term: varimax rotation
+  aliases: []
+  kind: domain concept
+  wikipedia: Varimax rotation
+  url: https://en.wikipedia.org/wiki/Varimax_rotation
+  recommend: link
+  note: ''
+  entries:
+  - 9
+  lowest_tier: 2
+  uses: 1
+  match:
+  - varimax
+- term: Young's modulus
+  aliases: []
+  kind: domain concept
+  wikipedia: Young's modulus
+  url: https://en.wikipedia.org/wiki/Young's_modulus
+  recommend: link
+  note: ''
+  entries:
+  - 1
+  lowest_tier: 3
+  uses: 1
+  match:
+  - Young's modulus

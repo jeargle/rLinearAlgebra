@@ -18,8 +18,8 @@ from collections import Counter
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import (BLOCKS, DIST, DOCS, FIELD_DEF, GF2_DEF, escape_cell, load_all,
-                    load_entries, require_gf2_definition)
+from common import (BLOCKS, DIST, DOCS, FIELD_DEF, GF2_DEF, escape_cell, link_first_uses,
+                    load_all, load_entries, load_terms, require_gf2_definition, terms_for_entry)
 
 SUMMARY = "Start here — the problem in plain terms"
 
@@ -103,7 +103,11 @@ def main():
     }
 
     pieces = [(DOCS / "00-front.md").read_text().rstrip("\n")]
-    pieces += [render_entry(m).rstrip("\n") for m in entries]
+    # The catalog is one page: each term is linked once, at its first use in any entry,
+    # and each entry section is matched only against that entry's own terms.
+    terms, done = load_terms(), set()
+    pieces += [link_first_uses(render_entry(m), terms_for_entry(terms, m["id"]), done).rstrip("\n")
+               for m in entries]
     pieces += [(DOCS / "99-back.md").read_text().strip("\n")]
     text = "\n\n".join(pieces) + "\n"
 

@@ -21,7 +21,7 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 **Tier:** 2 — a dominant-eigenvector problem by construction.  
 **Scalar field:** R  
 **Vectors:** R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace  
-**Underlying equations:** None; a linear difference equation π_{t+1} = G π_t, i.e. a discrete-time Markov chain
+**Underlying equations:** None; a linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time [Markov chain](https://en.wikipedia.org/wiki/Markov_chain)
 
 ### The problem
 
@@ -51,13 +51,13 @@ Order the pages of the web (or papers in a citation graph, or proteins in an int
 
 Row i reads: the probability of being on page i next equals the sum over pages j of (probability of being on j now) × (probability of moving from j to i).
 
-**What a solution means.** The difference equation's solution is π_t = Gᵗ π_0. Because α < 1 every entry of G is positive, and the Perron–Frobenius theorem then guarantees that π_t converges to the same limit r for every starting distribution π_0. That limit is the stationary distribution:
+**What a solution means.** The difference equation's solution is π_t = Gᵗ π_0. Because α < 1 every entry of G is positive, and the [Perron–Frobenius theorem](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) then guarantees that π_t converges to the same limit r for every starting distribution π_0. That limit is the stationary distribution:
 
 ```
 G r = r,     r ≥ 0,     1ᵀ r = 1
 ```
 
-r is the eigenvector of G with eigenvalue 1, scaled to sum to one. Using 1ᵀ r = 1, the same equation can be written without forming the dense matrix G:
+r is the [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of G with eigenvalue 1, scaled to sum to one. Using 1ᵀ r = 1, the same equation can be written without forming the dense matrix G:
 
 ```
 r = α P r + ((1 − α)/n) 1
@@ -67,11 +67,11 @@ This models importance as long-run visit frequency: a page ranks highly if a sur
 
 ### Matrix structure
 
-`P` is sparse (average out-degree in the tens) and stochastic; `G` is dense but never formed — the damping term is a rank-one update applied on the fly, so each matrix–vector product still costs O(nnz).
+`P` is [sparse](https://en.wikipedia.org/wiki/Sparse_matrix) (average out-degree in the tens) and stochastic; `G` is dense but never formed — the damping term is a rank-one update applied on the fly, so each matrix–vector product still costs O(nnz).
 
 ### What is computed
 
-Power iteration. Convergence rate is governed by `|λ₂/λ₁| ≤ α`, so the damping factor directly sets the iteration count: roughly 50–100 iterations at α = 0.85 regardless of graph size.
+[Power iteration](https://en.wikipedia.org/wiki/Power_iteration). Convergence rate is governed by `|λ₂/λ₁| ≤ α`, so the damping factor directly sets the iteration count: roughly 50–100 iterations at α = 0.85 regardless of graph size.
 
 ### Why linear algebra is the right tool
 
@@ -79,11 +79,11 @@ The circular definition of importance is a fixed-point equation, and Perron–Fr
 
 ### Pitfall worth teaching
 
-Dangling nodes (no outlinks) break stochasticity, and the standard patch — treating them as linking to everything — is a modeling decision with real effects on the ranking. Every "algorithm detail" here is a mathematical requirement in disguise.
+Dangling nodes (no outlinks) break [stochasticity](https://en.wikipedia.org/wiki/Stochastic_matrix), and the standard patch — treating them as linking to everything — is a modeling decision with real effects on the ranking. Every "algorithm detail" here is a mathematical requirement in disguise.
 
 ### Extensions
 
-Leslie matrices in population ecology (same dominant-eigenvector structure, eigenvalue = population growth rate); the next-generation matrix in epidemiology, whose spectral radius *is* R₀; Katz centrality and hub/authority (HITS) scores; personalized PageRank as a graph kernel in ML.
+[Leslie matrices](https://en.wikipedia.org/wiki/Leslie_matrix) in population ecology (same dominant-eigenvector structure, eigenvalue = population growth rate); the [next-generation matrix](https://en.wikipedia.org/wiki/Next-generation_matrix) in epidemiology, whose [spectral radius](https://en.wikipedia.org/wiki/Spectral_radius) *is* [R₀](https://en.wikipedia.org/wiki/Basic_reproduction_number); [Katz centrality](https://en.wikipedia.org/wiki/Katz_centrality) and [hub/authority](https://en.wikipedia.org/wiki/HITS_algorithm) (HITS) scores; personalized [PageRank](https://en.wikipedia.org/wiki/PageRank) as a graph kernel in ML.
 
 ### Terminology
 

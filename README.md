@@ -109,6 +109,29 @@ The same entry renders differently per destination, and the generators handle it
 
 Pipes inside table cells are escaped at render time, so terminology entries like `G = [I | P]` survive.
 
+## Wikipedia links
+
+`terms.yaml` lists terms used in the entries, each with the Wikipedia article that explains it.
+Every term with a `url` is linked **once per page, at its first use**. The same rules apply to the
+catalog, the wiki, and the site:
+
+- **Entry pages** link only the terms whose `entries` list includes that entry. A word or abbreviation
+  can mean different things in different fields (DFT is density functional theory in the quantum
+  entry but the discrete Fourier transform elsewhere), so matching is never global.
+- **The catalog** is one page: each term is linked at its first use in any entry section. Its editorial
+  front and back matter is not linked.
+- **Glossary pages** link only their introductory prose. **Index pages** are navigation and get no links.
+- Nothing inside code, display equations, headings, table rows (including the Variables and terminology
+  tables), existing links, or URLs is ever linked.
+
+Each term's `match` field holds the regular expressions for its link text. See the comment at the top of
+`terms.yaml` for the rules. When adding a term, check that its article exists and is not a
+disambiguation page, and record where it is used in `entries`. A pattern that is too general links the
+wrong sense of a word: `observab` once linked "observables" in the quantum entry to control-theory
+observability. The fix is to narrow the pattern or the entry list, not to delete the term.
+
+`uv run python tests/test_linker.py` checks the linker's rules; CI runs it on every push.
+
 ## Adding an entry
 
 1. Move its row out of `backlog.yaml` and create `entries/NN-slug.md`.

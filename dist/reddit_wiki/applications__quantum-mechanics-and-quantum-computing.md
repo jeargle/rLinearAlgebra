@@ -10,7 +10,7 @@ stated this way.
 Two consequences follow immediately. First, adding two valid states gives another valid state — this is
 superposition, and it is just the statement that states form a vector space. Second, every measurable
 quantity (energy, momentum, spin) corresponds to a matrix, and the values you can actually observe are
-that matrix's eigenvalues. Asking "what energies can this molecule have?" is literally asking for the
+that matrix's [eigenvalues](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors). Asking "what energies can this molecule have?" is literally asking for the
 eigenvalues of a particular matrix.
 
 The difficulty is size. Combining two systems multiplies their dimensions rather than adding them, so
@@ -19,9 +19,9 @@ Much of modern quantum chemistry and quantum computing is about exploiting the f
 that actually occur in nature occupy a very thin slice of that enormous space.
 
 **Field:** Physics, quantum chemistry, quantum information  
-**Tier:** 3 — the eigenproblem comes from separating variables in the Schrödinger equation, and its meaning is a statement about that ODE's solutions. On-ramp: benzene's 6×6 Hückel matrix can be diagonalized with no quantum background at all.  
-**Scalar field:** C (real symmetric in the Huckel special case)  
-**Vectors:** unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n. Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices, which form a REAL vector space of dimension d^2  
+**Tier:** 3 — the eigenproblem comes from [separating variables](https://en.wikipedia.org/wiki/Separation_of_variables) in the [Schrödinger equation](https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation), and its meaning is a statement about that [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation)'s solutions. On-ramp: [benzene](https://en.wikipedia.org/wiki/Benzene)'s 6×6 [Hückel](https://en.wikipedia.org/wiki/H%C3%BCckel_method) matrix can be diagonalized with no quantum background at all.  
+**Scalar field:** C (real [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) in the Huckel special case)  
+**Vectors:** unit vectors in C^d; for n [qubits](https://en.wikipedia.org/wiki/Qubit) d = 2^n and the space is the [tensor product](https://en.wikipedia.org/wiki/Tensor_product) (C^2)^(x)n. Global phase is unphysical, so states are really points of [CP^(d-1)](https://en.wikipedia.org/wiki/Complex_projective_space). Observables are [Hermitian](https://en.wikipedia.org/wiki/Hermitian_matrix) matrices, which form a REAL vector space of dimension d^2  
 **Underlying equations:** Linear Schrödinger equation iħ dψ/dt = H ψ; separation of variables gives the eigenproblem H φ = E φ
 
 ### The problem
@@ -48,13 +48,13 @@ A dagger (†) denotes the conjugate transpose, so φ† ψ is the complex inner
 
 ### Formulation
 
-**Where the equations come from.** The dynamics are the time-dependent Schrödinger equation, a linear partial differential equation that is first order in time. Written in a finite basis it becomes a system of d linear ordinary differential equations with complex coefficients:
+**Where the equations come from.** The dynamics are the time-dependent Schrödinger equation, a linear [partial differential equation](https://en.wikipedia.org/wiki/Partial_differential_equation) that is first order in time. Written in a finite basis it becomes a system of d linear ordinary differential equations with complex coefficients:
 
 ```
 iħ dψ/dt = H ψ(t)
 ```
 
-**Stationary states.** Look for solutions whose shape does not change, ψ(t) = φ e^{−iEt/ħ}. Substituting gives the time-independent Schrödinger equation:
+**[Stationary states](https://en.wikipedia.org/wiki/Stationary_state).** Look for solutions whose shape does not change, ψ(t) = φ e^{−iEt/ħ}. Substituting gives the time-independent Schrödinger equation:
 
 ```
 H φ = E φ
@@ -66,25 +66,25 @@ That is what the eigenproblem means for the ODE. An eigenvector is a stationary 
 ψ(t) = Σ_k (φ_k† ψ(0)) φ_k e^{−iE_k t/ħ}      equivalently     ψ(t) = U(t) ψ(0)
 ```
 
-U(t) is unitary, which is why time evolution preserves ‖ψ‖ = 1, and why quantum gates are unitary matrices.
+U(t) is [unitary](https://en.wikipedia.org/wiki/Unitary_matrix), which is why time evolution preserves ‖ψ‖ = 1, and why [quantum gates](https://en.wikipedia.org/wiki/Quantum_logic_gate) are unitary matrices.
 
-**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The Hamiltonian is then
+**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The [Hamiltonian](https://en.wikipedia.org/wiki/Hamiltonian_%28quantum_mechanics%29) is then
 
 ```
 H = α I + β Aᴳ
 ```
 
-so its eigenvectors are exactly those of the ring's adjacency matrix, and its energies are E = α + β μ_k, where μ_k are the adjacency eigenvalues. For a 6-cycle, μ_k = 2 cos(2πk/6), giving 2, 1, 1, −1, −1, −2. Since β < 0 the lowest level is α + 2β, then α + β twice, α − β twice, and α − 2β. Benzene's six π electrons fill the three lowest orbitals, two per orbital. Dropping the orthonormality assumption turns this into a generalized eigenproblem, H φ = E S φ, where S is the orbital overlap matrix.
+so its eigenvectors are exactly those of the ring's [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix), and its energies are E = α + β μ_k, where μ_k are the adjacency eigenvalues. For a 6-cycle, μ_k = 2 cos(2πk/6), giving 2, 1, 1, −1, −1, −2. Since β < 0 the lowest level is α + 2β, then α + β twice, α − β twice, and α − 2β. Benzene's six π electrons fill the three lowest orbitals, two per orbital. Dropping the orthonormality assumption turns this into a [generalized eigenproblem](https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix#Generalized_eigenvalue_problem), H φ = E S φ, where S is the orbital overlap matrix.
 
 **Many particles.** n qubits (or n two-level systems) live in the tensor product (ℂ²)^⊗n, of dimension d = 2ⁿ. Combining systems multiplies dimensions rather than adding them.
 
 ### Matrix structure
 
-Hermitian (hence real eigenvalues, orthogonal eigenvectors) and, in a local basis, sparse — Hamiltonians typically couple only nearby sites or orbitals. The dimension is the problem: it grows exponentially in system size.
+Hermitian (hence real eigenvalues, orthogonal eigenvectors) and, in a local basis, [sparse](https://en.wikipedia.org/wiki/Sparse_matrix) — Hamiltonians typically couple only nearby sites or orbitals. The dimension is the problem: it grows exponentially in system size.
 
 ### What is computed
 
-Lanczos and Davidson methods for the lowest few eigenpairs of matrices too large to store; self-consistent field iteration (Hartree–Fock, DFT) as a nonlinear eigenproblem solved by repeated dense diagonalization; quantum circuit simulation as a sequence of sparse structured matrix–vector products.
+[Lanczos](https://en.wikipedia.org/wiki/Lanczos_algorithm) and Davidson methods for the lowest few eigenpairs of matrices too large to store; [self-consistent field](https://en.wikipedia.org/wiki/Hartree%E2%80%93Fock_method) iteration (Hartree–Fock, [DFT](https://en.wikipedia.org/wiki/Density_functional_theory)) as a nonlinear eigenproblem solved by repeated dense diagonalization; quantum circuit simulation as a sequence of sparse structured matrix–vector products.
 
 ### Why linear algebra is the right tool
 
@@ -92,11 +92,11 @@ It is not a modeling convenience here — the superposition principle *is* linea
 
 ### Pitfall worth teaching
 
-The tensor-product structure means the state space grows as 2ⁿ, which makes exact methods hopeless past ~50 qubits. The response is again low-rank structure: matrix product states and tensor networks exploit the fact that physically relevant states occupy a very thin, low-entanglement slice of the full space. Low-rank approximation appears here for the same reason it appears in entry 9, in a completely different setting.
+The tensor-product structure means the state space grows as 2ⁿ, which makes exact methods hopeless past ~50 qubits. The response is again low-rank structure: [matrix product states](https://en.wikipedia.org/wiki/Matrix_product_state) and tensor networks exploit the fact that physically relevant states occupy a very thin, low-entanglement slice of the full space. [Low-rank approximation](https://en.wikipedia.org/wiki/Low-rank_approximation) appears here for the same reason it appears in entry 9, in a completely different setting.
 
 ### Extensions
 
-Hückel molecular orbital theory, where the Hamiltonian is α I + β A for the molecular graph's adjacency matrix A, so the orbitals are exactly A's eigenvectors and the orbital energies are an affine function of its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: density matrices as positive semidefinite operators, quantum channels as completely positive maps, and variational quantum eigensolvers.
+Hückel molecular orbital theory, where the Hamiltonian is α I + β A for the molecular graph's adjacency matrix A, so the orbitals are exactly A's eigenvectors and the orbital energies are an affine function of its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: [density matrices](https://en.wikipedia.org/wiki/Density_matrix) as [positive semidefinite](https://en.wikipedia.org/wiki/Definite_matrix) operators, [quantum channels](https://en.wikipedia.org/wiki/Quantum_channel) as completely positive maps, and [variational quantum eigensolvers](https://en.wikipedia.org/wiki/Variational_quantum_eigensolver).
 
 ### Terminology
 

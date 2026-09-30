@@ -16,8 +16,8 @@ from pathlib import Path
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import (BLOCKS, FIELD_DEF, GF2_DEF, GF2_SHORT, ROOT, escape_cell, load_all,
-                    load_entries, require_gf2_definition)
+from common import (BLOCKS, FIELD_DEF, GF2_DEF, GF2_SHORT, ROOT, escape_cell, link_first_uses,
+                    load_all, load_entries, load_terms, require_gf2_definition, terms_for_entry)
 
 try:
     import markdown
@@ -85,22 +85,27 @@ def page(title, body, depth=0):
     )
 
 
-def entry_page(meta):
+def entry_page(meta, link_terms=()):
     s = meta["_sections"]
+    mine, done = terms_for_entry(link_terms, meta["id"]), set()
+
+    def L(text):
+        # link in page order, sharing `done`, so each term is linked once per page
+        return link_first_uses(text, mine, done)
     parts = [f"<nav class=\"crumb\"><a href=\"../index.html\">← All fields</a></nav>",
              f"<h1>{inline(meta['title'])}</h1>"]
     parts.append("<details>\n<summary>Start here — the problem in plain terms</summary>\n"
-                 + md(s["Start here"]) + "\n</details>")
+                 + md(L(s["Start here"])) + "\n</details>")
     parts.append(
         "<div class=\"meta\">"
         f"<div><b>Field:</b> {html.escape(meta['field_label'])}</div>"
-        f"<div><b>Tier:</b> {meta['tier']} — {inline(meta['tier_note'])}</div>"
-        f"<div><b>Scalar field:</b> {inline(meta['scalar_field'])}</div>"
-        f"<div><b>Vectors:</b> {inline(meta['vector_space'])}</div>"
-        f"<div><b>Underlying equations:</b> {inline(meta.get('underlying_equations') or 'not yet recorded')}</div>"
+        f"<div><b>Tier:</b> {meta['tier']} — {inline(L(meta['tier_note']))}</div>"
+        f"<div><b>Scalar field:</b> {inline(L(meta['scalar_field']))}</div>"
+        f"<div><b>Vectors:</b> {inline(L(meta['vector_space']))}</div>"
+        f"<div><b>Underlying equations:</b> {inline(L(meta.get('underlying_equations') or 'not yet recorded'))}</div>"
         "</div>")
     for name in BLOCKS:
-        parts.append(f"<h2>{html.escape(name)}</h2>\n" + md(s[name]))
+        parts.append(f"<h2>{html.escape(name)}</h2>\n" + md(L(s[name])))
     terms = meta.get("terminology") or {}
     if terms:
         rows = "\n".join(f"| {escape_cell(t)} | {escape_cell(v)} |" for t, v in terms.items())
@@ -143,7 +148,7 @@ def index_page(entries, rows):
     return page("Applied Linear Algebra", "\n".join(parts))
 
 
-def glossary_page(entries):
+def glossary_page(entries, terms=()):
     rows = [(t, v, m) for m in entries for t, v in (m.get("terminology") or {}).items()]
     rows.sort(key=lambda r: r[0].lower())
     body = "\n".join(
@@ -151,11 +156,12 @@ def glossary_page(entries):
         f"[{escape_cell(m['short_title'])}](entries/{m['slug']}.html) |"
         for t, v, m in rows)
     table = "| Domain term | In linear algebra | Entry |\n|---|---|---|\n" + body
+    done = set()   # links are shared across the page's prose pieces
     parts = ["<nav class=\"crumb\"><a href=\"index.html\">← All fields</a></nav>",
              "<h1>Domain terminology, translated</h1>",
-             "<h2>Two general terms</h2>", md(FIELD_DEF)]
+             "<h2>Two general terms</h2>", md(link_first_uses(FIELD_DEF, terms, done))]
     if any("GF(2)" in v for _, v, _ in rows):
-        parts.append(md(GF2_DEF))
+        parts.append(md(link_first_uses(GF2_DEF, terms, done)))
     parts += ["<h2>By field</h2>",
               f"<p>{len(rows)} terms from {len(entries)} entries.</p>", md(table)]
     return page("Domain terminology", "\n".join(parts))
@@ -171,10 +177,11 @@ def main():
 
     (SITE / "style.css").write_text(CSS)
     (SITE / ".nojekyll").write_text("")  # or GitHub runs Jekyll and drops _-prefixed paths
-    pages = {SITE / "index.html": (index_page(entries, rows), 0),
-             SITE / "glossary.html": (glossary_page(entries), 0)}
+    terms = load_terms()
+    pages = {SITE / "index.html": (index_page(entries, rows), 0),       # navigation only: no links
+             SITE / "glossary.html": (glossary_page(entries, terms), 0)}
     for meta in entries:
-        pages[SITE / "entries" / f"{meta['slug']}.html"] = (entry_page(meta), meta["tier"])
+        pages[SITE / "entries" / f"{meta['slug']}.html"] = (entry_page(meta, terms), meta["tier"])
     for path, (text, tier) in pages.items():
         if tier != 3:
             require_gf2_definition(text, f"site:{path.relative_to(SITE)}")

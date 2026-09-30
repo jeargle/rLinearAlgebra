@@ -118,6 +118,119 @@ GF2_DEF = (
 
 GF2_SHORT = "GF(2) is the number system {0, 1} with arithmetic modulo 2, so 1 + 1 = 0"
 
+# ---------------------------------------------------------------------------
+# Wikipedia links at first use (terms.yaml)
+
+TERMS = ROOT / "terms.yaml"
+
+# Regions of markdown that must never receive a link: fenced and inline code, headings,
+# table rows, existing links, and bare URLs.
+_PROTECTED = re.compile(
+    r"```.*?```"                 # fenced code, including display equations
+    r"|`[^`\n]*`"                # inline code
+    r"|^#[^\n]*$"                # headings (one line; re.S would let .* run to end of page)
+    r"|^\|[^\n]*$"               # table rows
+    r"|!?\[[^\]\n]*\]\([^)\n]*\)"  # existing links and images
+    r"|<https?://[^>\s]+>"       # autolinks
+    r"|https?://\S+",            # bare URLs
+    re.S | re.M,
+)
+
+
+def _compile_pattern(pattern):
+    """All-lowercase patterns are case-insensitive; any capital letter makes it case-sensitive."""
+    flags = 0 if re.search(r"[A-Z]", pattern.replace(r"\b", "")) else re.I
+    # not preceded by a word character or hyphen, and extended to the end of its word
+    return re.compile(r"(?<![\w-])(?:" + pattern + r")\w*", flags)
+
+
+def load_terms():
+    """Terms that have a Wikipedia URL, with compiled match patterns."""
+    if not TERMS.exists():
+        return []
+    data = yaml.safe_load(TERMS.read_text()) or {}
+    out = []
+    for term in data.get("terms", []):
+        if not term.get("url"):
+            continue
+        out.append({
+            "term": term["term"],
+            "url": term["url"],
+            "entries": set(term.get("entries") or []),
+            "patterns": [_compile_pattern(p) for p in term.get("match") or []],
+        })
+    return out
+
+
+def terms_for_entry(terms, entry_id):
+    """Only the terms recorded for this entry, so an abbreviation keeps its entry's meaning."""
+    return [t for t in terms if entry_id in t["entries"]]
+
+
+def _free_spans(text):
+    """(start, end) spans of text that may receive links."""
+    spans, pos = [], 0
+    for m in _PROTECTED.finditer(text):
+        if m.start() > pos:
+            spans.append((pos, m.start()))
+        pos = m.end()
+    if pos < len(text):
+        spans.append((pos, len(text)))
+    return spans
+
+
+def _first_matches(text, terms, done):
+    """Earliest match of each not-yet-linked term, restricted to free spans."""
+    spans = _free_spans(text)
+    found = []
+    for term in terms:
+        if term["term"] in done:
+            continue
+        best = None
+        for rx in term["patterns"]:
+            m = _earliest(rx, text, spans)
+            if m and (best is None or m.start() < best[0]):
+                best = (m.start(), m.end(), term)
+        if best:
+            found.append(best)
+    return found
+
+
+def _earliest(rx, text, spans):
+    """First match of rx inside any free span (spans are in text order)."""
+    for lo, hi in spans:
+        m = rx.search(text, lo, hi)
+        if m:
+            return m
+    return None
+
+
+def _resolve_overlaps(found):
+    """Keep non-overlapping matches, preferring the earlier and then the longer one."""
+    kept, last_end = [], -1
+    for start, end, term in sorted(found, key=lambda f: (f[0], -(f[1] - f[0]))):
+        if start >= last_end:
+            kept.append((start, end, term))
+            last_end = end
+    return kept
+
+
+def link_first_uses(text, terms, done):
+    """Link each term's first use in markdown `text`; `done` records terms already linked on the page.
+
+    Call repeatedly, in page order, with the same `done` set when a page is assembled in pieces.
+    """
+    kept = _resolve_overlaps(_first_matches(text, terms, done))
+    out, pos = [], 0
+    for start, end, term in kept:
+        out.append(text[pos:start])
+        out.append(f"[{text[start:end]}]({term['url']})")
+        done.add(term["term"])
+        pos = end
+    out.append(text[pos:])
+    return "".join(out)
+
+
 _GF2 = re.compile(r"GF\(2\)")
 _GF2_DEFINED = re.compile(r"modulo 2|mod 2")
 GF2_WINDOW = 320  # characters on either side of the first use

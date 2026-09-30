@@ -25,8 +25,8 @@ from collections import defaultdict
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import (BLOCKS, DIST, FIELD_DEF, GF2_DEF, GF2_SHORT, escape_cell, load_all,
-                    load_entries, require_gf2_definition)
+from common import (BLOCKS, DIST, FIELD_DEF, GF2_DEF, GF2_SHORT, escape_cell, link_first_uses,
+                    load_all, load_entries, load_terms, require_gf2_definition, terms_for_entry)
 
 WIKI_ROOT = "applications"
 
@@ -35,7 +35,7 @@ def page_path(meta):
     return f"{WIKI_ROOT}/{meta['slug']}"
 
 
-def render_entry(meta):
+def render_entry(meta, link_terms=()):
     sections = meta["_sections"]
     out = [f"# {meta['title']}", ""]
     out += ["### Start here", "", sections["Start here"], ""]
@@ -55,7 +55,8 @@ def render_entry(meta):
         out += [""]
     out += ["---", "", f"[Back to the index](/r/{os.environ.get('REDDIT_SUBREDDIT', 'LinearAlgebra')}"
             f"/wiki/{WIKI_ROOT})", ""]
-    return "\n".join(out)
+    # Wikipedia links at first use, using only this entry's terms
+    return link_first_uses("\n".join(out), terms_for_entry(link_terms, meta["id"]), set())
 
 
 def render_index(entries, rows):
@@ -85,7 +86,7 @@ def render_index(entries, rows):
     return "\n".join(out)
 
 
-def render_glossary(entries):
+def render_glossary(entries, terms=()):
     rows = []
     for meta in entries:
         for term, meaning in (meta.get("terminology") or {}).items():
@@ -100,7 +101,8 @@ def render_glossary(entries):
             "| Domain term | In linear algebra | Entry |", "|---|---|---|"]
     out += [f"| {escape_cell(t)} | {escape_cell(m)} | [{meta['short_title']}]({page_path(meta)}) |"
             for t, m, meta in rows]
-    return "\n".join(out + [""])
+    # tables and headings are never linked, so only the introductory prose receives links
+    return link_first_uses("\n".join(out + [""]), terms, set())
 
 
 def build():
@@ -109,11 +111,12 @@ def build():
     outdir = DIST / "reddit_wiki"
     outdir.mkdir(parents=True, exist_ok=True)
 
-    pages = {WIKI_ROOT: render_index(entries, rows),
-             f"{WIKI_ROOT}/glossary": render_glossary(entries)}
+    terms = load_terms()
+    pages = {WIKI_ROOT: render_index(entries, rows),          # navigation only: no links
+             f"{WIKI_ROOT}/glossary": render_glossary(entries, terms)}
     tier3 = set()
     for meta in entries:
-        pages[page_path(meta)] = render_entry(meta)
+        pages[page_path(meta)] = render_entry(meta, terms)
         if meta["tier"] == 3:
             tier3.add(page_path(meta))
 

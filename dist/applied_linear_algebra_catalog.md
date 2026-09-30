@@ -217,20 +217,20 @@ deforms.
 
 The second question engineers ask is what happens with no load at all: let the structure wobble freely
 and only certain shapes of wobble sustain themselves, each at its own frequency. Finding those special
-shapes is what eigenvalues are for, and it is why bridges are checked against the frequencies of
+shapes is what [eigenvalues](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) are for, and it is why bridges are checked against the frequencies of
 marching feet and wind.
 
 </details>
 
-**Field:** Civil and mechanical engineering (finite element analysis)
+**Field:** Civil and mechanical engineering ([finite element](https://en.wikipedia.org/wiki/Finite_element_method) analysis)
 
-**Tier:** 3 — the matrix problem comes from the ODE system M ü + K u = f: statics sets ü = 0, vibration assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.
+**Tier:** 3 — the matrix problem comes from the [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) system M ü + K u = f: statics sets ü = 0, vibration assumes harmonic motion. On-ramp: the static solve K u = f itself needs only first-course linear algebra.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and forces live in the same space.
 
-**Underlying equations.** Linear second-order ODE system M ü + K u = f, from the PDE of linear elasticity; statics sets ü = 0.
+**Underlying equations.** Linear second-order ODE system M ü + K u = f, from the [PDE](https://en.wikipedia.org/wiki/Partial_differential_equation) of [linear elasticity](https://en.wikipedia.org/wiki/Linear_elasticity); statics sets ü = 0.
 
-**The problem.** Given a structure — truss, bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
+**The problem.** Given a structure — [truss](https://en.wikipedia.org/wiki/Truss), bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
 
 **Variables.**
 | Symbol | Name | What it holds | Shape | Units |
@@ -277,15 +277,15 @@ A nonzero φ exists only for special values of λ, the eigenvalues. This is what
 u(t) = Σ_i φ_i (a_i cos ω_i t + b_i sin ω_i t)
 ```
 
-with the constants a_i, b_i fixed by the initial displacement and velocity. A load that oscillates near one of the ω_i drives that mode into resonance.
+with the constants a_i, b_i fixed by the initial displacement and velocity. A load that oscillates near one of the ω_i drives that mode into [resonance](https://en.wikipedia.org/wiki/Resonance).
 
-**Matrix structure.** `K` is symmetric positive definite (after boundary conditions are applied), extremely sparse — each node couples only to its mesh neighbors — and often banded or block-structured. Industrial models run 10⁶–10⁸ degrees of freedom.
+**Matrix structure.** `K` is [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) [positive definite](https://en.wikipedia.org/wiki/Definite_matrix) (after boundary conditions are applied), extremely [sparse](https://en.wikipedia.org/wiki/Sparse_matrix) — each node couples only to its mesh neighbors — and often banded or block-structured. Industrial models run 10⁶–10⁸ degrees of freedom.
 
-**What is computed.** Sparse Cholesky with fill-reducing reordering (AMD, nested dissection) for the static solve; Lanczos or shift-and-invert Arnoldi for the lowest few dozen eigenpairs. Nobody forms `K⁻¹`.
+**What is computed.** Sparse [Cholesky](https://en.wikipedia.org/wiki/Cholesky_decomposition) with fill-reducing reordering ([AMD](https://en.wikipedia.org/wiki/Minimum_degree_algorithm), [nested dissection](https://en.wikipedia.org/wiki/Nested_dissection)) for the static solve; [Lanczos](https://en.wikipedia.org/wiki/Lanczos_algorithm) or shift-and-invert [Arnoldi](https://en.wikipedia.org/wiki/Arnoldi_iteration) for the lowest few dozen eigenpairs. Nobody forms `K⁻¹`.
 
 **Why linear algebra is the right tool.** The underlying PDE (linear elasticity) is linear in the small-strain regime, so superposition holds exactly: the response to a load combination is the combination of responses. Sparsity is a direct encoding of physical locality.
 
-**Pitfall worth teaching.** A near-singular `K` is not a numerical accident — it means the structure has a near-mechanism, a direction in which it can deform with almost no restoring force. The condition number is a physical diagnostic, not just a numerical one.
+**Pitfall worth teaching.** A near-singular `K` is not a numerical accident — it means the structure has a near-mechanism, a direction in which it can deform with almost no restoring force. The [condition number](https://en.wikipedia.org/wiki/Condition_number) is a physical diagnostic, not just a numerical one.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -301,7 +301,7 @@ with the constants a_i, b_i fixed by the initial displacement and velocity. A lo
 | mechanism | a nontrivial null space of K — the structure can move with no restoring force |
 | bandwidth / skyline | the sparsity pattern induced by node numbering |
 
-**Extensions.** Buckling as a different generalized eigenproblem (`K φ = λ K_geometric φ`); substructuring and domain decomposition; the same modal analysis applied to molecules gives normal-mode analysis and elastic network models.
+**Extensions.** [Buckling](https://en.wikipedia.org/wiki/Buckling) as a different [generalized eigenproblem](https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix#Generalized_eigenvalue_problem) (`K φ = λ K_geometric φ`); substructuring and domain decomposition; the same [modal analysis](https://en.wikipedia.org/wiki/Normal_mode) applied to molecules gives normal-mode analysis and elastic network models.
 
 ---
 
@@ -312,7 +312,7 @@ with the constants a_i, b_i fixed by the initial displacement and velocity. A lo
 
 You are trying to work out where a moving vehicle is, and you have two unreliable sources. One is dead
 reckoning: start from a known point and add up your measured motion. It is smooth but drifts, because
-small errors accumulate. The other is GPS: it does not drift, but each individual reading is noisy and
+small errors accumulate. The other is [GPS](https://en.wikipedia.org/wiki/Satellite_navigation): it does not drift, but each individual reading is noisy and
 sometimes missing entirely.
 
 Neither is right. The sensible thing is a compromise, weighted by how much you trust each — and the
@@ -320,7 +320,7 @@ trick is that "how much you trust each" is something you can compute rather than
 reckoning has been running unchecked for a while, trust it less. If GPS has just given three consistent
 readings, trust it more.
 
-A Kalman filter does exactly this, once per time step, forever. What makes it more than a rule of thumb
+A [Kalman filter](https://en.wikipedia.org/wiki/Kalman_filter) does exactly this, once per time step, forever. What makes it more than a rule of thumb
 is that it carries an explicit bookkeeping of its own uncertainty — not one number but a whole table,
 because being unsure about north-south position is different from being unsure about speed, and the two
 uncertainties interact.
@@ -329,13 +329,13 @@ uncertainties interact.
 
 **Field:** Aerospace, robotics, control engineering
 
-**Tier:** 3 — the model is a stochastic ODE discretized in time, and the filter propagates a probability distribution. On-ramp: static GNSS trilateration, a plain least-squares problem.
+**Tier:** 3 — the model is a stochastic ODE discretized in time, and the filter propagates a probability distribution. On-ramp: static GNSS [trilateration](https://en.wikipedia.org/wiki/True-range_multilateration), a plain [least-squares](https://en.wikipedia.org/wiki/Least_squares) problem.
 
-**Scalars and vectors.** Scalar field: R. Vectors: state in R^n (n = 6-50); measurements in R^m; covariances live in Sym_n, the real vector space of symmetric n x n matrices, dimension n(n+1)/2.
+**Scalars and vectors.** Scalar field: R. Vectors: state in R^n (n = 6-50); measurements in R^m; [covariances](https://en.wikipedia.org/wiki/Covariance_matrix) live in Sym_n, the real vector space of symmetric n x n matrices, dimension n(n+1)/2.
 
-**Underlying equations.** Linear ODE driven by random noise (a stochastic differential equation), dx/dt = A x + noise, discretized exactly to x_{k+1} = F x_k + w_k.
+**Underlying equations.** Linear ODE driven by random noise (a [stochastic differential equation](https://en.wikipedia.org/wiki/Stochastic_differential_equation)), dx/dt = A x + noise, discretized exactly to x_{k+1} = F x_k + w_k.
 
-**The problem.** A vehicle carries an inertial measurement unit that drifts, plus a GNSS receiver that is accurate but intermittent and noisy. Produce a continuously updated best estimate of position, velocity, and attitude — with an honest uncertainty attached.
+**The problem.** A vehicle carries an [inertial measurement unit](https://en.wikipedia.org/wiki/Inertial_measurement_unit) that drifts, plus a GNSS receiver that is accurate but intermittent and noisy. Produce a continuously updated best estimate of position, velocity, and attitude — with an honest uncertainty attached.
 
 **Variables.**
 | Symbol | Name | What it holds | Shape | Units |
@@ -359,7 +359,7 @@ uncertainties interact.
 
 **Formulation.** **Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modelled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
 
-Integrating the ODE exactly over one step gives the discrete model. For this A the matrix exponential is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
+Integrating the ODE exactly over one step gives the discrete model. For this A the [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential) is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
 
 **The model.**
 
@@ -368,7 +368,7 @@ x_{k+1} = F x_k + w_k,     w_k ~ N(0, Q)      (dynamics)
 z_k     = H x_k + η_k,     η_k ~ N(0, R)      (measurement)
 ```
 
-The first line models how the true state evolves between measurements; the second models what the sensor reports about it. Both are linear, and both noises are Gaussian.
+The first line models how the true state evolves between measurements; the second models what the sensor reports about it. Both are linear, and both noises are [Gaussian](https://en.wikipedia.org/wiki/Multivariate_normal_distribution).
 
 **The filter.** Each step has two stages. *Predict* pushes the estimate and its uncertainty forward through the dynamics:
 
@@ -390,13 +390,13 @@ H P⁻ Hᵀ + R is the covariance of the innovation: prediction uncertainty seen
 
 **What a solution means.** At each step the output is a Gaussian distribution with mean x̂⁺ and covariance P⁺. For a linear model with Gaussian noise this is exact: it is the distribution of the true state given every measurement so far, and x̂⁺ is the minimum-mean-squared-error estimate.
 
-**Matrix structure.** Small and dense (state dimension 6–50 for navigation, thousands for SLAM). `P`, `Q`, `R` are symmetric positive semidefinite. The covariance recursion is a discrete Riccati equation.
+**Matrix structure.** Small and dense (state dimension 6–50 for navigation, thousands for [SLAM](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping)). `P`, `Q`, `R` are symmetric positive semidefinite. The covariance recursion is a [discrete Riccati equation](https://en.wikipedia.org/wiki/Algebraic_Riccati_equation).
 
 **What is computed.** A weighted least-squares update, done recursively so no measurement history is stored. Square-root and UD-factored forms (Potter, Bierman–Thornton) propagate a Cholesky factor of `P` instead of `P` itself to guarantee the covariance stays positive definite in finite precision — this is why Apollo's navigation filter was implemented in square-root form.
 
-**Why linear algebra is the right tool.** The Kalman gain is an orthogonal-projection operator in a metric defined by the noise covariances. "Optimal fusion of uncertain information" turns out to be a projection, which is why the formula is a matrix expression and not a heuristic.
+**Why linear algebra is the right tool.** The Kalman gain is an [orthogonal-projection](https://en.wikipedia.org/wiki/Projection_%28linear_algebra%29) operator in a metric defined by the noise covariances. "Optimal fusion of uncertain information" turns out to be a projection, which is why the formula is a matrix expression and not a heuristic.
 
-**Pitfall worth teaching.** Rank of the observability matrix `[H; HF; HF²; …]` tells you which state directions the sensors can ever pin down. An unobservable direction shows up as a covariance that grows without bound — the filter tells you honestly that it does not know.
+**Pitfall worth teaching.** [Rank](https://en.wikipedia.org/wiki/Rank_%28linear_algebra%29) of the [observability](https://en.wikipedia.org/wiki/Observability) matrix `[H; HF; HF²; …]` tells you which state directions the sensors can ever pin down. An unobservable direction shows up as a covariance that grows without bound — the filter tells you honestly that it does not know.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -412,7 +412,7 @@ H P⁻ Hᵀ + R is the covariance of the innovation: prediction uncertainty seen
 | filter divergence | P losing positive definiteness in finite precision, or an unobservable direction growing without bound |
 | square-root filter | propagating a Cholesky factor of P instead of P |
 
-**Extensions.** Static GNSS trilateration as the nonrecursive special case (Gauss–Newton on an overdetermined system); extended and unscented filters for nonlinear dynamics; ensemble Kalman filters for weather data assimilation at 10⁸ state dimensions.
+**Extensions.** Static GNSS trilateration as the nonrecursive special case ([Gauss–Newton](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm) on an overdetermined system); [extended and unscented](https://en.wikipedia.org/wiki/Extended_Kalman_filter) filters for nonlinear dynamics; [ensemble Kalman](https://en.wikipedia.org/wiki/Ensemble_Kalman_filter) filters for weather [data assimilation](https://en.wikipedia.org/wiki/Data_assimilation) at 10⁸ state dimensions.
 
 ---
 
@@ -429,7 +429,7 @@ Now take hundreds of thousands of such readings, along lines at every angle. Eac
 over a different set of points. The question is whether all those sums together pin down the individual
 values: can you reconstruct a picture of the interior from a very large collection of line totals?
 
-Mostly yes, and that reconstruction is what a CT scanner computes between the scan finishing and the
+Mostly yes, and that reconstruction is what a [CT](https://en.wikipedia.org/wiki/CT_scan) scanner computes between the scan finishing and the
 image appearing. But "mostly" hides the interesting part. Some patterns of density barely affect any
 measurement — they are nearly invisible to every ray — so their reconstructed values are wildly
 sensitive to noise. The fix is to add an assumption, usually that real tissue does not vary wildly from
@@ -439,7 +439,7 @@ one point to the next, and that assumption is doing real work in the picture a r
 
 **Field:** Medical imaging (and, with different physics, seismic tomography and electron microscopy)
 
-**Tier:** 3 — the linearity comes from solving the Beer–Lambert ODE along each ray and taking a logarithm; ill-posedness is read from the singular-value spectrum. On-ramp: a small noisy A x = b solved naively and with regularization.
+**Tier:** 3 — the linearity comes from solving the [Beer–Lambert](https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law) ODE along each ray and taking a logarithm; [ill-posedness](https://en.wikipedia.org/wiki/Well-posed_problem) is read from the singular-value spectrum. On-ramp: a small noisy A x = b solved naively and with regularization.
 
 **Scalars and vectors.** Scalar field: R (nonnegative in practice). Vectors: image in R^N (N voxels); measurements in R^M (M rays); A maps R^N to R^M with M != N.
 
@@ -475,7 +475,7 @@ Its solution is I = I₀ exp(−∫ μ(s) ds). Taking the logarithm:
 b_i = −ln(I_i / I₀) = ∫_{ray i} μ(s) ds
 ```
 
-This is the step that makes CT a linear problem. The raw reading depends exponentially on μ, but the log-transformed reading is a line integral of μ, which is linear in μ. The set of all such line integrals is the Radon transform of μ.
+This is the step that makes CT a linear problem. The raw reading depends exponentially on μ, but the log-transformed reading is a line integral of μ, which is linear in μ. The set of all such line integrals is the [Radon transform](https://en.wikipedia.org/wiki/Radon_transform) of μ.
 
 **Discretization.** Assume μ is constant inside each voxel. The integral along ray i then becomes a sum over the voxels it crosses, each term being the length inside the voxel times the value there:
 
@@ -485,23 +485,23 @@ b_i = Σ_j a_ij x_j      for every ray i,      i.e.   A x = b
 
 Units check: metres times m⁻¹ is dimensionless, matching b. This models each measurement as the total attenuation met by one ray, and it defines M equations in N unknowns.
 
-**What a solution means.** x is an estimate of μ, one value per voxel. For display it is converted to Hounsfield units, HU = 1000 (μ − μ_water) / μ_water, which puts water at 0 and air at −1000. The system is not solved exactly: photon counts are noisy, M and N differ, and A is badly conditioned, so the reconstruction is posed as regularized least squares (see What is computed).
+**What a solution means.** x is an estimate of μ, one value per voxel. For display it is converted to [Hounsfield units](https://en.wikipedia.org/wiki/Hounsfield_scale), HU = 1000 (μ − μ_water) / μ_water, which puts water at 0 and air at −1000. The system is not solved exactly: photon counts are noisy, M and N differ, and A is badly conditioned, so the reconstruction is posed as regularized least squares (see What is computed).
 
 **Where the model is approximate.** The ODE assumes a single X-ray energy. Real tubes emit a spectrum, low-energy photons are absorbed first, and μ in fact depends on energy. That mismatch, called beam hardening, is a standard source of artifacts precisely because it violates the linearity above.
 
-**Matrix structure.** Enormous (10⁶–10⁹ rows and columns), very sparse — a ray touches only O(n^{1/3}) of n voxels — and severely ill-conditioned. Singular values decay smoothly toward zero with no gap, which is the signature of an ill-posed inverse problem.
+**Matrix structure.** Enormous (10⁶–10⁹ rows and columns), very sparse — a ray touches only O(n^{1/3}) of n voxels — and severely ill-conditioned. [Singular values](https://en.wikipedia.org/wiki/Singular_value_decomposition) decay smoothly toward zero with no gap, which is the signature of an ill-posed inverse problem.
 
-**What is computed.** Either filtered backprojection (an analytic spectral inverse, fast, the classical approach) or iterative reconstruction: Kaczmarz/ART row-action sweeps, conjugate gradient on the normal equations, or a regularized objective
+**What is computed.** Either [filtered backprojection](https://en.wikipedia.org/wiki/Tomographic_reconstruction) (an analytic spectral inverse, fast, the classical approach) or iterative reconstruction: [Kaczmarz](https://en.wikipedia.org/wiki/Kaczmarz_method)/ART row-action sweeps, [conjugate gradient](https://en.wikipedia.org/wiki/Conjugate_gradient_method) on the normal equations, or a regularized objective
 
 ```
 min_x ‖A x − b‖² + λ ‖L x‖²      (Tikhonov)
 ```
 
-with total-variation penalties now standard in commercial scanners.
+with [total-variation](https://en.wikipedia.org/wiki/Total_variation_denoising) penalties now standard in commercial scanners.
 
 **Why linear algebra is the right tool.** Beer–Lambert attenuation is multiplicative in intensity, hence additive in log-intensity — that logarithm is what makes the whole problem linear and the entire field of algebraic reconstruction possible.
 
-**Pitfall worth teaching.** The naive least-squares solution amplifies noise through the small singular values. Regularization is not cosmetic smoothing; it is the choice of which part of the null space and near-null space to fill in, and it is where clinical judgment enters the mathematics. Fewer projection angles means lower dose to the patient but a worse-conditioned `A` — the linear algebra sits directly on a medical trade-off.
+**Pitfall worth teaching.** The naive least-squares solution amplifies noise through the small singular values. Regularization is not cosmetic smoothing; it is the choice of which part of the [null space](https://en.wikipedia.org/wiki/Kernel_%28linear_algebra%29) and near-null space to fill in, and it is where clinical judgment enters the mathematics. Fewer projection angles means lower dose to the patient but a worse-conditioned `A` — the linear algebra sits directly on a medical trade-off.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -517,7 +517,7 @@ with total-variation penalties now standard in commercial scanners.
 | regularization strength | the Tikhonov parameter lambda trading data fit against smoothness |
 | streak artifact | the visible signature of undersampling — energy in the near-null space |
 
-**Extensions.** Compressed sensing MRI (sparsity in a transform domain replaces smoothness); cryo-EM reconstruction, which adds unknown orientations; electrical impedance tomography, which is nonlinear.
+**Extensions.** [Compressed sensing](https://en.wikipedia.org/wiki/Compressed_sensing) MRI (sparsity in a transform domain replaces smoothness); [cryo-EM](https://en.wikipedia.org/wiki/Cryo-electron_microscopy) reconstruction, which adds unknown orientations; [electrical impedance tomography](https://en.wikipedia.org/wiki/Electrical_impedance_tomography), which is nonlinear.
 
 ---
 
@@ -573,7 +573,7 @@ Flux vectors live in ℝʳ, one entry per reaction; concentration vectors live i
 dc/dt = S v(c)
 ```
 
-S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics, and they are generally nonlinear. For example, under mass action the reaction A + B → C runs at v = k c_A c_B. So the ODE itself is nonlinear, and solving it requires rate constants that are rarely known. The linear algebra here extracts what holds for every possible choice of kinetics.
+S is a constant matrix fixed by the chemistry. The fluxes v(c) are the kinetics, and they are generally nonlinear. For example, under [mass action](https://en.wikipedia.org/wiki/Law_of_mass_action) the reaction A + B → C runs at v = k c_A c_B. So the ODE itself is nonlinear, and solving it requires rate constants that are rarely known. The linear algebra here extracts what holds for every possible choice of kinetics.
 
 **Steady state.** A cell in steady operation has dc/dt = 0:
 
@@ -589,14 +589,14 @@ This models every species being produced exactly as fast as it is consumed. What
 d(yᵀc)/dt = yᵀ S v = 0      ⟹      yᵀc(t) = yᵀc(0)   for all t
 ```
 
-This is a statement about the solutions of the nonlinear ODE, obtained without knowing v. Each independent left-null vector removes one degree of freedom, and every trajectory stays on the affine subspace c(0) + range(S) (the stoichiometric compatibility class), whose dimension is rank(S).
+This is a statement about the solutions of the nonlinear ODE, obtained without knowing v. Each independent left-null vector removes one degree of freedom, and every trajectory stays on the affine subspace c(0) + range(S) (the [stoichiometric](https://en.wikipedia.org/wiki/Stoichiometry) compatibility class), whose dimension is rank(S).
 
 **Balancing a single reaction.** Atoms are neither created nor destroyed, so a reaction's coefficients s must satisfy Z s = 0: for each element, atoms consumed equal atoms produced. Balancing an equation means finding an integer vector in the null space of Z.
 
 **Matrix structure.** Sparse, integer-valued, typically rank-deficient in both directions. Genome-scale metabolic models reach ~2,000 species × ~3,000 reactions.
 
 **What is computed.**
-- **Right null space** of `S`: the space of steady-state flux distributions. Its dimension counts the network's degrees of freedom; its nonnegative extreme rays are the elementary flux modes.
+- **Right null space** of `S`: the space of steady-state flux distributions. Its dimension counts the network's degrees of freedom; its nonnegative extreme rays are the [elementary flux modes](https://en.wikipedia.org/wiki/Elementary_modes).
 - **Left null space** of `S`: conservation laws. A vector `y` with `yᵀS = 0` means `yᵀc` is constant for all time, independent of rate constants — conserved moieties like total ATP+ADP+AMP, or total enzyme.
 - **Rank** of `S`: the number of independent reactions, which is what distinguishes an overdetermined mechanism from an underdetermined one.
 
@@ -616,7 +616,7 @@ This is a statement about the solutions of the nonlinear ODE, obtained without k
 | degrees of freedom of the network | the nullity of S |
 | balancing an equation | finding an integer null vector of the element-by-species matrix |
 
-**Extensions.** Flux balance analysis adds a linear objective and flux bounds, turning the null space into a linear program. Chemical reaction network theory (Feinberg) uses the *deficiency*, a rank-based integer, to predict whether multiple steady states are possible.
+**Extensions.** [Flux balance analysis](https://en.wikipedia.org/wiki/Flux_balance_analysis) adds a linear objective and flux bounds, turning the null space into a linear program. [Chemical reaction network theory](https://en.wikipedia.org/wiki/Chemical_reaction_network_theory) (Feinberg) uses the *deficiency*, a rank-based integer, to predict whether multiple steady states are possible.
 
 ---
 
@@ -643,7 +643,7 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Field:** Economics (and, in its modern form, environmental footprint accounting)
 
-**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The Perron–Frobenius convergence condition is Tier 2; the dynamic Leontief model, an ODE, is Tier 3.
+**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The [Perron–Frobenius](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) convergence condition is Tier 2; the dynamic [Leontief](https://en.wikipedia.org/wiki/Input%E2%80%93output_model) model, an ODE, is Tier 3.
 
 **Scalars and vectors.** Scalar field: R (nonnegative). Vectors: outputs and demands in R^n, n = number of sectors.
 
@@ -683,7 +683,7 @@ This models, for any given final demand, the gross output each industry must pro
 
 **Matrix structure.** Square, entrywise nonnegative, dense-ish, with column sums below 1 for a productive economy. National tables run 400–500 sectors; the global multi-region tables (EXIOBASE, WIOD) reach tens of thousands.
 
-**What is computed.** `(I − A)⁻¹`, the Leontief inverse, is the object of interest itself — entry `(i,j)` is the total output of `i` required per unit of final demand for `j`, summed over all supply-chain depths. The Neumann series
+**What is computed.** `(I − A)⁻¹`, the Leontief inverse, is the object of interest itself — entry `(i,j)` is the total output of `i` required per unit of final demand for `j`, summed over all supply-chain depths. The [Neumann series](https://en.wikipedia.org/wiki/Neumann_series)
 
 ```
 (I − A)⁻¹ = I + A + A² + A³ + …
@@ -693,7 +693,7 @@ has a direct reading: direct requirements, then requirements of requirements, an
 
 **Why linear algebra is the right tool.** The circularity that makes the accounting hard by hand — steel needs electricity needs steel — is precisely what a matrix inverse resolves in closed form.
 
-**Pitfall worth teaching.** By Perron–Frobenius, the series converges exactly when the spectral radius of `A` is below 1. That is not a technical condition: it is the statement that the economy produces more than it consumes in production. A nonnegative matrix's dominant eigenvalue carries economic meaning.
+**Pitfall worth teaching.** By Perron–Frobenius, the series converges exactly when the [spectral radius](https://en.wikipedia.org/wiki/Spectral_radius) of `A` is below 1. That is not a technical condition: it is the statement that the economy produces more than it consumes in production. A nonnegative matrix's dominant eigenvalue carries economic meaning.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -708,7 +708,7 @@ has a direct reading: direct requirements, then requirements of requirements, an
 | direct vs indirect requirements | the successive terms A, A^2, A^3 of the Neumann series |
 | embodied / Scope 3 emissions | an appended satellite row multiplied through the same inverse |
 
-**Extensions.** Environmentally-extended I/O appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate Scope 3 emissions are estimated. Same mathematics: Markov chain fundamental matrices, and structural path analysis.
+**Extensions.** [Environmentally-extended I/O](https://en.wikipedia.org/wiki/Environmentally_extended_input%E2%80%93output_analysis) appends rows for CO₂, water, and land use, and the same inverse yields the full upstream carbon footprint of a product — this is how most corporate [Scope 3](https://en.wikipedia.org/wiki/Carbon_accounting) emissions are estimated. Same mathematics: [Markov chain](https://en.wikipedia.org/wiki/Markov_chain) fundamental matrices, and structural path analysis.
 
 **The differential-equation version.** The dynamic Leontief model adds investment in productive capacity: x = A x + B dx/dt + d, where B holds capital coefficients (capital stock from sector i needed per unit increase of output rate in sector j). That is a system of linear ODEs and is a Tier 3 extension; this entry uses only the static model.
 
@@ -742,7 +742,7 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace.
 
-**Underlying equations.** None; a linear difference equation π_{t+1} = G π_t, i.e. a discrete-time Markov chain.
+**Underlying equations.** None; a linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time Markov chain.
 
 **The problem.** Order the pages of the web (or papers in a citation graph, or proteins in an interaction network) by importance, where importance is recursive: a page is important if important pages link to it.
 
@@ -783,11 +783,11 @@ This models importance as long-run visit frequency: a page ranks highly if a sur
 
 **Matrix structure.** `P` is sparse (average out-degree in the tens) and stochastic; `G` is dense but never formed — the damping term is a rank-one update applied on the fly, so each matrix–vector product still costs O(nnz).
 
-**What is computed.** Power iteration. Convergence rate is governed by `|λ₂/λ₁| ≤ α`, so the damping factor directly sets the iteration count: roughly 50–100 iterations at α = 0.85 regardless of graph size.
+**What is computed.** [Power iteration](https://en.wikipedia.org/wiki/Power_iteration). Convergence rate is governed by `|λ₂/λ₁| ≤ α`, so the damping factor directly sets the iteration count: roughly 50–100 iterations at α = 0.85 regardless of graph size.
 
 **Why linear algebra is the right tool.** The circular definition of importance is a fixed-point equation, and Perron–Frobenius guarantees for an irreducible aperiodic nonnegative matrix that the fixed point exists, is unique, and is positive. The damping factor is what buys irreducibility — a modeling choice made to secure a theorem.
 
-**Pitfall worth teaching.** Dangling nodes (no outlinks) break stochasticity, and the standard patch — treating them as linking to everything — is a modeling decision with real effects on the ranking. Every "algorithm detail" here is a mathematical requirement in disguise.
+**Pitfall worth teaching.** Dangling nodes (no outlinks) break [stochasticity](https://en.wikipedia.org/wiki/Stochastic_matrix), and the standard patch — treating them as linking to everything — is a modeling decision with real effects on the ranking. Every "algorithm detail" here is a mathematical requirement in disguise.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -801,7 +801,7 @@ This models importance as long-run visit frequency: a page ranks highly if a sur
 | power iteration | repeated multiplication by the matrix |
 | centrality | a score defined as an eigenvector, or a function, of the graph matrix |
 
-**Extensions.** Leslie matrices in population ecology (same dominant-eigenvector structure, eigenvalue = population growth rate); the next-generation matrix in epidemiology, whose spectral radius *is* R₀; Katz centrality and hub/authority (HITS) scores; personalized PageRank as a graph kernel in ML.
+**Extensions.** [Leslie matrices](https://en.wikipedia.org/wiki/Leslie_matrix) in population ecology (same dominant-eigenvector structure, eigenvalue = population growth rate); the [next-generation matrix](https://en.wikipedia.org/wiki/Next-generation_matrix) in epidemiology, whose spectral radius *is* [R₀](https://en.wikipedia.org/wiki/Basic_reproduction_number); [Katz centrality](https://en.wikipedia.org/wiki/Katz_centrality) and [hub/authority](https://en.wikipedia.org/wiki/HITS_algorithm) (HITS) scores; personalized [PageRank](https://en.wikipedia.org/wiki/PageRank) as a graph kernel in ML.
 
 ---
 
@@ -830,9 +830,9 @@ does.
 
 **Field:** Communications, information theory, storage systems
 
-**Tier:** 1 — rank and null space over GF(2), the smallest finite field: just the numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. Reed–Solomon codes use the larger fields GF(2^m), which are Tier 3.
+**Tier:** 1 — rank and null space over [GF(2)](https://en.wikipedia.org/wiki/GF%282%29), the smallest [finite field](https://en.wikipedia.org/wiki/Finite_field): just the numbers 0 and 1, added and multiplied modulo 2, so 1 + 1 = 0. Nothing from abstract algebra is needed beyond that. [Reed–Solomon](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) codes use the larger fields GF(2^m), which are Tier 3.
 
-**Scalars and vectors.** Scalar field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is AND); Reed–Solomon codes use GF(2^m). Vectors: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - Hamming weight is a metric, not a norm from an inner product.
+**Scalars and vectors.** Scalar field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is AND); Reed–Solomon codes use GF(2^m). Vectors: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - [Hamming weight](https://en.wikipedia.org/wiki/Hamming_distance) is a metric, not a norm from an inner product.
 
 **Underlying equations.** None: algebraic constraints over GF(2).
 
@@ -879,13 +879,13 @@ because G Hᵀ = B + B = 0 in GF(2). Each row of H is one parity check: the bits
 s = H yᵀ = H cᵀ + H eᵀ = H eᵀ
 ```
 
-The syndrome depends only on the error pattern, not on the message. Decoding means finding the error pattern with the fewest 1s that satisfies H eᵀ = s, and then recovering c = y + e.
+The [syndrome](https://en.wikipedia.org/wiki/Decoding_methods#Syndrome_decoding) depends only on the error pattern, not on the message. Decoding means finding the error pattern with the fewest 1s that satisfies H eᵀ = s, and then recovering c = y + e.
 
-**Worked case: Hamming(7,4).** Here k = 4, n = 7, d = 3, and t = 1. The seven columns of H are the seven nonzero 3-bit vectors. A single flipped bit in position i produces a syndrome equal to column i of H, so the syndrome directly names the position of the error.
+**Worked case: [Hamming(7,4)](https://en.wikipedia.org/wiki/Hamming%287,4%29).** Here k = 4, n = 7, d = 3, and t = 1. The seven columns of H are the seven nonzero 3-bit vectors. A single flipped bit in position i produces a syndrome equal to column i of H, so the syndrome directly names the position of the error.
 
-**Matrix structure.** Entries in GF(2); LDPC codes use very sparse `H`; Reed–Solomon works over GF(2^m) with a Vandermonde-structured generator.
+**Matrix structure.** Entries in GF(2); [LDPC](https://en.wikipedia.org/wiki/Low-density_parity-check_code) codes use very sparse `H`; Reed–Solomon works over GF(2^m) with a [Vandermonde](https://en.wikipedia.org/wiki/Vandermonde_matrix)-structured generator.
 
-**What is computed.** Syndrome decoding: look up or infer the minimum-weight `e` consistent with `s`. For LDPC codes, belief propagation on the bipartite graph of `H`. For Reed–Solomon, polynomial interpolation, which is a structured linear solve.
+**What is computed.** Syndrome decoding: look up or infer the minimum-weight `e` consistent with `s`. For LDPC codes, [belief propagation](https://en.wikipedia.org/wiki/Belief_propagation) on the bipartite graph of `H`. For Reed–Solomon, polynomial interpolation, which is a structured linear solve.
 
 **Why linear algebra is the right tool.** Distance properties — the whole point of a code — become rank conditions. A code corrects `t` errors if and only if every `2t` columns of `H` are linearly independent. Searching an exponentially large space of codewords collapses to a statement about column ranks.
 
@@ -904,7 +904,7 @@ The syndrome depends only on the error pattern, not on the message. Decoding mea
 | code rate | k/n, the subspace dimension over the ambient dimension |
 | erasure vs error | known vs unknown error position — a column selection vs a search |
 
-**Extensions.** Reed–Solomon in QR codes, CDs, and RAID-6; LDPC in 5G and Wi-Fi 6; polar codes in 5G control channels. Separately, the same GF(2) linear algebra at massive scale — sparse nullspace via block Lanczos or Wiedemann — is the final stage of the number field sieve used to factor RSA moduli.
+**Extensions.** Reed–Solomon in [QR codes](https://en.wikipedia.org/wiki/QR_code), CDs, and [RAID](https://en.wikipedia.org/wiki/Standard_RAID_levels)-6; LDPC in 5G and Wi-Fi 6; [polar codes](https://en.wikipedia.org/wiki/Polar_code_%28coding_theory%29) in 5G control channels. Separately, the same GF(2) linear algebra at massive scale — sparse nullspace via [block Lanczos](https://en.wikipedia.org/wiki/Block_Lanczos_algorithm) or [Wiedemann](https://en.wikipedia.org/wiki/Block_Wiedemann_algorithm) — is the final stage of the [number field sieve](https://en.wikipedia.org/wiki/General_number_field_sieve) used to factor RSA moduli.
 
 ---
 
@@ -930,15 +930,15 @@ why graphics hardware is built the way it is.
 
 </details>
 
-**Field:** Computer vision, photogrammetry, robotics
+**Field:** Computer vision, [photogrammetry](https://en.wikipedia.org/wiki/Photogrammetry), robotics
 
-**Tier:** 2 — the SVD does the work. The 2D homography and the transformation pipeline behind it sit at Tier 1; pose refinement on SE(3) is Tier 3.
+**Tier:** 2 — the SVD does the work. The 2D [homography](https://en.wikipedia.org/wiki/Homography_%28computer_vision%29) and the transformation pipeline behind it sit at Tier 1; pose refinement on [SE(3)](https://en.wikipedia.org/wiki/Rigid_transformation) is Tier 3.
 
-**Scalars and vectors.** Scalar field: R. Vectors: scene points in R^3, written in homogeneous R^4 up to scale (projective space P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown essential matrix is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8.
+**Scalars and vectors.** Scalar field: R. Vectors: scene points in R^3, written in homogeneous R^4 up to scale ([projective space](https://en.wikipedia.org/wiki/Projective_space) P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown [essential matrix](https://en.wikipedia.org/wiki/Essential_matrix) is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8.
 
-**Underlying equations.** None: projective geometry of the pinhole camera.
+**Underlying equations.** None: projective geometry of the [pinhole camera](https://en.wikipedia.org/wiki/Pinhole_camera_model).
 
-**The problem.** Given photographs of a scene from unknown viewpoints, recover both the camera positions and the 3D geometry. This is the engine behind phone panorama stitching, drone mapping, visual SLAM, and photogrammetric reconstruction.
+**The problem.** Given photographs of a scene from unknown viewpoints, recover both the camera positions and the 3D geometry. This is the engine behind phone [panorama stitching](https://en.wikipedia.org/wiki/Image_stitching), drone mapping, visual SLAM, and photogrammetric reconstruction.
 
 **Variables.**
 | Symbol | Name | What it holds | Shape | Units |
@@ -961,7 +961,7 @@ why graphics hardware is built the way it is.
 | A | constraint matrix | one row per correspondence, built from the products of their coordinates | N × 9 | dimensionless |
 | e | vectorized E | the nine entries of E stacked into a column | 9 × 1 | dimensionless |
 
-Primes mark the second view: x̂′ is the same scene point seen by the second camera, and K′ is that camera's intrinsic matrix.
+Primes mark the second view: x̂′ is the same scene point seen by the second camera, and K′ is that camera's [intrinsic](https://en.wikipedia.org/wiki/Camera_resectioning#Intrinsic_parameters) matrix.
 
 **Formulation.** **Where the equations come from.** There is no differential equation; the model is the geometry of an ideal pinhole camera.
 
@@ -971,9 +971,9 @@ Primes mark the second view: x̂′ is the same scene point seen by the second c
 λ x̃ = K [R | t] X̃
 ```
 
-Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in metres). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. Homogeneous coordinates isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × metres on the right, λ in metres on the left, leaving pixels.
+Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in metres). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. [Homogeneous coordinates](https://en.wikipedia.org/wiki/Homogeneous_coordinates) isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × metres on the right, λ in metres on the left, leaving pixels.
 
-**Two views.** Place the first camera at the world origin (R = I, t = 0) and the second at an unknown R, t. A scene point appears at x̂ in the first image and x̂′ in the second, both in normalized coordinates. The two viewing rays and the baseline t between the cameras lie in one plane, and that coplanarity is the epipolar constraint:
+**Two views.** Place the first camera at the world origin (R = I, t = 0) and the second at an unknown R, t. A scene point appears at x̂ in the first image and x̂′ in the second, both in normalized coordinates. The two viewing rays and the baseline t between the cameras lie in one plane, and that coplanarity is the [epipolar](https://en.wikipedia.org/wiki/Epipolar_geometry) constraint:
 
 ```
 x̂′ᵀ E x̂ = 0,      E = [t]ₓ R
@@ -989,11 +989,11 @@ A e = 0
 
 **Matrix structure.** `A` is small and dense (n × 9). The later bundle-adjustment stage produces a large, sparse, highly structured Jacobian with the characteristic "arrowhead" block pattern from cameras and points.
 
-**What is computed.** SVD, twice and for two different reasons: once to solve the homogeneous least-squares problem (smallest singular vector), and once to project the estimate onto the manifold of valid essential matrices by zeroing the third singular value and equalizing the first two. Bundle adjustment then refines everything by sparse Levenberg–Marquardt with the Schur complement trick to eliminate the 3D points.
+**What is computed.** SVD, twice and for two different reasons: once to solve the homogeneous least-squares problem (smallest singular vector), and once to project the estimate onto the manifold of valid essential matrices by zeroing the third singular value and equalizing the first two. [Bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) then refines everything by sparse [Levenberg–Marquardt](https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm) with the [Schur complement](https://en.wikipedia.org/wiki/Schur_complement) trick to eliminate the 3D points.
 
 **Why linear algebra is the right tool.** Projective geometry in homogeneous coordinates is the reason: a genuinely nonlinear operation (perspective division) becomes a linear map followed by a normalization. Adding one coordinate buys linearity.
 
-**Pitfall worth teaching.** Conditioning matters more than the algorithm here. Hartley's normalized 8-point algorithm — translate and scale the image points before forming `A` — is the difference between usable and useless results, and the only change is a preconditioning of the input. It is one of the cleanest real demonstrations that condition number is not an academic concern.
+**Pitfall worth teaching.** Conditioning matters more than the algorithm here. Hartley's normalized [8-point](https://en.wikipedia.org/wiki/Eight-point_algorithm) algorithm — translate and scale the image points before forming `A` — is the difference between usable and useless results, and the only change is a preconditioning of the input. It is one of the cleanest real demonstrations that condition number is not an academic concern.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -1009,7 +1009,7 @@ A e = 0
 | bundle adjustment | sparse nonlinear least squares over all cameras and points at once |
 | degenerate configuration | point placement that makes A rank-deficient, so the solution is not unique |
 
-**Extensions.** Homography estimation and image stitching; the PnP problem; the Perron-like structure in rotation averaging; SE(3) and Lie-group optimization for pose graphs.
+**Extensions.** Homography estimation and image stitching; the [PnP](https://en.wikipedia.org/wiki/Perspective-n-Point) problem; the Perron-like structure in rotation averaging; SE(3) and Lie-group optimization for pose graphs.
 
 ---
 
@@ -1018,12 +1018,12 @@ A e = 0
 <details>
 <summary><b>Start here — the problem in plain terms</b></summary>
 
-Here is a century of monthly sea-surface temperature maps: tens of thousands of grid points, over a
+Here is a century of monthly [sea-surface temperature](https://en.wikipedia.org/wiki/Sea_surface_temperature) maps: tens of thousands of grid points, over a
 thousand time steps. Far too much to look at directly, and most of it is redundant — neighbouring points
 in the ocean do not behave independently.
 
 What a climatologist wants is the handful of recurring patterns that account for most of the variation.
-El Nino is one: a specific spatial signature of warm and cool regions that strengthens and weakens over
+[El Nino](https://en.wikipedia.org/wiki/El_Ni%C3%B1o%E2%80%93Southern_Oscillation) is one: a specific spatial signature of warm and cool regions that strengthens and weakens over
 time. If you can identify a few such patterns, each with a single time series saying how strongly it is
 present each month, you have compressed the whole dataset into something you can reason about.
 
@@ -1038,9 +1038,9 @@ of two unrelated physical processes.
 
 **Field:** Atmospheric and ocean science, climatology
 
-**Tier:** 2 — truncated SVD and the Eckart–Young optimality statement; no differential equation is used. Relating EOFs to the dynamics through a stochastic ODE is a Tier 3 extension.
+**Tier:** 2 — truncated SVD and the [Eckart–Young](https://en.wikipedia.org/wiki/Low-rank_approximation) optimality statement; no differential equation is used. Relating [EOFs](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions) to the dynamics through a stochastic ODE is a Tier 3 extension.
 
-**Scalars and vectors.** Scalar field: R. Vectors: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps).
+**Scalars and vectors.** Scalar field: R. Vectors: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and [principal-component](https://en.wikipedia.org/wiki/Principal_component_analysis) series in R^t (t time steps).
 
 **Underlying equations.** None used: a statistical decomposition of observed data (the ocean itself obeys PDEs that the method ignores).
 
@@ -1078,7 +1078,7 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 
 **Matrix structure.** Tall or wide but dense; the effective rank is low — typically 5–10 modes capture most of the variance, which is why the technique works at all.
 
-**What is computed.** Truncated SVD (randomized SVD or Lanczos bidiagonalization for large grids). The Eckart–Young theorem guarantees that the rank-k truncation is the best possible rank-k approximation in both the Frobenius and spectral norms — an optimality statement, not a heuristic.
+**What is computed.** Truncated SVD (randomized SVD or Lanczos bidiagonalization for large grids). The Eckart–Young theorem guarantees that the rank-k truncation is the best possible rank-k approximation in both the [Frobenius and spectral norms](https://en.wikipedia.org/wiki/Matrix_norm) — an optimality statement, not a heuristic.
 
 **Why linear algebra is the right tool.** The field is spatially correlated: neighboring grid points are far from independent. Low-rank structure is a mathematical restatement of physical coherence, and the SVD finds it without being told any physics.
 
@@ -1096,7 +1096,7 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 | rotated EOF (varimax) | a deliberately non-orthogonal re-basis of the leading subspace |
 | North's rule of thumb | a test for whether two singular values are too close to separate the modes |
 
-**Extensions.** Proper orthogonal decomposition and reduced-order models in fluid dynamics; dynamic mode decomposition, which extracts an approximate linear operator (Koopman) rather than just a basis; the same SVD machinery in latent semantic analysis, recommender systems, and matrix completion.
+**Extensions.** [Proper orthogonal decomposition](https://en.wikipedia.org/wiki/Proper_orthogonal_decomposition) and reduced-order models in fluid dynamics; [dynamic mode decomposition](https://en.wikipedia.org/wiki/Dynamic_mode_decomposition), which extracts an approximate linear operator ([Koopman](https://en.wikipedia.org/wiki/Composition_operator)) rather than just a basis; the same SVD machinery in [latent semantic analysis](https://en.wikipedia.org/wiki/Latent_semantic_analysis), [recommender systems](https://en.wikipedia.org/wiki/Recommender_system), and [matrix completion](https://en.wikipedia.org/wiki/Matrix_completion).
 
 **The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
@@ -1127,9 +1127,9 @@ that actually occur in nature occupy a very thin slice of that enormous space.
 
 **Field:** Physics, quantum chemistry, quantum information
 
-**Tier:** 3 — the eigenproblem comes from separating variables in the Schrödinger equation, and its meaning is a statement about that ODE's solutions. On-ramp: benzene's 6×6 Hückel matrix can be diagonalized with no quantum background at all.
+**Tier:** 3 — the eigenproblem comes from [separating variables](https://en.wikipedia.org/wiki/Separation_of_variables) in the [Schrödinger equation](https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation), and its meaning is a statement about that ODE's solutions. On-ramp: [benzene](https://en.wikipedia.org/wiki/Benzene)'s 6×6 [Hückel](https://en.wikipedia.org/wiki/H%C3%BCckel_method) matrix can be diagonalized with no quantum background at all.
 
-**Scalars and vectors.** Scalar field: C (real symmetric in the Huckel special case). Vectors: unit vectors in C^d; for n qubits d = 2^n and the space is the tensor product (C^2)^(x)n. Global phase is unphysical, so states are really points of CP^(d-1). Observables are Hermitian matrices, which form a REAL vector space of dimension d^2.
+**Scalars and vectors.** Scalar field: C (real symmetric in the Huckel special case). Vectors: unit vectors in C^d; for n [qubits](https://en.wikipedia.org/wiki/Qubit) d = 2^n and the space is the [tensor product](https://en.wikipedia.org/wiki/Tensor_product) (C^2)^(x)n. Global phase is unphysical, so states are really points of [CP^(d-1)](https://en.wikipedia.org/wiki/Complex_projective_space). Observables are [Hermitian](https://en.wikipedia.org/wiki/Hermitian_matrix) matrices, which form a REAL vector space of dimension d^2.
 
 **Underlying equations.** Linear Schrödinger equation iħ dψ/dt = H ψ; separation of variables gives the eigenproblem H φ = E φ.
 
@@ -1158,7 +1158,7 @@ A dagger (†) denotes the conjugate transpose, so φ† ψ is the complex inner
 iħ dψ/dt = H ψ(t)
 ```
 
-**Stationary states.** Look for solutions whose shape does not change, ψ(t) = φ e^{−iEt/ħ}. Substituting gives the time-independent Schrödinger equation:
+**[Stationary states](https://en.wikipedia.org/wiki/Stationary_state).** Look for solutions whose shape does not change, ψ(t) = φ e^{−iEt/ħ}. Substituting gives the time-independent Schrödinger equation:
 
 ```
 H φ = E φ
@@ -1170,25 +1170,25 @@ That is what the eigenproblem means for the ODE. An eigenvector is a stationary 
 ψ(t) = Σ_k (φ_k† ψ(0)) φ_k e^{−iE_k t/ħ}      equivalently     ψ(t) = U(t) ψ(0)
 ```
 
-U(t) is unitary, which is why time evolution preserves ‖ψ‖ = 1, and why quantum gates are unitary matrices.
+U(t) is [unitary](https://en.wikipedia.org/wiki/Unitary_matrix), which is why time evolution preserves ‖ψ‖ = 1, and why [quantum gates](https://en.wikipedia.org/wiki/Quantum_logic_gate) are unitary matrices.
 
-**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The Hamiltonian is then
+**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The [Hamiltonian](https://en.wikipedia.org/wiki/Hamiltonian_%28quantum_mechanics%29) is then
 
 ```
 H = α I + β Aᴳ
 ```
 
-so its eigenvectors are exactly those of the ring's adjacency matrix, and its energies are E = α + β μ_k, where μ_k are the adjacency eigenvalues. For a 6-cycle, μ_k = 2 cos(2πk/6), giving 2, 1, 1, −1, −1, −2. Since β < 0 the lowest level is α + 2β, then α + β twice, α − β twice, and α − 2β. Benzene's six π electrons fill the three lowest orbitals, two per orbital. Dropping the orthonormality assumption turns this into a generalized eigenproblem, H φ = E S φ, where S is the orbital overlap matrix.
+so its eigenvectors are exactly those of the ring's [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix), and its energies are E = α + β μ_k, where μ_k are the adjacency eigenvalues. For a 6-cycle, μ_k = 2 cos(2πk/6), giving 2, 1, 1, −1, −1, −2. Since β < 0 the lowest level is α + 2β, then α + β twice, α − β twice, and α − 2β. Benzene's six π electrons fill the three lowest orbitals, two per orbital. Dropping the orthonormality assumption turns this into a generalized eigenproblem, H φ = E S φ, where S is the orbital overlap matrix.
 
 **Many particles.** n qubits (or n two-level systems) live in the tensor product (ℂ²)^⊗n, of dimension d = 2ⁿ. Combining systems multiplies dimensions rather than adding them.
 
 **Matrix structure.** Hermitian (hence real eigenvalues, orthogonal eigenvectors) and, in a local basis, sparse — Hamiltonians typically couple only nearby sites or orbitals. The dimension is the problem: it grows exponentially in system size.
 
-**What is computed.** Lanczos and Davidson methods for the lowest few eigenpairs of matrices too large to store; self-consistent field iteration (Hartree–Fock, DFT) as a nonlinear eigenproblem solved by repeated dense diagonalization; quantum circuit simulation as a sequence of sparse structured matrix–vector products.
+**What is computed.** Lanczos and Davidson methods for the lowest few eigenpairs of matrices too large to store; [self-consistent field](https://en.wikipedia.org/wiki/Hartree%E2%80%93Fock_method) iteration (Hartree–Fock, [DFT](https://en.wikipedia.org/wiki/Density_functional_theory)) as a nonlinear eigenproblem solved by repeated dense diagonalization; quantum circuit simulation as a sequence of sparse structured matrix–vector products.
 
 **Why linear algebra is the right tool.** It is not a modeling convenience here — the superposition principle *is* linearity, and the postulates of quantum mechanics are stated directly in terms of Hilbert spaces, Hermitian operators, and unitary evolution. This is the entry where the mathematics is not applied to the physics but constitutive of it.
 
-**Pitfall worth teaching.** The tensor-product structure means the state space grows as 2ⁿ, which makes exact methods hopeless past ~50 qubits. The response is again low-rank structure: matrix product states and tensor networks exploit the fact that physically relevant states occupy a very thin, low-entanglement slice of the full space. Low-rank approximation appears here for the same reason it appears in entry 9, in a completely different setting.
+**Pitfall worth teaching.** The tensor-product structure means the state space grows as 2ⁿ, which makes exact methods hopeless past ~50 qubits. The response is again low-rank structure: [matrix product states](https://en.wikipedia.org/wiki/Matrix_product_state) and tensor networks exploit the fact that physically relevant states occupy a very thin, low-entanglement slice of the full space. Low-rank approximation appears here for the same reason it appears in entry 9, in a completely different setting.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
 
@@ -1206,7 +1206,7 @@ so its eigenvectors are exactly those of the ring's adjacency matrix, and its en
 | SCF iteration | fixed-point iteration on an eigenproblem whose matrix depends on its own solution |
 | density matrix | a positive semidefinite matrix with trace 1 |
 
-**Extensions.** Hückel molecular orbital theory, where the Hamiltonian is α I + β A for the molecular graph's adjacency matrix A, so the orbitals are exactly A's eigenvectors and the orbital energies are an affine function of its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: density matrices as positive semidefinite operators, quantum channels as completely positive maps, and variational quantum eigensolvers.
+**Extensions.** Hückel molecular orbital theory, where the Hamiltonian is α I + β A for the molecular graph's adjacency matrix A, so the orbitals are exactly A's eigenvectors and the orbital energies are an affine function of its eigenvalues — the cleanest bridge between graph theory and chemistry. Also: [density matrices](https://en.wikipedia.org/wiki/Density_matrix) as positive semidefinite operators, [quantum channels](https://en.wikipedia.org/wiki/Quantum_channel) as completely positive maps, and [variational quantum eigensolvers](https://en.wikipedia.org/wiki/Variational_quantum_eigensolver).
 
 ---
 

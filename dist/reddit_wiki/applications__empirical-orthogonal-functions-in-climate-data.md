@@ -2,16 +2,16 @@
 
 ### Start here
 
-Here is a century of monthly sea-surface temperature maps: tens of thousands of grid points, over a
+Here is a century of monthly [sea-surface temperature](https://en.wikipedia.org/wiki/Sea_surface_temperature) maps: tens of thousands of grid points, over a
 thousand time steps. Far too much to look at directly, and most of it is redundant — neighbouring points
 in the ocean do not behave independently.
 
 What a climatologist wants is the handful of recurring patterns that account for most of the variation.
-El Nino is one: a specific spatial signature of warm and cool regions that strengthens and weakens over
+[El Nino](https://en.wikipedia.org/wiki/El_Ni%C3%B1o%E2%80%93Southern_Oscillation) is one: a specific spatial signature of warm and cool regions that strengthens and weakens over
 time. If you can identify a few such patterns, each with a single time series saying how strongly it is
 present each month, you have compressed the whole dataset into something you can reason about.
 
-That decomposition is what the SVD provides, and it comes with a guarantee: no other set of that many
+That decomposition is what the [SVD](https://en.wikipedia.org/wiki/Singular_value_decomposition) provides, and it comes with a guarantee: no other set of that many
 patterns reconstructs the data more accurately.
 
 The caveat is worth absorbing early. The method forces the patterns to be mutually perpendicular, and
@@ -19,10 +19,10 @@ nature is under no obligation to comply. A pattern that is optimal mathematicall
 of two unrelated physical processes.
 
 **Field:** Atmospheric and ocean science, climatology  
-**Tier:** 2 — truncated SVD and the Eckart–Young optimality statement; no differential equation is used. Relating EOFs to the dynamics through a stochastic ODE is a Tier 3 extension.  
+**Tier:** 2 — truncated SVD and the [Eckart–Young](https://en.wikipedia.org/wiki/Low-rank_approximation) optimality statement; no differential equation is used. Relating [EOFs](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions) to the dynamics through a stochastic [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) is a Tier 3 extension.  
 **Scalar field:** R  
-**Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component series in R^t (t time steps)  
-**Underlying equations:** None used: a statistical decomposition of observed data (the ocean itself obeys PDEs that the method ignores)
+**Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and [principal-component](https://en.wikipedia.org/wiki/Principal_component_analysis) series in R^t (t time steps)  
+**Underlying equations:** None used: a statistical decomposition of observed data (the ocean itself obeys [PDEs](https://en.wikipedia.org/wiki/Partial_differential_equation) that the method ignores)
 
 ### The problem
 
@@ -57,7 +57,7 @@ X = U Σ Vᵀ = Σ_i σ_i u_i v_iᵀ
 
 This models the anomaly field as a sum of rank-one pieces, each a fixed spatial pattern u_i multiplied by a time series σ_i v_i. Read by columns: the map for month k is Σ_i u_i (σ_i v_ik), a weighted combination of the patterns with weights that change month by month.
 
-**Truncation.** Keeping the first q terms gives the best possible rank-q approximation of X, and pattern i accounts for the fraction σ_i² / Σ_j σ_j² of the total variance. Equivalently, the u_i are the eigenvectors of the covariance matrix C, with eigenvalues σ_i² / (t − 1). That is why EOFs are called principal components.
+**Truncation.** Keeping the first q terms gives the best possible rank-q approximation of X, and pattern i accounts for the fraction σ_i² / Σ_j σ_j² of the total variance. Equivalently, the u_i are the [eigenvectors](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the [covariance](https://en.wikipedia.org/wiki/Covariance_matrix) matrix C, with eigenvalues σ_i² / (t − 1). That is why EOFs are called principal components.
 
 **Area weighting.** On a latitude–longitude grid, cells shrink toward the poles. The SVD is therefore applied to W X, and the resulting patterns are divided by the weights before they are plotted.
 
@@ -67,7 +67,7 @@ Tall or wide but dense; the effective rank is low — typically 5–10 modes cap
 
 ### What is computed
 
-Truncated SVD (randomized SVD or Lanczos bidiagonalization for large grids). The Eckart–Young theorem guarantees that the rank-k truncation is the best possible rank-k approximation in both the Frobenius and spectral norms — an optimality statement, not a heuristic.
+Truncated SVD (randomized SVD or [Lanczos](https://en.wikipedia.org/wiki/Lanczos_algorithm) bidiagonalization for large grids). The Eckart–Young theorem guarantees that the rank-k truncation is the best possible rank-k approximation in both the [Frobenius and spectral norms](https://en.wikipedia.org/wiki/Matrix_norm) — an optimality statement, not a heuristic.
 
 ### Why linear algebra is the right tool
 
@@ -79,9 +79,9 @@ EOFs are constrained to be orthogonal, and physical modes are generally not. A l
 
 ### Extensions
 
-Proper orthogonal decomposition and reduced-order models in fluid dynamics; dynamic mode decomposition, which extracts an approximate linear operator (Koopman) rather than just a basis; the same SVD machinery in latent semantic analysis, recommender systems, and matrix completion.
+[Proper orthogonal decomposition](https://en.wikipedia.org/wiki/Proper_orthogonal_decomposition) and reduced-order models in fluid dynamics; [dynamic mode decomposition](https://en.wikipedia.org/wiki/Dynamic_mode_decomposition), which extracts an approximate linear operator ([Koopman](https://en.wikipedia.org/wiki/Composition_operator)) rather than just a basis; the same SVD machinery in [latent semantic analysis](https://en.wikipedia.org/wiki/Latent_semantic_analysis), [recommender systems](https://en.wikipedia.org/wiki/Recommender_system), and [matrix completion](https://en.wikipedia.org/wiki/Matrix_completion).
 
-**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is symmetric and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
+**The link to dynamics, and why it is weak.** If the anomalies obeyed a linear stochastic ODE, dx/dt = B x + noise, the EOFs would be eigenvectors of the resulting covariance. Those coincide with the eigenvectors of B, the actual dynamical modes, only in special cases, such as when B is [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) and the noise is equally strong in every direction. This is the precise sense in which an optimal pattern need not be a physical mode.
 
 ### Terminology
 

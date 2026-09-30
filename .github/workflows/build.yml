@@ -37,6 +37,9 @@ jobs:
         # --locked fails rather than silently re-resolving if uv.lock is out of date.
         run: uv sync --locked
 
+      - name: Test the linker
+        run: uv run python tests/test_linker.py
+
       - name: Regenerate dist/
         run: uv run python build/build_all.py
 
