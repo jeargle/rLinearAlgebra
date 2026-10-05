@@ -22,7 +22,7 @@ la_concepts: matrix inverse; Neumann series; Perron-Frobenius; spectral radius
 primary_method: Dense LU; Neumann expansion
 matrix_structure: nonnegative, column sums < 1
 typical_size: 400-500 sectors (1e4 multiregion)
-worked_example_size: 5-sector toy economy
+worked_example_size: 2-sector toy; 15-sector US economy (BEA 2023)
 terminology:
   technical coefficient matrix A: input from sector i per unit output of sector j
   final demand: the right-hand side d

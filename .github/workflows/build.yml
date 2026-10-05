@@ -35,10 +35,14 @@ jobs:
 
       - name: Install dependencies
         # --locked fails rather than silently re-resolving if uv.lock is out of date.
-        run: uv sync --locked
+        run: uv sync --locked --group notebooks
 
       - name: Test the linker
         run: uv run python tests/test_linker.py
+
+      - name: Run the notebooks as scripts
+        # marimo notebooks are plain Python; their asserts check the worked examples
+        run: uv run --group notebooks python build/build_notebooks.py --check
 
       - name: Regenerate dist/
         run: uv run python build/build_all.py
@@ -55,6 +59,10 @@ jobs:
 
       - name: Build static site
         run: uv run python build/build_site.py
+
+      - name: Export notebooks into the site
+        # after build_site.py, which recreates site/ from scratch
+        run: uv run --group notebooks python build/build_notebooks.py
 
       - name: Verify the site has no absolute links
         # An absolute path breaks a project site served under /<repo>/.

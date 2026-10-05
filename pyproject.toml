@@ -16,6 +16,19 @@ dependencies = [
 publish = [
     "praw>=7.7",     # subreddit wiki sync
 ]
+# Running and exporting the notebooks in notebooks/:
+#   uv run --group notebooks python build/build_notebooks.py
+notebooks = [
+    "marimo>=0.25",
+    "numpy>=2.0",
+    "matplotlib>=3.8",
+]
+# Regenerating the data embedded in notebooks (maintainers only):
+#   uv run --group data python data/prepare_bea_2023.py
+data = [
+    "numpy>=2.0",
+    "openpyxl>=3.1",
+]
 
 [tool.uv]
 # The build/ scripts are run directly, not imported as an installed package,

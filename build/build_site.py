@@ -17,7 +17,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from common import (BLOCKS, FIELD_DEF, GF2_DEF, GF2_SHORT, ROOT, escape_cell, link_first_uses,
-                    load_all, load_entries, load_terms, require_gf2_definition, terms_for_entry)
+                    load_all, load_entries, load_terms, notebook_page, require_gf2_definition,
+                    terms_for_entry)
 
 try:
     import markdown
@@ -51,6 +52,8 @@ summary { cursor:pointer; font-weight:600; }
 .tier { display:inline-block; font-size:.75rem; font-weight:600; padding:.1rem .45rem;
   border-radius:3px; background:#eceff3; color:var(--dim); vertical-align:.08rem; }
 .planned { color:var(--dim); }
+.run { background:#eef3ff; border:1px solid #c7d6fb; border-radius:4px; padding:.6rem .9rem; }
+.run a { font-weight:600; }
 .def { font-size:.85rem; color:var(--dim); font-style:italic; }
 nav.crumb { font-size:.9rem; margin-bottom:1.5rem; }
 ul.entries { list-style:none; padding-left:0; }
@@ -104,6 +107,11 @@ def entry_page(meta, link_terms=()):
         f"<div><b>Vectors:</b> {inline(L(meta['vector_space']))}</div>"
         f"<div><b>Underlying equations:</b> {inline(L(meta.get('underlying_equations') or 'not yet recorded'))}</div>"
         "</div>")
+    nb = notebook_page(meta)
+    if nb:
+        parts.append(f"<p class=\"run\"><a href=\"../{nb}\">Run this example</a> — an interactive "
+                     "notebook that runs in your browser, with nothing to install. The first visit "
+                     "takes a little while, because it downloads Python.</p>")
     for name in BLOCKS:
         parts.append(f"<h2>{html.escape(name)}</h2>\n" + md(L(s[name])))
     terms = meta.get("terminology") or {}

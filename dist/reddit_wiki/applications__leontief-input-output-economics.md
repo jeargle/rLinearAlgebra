@@ -22,6 +22,8 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 **Vectors:** outputs and demands in R^n, n = number of sectors  
 **Underlying equations:** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE)
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/05-leontief-input-output-economics.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 Industries consume each other's output. Making a car needs steel; making steel needs electricity; making electricity needs steel. Given final consumer demand, find the total production every sector must run.

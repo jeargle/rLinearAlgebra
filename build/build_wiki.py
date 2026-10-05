@@ -25,8 +25,9 @@ from collections import defaultdict
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import (BLOCKS, DIST, FIELD_DEF, GF2_DEF, GF2_SHORT, escape_cell, link_first_uses,
-                    load_all, load_entries, load_terms, require_gf2_definition, terms_for_entry)
+from common import (BLOCKS, DIST, FIELD_DEF, GF2_DEF, GF2_SHORT, SITE_URL, escape_cell,
+                    link_first_uses, load_all, load_entries, load_terms, notebook_page,
+                    require_gf2_definition, terms_for_entry)
 
 WIKI_ROOT = "applications"
 
@@ -44,6 +45,10 @@ def render_entry(meta, link_terms=()):
             f"**Scalar field:** {meta['scalar_field']}  ",
             f"**Vectors:** {meta['vector_space']}  ",
             f"**Underlying equations:** {meta.get('underlying_equations') or 'not yet recorded'}", ""]
+    nb = notebook_page(meta)
+    if nb:
+        out += [f"**[Run this example]({SITE_URL}{nb})** — an interactive notebook that runs in "
+                "your browser, with nothing to install.", ""]
     for name in BLOCKS:
         out += [f"### {name}", "", sections[name], ""]
     terms = meta.get("terminology") or {}

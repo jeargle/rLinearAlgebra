@@ -15,6 +15,11 @@ ENTRIES_DIR = ROOT / "entries"
 BACKLOG = ROOT / "backlog.yaml"
 DOCS = ROOT / "docs"
 DIST = ROOT / "dist"
+NOTEBOOKS_DIR = ROOT / "notebooks"
+
+# Public address of the GitHub Pages site. Only the wiki needs it: the site itself uses
+# relative links, but a Reddit wiki page can only link out with a full URL.
+SITE_URL = "https://jeargle.github.io/rLinearAlgebra/"
 
 # Order of the analytical blocks in a rendered entry.
 BLOCKS = [
@@ -72,6 +77,24 @@ def load_entries():
         out.append(meta)
     out.sort(key=lambda m: m["id"])
     return out
+
+
+def notebook_paths():
+    """Notebook sources, each named after its entry file (NN-slug.py for NN-slug.md)."""
+    stems = {p.stem for p in ENTRIES_DIR.glob("*.md")}
+    paths = sorted(NOTEBOOKS_DIR.glob("[0-9]*.py"))
+    orphans = [p.name for p in paths if p.stem not in stems]
+    if orphans:
+        raise ValueError(f"notebooks with no matching entry file: {orphans}")
+    return paths
+
+
+def notebook_page(meta):
+    """Path of the entry's exported notebook relative to the site root, or None."""
+    stem = Path(meta["_path"]).stem
+    if (NOTEBOOKS_DIR / f"{stem}.py").exists():
+        return f"notebooks/{stem}.html"
+    return None
 
 
 def load_backlog():

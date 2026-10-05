@@ -61,6 +61,30 @@ uv run python -m http.server --directory site 8000
 
 Opening the files directly from disk is not equivalent — serve over HTTP.
 
+## Notebooks
+
+`notebooks/` holds one [marimo](https://marimo.io) notebook per entry that has one, named after
+its entry file (`notebooks/05-leontief-input-output-economics.py` for
+`entries/05-leontief-input-output-economics.md`). The entry's site and wiki pages link to it
+automatically. Each notebook starts with a tiny toy version of the problem that can be checked by
+hand; when the realistic version is large, a second, realistic-size problem follows.
+
+```sh
+uv run --group notebooks marimo edit notebooks/05-leontief-input-output-economics.py   # work on one
+uv run --group notebooks python build/build_notebooks.py --check   # run all as plain scripts
+uv run --group notebooks python build/build_notebooks.py           # also export into site/notebooks/
+```
+
+Run the export after `build_site.py`, which recreates `site/`. Each notebook is exported as a single
+HTML page that runs Python in the browser (Pyodide); marimo's interface and the Python runtime load
+from a CDN, so nothing large is deployed. Notebooks must embed their data or compute it, since the
+browser has no access to the repository.
+
+Real datasets are prepared by scripts in `data/`, which download the source and write the numbers
+into a marked block in the notebook. For example, `uv run --group data python
+data/prepare_bea_2023.py` rebuilds the Leontief notebook's 15-sector US table from the Bureau of
+Economic Analysis release. Downloads are cached in `data/.cache/`, which is not committed.
+
 ## Continuous integration
 
 `.github/workflows/build.yml` runs on every push to `main` and on pull requests:
