@@ -29,7 +29,8 @@ SITE = ROOT / "site"
 def check(nb):
     """Run the notebook top to bottom as a plain Python script; its asserts must pass."""
     env = dict(os.environ, MPLBACKEND="Agg")
-    result = subprocess.run([sys.executable, str(nb)], env=env, cwd=ROOT)
+    result = subprocess.run([sys.executable, str(nb)], env=env, cwd=ROOT,
+                            stdin=subprocess.DEVNULL)
     if result.returncode != 0:
         print(f"error: {nb.relative_to(ROOT)} failed when run as a script", file=sys.stderr)
     return result.returncode == 0
@@ -38,9 +39,14 @@ def check(nb):
 def export(nb):
     out = SITE / "notebooks" / f"{nb.stem}.html"
     out.unlink(missing_ok=True)
+    # --no-sandbox: we already run inside the project environment, which has every notebook's
+    # dependencies. Without it, marimo asks whether to build a sandbox for notebooks that carry
+    # inline (PEP 723) dependencies, and the question is invisible because output is captured.
+    # stdin=DEVNULL makes any future prompt fail at once instead of waiting for a keypress.
     cmd = [sys.executable, "-m", "marimo", "export", "html-wasm", str(nb), "-o", str(out),
-           "--single-file", "--mode", "run", "--show-code", "--force"]
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+           "--single-file", "--mode", "run", "--show-code", "--no-sandbox", "--force"]
+    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
+                            stdin=subprocess.DEVNULL)
     # marimo can exit 0 without writing the page (e.g. when uv is missing), so check the file
     if result.returncode != 0 or not out.exists():
         print(result.stdout + result.stderr, file=sys.stderr)
