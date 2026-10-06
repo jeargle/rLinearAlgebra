@@ -10,7 +10,8 @@ region around the volcano, downsamples it to 128 x 128, and quantizes it to the
 values 0..63. The black dots are the camera's reference marks, part of the original
 frame.
 
-The pixels are written, one byte per pixel and base64-encoded, into the block
+The pixels are written, one byte per pixel and base64-encoded, into the `data`
+section of both snippet files (snippets/07-*.py and .jl, so they run standalone) and into the block
 between the BEGIN/END markers in the notebook, so the notebook needs no data files.
 
 Usage (maintainers only; needs network access, numpy and Pillow):
@@ -61,14 +62,38 @@ def literal(q):
     return "\n".join(out)
 
 
+SNIPPETS = ROOT / "snippets" / "07-linear-error-correcting-codes"
+SNIPPET_BEGIN = "# BEGIN MARINER DATA (written by data/prepare_mariner9.py; NASA/JPL PIA02999)  #hide"
+SNIPPET_END = "# END MARINER DATA  #hide"
+
+
+def snippet_literal(q, julia):
+    """The same bytes for a snippet file. Every line ends in #hide: the data runs but is not
+    shown, since the snippet's visible text explains it instead."""
+    lines = textwrap.wrap(base64.b64encode(q.tobytes()).decode("ascii"), 92)
+    out = [SNIPPET_BEGIN, f"image_shape = ({SIZE}, {SIZE})  #hide"]
+    if julia:
+        out += ["image_b64 = join([  #hide"] + [f'    "{line}",  #hide' for line in lines]
+    else:
+        out += ["image_b64 = (  #hide"] + [f'    "{line}"  #hide' for line in lines]
+    out += ["])  #hide" if julia else ")  #hide", SNIPPET_END]
+    return "\n".join(out)
+
+
 def main():
     q = pixels(fetch())
     assert q.shape == (SIZE, SIZE) and q.max() < LEVELS
-    text = NOTEBOOK.read_text()
-    start, stop = text.index(BEGIN), text.index(END) + len(END)
-    NOTEBOOK.write_text(text[:start] + literal(q) + text[stop:])
-    print(f"wrote {SIZE}x{SIZE} Mariner 9 image ({q.size} pixels, levels {q.min()}..{q.max()}) "
-          f"into {NOTEBOOK.relative_to(ROOT)}")
+    targets = [(NOTEBOOK, BEGIN, END, literal(q)),
+               (SNIPPETS.with_suffix(".py"), "# BEGIN MARINER DATA", SNIPPET_END,
+                snippet_literal(q, julia=False)),
+               (SNIPPETS.with_suffix(".jl"), "# BEGIN MARINER DATA", SNIPPET_END,
+                snippet_literal(q, julia=True))]
+    for path, begin, end, new in targets:
+        text = path.read_text()
+        start, stop = text.index(begin), text.index(end) + len(end)
+        path.write_text(text[:start] + new + text[stop:])
+        print(f"wrote {SIZE}x{SIZE} Mariner 9 image into {path.relative_to(ROOT)}")
+    print(f"{q.size} pixels, levels {q.min()}..{q.max()}")
     return 0
 
 
