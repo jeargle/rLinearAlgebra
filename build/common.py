@@ -20,6 +20,7 @@ NOTEBOOKS_DIR = ROOT / "notebooks"
 # Public address of the GitHub Pages site. Only the wiki needs it: the site itself uses
 # relative links, but a Reddit wiki page can only link out with a full URL.
 SITE_URL = "https://jeargle.github.io/rLinearAlgebra/"
+REPO_URL = "https://github.com/jeargle/rLinearAlgebra/blob/main/"
 
 # Order of the analytical blocks in a rendered entry.
 BLOCKS = [
@@ -87,6 +88,52 @@ def notebook_paths():
     if orphans:
         raise ValueError(f"notebooks with no matching entry file: {orphans}")
     return paths
+
+
+SNIPPETS_DIR = ROOT / "snippets"
+SNIPPET_LANGS = {"py": "Python", "jl": "Julia"}
+_SNIPPET_MARK = re.compile(r"^# --- snippet (\w+): (.+?) ---$", re.M)
+
+
+def parse_snippets(path):
+    """{name: (title, code)} for one snippet file, in file order.
+
+    A section starts at a line `# --- snippet NAME: Title ---` and runs to the next one;
+    anything before the first marker is a file header and is not shown. A line ending in
+    `#hide` runs but is not shown: it lets a section use the notebook's variable names
+    (A_us, L_us, ...) while its check runs on the hand-worked toy.
+    """
+    text = Path(path).read_text()
+    marks = list(_SNIPPET_MARK.finditer(text))
+    out = {}
+    for i, mark in enumerate(marks):
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
+        lines = text[mark.end():end].split("\n")
+        shown = "\n".join(line for line in lines if not line.rstrip().endswith("#hide"))
+        out[mark.group(1)] = (mark.group(2), shown.strip("\n"))
+    return out
+
+
+def entry_snippets(meta):
+    """[(name, title, {lang: code})] for an entry, or [] if it has no snippet files.
+
+    Every language's file must define the same sections with the same titles, so the
+    tabs on a page always show the same computation side by side.
+    """
+    stem = Path(meta["_path"]).stem
+    files = {lang: SNIPPETS_DIR / f"{stem}.{lang}" for lang in SNIPPET_LANGS}
+    present = {lang: p for lang, p in files.items() if p.exists()}
+    if not present:
+        return []
+    if len(present) != len(files):
+        raise ValueError(f"{stem}: snippet files must come as a set: {sorted(files.values())}")
+    parsed = {lang: parse_snippets(p) for lang, p in present.items()}
+    reference = parsed["py"]
+    for lang, sections in parsed.items():
+        if [(n, t) for n, (t, _) in sections.items()] != [(n, t) for n, (t, _) in reference.items()]:
+            raise ValueError(f"{stem}.{lang}: snippet names and titles differ from {stem}.py")
+    return [(name, title, {lang: parsed[lang][name][1] for lang in SNIPPET_LANGS})
+            for name, (title, _) in reference.items()]
 
 
 def notebook_page(meta):

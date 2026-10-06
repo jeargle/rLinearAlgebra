@@ -7,7 +7,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-STEPS = ["build_index.py", "build_glossary.py", "build_catalog.py", "build_wiki.py"]
+STEPS = ["build_index.py", "build_glossary.py", "build_catalog.py", "build_wiki.py",
+         "sync_snippets.py"]
 
 
 def main():

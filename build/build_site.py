@@ -16,9 +16,9 @@ from pathlib import Path
 # Make the script runnable from any working directory, and under PYTHONSAFEPATH.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import (BLOCKS, FIELD_DEF, GF2_DEF, GF2_SHORT, ROOT, escape_cell, link_first_uses,
-                    load_all, load_entries, load_terms, notebook_page, require_gf2_definition,
-                    terms_for_entry)
+from common import (BLOCKS, FIELD_DEF, GF2_DEF, GF2_SHORT, REPO_URL, ROOT, SNIPPET_LANGS,
+                    entry_snippets, escape_cell, link_first_uses, load_all, load_entries,
+                    load_terms, notebook_page, require_gf2_definition, terms_for_entry)
 
 try:
     import markdown
@@ -54,6 +54,16 @@ summary { cursor:pointer; font-weight:600; }
 .planned { color:var(--dim); }
 .run { background:#eef3ff; border:1px solid #c7d6fb; border-radius:4px; padding:.6rem .9rem; }
 .run a { font-weight:600; }
+.code-tabs > input { position:absolute; opacity:0; width:1px; height:1px; }
+.code-tabs > label { display:inline-block; padding:.25rem .9rem; margin-right:.25rem; cursor:pointer;
+  border:1px solid var(--rule); border-radius:4px; color:var(--dim); font-size:.9rem; }
+.code-tabs > input:checked + label { background:#eef3ff; border-color:#c7d6fb; color:var(--ink); font-weight:600; }
+.code-tabs > input:focus-visible + label { outline:2px solid var(--accent); outline-offset:2px; }
+.snips h3 { font-size:.95rem; margin:1.2rem 0 .3rem; }
+.snip { margin-top:0; }
+.snip-jl { display:none; }
+#lang-jl:checked ~ .snips .snip-jl { display:block; }
+#lang-jl:checked ~ .snips .snip-py { display:none; }
 .def { font-size:.85rem; color:var(--dim); font-style:italic; }
 nav.crumb { font-size:.9rem; margin-bottom:1.5rem; }
 ul.entries { list-style:none; padding-left:0; }
@@ -88,6 +98,35 @@ def page(title, body, depth=0):
     )
 
 
+def code_section(meta):
+    """'In code' section: each core computation in Python and Julia, switched by CSS-only tabs.
+
+    The tabs are radio buttons, so one choice applies to every snippet on the page, the
+    keyboard can operate them, and no JavaScript is needed.
+    """
+    snippets = entry_snippets(meta)
+    if not snippets:
+        return ""
+    stem = Path(meta["_path"]).stem
+    tabs = "".join(
+        f"<input type=\"radio\" name=\"lang\" id=\"lang-{lang}\"{' checked' if i == 0 else ''}>"
+        f"<label for=\"lang-{lang}\">{label}</label>"
+        for i, (lang, label) in enumerate(SNIPPET_LANGS.items()))
+    blocks = []
+    for _name, title, code in snippets:
+        blocks.append(f"<h3>{html.escape(title)}</h3>")
+        blocks += [f"<pre class=\"snip snip-{lang}\"><code>{html.escape(code[lang])}</code></pre>"
+                   for lang in SNIPPET_LANGS]
+    sources = ", ".join(f"<a href=\"{REPO_URL}snippets/{stem}.{lang}\">{label}</a>"
+                        for lang, label in SNIPPET_LANGS.items())
+    return ("<h2>In code</h2>\n"
+            "<p>The core computations, in the language of your choice. Each one is checked "
+            "against the small worked example, where the answer is known by hand. "
+            f"Source files: {sources}.</p>\n"
+            f"<div class=\"code-tabs\">{tabs}\n<div class=\"snips\">\n"
+            + "\n".join(blocks) + "\n</div>\n</div>")
+
+
 def entry_page(meta, link_terms=()):
     s = meta["_sections"]
     mine, done = terms_for_entry(link_terms, meta["id"]), set()
@@ -114,6 +153,9 @@ def entry_page(meta, link_terms=()):
                      "takes a little while, because it downloads Python.</p>")
     for name in BLOCKS:
         parts.append(f"<h2>{html.escape(name)}</h2>\n" + md(L(s[name])))
+    code = code_section(meta)
+    if code:
+        parts.append(code)
     terms = meta.get("terminology") or {}
     if terms:
         rows = "\n".join(f"| {escape_cell(t)} | {escape_cell(v)} |" for t, v in terms.items())

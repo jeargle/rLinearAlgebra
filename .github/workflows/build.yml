@@ -44,18 +44,28 @@ jobs:
         # marimo notebooks are plain Python; their asserts check the worked examples
         run: uv run --group notebooks python build/build_notebooks.py --check
 
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: '1'
+
+      - name: Run the Python and Julia snippets
+        # each snippet section asserts its result on the hand-worked toy example
+        run: uv run --group notebooks python build/check_snippets.py --require-julia
+
       - name: Regenerate dist/
         run: uv run python build/build_all.py
 
-      - name: Fail if dist/ is stale
+      - name: Fail if generated files are stale
+        # dist/ is generated from entries/ and backlog.yaml; the Julia blocks inside
+        # notebooks/ are generated from snippets/
         run: |
-          if ! git diff --quiet -- dist; then
-            echo "::error::dist/ does not match its sources."
+          if ! git diff --quiet -- dist notebooks; then
+            echo "::error::dist/ or the generated blocks in notebooks/ do not match their sources."
             echo "Run 'uv run python build/build_all.py' locally and commit the result."
-            git --no-pager diff --stat -- dist
+            git --no-pager diff --stat -- dist notebooks
             exit 1
           fi
-          echo "dist/ is up to date with entries/ and backlog.yaml"
+          echo "dist/ and notebooks/ are up to date with their sources"
 
       - name: Build static site
         run: uv run python build/build_site.py

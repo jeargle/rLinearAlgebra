@@ -85,17 +85,49 @@ into a marked block in the notebook. For example, `uv run --group data python
 data/prepare_bea_2023.py` rebuilds the Leontief notebook's 15-sector US table from the Bureau of
 Economic Analysis release. Downloads are cached in `data/.cache/`, which is not committed.
 
+## Code snippets (Python and Julia)
+
+`snippets/` holds, for an entry, a matched pair of files: `snippets/NN-slug.py` and
+`snippets/NN-slug.jl`. Each is split into named sections, one per core computation:
+
+```
+# --- snippet solve: Solve (I − A) x = d ---
+```
+
+Both files must have the same section names and titles, in the same order, or the build fails.
+Snippets use the notebook's own variable names (`A_toy`, `x_toy`, `A_us`, `L_us`, ...), so the
+Python cell and the Julia block beneath it read alike. A line ending in `#hide` runs but is not
+shown; sections that mirror the realistic part of a notebook use it to load the toy numbers under
+the realistic names and to keep checks against toy values out of sight.
+Every section asserts its result on the entry's hand-worked toy example, so the files are
+runnable tests:
+
+```sh
+uv run --group notebooks python build/check_snippets.py   # runs both languages; needs julia on PATH
+```
+
+The sections appear in two places. The entry's site page gets an **In code** section with
+Python and Julia tabs. The entry's notebook shows the Julia sections behind a *Show Julia
+equivalents* switch, beneath the Python cells that do the same work. The notebook can't run
+Julia, so `build/sync_snippets.py` (part of `build_all.py`) copies the Julia text into a generated
+block in the notebook. CI fails if a committed notebook's block is out of date. The Reddit wiki
+does not show snippets.
+
 ## Continuous integration
 
 `.github/workflows/build.yml` runs on every push to `main` and on pull requests:
 
-1. installs with `uv sync --locked` and regenerates `dist/` from `entries/` and `backlog.yaml`;
-2. **fails if the committed `dist/` differs from what the sources produce** — this is what makes
-   "`dist/` is generated" an enforced rule rather than a convention. If it fails, run
-   `uv run python build/build_all.py` locally and commit the result;
-3. builds `site/` and checks that no link is absolute (an absolute path breaks a project site served
-   under `/rLinearAlgebra/`) and that `site/.nojekyll` exists;
-4. on `main` only, deploys `site/` to GitHub Pages.
+1. installs with `uv sync --locked --group notebooks`, runs the linker tests, runs each notebook
+   as a plain script, installs Julia, and runs every Python and Julia snippet file;
+2. regenerates `dist/` from `entries/` and `backlog.yaml`, and the Julia blocks in `notebooks/`
+   from `snippets/`;
+3. **fails if the committed `dist/` or `notebooks/` differs from what the sources produce** — this
+   is what makes "generated files are generated" an enforced rule rather than a convention. If it
+   fails, run `uv run python build/build_all.py` locally and commit the result;
+4. builds `site/`, exports the notebooks into `site/notebooks/`, and checks that no link is absolute
+   (an absolute path breaks a project site served under `/rLinearAlgebra/`) and that
+   `site/.nojekyll` exists;
+5. on `main` only, deploys `site/` to GitHub Pages.
 
 **One-time setup:** Settings → Pages → Build and deployment → Source → **GitHub Actions**. Without
 this the deploy step fails.
