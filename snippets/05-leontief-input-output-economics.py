@@ -1,9 +1,12 @@
-# Python versions of the core computations in notebooks/05-leontief-input-output-economics.py,
-# using the notebook's variable names. Each section is shown on the entry page next to its Julia
-# twin; the assert lines check it against the two-sector toy worked by hand. Lines ending in
-# #hide run but are not shown: they load the toy numbers under the notebook's Part 2 names.
-# Needs only numpy:
-#     uv run --group notebooks python snippets/05-leontief-input-output-economics.py
+# Python version of notebooks/05-leontief-input-output-economics.py: the two-sector toy, then
+# the 2023 US economy in 15 sectors, using the notebook's variable names. Runs as it stands,
+# with only numpy:
+#
+#     python 05-leontief-input-output-economics.py
+#
+# Each section is shown on the entry page (except the data) next to its Julia twin. The assert
+# lines check the results: the toy against the numbers worked by hand, the US table against
+# BEA's published outputs. Lines ending in #hide run but are not shown.
 
 # --- snippet setup: The toy economy ---
 import numpy as np
@@ -14,12 +17,14 @@ d_toy = np.array([100.0, 50.0])  # final demand
 # --- snippet solve: Solve (I − A) x = d ---
 x_toy = np.linalg.solve(np.eye(2) - A_toy, d_toy)   # solves without forming an inverse
 assert np.allclose(x_toy, [156.25, 125.0])
+print("x_toy =", x_toy)
 
 # --- snippet inverse: The Leontief inverse ---
 assert np.isclose(np.linalg.det(np.eye(2) - A_toy), 0.64)
 L_toy = np.linalg.inv(np.eye(2) - A_toy)  # entry (i, j): output of i needed per $1 of final demand for j
 assert np.allclose(L_toy, [[1.40625, 0.3125],
                            [0.625,   1.25]])
+print("L_toy =", L_toy, sep="\n")
 
 # --- snippet rounds: Round by round: d + A d + A² d + ... ---
 assert np.allclose(sum(np.linalg.matrix_power(A_toy, k) @ d_toy for k in range(31)), x_toy)
@@ -30,24 +35,53 @@ A_s = s * A_toy
 colsums_s = A_s.sum(axis=0)              # quick test: every column sums below 1
 rho_s = max(abs(np.linalg.eigvals(A_s))) # exact test: spectral radius below 1
 assert (colsums_s < 1).all() and rho_s < 1
+print("rho_s =", rho_s)
+
+# --- snippet data: The 2023 US table ---
+# BEGIN BEA DATA: US 2023, 15 sectors, $ millions (written by data/prepare_bea_2023.py)
+sectors = ['Agriculture', 'Mining', 'Utilities', 'Construction', 'Manufacturing', 'Wholesale trade', 'Retail trade', 'Transportation', 'Information', 'Finance & real estate', 'Professional services', 'Education & health', 'Arts, food & lodging', 'Other services', 'Government']
+Z_us = np.array([
+    [155139, 151, 5, 2424, 328784, 60, 1216, 48, 85, 223, 3845, 389, 13363, 107, 8588],
+    [1841, 55268, 23380, 25565, 445075, 1009, 590, 1512, 2870, 756, 4741, 3891, 3547, 1919, 26907],
+    [8069, 11529, 27020, 10974, 59953, 14436, 38376, 10997, 13345, 41279, 15753, 20098, 32165, 7605, 40559],
+    [2097, 4742, 5656, 525, 25667, 5846, 12788, 8590, 5405, 138516, 6036, 5932, 11897, 5737, 142406],
+    [84226, 81951, 20514, 544329, 2193324, 135963, 58877, 134412, 92044, 84576, 251596, 259175, 155471, 62312, 558162],
+    [52875, 22157, 7425, 136318, 526171, 74972, 35605, 30483, 39808, 38418, 72354, 77397, 43078, 17923, 108765],
+    [1760, 895, 2558, 109690, 20548, 688, 8091, 18822, 421, 11154, 7874, 972, 14341, 8429, 366],
+    [18120, 15987, 26188, 44355, 193891, 139015, 110495, 211671, 23865, 66709, 73950, 41034, 24381, 6828, 100114],
+    [710, 4860, 7505, 19094, 41731, 47499, 58420, 17013, 316882, 143017, 191761, 62632, 63033, 24121, 199651],
+    [14270, 38446, 21460, 86091, 150578, 264691, 320427, 193954, 159002, 1857061, 478329, 375355, 287033, 137742, 124605],
+    [3814, 63753, 29685, 119855, 223812, 407348, 263880, 100991, 289883, 846591, 787838, 339667, 221592, 89010, 400069],
+    [2, 0, 21, 1, 6, 1784, 3672, 103, 32, 53, 607, 35575, 5476, 3458, 34052],
+    [572, 425, 3031, 2301, 8663, 22704, 13654, 13048, 55967, 145438, 101599, 95735, 79581, 5285, 44696],
+    [351, 442, 1104, 9919, 17326, 24886, 17234, 19279, 9307, 64871, 54540, 28017, 21124, 8663, 78763],
+    [3742, 4441, 10160, 5800, 31917, 34248, 28057, 18222, 11427, 50492, 26136, 26901, 30575, 6163, 38120],
+], dtype=float)
+d_us = np.array([109116, 96859, 277658, 2086499, 2188266, 1504361, 2435071, 645397, 1261270, 4857029, 1946469, 3559780, 1694797, 857344, 4455159], dtype=float)
+x_us = np.array([623540, 695731, 629815, 2468340, 6905201, 2788110, 2641681, 1742000, 2459201, 9366073, 6134256, 3644624, 2287495, 1213169, 4787577], dtype=float)
+# END BEA DATA  #hide
 
 # --- snippet coefficients: Coefficients from a flow table ---
-Z_us, d_us, x_us = A_toy * x_toy, d_toy, x_toy   #hide
-# Z_us: flows between sectors; d_us: final demand; x_us: gross output
 n_us = len(x_us)
 A_us = Z_us / x_us                 # a_ij = z_ij / x_j  (broadcasting divides column j by x_j)
 L_us = np.linalg.inv(np.eye(n_us) - A_us)
-x_solved = np.linalg.solve(np.eye(n_us) - A_us, d_us)   # should recover the actual output x_us
-assert np.allclose(A_us, A_toy) and np.allclose(x_solved, x_us)   #hide
+x_solved = np.linalg.solve(np.eye(n_us) - A_us, d_us)   # should recover BEA's published output x_us
+closure = x_solved / x_us - 1
+rho_us = max(abs(np.linalg.eigvals(A_us)))
+assert abs(closure).max() < 0.005 and rho_us < 1
+print("max |closure| =", abs(closure).max(), " rho_us =", rho_us)
 
 # --- snippet multipliers: Output multipliers ---
 multipliers = L_us.sum(axis=0)     # column sums of L
-assert np.allclose(multipliers, [2.03125, 1.5625])   #hide
+assert 1 < multipliers.min() and multipliers.max() < 3
+for sector, m in sorted(zip(sectors, multipliers), key=lambda t: -t[1]):
+    print(f"{sector:<24}{m:.2f}")
 
 # --- snippet shock: A demand shock, round by round ---
-dd = np.array([10.0, 0.0])         #hide
-# dd: extra final demand, all of it for one sector
-dx_total = L_us @ dd               # total extra output
+dd = np.zeros(n_us)
+dd[sectors.index("Manufacturing")] = 10.0   # $10 billion of extra final demand
+dx_total = L_us @ dd               # total extra output, $ billions
 dx_first = A_us @ dd               # first round of inputs
 dx_later = dx_total - dd - dx_first
-assert np.allclose(dx_total, [14.0625, 6.25]) and np.allclose(dx_later, [2.0625, 2.25])   #hide
+assert dx_total.sum() > dd.sum()
+print("sum(dx_total) =", dx_total.sum())

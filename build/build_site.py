@@ -113,16 +113,20 @@ def code_section(meta):
         f"<label for=\"lang-{lang}\">{label}</label>"
         for i, (lang, label) in enumerate(SNIPPET_LANGS.items()))
     blocks = []
-    for _name, title, code in snippets:
+    for name, title, code in snippets:
         blocks.append(f"<h3>{html.escape(title)}</h3>")
+        if name.startswith("data"):   # full datasets would swamp the page; point to them instead
+            blocks.append("<p class=\"def\">Written out in full in the notebook and in the "
+                          "source files linked above.</p>")
+            continue
         blocks += [f"<pre class=\"snip snip-{lang}\"><code>{html.escape(code[lang])}</code></pre>"
                    for lang in SNIPPET_LANGS]
     sources = ", ".join(f"<a href=\"{REPO_URL}snippets/{stem}.{lang}\">{label}</a>"
                         for lang, label in SNIPPET_LANGS.items())
     return ("<h2>In code</h2>\n"
-            "<p>The core computations, in the language of your choice. Each one is checked "
-            "against the small worked example, where the answer is known by hand. "
-            f"Source files: {sources}.</p>\n"
+            "<p>The core computations, in the language of your choice, with the results checked "
+            "as they go. The source files run as they stand, data included: "
+            f"{sources}.</p>\n"
             f"<div class=\"code-tabs\">{tabs}\n<div class=\"snips\">\n"
             + "\n".join(blocks) + "\n</div>\n</div>")
 

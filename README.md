@@ -97,8 +97,14 @@ Economic Analysis release. Downloads are cached in `data/.cache/`, which is not 
 Both files must have the same section names and titles, in the same order, or the build fails.
 Snippets use the notebook's own variable names (`A_toy`, `x_toy`, `A_us`, `L_us`, ...), so the
 Python cell and the Julia block beneath it read alike. A line ending in `#hide` runs but is not
-shown; sections that mirror the realistic part of a notebook use it to load the toy numbers under
-the realistic names and to keep checks against toy values out of sight.
+shown.
+
+Each pair of files runs on its own, data included, so a reader can download one and run it
+(`julia 05-leontief-input-output-economics.jl`). A section named `data` holds the realistic
+dataset as plain literals, written by the matching `data/prepare_*.py` script into the notebook
+and both snippet files at once. The notebook shows it behind the Julia switch; the entry page
+shows a one-line pointer instead. When a dataset is too large to write out, the `data` section
+explains where it comes from and gives commented-out code for loading it.
 Every section asserts its result on the entry's hand-worked toy example, so the files are
 runnable tests:
 
