@@ -1,0 +1,742 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["marimo", "numpy", "matplotlib"]
+# ///
+"""Error-correcting codes: Hamming(7,4) by hand, then Mariner 9's Reed-Muller code on a real image.
+
+Companion notebook to entries/07-linear-error-correcting-codes.md.
+Runs in the browser (marimo WebAssembly export) or locally:
+    uv run --group notebooks marimo edit notebooks/07-linear-error-correcting-codes.py
+    uv run --group notebooks python notebooks/07-linear-error-correcting-codes.py
+"""
+import marimo
+
+__generated_with = "0.25.1"
+app = marimo.App(width="medium")
+
+
+@app.cell
+def _():
+    import base64
+    import math
+    import marimo as mo
+    import numpy as np
+    import matplotlib.pyplot as plt
+    return base64, math, mo, np, plt
+
+
+@app.cell
+def _():
+    def md_table(headers, rows):
+        """A markdown table from a header list and rows of already-formatted cells."""
+        lines = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
+        lines += ["| " + " | ".join(str(c) for c in row) + " |" for row in rows]
+        return "\n".join(lines)
+
+    def bits(v):
+        """A bit vector as a compact string, e.g. 1011010."""
+        return "".join(str(int(b)) for b in v)
+    return bits, md_table
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Error-correcting codes: linear algebra over a finite field
+
+    A channel flips some of the bits you send. An error-correcting code adds extra bits, each a
+    parity check on some of the data bits, so the receiver can work out which bits were flipped and
+    flip them back.
+
+    All the arithmetic here is in **GF(2)**: just the two numbers 0 and 1, added and multiplied
+    modulo 2, so $1 + 1 = 0$. Addition is the same as XOR. Vectors, matrices, subspaces, rank and
+    null space all work exactly as usual. Lengths and angles do not, as the end of Part 1 shows.
+
+    As in the entry, messages and codewords are **row vectors**.
+
+    This notebook works two codes: first **Hamming(7,4)**, small enough to check by hand, then the
+    **Reed–Muller code that the Mariner 9 spacecraft used in 1971** to send pictures of Mars, applied
+    to one of its real images.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Part 1 — Hamming(7,4)
+
+    Each block carries $k = 4$ message bits in $n = 7$ transmitted bits. The generator matrix is in
+    systematic form $G = [\,I_4 \;\; B\,]$, so the first four bits of a codeword are the message
+    itself and the last three are parity checks. The parity-check matrix is
+    $H = [\,B^{\mathsf T} \;\; I_3\,]$. The columns of $B^{\mathsf T}$ are chosen so that the seven
+    columns of $H$ are exactly the seven nonzero 3-bit vectors.
+    """)
+    return
+
+
+@app.cell
+def _(np):
+    B = np.array([[1, 1, 0],
+                  [1, 0, 1],
+                  [0, 1, 1],
+                  [1, 1, 1]])
+    G = np.hstack([np.eye(4, dtype=int), B])          # 4 x 7
+    H = np.hstack([B.T, np.eye(3, dtype=int)])        # 3 x 7
+    # every codeword passes every check: G H^T = B + B = 0 modulo 2
+    assert not (G @ H.T % 2).any()
+    # the columns of H are the 7 distinct nonzero 3-bit vectors
+    assert len({tuple(col) for col in H.T}) == 7 and H.any(axis=0).all()
+    return G, H
+
+
+@app.cell(hide_code=True)
+def _(G, H, bits, mo):
+    _g = "\n".join(f"    {bits(r[:4])} {bits(r[4:])}" for r in G)
+    _h = "\n".join(f"    {bits(r[:4])} {bits(r[4:])}" for r in H)
+    mo.md(
+        "```\nG  (rows are a basis of the code)     H  (rows are the parity checks)\n"
+        + "\n".join(f"{a:<38}{b}" for a, b in zip(_g.split("\n"), _h.split("\n") + [""]))
+        + "\n```\n\nColumn $j$ of $H$ lists the checks that bit $j$ takes part in. "
+        "Because every column is different, every single flipped bit produces a different "
+        "pattern of failed checks."
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Send a message and flip some bits
+
+    Set the four message bits, then flip any of the seven transmitted bits to play the channel.
+    The receiver sees only $y = c + e$ and computes the **syndrome** $s = H y^{\mathsf T}$, the list
+    of failed checks.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    msg_bits = mo.ui.array([mo.ui.switch(value=bool(b), label=f"m{i + 1}")
+                            for i, b in enumerate((1, 0, 1, 1))])
+    err_bits = mo.ui.array([mo.ui.switch(value=(i == 5), label=f"bit {i + 1}")
+                            for i in range(7)])
+    mo.vstack([mo.md("**Message bits**"), mo.hstack(list(msg_bits), justify="start"),
+               mo.md("**Bits the channel flips**"), mo.hstack(list(err_bits), justify="start")])
+    return err_bits, msg_bits
+
+
+@app.cell
+def _(G, H, err_bits, msg_bits, np):
+    m = np.array(msg_bits.value, dtype=int)
+    e = np.array(err_bits.value, dtype=int)
+    c = m @ G % 2                       # encode
+    y = (c + e) % 2                     # what arrives
+    s = H @ y % 2                       # failed checks; equals H e^T
+    # a single flip in position j gives s = column j of H
+    match = [j for j in range(7) if (H[:, j] == s).all()]
+    flip_at = match[0] if s.any() else None
+    c_hat = y.copy()
+    if flip_at is not None:
+        c_hat[flip_at] ^= 1
+    m_hat = c_hat[:4]
+    return c, c_hat, e, flip_at, m, m_hat, s, y
+
+
+@app.cell(hide_code=True)
+def _(bits, c, c_hat, e, flip_at, m, m_hat, md_table, mo, s, y):
+    _n = int(e.sum())
+    if _n == 0:
+        _verdict = "No bit was flipped, so every check passes and the syndrome is zero."
+    elif _n == 1:
+        _verdict = (f"The syndrome {bits(s)} equals column {flip_at + 1} of H, so the decoder "
+                    f"flips bit {flip_at + 1} back. The message is recovered.")
+    elif (m_hat == m).all():
+        _verdict = f"{_n} bits were flipped, and by luck the decoder still recovered the message."
+    elif flip_at is None:
+        _verdict = (f"{_n} bits were flipped and they happen to form a codeword, so every check "
+                    "passes. The errors are invisible.")
+    else:
+        _verdict = (f"**The decoder is fooled.** With {_n} flips, the syndrome {bits(s)} is the sum "
+                    f"of {_n} columns of H, which equals column {flip_at + 1}. The decoder flips "
+                    f"bit {flip_at + 1}, which makes things worse. Hamming(7,4) corrects one error, "
+                    "not two.")
+    _rows = [["message m", bits(m)], ["codeword c = mG", bits(c)], ["error e", bits(e)],
+             ["received y = c + e", bits(y)], ["syndrome s = Hyᵀ", bits(s)],
+             ["corrected codeword", bits(c_hat)], ["decoded message", bits(m_hat)]]
+    mo.md(md_table(["", "bits"], _rows) + "\n\n" + _verdict)
+    return
+
+
+@app.cell(hide_code=True)
+def _(G, H, bits, mo, np):
+    _m = np.array([1, 0, 1, 1])
+    _c = _m @ G % 2
+    _y = _c.copy()
+    _y[5] ^= 1
+    _s = H @ _y % 2
+    # the hand calculation below relies on these values
+    assert bits(_c) == "1011010" and bits(_y) == "1011000" and bits(_s) == "010"
+    assert (H[:, 5] == _s).all()
+    mo.md(r"""
+    ### By hand
+
+    For the message $m = 1011$, the codeword adds rows 1, 3 and 4 of $G$, modulo 2:
+
+    ```
+      1000 110     (row 1)
+    + 0010 011     (row 3)
+    + 0001 111     (row 4)
+    = 1011 010     each column added modulo 2: 1 + 0 + 1 = 0,  1 + 1 + 1 = 1,  0 + 1 + 1 = 0
+    ```
+
+    If the channel flips bit 6, the receiver gets $y = 1011000$. Each row of $H$ checks a subset of
+    positions:
+
+    - check 1 (positions 1, 2, 4, 5): $1 + 0 + 1 + 0 = 0$, passes;
+    - check 2 (positions 1, 3, 4, 6): $1 + 1 + 1 + 0 = 1$, **fails**;
+    - check 3 (positions 2, 3, 4, 7): $0 + 1 + 1 + 0 = 0$, passes.
+
+    So $s = 010$, which is column 6 of $H$: bit 6 flipped.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### The full decoding table
+
+    There are only $2^3 = 8$ possible syndromes, and each one names a single error position (or
+    none). Decoding is a table lookup, whatever the message was.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(H, bits, md_table, mo):
+    _rows = [["000", "no error"]]
+    _rows += [[bits(H[:, j]), f"bit {j + 1}"] for j in range(7)]
+    _rows.sort(key=lambda r: r[0])
+    mo.md(md_table(["syndrome s", "flipped bit"], _rows))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Why it corrects exactly one error: the minimum distance
+
+    The code is the 4-dimensional subspace of $\mathrm{GF}(2)^7$ spanned by the rows of $G$; it has
+    $2^4 = 16$ codewords. The **minimum distance** $d$ is the smallest number of positions in which two
+    codewords differ. Because the code is a subspace, this equals the smallest weight (number of 1s)
+    of a nonzero codeword. A code corrects $t = \lfloor (d-1)/2 \rfloor$ errors.
+    """)
+    return
+
+
+@app.cell
+def _(G, H, np):
+    all_msgs = np.array([[(v >> (3 - i)) & 1 for i in range(4)] for v in range(16)])
+    codebook = all_msgs @ G % 2
+    weights = codebook.sum(axis=1)
+    d_min = int(weights[weights > 0].min())
+    assert d_min == 3
+    # columns 1, 5 and 6 of H are dependent (the prose below cites them)
+    assert not ((H[:, 0] + H[:, 4] + H[:, 5]) % 2).any()
+    return codebook, d_min, weights
+
+
+@app.cell(hide_code=True)
+def _(bits, codebook, d_min, md_table, mo, np, weights):
+    _rows = [[bits(cw[:4]), bits(cw), int(w)] for cw, w in zip(codebook, weights)]
+    _dist = {int(w): int((weights == w).sum()) for w in np.unique(weights)}
+    mo.md(
+        md_table(["message", "codeword", "weight"], _rows)
+        + f"\n\nWeights: {_dist}. The smallest nonzero weight is **d = {d_min}**, so the code "
+        f"corrects ⌊(3 − 1)/2⌋ = **1** error. In linear-algebra terms: every 2 columns of H are "
+        "linearly independent (no two are equal), but some 3 are dependent (for example columns 1, "
+        "5 and 6: 110 + 100 + 010 = 000)."
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(H, bits, codebook, mo, np):
+    _cw = codebook[11]                         # message 1011
+    _dot = int(_cw @ _cw % 2)
+    assert bits(_cw) == "1011010" and _dot == 0
+    assert 7 - np.linalg.matrix_rank(H) == 4   # rank of H is 3 over GF(2) and over R alike here
+    mo.md(rf"""
+    ### Pitfall: there are no lengths in GF(2)
+
+    Take the codeword $c = 1011010$. Its "dot product with itself" is
+    $1 + 0 + 1 + 1 + 0 + 1 + 0 = 4 = {_dot}$ modulo 2. A nonzero vector is orthogonal to itself.
+    So $c \cdot c$ cannot be a squared length, and nothing that relies on lengths or angles carries
+    over: no projections, no least squares, no positive definiteness.
+
+    What does carry over is everything that uses only addition and scaling: subspaces, bases,
+    dimension, rank, null space. The code is the null space of $H$, and its dimension is
+    $7 - \operatorname{{rank}} H = 4$. The distance that matters, the number of differing positions,
+    is the Hamming distance, which is a metric but does not come from an inner product.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Part 2 — Mariner 9's pictures of Mars
+
+    In 1971 Mariner 9 became the first spacecraft to orbit another planet. Its camera recorded each
+    pixel as one of 64 grey levels, which is 6 bits. Each 6-bit pixel was sent as a 32-bit codeword
+    of the **first-order Reed–Muller code RM(1,5)**, a $[32, 6, 16]$ code: 6 message bits, 32
+    transmitted bits, minimum distance 16. It corrects any 7 flipped bits out of 32.
+
+    The image below is real: NASA/JPL frame PIA02999, Mariner 9's view of the volcano Olympus Mons
+    rising above a planet-wide dust storm, cropped and reduced to $128 \times 128$ pixels at 64 grey
+    levels. The black dots are reference marks on the camera. `data/prepare_mariner9.py` in the
+    repository downloads and prepares it.
+    """)
+    return
+
+
+@app.cell
+def _(base64, np):
+    # BEGIN MARINER DATA (generated by data/prepare_mariner9.py; NASA/JPL PIA02999)
+    image_shape = (128, 128)
+    image_b64 = (
+        "FyIdEwwVDg4PEgsKCw4XGhUXGx8YGxciJyQlIh8jIiIlHBoZGRsSEBgUGBkYGxUaICElJCceHBcYFh8cHBobFxocHSgr"
+        "JB8eGBwhHyYlHiQoJycpJigkKSYlIiocGxgWFxsYGhkYFhUbICYnLCsqLissLS4uLiYqMjEtLC8sKSkcGhkWEhATGA8R"
+        "DQsLDg0VFx4iJR8eGSQjIB8jHRglJB4bEhAaFhYOExQWGCQgGB4fHisiHRsbIRYWGB4eICUTFRcYIiUhGyIeIyYiJykl"
+        "KioqKysjKSgkHh0gJBwZFRoWFRcbExMVFholKi4uLSkqKiswLy8sJCgtLzAvLi8sKx0eFhcTERAYFxIPCgkODxETHxse"
+        "ICEmJSEfIBgaFxcdJSUbEhQTFRUXFBkdISYoJCogKgwFHB4YIRcZFh0cGBQQFhshICEhISAiHCQlJSUvLC4uLicpJiQg"
+        "Gx4jJiYZFxYZGBoSFBYfGCQtLicpLCcoLissMTIqLCknLSwuLycoKSUeGBQWEhUWFxQTDxAPExUXHSAeJCMcIxwYEQ8U"
+        "FRkiIh8eGhQZGh0ZFxsdIiIaHyEhEhwdHRoZGBgYHhsZFhcaHiIlHBsbIh4cIiwnJywqMDIuLygkKyQoIyQgHRgSGR4V"
+        "ExMYGh8cJSIlICgsJycoJy0vMiwuKiYkKysvLiouKiEdERIUExEVERwXEhATFRMbIR0cIiEfHBcTExkTERgYGhcSFRcS"
+        "ICofHCQbDgsoISIpJh4lGhIYFRMaGBMTHh4dHR0TGhofISYiJiUpLS8tLS4qJiYqKCgrJiIjGhYYFxEVFR8ZFRgjHxoj"
+        "KiUoJykqLC4yMi0rLy0uKSknJycrIiIdFxASDg4OFBYUERQWGRseHRkWHRYaGBcWExIRFxETFxYTFRQbHx4fIBUYHCof"
+        "HR8nIB8cGRkUERINDg0YHCMjIhodICImJiIlKCkvMCksLCkpKCkqLSonJSMlJBgcGR0cIBwfGyAjHyEnJywmJy8sLjEy"
+        "MDEyMzMwMx0HKi0lIRsTFhkREREYFRAUFRYYGx0dHhMQGRYQExYQExMXEhUcHBgZFBoeJRobIBsaIhohIioaFh0gIBgX"
+        "EA4PDxcXHCQkHh4gJSQkKyooJCssLCwyLycmICArJyokIyUjICIdJiIjIB8aHicuMTExMzUzNDI0NDQ0MzQ0NTU3Jgww"
+        "LichIB0VFh4cGBkOERIUFBQcFhQUEBEWExYcHBQSFRcVGhIQFx8VJh4hHRocIh8mHCAkJyEfICMfGQ0PDhAVGBwdJxUN"
+        "IycnKyw3NC0uMDAyMjMxNCkIBSo1NDIwLyopMC4yMDAuLCooLDIrKSQhIicpJSUoLCwsLi0vLysrMiosKCQhIBUbFx4a"
+        "GBASEhUWFBMXExUTDxcTERskGhYWGh4gExQdGBMfHSIiIyAfFBoaHCIlJB4fHxYZERENERobHyIsHh0tLissMjAvMDEx"
+        "MS8yMi8vLhceMzA1Mi0rLSopKCssKB0gHiEkIhwaHR0aKCYeHiYoKDAuLS4wMSspKiooJBoUIBwSFRERDRIVExcRFhYY"
+        "FBYVGA0UFhweIB4fJCYeHSAfHh8mKiklJioMABIjKCwnKCcsIyMfHRsiJCUjHSctJSAbGR8hICEkJikoKSctKSouNDQz"
+        "MDEvKCcoJSYaGR8hFh8dHRsbIBwVGBkhJiEcIy0lKikvKy8uLispLiYgFRUeFREYFhENDQ0bHQoRGBESGhYYFRofLCIm"
+        "KScqMCUhJyIhJyowKyYnLR0PIyojKisrJiUdHyIWFBYZGRYPGSAYHBobIiIiJiciJSItLC0rLisrLjIyMjAsKykoKyUh"
+        "HxsXGxocGyAcGBISGiEnJyssIiQnJC4rLisqKTExLiwgHRUWDAsKDxMNDxMcGx0aFRUeGhkeHxggJCAaJBseHhgVExMd"
+        "IyMcHBgjJzAhGRccIRwdGhcYEQsPEBEPFhEUExUWHxwcHiMhIB0bGSorLiwsJisuLy4uLy8sLi0sJycfHhoaGxoYHx0Y"
+        "FBEUHSMmKCglJCcnKS0uLCsqNTQzNS8mGhkDARMRHBsfICkpJCEgJywnJycoJighFRAeHBcdHQ8ZGiAfHx0WGSEeHxkd"
+        "HSYiGBwZEhoSCgkMDRMXFRMbFRUhIR4bJR4fIB4bKSguKy4qKi0xLy4uLiwvLCspLSkkGx4fHRYcGhoVEBEcJSkqIBwh"
+        "LS0pJSosKiovLSUjIxcQFhkhIQ8PFRcUHh4aEhEUFBoaFRUWHBkWFRodIBkeHRIZIxolJBsTEBceGR4jIhYaIRURFRcL"
+        "BxMXExYUFhoWDxodISElIx0YISEpKi0rLCYlLTIuLikuLywpLisuKikjJCQfGxobGBIeFRQhJCYlHAwiMSwmKSsmJiQg"
+        "GRwODwoTIiMSDAkICwoSGxsREA4PFB0VGxYVFRohHRYeGxkYFRMbHCQdHSAZExwcHyIeEhgbGx8aFg4MDRITGBgUExUR"
+        "DhIXHyAaFRMhJSYmMC0nJCwuLy8uLTIuLygrKi0rKiYoICEiHhsWEh4aExocJSYYDSEsKy4xLiYoJSkhJRUVDg4PEhYR"
+        "CwsSERIXGhAPERAbJBcaFRQWGyAcGBwbGBkXEBsaJR4YFRgQFhwjGR0dGhsZHxkTFhEOEhMaFhkPFRQOExgZGhUSEBwh"
+        "JCguKy8rMC8uLjAyMy4sKysmKS0sJSYhIyQgGxcOEhkZJSEhHyMrJCUuKy4sKSUYHhsaEhQTERcNDhAOCgsLFRscHRUP"
+        "GRkdGxgQFRgdGyAcKR0cHB0WGh4jGRccGxkdHxgTFR8XGB0gHBgYFBQVExYXFxYaFxEREg8QFBURGBsqJiopLC0vMCst"
+        "MigrMC0sLiUvLywpKiIeJScgGA4SHB0jJyAfISclJCwoKCQmISUbFxUREhQWHRkUERQNDQ4PFxoaGBUZFhoZFxoREBgc"
+        "ISIqHh0YHhUiLCMNExUbHSAVExUeHBoVGx8ZGhYVFw4MFBgRFxUSExEODxMWFRkaGCEiKiorKiwrLS00Ly4pLCknLTIu"
+        "LCosJiEqJhwfHiAhHh8kJB8hISkoKyUmJSYlJyAVHBMREhUbGxYRCxQYFRIVHRUVExMUFRchFxYYFxgYICohHhwbICMk"
+        "JhETFhsaHBgTGBwWHBkYGhcdHRoSDRAZFhASFRATFhQQFBcWGh8VHh8rKCcpKiouMDIwMCQpJycnKywnIissLCwjHRwk"
+        "HSMbISEdGSoqJCQmJS0kJSkbHRoaGBUXFxMWFQ8SGhsUFhMTERsXHBQZESEcExodHR8gKiciHBobIRwXGhwUDhQfGBMN"
+        "ERYbGhscGiQdEREREBwYExIVFBcTFQ8RFhITHRUiIiQkISAlKy0tMC4tJSInLioqKiUoLC8tLCIeHyAWIiAeIR8bISQj"
+        "JiQkKyIoJiMdHBwVFBISDxEQDxARFxMZEQ8TFh0bDRwXFhcXGyIgKCIoKSkpJCEqJBkTEhMTFBwVDw0OERYbGRkbHhsZ"
+        "FxkSFxMTFhUOGA4VFA8QEhITFyYmKiEdIiooLC8uLy0iJyouKyoqKywqKComKCIiHBgnJB0bKSYqJBghJSstKSYeIyMi"
+        "HhURFRUQDhQTFRAXFRYVFhQbIBcSHBYVERggJR8pJiorKiUmJigjHhcSFBsXHBoSFw8NDxEVFx8cFBsTExcXDxkYGBAO"
+        "DxQTFBQRERQVHigsHh4mKS0vLS0tKyElKiklKiwsLSomLCkpKCEkHiMmDA0dHyUaFh0qLC4rKBsmJCMlHBcYFxQOExQX"
+        "GhkSGRAUFhkcFxcgGxUTGB8kJCQkJSMqKSQjJh4bGRcXHB0hHBcUERIOEBYaHRwaHA4QFh4QERQWEA8MDgwTFhcRFBUi"
+        "IyAdHyYrJi4uLCAfJB0eJC0xMTAuLiwrKiwpJCYqHx4WCw4UIR8oKC0sLiclKSoqHSEfEhERExQSDg8UGA4RGBsWFxYb"
+        "FhobFx4hFx0jJyMoHiMgISMiIx4fHBoeHR4gGhoUGBYOEB0dHxsVEBUWHRYXFQ8NEQ4WFRkaGhAaFBweHh8hKSwpLjAr"
+        "IyccHiElKCotLysuKyorLCciHx4cGiEWGRUgJCQjKCsqKissKywmICAUEREWHBsTEBQZEhEYGRMSERkZGxchJyMhJyAl"
+        "KCYcGhkgIx0gIBwbHSMhJSMfFhUaFBgWGh4fFxYTExESDxMQEhITEg8PFhUWEhcWExokIx8hLCUpIysmJhYfLSYqLCwx"
+        "KyopLi0vKicjCRokICEjHCIhHyIoJSoqKywuKCQjJiEUFA4UGAwNDREUEBMXFA8RIhwdHyonHCUpHR8kIh8fGx8kGBgg"
+        "Gh0iGh8nIyUdGxkXGx0aGh0cGBIPDhQVGBUVEQ8PEBATEhcSGBYaHSEbIxohISkqKiIhHyElKCkqKi8sJisrKicnIygc"
+        "JigmKConIRscHyUoKCMtLC0dHyogHB4dFg4NDxAQFxURDgwMFSMlHh8aJyYjHiEdHSIrIR0eIh4cFCIcHyEeHyIkJx4V"
+        "FBwaIh4eHxwbFBYUFhUUEhEODhAUFRYSFRUbFhgfHxQXFx0gJyokHyAnIyEpKiYqKSsnKywpKSQYJiYnKCspJiUkHh8U"
+        "HiYnJSgkLCchJyYZICEcGBAMEw0UExANDQ8THSMcJCUiISUdGxwkGiIiHRgkHhkiIhwhIB8dJhwiHxYSFB0mJSAiGhcY"
+        "GxUeHxoUFg8REhgXFhISFBYUGh4eFQ4NHiAgIyQiHSQkHyguJysoKyknLjEtIyAnHyglLCAqKSYcKSQgIyQpJCYhIx4X"
+        "JBsUIB0REA4PDA0QEQsNDhQYIiQlKConHiAgHB4fKSUdGiQgGh4gFxgcIB0iHBwaFhYPGh8fIyUaGxwdFyMdHRkbFBsQ"
+        "FhUXFBEPExcZFRUTEBEcHCQgIiIbHCQhICUkJyoqJCcvKyYnHSUjJyYoKC8oJiMsJiIkJRwgJi8nHx0lHh0dGxEUCwsN"
+        "EBIPCgsNFRkkHhslJxsiJyMaHiEpIx0iHx8jICUYFRcaJSUiFhgYHRccIR8WIBwgGx4eHxoYFxwOFhkREhQXExAVGxgX"
+        "IRkXERUZIyMcGxkZHR4WIB8lJywlJyUqKSgoJyIpKyosLiMoLCwpKSYlISglMiciJCEZGxkaFhQKDwoODw0MDgwVGx8i"
+        "JCUgHB8iGhsgICMfIR0ZJCUeIhwSFBYcHBkbIBkZHR0YHh4gGiIkIR8hGx8UGBkSFRERExMQFhkTFBgaICAcGyMkIBoZ"
+        "GhwWHhkhISQjKiYiHiMmJikkISwuLyotKCopLSwoJSgmIyUwLyokJxwYIB8XFQ0PCg8LDQsPDRYZHyAfISQeICQhISAp"
+        "KCEhHxkfJx0bGBMUERYaGh4cGBsbIyElHSEdHCMnISQjIR0cHBUQEBEREhIUGAwRFxkcHRUeHhwbIB4hGRkVHyEfHRsY"
+        "ISYgJCgqJikqLjIrJiknKSknJicnKSYiIzQ1MyYpIhwYHhgXDxMLDg0OChAOGRYdHhocHxciHiEhICYiHSAkHh8gGRgR"
+        "FRoUGR0dHBgUGBYjJiUYIh8bHSkgHR4hIR8dHBYVFRMSERARDxYaHRkXFRogIx4gHB8bFxYcHhkPGSQjJSEkJC0rKi0u"
+        "KycjKigsJycpLCwoKiooNDEtJicgJhsbGRkNEA0RCw8NDA4WGR4ZHh8ZGiEcJSMgGh0iJiQoIh0gGhYUGhMWGRkUGRQZ"
+        "GB4eIiIgJyMbJiIhHiMgGhsdGRgaGxsWEhEXFhocFRgUGyEaGRkTEBMUFxciHBgcHx0jISAhKCckJiknKCInKS4nKysu"
+        "KyYpIyI1MS4sIx0tJR0eFQ4QDRINDQ0RDhMYHBgeHhccGiMnJigkFh0jKSQjJSEYExYYFB0cHBscFhUZGBYbICQkJB0i"
+        "HRweKSAYHyYjIyEYEx4XGhoUFxEQEhATGRkYFBENDxEbHyQdFhUdFhsjJysuJCYqJScwLS8sLikrKy0rIh8kJDcyLyUj"
+        "HCwhHSEZERgUERIMCw4KFhgcGRojHhwaISQkJCYbHCMiGB8hHBwUDxQVHRwiIBgZHCAfGyQaIBgcGyQkHiAlIRojKCUm"
+        "Ix8bHyIbHR0ZFxUTEQ8cGBMNCxMTEhQYIRQVFBYYHicqKCYjKicjJy0qMDAwLC4vKyspIiIsNTErJyYgIiAhJB4WGg4W"
+        "GBEODxYUEBscGRkcFxwdHxoZIhsdHh0dIR8iHxoVGBkiGRsbHxYdHCEVIBwdHRsgISEmHxUWHSEmKCYfKCQjGRYXGxUX"
+        "FRQSGBgQExEMERQUFRQYGBwbGRgeGxgYGhgeHR8iLC0uLi0wMS4tLiwrJic4MzAsKCwmKCUkJRshFx0VGhYXGR4XGRce"
+        "HRUSERwiHRciFxsXHCMoIicmHxMWFxoYGhoYGB8VHBcZGCAdHx4dICAeHR0hICkkKCklKCEeIR8fFRYTDREUEQ0SERIS"
+        "ExQWFx8hHBsdFxsPGRkbFyAbIyQnKjAvKzAwLy8wLCgoJTgzNCsoIykgJCIgFhYaHxkfFxIRFxUUFSMbEhINEhoZFyEd"
+        "GBghJScaHiUfDRwcGhccFRobGBceHBoeISAfGxwfJCIjIigjJCAmIyklHyIfHx8eFRIQDQ4REQ4PERYYEBoYGBgYDhYa"
+        "HREcGxQUHBogICcrLCYrLS4wMS4tKSoqNCopKx4UIhscICMXFBQbICEXHRwVFxwbIxoVGBUZFhYaGR0gHCEmHBMMDhYU"
+        "HBkjJBsWHRkYFB4eISMdGxwZHyMoHx4fJyQgJCUkJiMiIyEdICQdExEXExEOExMNGB0SHh0fFRgSFRUaHhsSFxQXGBYe"
+        "JykqIisvMjM1MC0qKioxKiAjHhYiIRoVIh0UEA8VHh8ZGRwZHSUjIB4cIBsXGRsdICktMigWDwMBAgYMEB8hJRkdGBcc"
+        "HyAkIiUhIyMoKCQbHhkeICIqLCYhJyIkISEeIRwcFRoYFBQXFBEUGhchHhsVFhASDRIUGRIXERMVHxgeIyYmLjIzMjEx"
+        "LC0rKzUvJiUkER8ZGRUXGBsVFBQbGxccFBIdIB4iIB4YGBceJzM2MjAlIRsWEwcGAQIGEB4qJyIZHSAgHyghHyAnKC0l"
+        "KCAdGB0hJignKCUlIR0gIRweGhgVGxMXExQXERcbERUWGBQXEBAOEQ4UGBgSExQhFwwaISEnKzEtLi8uKSwqNzQsJysV"
+        "GRIZFhYZIRkaHhsXFBQTFRcaGxYWGB8iJTE6LyccFSAiICQfExEFAgICDyYrKCIgICghIyQiICQkLC0sKR8aGBYgJCEm"
+        "IyAbICQhHyAVFx0aFRgcGxQTFxcVFRcgHBYUEhYWFxUaGhYfISAkEhEcGiQsMSwsLC4qKyo1MisoJxwhGx0VFBcZExQZ"
+        "GxkTERERDhcZCxAWHi8zOCwkHxkbHCEoJSglGhUMAwIBFyotKSUjIycrJyYiKDAzNDQwIRILCBARGyUiGhUeHx0fIxwZ"
+        "Hh0bIBwbGRMTExUYFCAbGBMZGhYXFRMcGBofJSUcFhIRIycrLy0sKyorKzYuLCgoGygZFhINDxUWEhgcGBYRDhMQFBcT"
+        "FR4mNzkvHxkdHBwcJi0jJiohHhAFAgIEHy4qLCcrLS4nKiwvNDQwMS0lJBkOCQgIDhEUGRsdHR0nJx8cGR0jGx8gExUc"
+        "GR4dGRMdGCMaExUUDxwXExciJCAbGR4jJjAtLi4uKBMaNC0wLSgaIh0TFAoDDhESFhocFBIVEQ4UFBsaITA3LCIcFBQZ"
+        "GhsdKi4pISYcEwUDAgEVLS4sLTIvLiQvNzIpKCQpKiomKiMXFQwIAgUSICMgHSUjKBkVFx8jIxcaGRoaGB0fFRgUGCAd"
+        "HSQlKicmJS0sLiwuKy4xNTMzMjInAQ4xLCopJSQiGRQODg4SGRISGh8eFxIUFA8PFRgpOC8eGhMZGh0cHygrLS0mKx4T"
+        "CQMCARUnKykrMSspLzYvLywmJiQlIiYnGxwfHyATBwMKHh8fJiYqIhMDGCgjHB4eHh8iJSkdGx0hJyooMTAiHCMjKSUn"
+        "JygqKCcoLi0qKCQkLC8tIyAnIR4YFxYWDxUYFxUdGxUQDBMcDxAdGyw3KCIYFh0YFyAlKC4oJSYiHBoLAwIDEBoXIx0c"
+        "IjI3MjI2MysqKicpMy4dFRUYICYjHhQJEyowLzArEAglLCwsLSUmKSomKCAfGiAnJyIgGxwZGx0hISciIiYeHyoqJygp"
+        "LCksMy4pJR4ZFxMXFhILCxYaFhweFQ8PEhYVFR0dJjMsIBgaIBgnKigrLicpJysoJQ0CAQQRJSsrHhsrNzQzNzcuLDM4"
+        "ODY1KxsJAgMGDxccHxEDCiAiJyQtMC0kJSEeFx0eIRoZDhAOEA8TFRcWHhcbGyIoJCkkIiEfKScmJycoKCU1LSojIB0b"
+        "GBgYFxIODhQZFBQVFQ8PFRUVHB8nMjUqIyovKi0sLjI0LzApLScgEgMMDh8yNzQqKjI0NDYzMS8sMC4kJCknIRUHAwIA"
+        "AgkVFQ4CBxspLS8tMCorJCEeHx8oIxwTExQbERUeHBcWFRwhJSsqJyQiIyIkIyYoISIiHzUwKSwkGyAUDREWExgQEhUX"
+        "GBgTEh0hGRwfGSYuNCMXFSAdGxoiJiQYHhQUFhwuLioUHCwqIyQkLjUzLB8eJi00KBcYFiApHQwDBwQBAQsYFQcCDCUt"
+        "MSsvLzIrLCMmJicjJBoWExUZGhUVFBIRGCUqKyonKCYiJyYnJSEmIB0kNzUyMC4vLhUADiEhJSYnIygnJBsXISgnIx0a"
+        "FxszIgoJFRMcHh4jJBgcGh8rNDk5KxcbKSEnLikvJiEgDRIjMzEqJSciHh8WERAGDAcCAQUTDQQDGygwLi8wMzIsJCMk"
+        "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"
+        "CCAyMTQzMzI0NDAtKS4pJiAcHBkMDQoTFBcYJSAbHykmKzAuIx0iITIwKiQbGxsYGRsTFw4NCw8PEAkLERANDwgHBwYI"
+        "CQkqNR4VFQwMFRkjNDk4NCslIB8kGhciKCYpJSMrKictKygvKykkKiokFw8VCQwbEgYGGBsOAwICAgMACSgxMTAzNDUx"
+        "Mi0rJygoJh4XGBITDBEQFRIdGBggKSgtLy4nHyUpMC0eISMeIBQJFBURDhENCwkNCQ8NFxAODAsFBgkQBCU4Hg8QCg8P"
+        "ExInNzk4NC8oISIfHSMmJSgoJCshKSgsJyopKCMqKycfGxoJCw4FBxkfFSEQCQMCAgIAFS8yMS4xNTAuLS4nJyomJB4X"
+        "ExMRFxIVFxgUEx8mLC8sKSomIiYzLyMhJCYjGhQUFxQSEgwODAoKCw0UDw0IDggHBwwJHDgiDgwLDgwMEhcnOTg4MSsl"
+        "JSEdHBskJiUjIyAlIi4pKSImJikpKyImHhMKBgMgKh8TJh4bCwICAgEJJy0uMDEvMDIuLiYlJSMgHxwWGhAUEw8RFB8f"
+        "HSgpListLSgeJC4wJyApKCAbIhoTGA0XFhUMDQ8LDw4ODQoKCAsKCg0cNSgXDgkLDQkSFxInOTg3MSkiHRgZGyIfISAm"
+        "JiUhKSkrJyosKCMtICkfDwQDECopJiInIiMVAwICAQgmLjAvMDArKSknKCUhJB4XHRMXExUUEg4THB8cIScrJywrKBwe"
+        "LCkeJCUhGSIcFBMWDxISEhAODBUSEBISDgwJCgkPDxYyLhEPDxANCRAXDR03ODg3MSQZFRYXGhciISAhKCIkJSssKiYn"
+        "ISwqJhgIAQkcKSonJykmJBUCAgIAEy8wMC0rLS0qKiYmJh8lJBwYExQPFhUaExcSFRgiHCsrLC4rKyMvKR8gGx8cIBMU"
+        "EhcUEBQSERMPEg4SFx0QEgkJCQkKBh80GhAQDw0MCQwVGSg4ODg1LBsVGhQZHyMhIh4oJCUmLi8sKiQmKiAYFgkBByAu"
+        "Ky0vLiUmFAECAgAYLy0tLy0qLSopKionIR4eHR4QDRMbExkTFhMZFCMYKC4uKyonHi0nHBgZIBwXFhUSERIZERAYGhIT"
+        "EhIVFw8QDQ4PDAwTCxsoJyMPDA4LCA0RHyw4ODEvJhgXGyInJiQlISopKi0xLysVISkaCxIOBgAYKi4uLSooGBoLAgQC"
+        "ASAyLi0tKyssKikrKCYiHR0SEhoHDRYZHQ4SGBoaIyofLTEuLSsgLyYaJx8eGBUTGBkVFBwTFhgZDw8RFx0bERAOCQ8R"
+        "Cw8PERklLBoPCgsMCw0UHik3NS01Kh8dJCgqKCgqLSwxMi4pIQ8OGRcHBgIEFS8tKScmIBsSEQ4IAQETKi0pKyUpKScf"
+        "JSciHyMcGhAQEg4KFR0fGBkWHCQmHSItMjErKCEyKB0hICIdHBgaExgWFRMVERQNERUTFhUOERAMDhIKCw8TChcjKiUP"
+        "CgoHChESGSUvNTg4MiowLi4vLi4vKSwtJhsSBgQHBQMBCCItMS8rKSoiHhIKDhQTIS8tLigfICMjIBkcHBkVGRsXDg8M"
+        "EAoUExceHx0hIigjJCksLiwjJTEpHxgjHRUeFxINEhUWExoXExMcFRUcHBcUDg4OEhAMCwkKDBMZLiwXCwoNDw4QFhon"
+        "Mjc4NzY2NDMyMC0jISATDAkDAQAABRghJystLC4vIQ4VFRkjJyswLSgkICIiGh0eGxgPEBUSFBILDw4OEBQTGBQXGyUm"
+        "KiIjKSgsKyYhKSUjFxoXFRwWEwwOEhAVGhcbDxYaGhgWEg4KDg4PERIKCQsMCgweKywlFRAVFBkeHiAsKjQ5OTk2MzAs"
+        "JRQPBwMBAQMJDBgfIh0fIychKConKS0qJSYmIyUpKiIZICAdGRYWGA4TERIRDQ4PDxIQEhYbFRYYJSsrKSclJycoIhku"
+        "KiIgHiEWGRQRDxESDxcaFhYQGhkcGh0WEg0WEAsRDwwPDgoMDxQSEyUcGicqLyorJCosLCoqKjAnGxUHBAgIDRQYFyUo"
+        "KCAfHCMlJCQlJSojISMjHyUjISUjJiAeHBkVExcZExYUEg4MCAkKERESEBcdGBsiJC0qKygnKScnIi8qJyUVFRoXEA8R"
+        "DxMTEBMUEQ0TGh0iIBkTEhARFRYODxgRDREXHRQUEBUhICAoISkkIB0TCg4ZHhwUDRQZIyIhHiAeJSQhHRwUIh4bHiUl"
+        "JSEgICIjKCgmICYnIhwdICMdEQ4QFRAQDgwMCwgSFxsSHiIhICIkLCUmKiwoKComMyklKhodHhkTEw0PFRINDxAWFhgY"
+        "HBUcGhkUDBMbERMRFxMQEhgVEhMYFhIWFhkYHRQVFhUWHBYXFRYcJyUrKiAQGBkbHhsbIB8mIiUlJSgqJCcjJCssLCoj"
+        "KCQcHhcWIxwTGRAPFxUPDhEQDhMZIRYZFh4bIichJSMjKCksKyQ2MC8vIiciHBoYEBYTFBIWEBMWHBwaGBcaIBQRFxoS"
+        "FA4RFxEYFRMREhgZERgZHBocEhQXHBcaGh0TGyAeHSEgGRcaFRccGx8nJywnJSgpJSonIiAjHyYqKCMeIhsYFBobGRUW"
+        "EREUEgwPDhUSFRQdGhkXGBwkJSYqJyElKCgpITQ0LCYhKSIbGhgVEQ0TDhMMEhUZFBQVFhcbFBQYGBoWExQTFx4bFg8U"
+        "FBoVFxgaGR0ZFg4TGBkSGBQZFBkgGxwZFxcZGhcjJSYsLCknJS0mKikiISEhKSYkJyUdGRYXIBoZEBQVEw0TFRUJDQ8W"
+        "ExkcIBkXHCQoLComHyIjIR0eNDEsKCQpICEbFBoXFBIQEAoVFBUVGRggFxYRFxkVGxoTEREVHB4XEBsYFxMSFxYcIxoT"
+        "DhQZHBkUDxQRHR4aFxwZExYgHykoJSMqKSssLisrKyUdISMgIiQhHRkUFBgUEBYSEwwVDxEWEw4LDBYTFRIbFBYbJCsq"
+        "LTApHh4fGR0zMicoHyMbHxQNERYVFBUPCREQHBYXFxwYGhkZHRQUFw8LEB4WFxsQExQOGCAbHB8cGBsQFhoeGRYRFRET"
+        "FBcXGBIREh4hIiomJisoKS4vLycoKCcmISQkJCMXHRcVFhwQERMRCxUVEg8UEg8PERMWFyMTFSEqMS0mJiQfGxkjHDUr"
+        "JCkiISQeERITEBARDhEPDBEaFhgYGxYZFBEUExISFBMSFhYVGhQVFBUYGxoZGCIbGxYXFyEYGxEPExgXERUaExkVHyAn"
+        "JiUoJyYpLS4wLywtIiQmJh4gIRkXDxoWEQ8NDAwREBMZFBMQDxMVFR8YIhoWGykqLykgHBgaFxgYNi8nKSseIyEXFw4P"
+        "EREQDA0SEhUUFSMiFRISERMNERocFhMXGBIYFRITEhEWFx0bJR4bFhwYHyAZDxMTFhwbFBkREhkeICMiJiIhJiwqLS4v"
+        "LC0pJCEhJBgTEhUQEhMSExAUEA4SFBYbHBMWFRoaIiUnJSIgKyowLCkhJh0EBxswLCkvJyAYHhgTDBIQDg0LChIVExEY"
+        "HSMUDxITExQYFRUPERMYERkVEhIREBsZGRwdFxwYHRwhISAfGBYVGSIfFw8UFxwgHiIlICgpKiwxMC4vKywlIhkbFxEZ"
+        "Gw4NDxEPFBERERUaGRcqKyosKyYsLCstLS8wLjIzLCYoHQcYKDQyMDIvLB8bFA8TGhMPEhANEB4WFBsbHBsOEBIYFh8S"
+        "DRAVEhgWDxQTERMSHSMgHRwYHBkcHB0hJh8YFhwXFBcYEB8hHiElKCcqLC0vMTM0MDEyMS4bABInIh4fHSMfIxwfGh8i"
+        "IiQfIysrJBocIiMgIiMkHiQnJCUfFA8VIyseNTU0LikfGBUNExEMDREQExUTFR0YExMTGRQTFhcSEQ4ODwwPHhkaFBgT"
+        "GBMXHBsVFhwgGB4gIh4iIxcXIyEfGBocKSsuLywuMDAvMTIxNjUwMSwuIxMTLCgkHhsdHRQUGB0THB8bFRYdGxUZGhsc"
+        "IxofGxweJiYnJiEWFRUXIh41MTAuKSUVFg0MChEWGRUYFRQUGx4VDhEXIRgVEREbHBURFBshGCEhJx4ZHCMcCAAZKSkm"
+        "LSstKSsrJB4oLS8qKCklJR8fIiQiJCMgIykpLjArJCMgJDEzJyEZFBEPDg8SEA4UDRgVFRUYExoVGRchGxcYHh0eJioj"
+        "GxcaGRUfHjU0LjAqJiMeDQkOFQ0SEREVGRgXFxgXFx4aIRwgJiwlHiEiHiYjIygoKSAfHx4OFy0lJScoIyQsJhsaExgh"
+        "ISAaHBgWHx4bJSMlJCIfJyQsKiksJCUhISkiIhQWDxMTEhESDBEUHhcfHR0WFRMZHichHiEgHiImKCchFBMYGRsfNzg0"
+        "MjMqISECBhUYGRwgHSMoKiYiJSMfICMnJSsiFRcTDRMNFRQTGxsUGRkXFiUuIhkaHR8dIiYiDhMWFRwXFBcVFBcfIR0k"
+        "Jh8iIhkiKCknJiEfIiUiKSIhFBgWFhUTERUMEREXFhkZExUXFB4mIyIjHx4iJyUkKCAUExETFRQ4NDI0MCgnFgwhHBcW"
+        "GhsfIRsgIB4cHBsZEgwVHhMWFhgREhQRHyIVFQ0bGxsQGhojGyAbHiAnKR4WGhohJRkSFxcZGyIYISEdGhwlHR4kJikk"
+        "Hh4gHR0pIBkXGRgcFhMUGBETEBYTGRcYFhcWHh4iJx8YHhchJSoiHBATExQdFTMwKSoiHhgdKiYPDQwTEhgUEBMZGBYV"
+        "FhIKCA8cFRsXFhULCxMeJBsWERISFxUXFyAgIBkfIycmGRYWFSMhGhgXFhMWHRodIhsaHyQjGh8lHyQeIR0eHxsWGBYZ"
+        "HR4UFhYXFxcQFxUaHR0UFRkjIicoJCMkISUoIh4XFRQSFBsWNDEqIyAgGh0VDxAQEREYHBcSEhIYHRcVFAwLERcXGBUR"
+        "EA8PFRQfGhoVGRYgHhsXHRwiGR0lJxsWFRseIiEbHhsYFhgkHyMmIx4hHhkYICMfJxwfHR0gHRYaGxgbGRYcFRMTGBIU"
+        "Fh0dGhMUFSUpIh0jJiQmISEeHRoTFhQVFxM3NC8qJychFxMUFRYUExoiFhIaFxcUGBoXEQ0RGhcYExIMExARDh0ZGREe"
+        "GR0aHhgYExYXJRwmIxUSFhsgISAYGBgTIR4ZISEeGBYaFBoaIiEiHh8eGhskFhgZHBUbGSMbFhEdEBUdIBoXFxwZHRkd"
+        "GSMlICUhHB0hGhQQExcdGTUwLTAnKyAXDw8QFRMUFhgYFRkWExIUGRQPEhQbIBsRDhEYFhgQGBkVEBgVGhwZFRkUFhoi"
+        "ISYgFhIcHCMjIBogHhcZHBodJyEYFyEdGR0mIiIgHxkgGR4XHB8jGBsZHBweHCMVFx4eFxkbGyIjHSAiHiYhICMeGyEh"
+        "FhAaFBIUMzMtLComIRUTEgsMFBMcGBUOFhMOERgaGxEUFh4eGRMUExMYHBgVEREVIBwXFBoeFBEVFh0fICAXEhgiKyQR"
+        "FhofHBgbHBYiHhgUHRseHBwcIh8fFx8aGh4eHB4ZGBMfHSQgGBQWHyQbFhMYGx8eHCAfJiwjIRgZFxYXFx4bEBYxMi4t"
+        "Jx0fFhMPDw8PERMPEhEUERMVFhUiFhcYHxcZFRYRFBkaDxUaFxETFSESHB8YERcWIRYYHhgVICYjJiAeFRUbHhwbGR4U"
+        "FRQbGSAZGhcbHRsWFx0fGiIdGx4cHSUeJSQdFhsnJB4VGBoXICMjHyUqJCEiGhQXFRUZGhUZFzYxLi4kHBkQDhYMDRIO"
+        "Dw4PFRYOGBodGxwXGRUXGBcQEhITFB4VFRoXExIWHBccGxsVGRUgGxwfGRsbHx4fHxkbHhkcHhkdGxsbHBsYJh0eGRoZ"
+        "HRQXGBsVHh0gHiAeJR0cHB0gIyYkIh4dFRUiHCMmJCglIBkUEBsTEBIUFh4bODUuLiweGBUUEQ4LCgsNDw8REhkaGRYY"
+        "FxIUDxkZHBMWExEOHBoYHRoREBcZGBsVGxEUGxogJh8eGxoZHR8fFhYdFxcbHhwbFhYZFxUdGyYXGRUVFRcZHR0ZGyEb"
+        "GhojGiEiIh0dIikjJRsYFh4iISUlJyYfGRIPFRETFhQVIBs5ODExLSceHRIODwoICg0MCQkQGh8ZGBAXGxoVFBogGBcN"
+        "Dg8RFBggFQ4VFh4XIh8UDRIbGRwlICMYFhsiIR4cFRoWFhsdEh4cGhMYHBoYJBkfJBwSGyEjHhkdHBoYHCQcJBwkIB4l"
+        "Ix0XGSQfHCQkJSEoIxsVFRATEhIYFxUfGDg2MjAnJR4TEQ8ODQ8PEQ0LERUNFBceExcQExYUGBkZDwoOESAVFx4cEBka"
+        "GxYfIBMNFhgTGB0fGx4fGyAcGBoXHRcVGxsZHR8dExYXHBQdFxwbHxUgICUbFRkdICEgIh0iJCEcGxwlGxYaISEdIiIg"
+        "JCEgHRETEBMWExQdGxUXODcvJyIjHRUTEBIVFRIQEQ8PEREUDhgbGg8PDxcXHBgQEBUSKSAVGhwRExQaHiEdFxkaEhoX"
+        "FBsZFR8YFR0bGhgVFhoZHhsiHR4WFBQUFB8YFhkbGRwdIhcYHhwXJCglIyQmIR4aHSYkIBsbJygjHiQkIRcUDxEZGBIW"
+        "GhkXIh43NzEqKighGA8REhMSDhIRDgoMDw4LDxEYDhIWHBYaFxIOGRcdGRkYGhQTEBoeIRUVGhUTFxQYGBgeHxsYHxgW"
+        "FhQYHholHCgfEhgcGhkSFxkdGxUjIBofHSUgHCIiKSceHx4jKRoXJSAXGxklKyAeISQgEhATFBkfFxMVHBYeGDg2MjAu"
+        "KiUaFxgTEBUQEhAODRAUDg0UCw4MGBoYGBwTEhQVFx8ZHRsZGR0YJSUfFxkaEw8QEREYGRkcJBkXFRoYFRAZERwkHx0T"
+        "FyEaFRMTGSQhHhwiIyIZGB0bHCAnJyIlHyMpHRUfHhsbHhojKSgeHxsNFBwaGRUTGxQZFRgVOTc1MzAvJCAfFxkSEg8Q"
+        "DAsLEBISDhYODgoTFxYVHRAMDBUXHhYdHxkZGxgfICEeGxMOERkZEBcbFRshIh8bGBgVERUbGhkfHh0TGxQUExYXIR4h"
+        "GhsdKiUUICAdIiUpIR4gJC8eERwZGRshIyQmKCEcFhQXExUYGRcVEBMSGRk4NzQ0LiYnHBoXFBIOEBIQCwsREg8NExAO"
+        "DxMRGR0dEhAQFhodFx0jFxMWHB0bGhsaEg8QGBIUGBgeFh0eIBcWFBoVFxokFhgYGRIYFxkSGhkdHCMfGx0pKx4fIyEp"
+        "JSckHB8lKhkVHBwbFCYnKCcmJhoZFRQXGBYXFxYUFxcaHTk2NDEsLioaHRcWDgsQFBAQFxQKDhARDw4MEBEZIiAVEw0X"
+        "HiMYGB8jERYfIB4ZHBMSFxUXFxoeGBkXIRcYGRscGBUaGh0aFhQUGR4bFxEYFBofGRslKCojHSEgJCUgKSQeIx8iGhYa"
+        "IB4bJiclIiQlEhkUEhgVGBcVFRUWGR0aNzMzMigkJx4aEhgQDQ4WDQ4UFQ4TDRUREQ8NExUcJBgUFBcYJR0dGRsUICEd"
+        "HRQaERUeFRcZIRcRFyIhGBkgHBAUFhMUGRYVFRYVHRcUFRkaHRMZJCYmJh4eJR4gJyUoIBwkHiEdHyAeHSQiIh8fHxsY"
+        "GBMYFBEVFhgZGx4WGxs4NDAtKCElIBsUFhMUEBUODQ0UDQ0QEgsRERAUFxgZFBYVGhcbGxoUEhMdIyEYFhwMDhcSEhoa"
+        "FhETHhwZIBgVExcXGBQYFBwVERMaFCAXGh4jGBkfJyIcHRoeKCUlHh8eJCEjHx0fICMeHCQkISMbFRQUFhkVFxMYGBoW"
+        "GhQcHzczMCsrJyIdGxUUFhYTFwoJCw8PERYUDg4TEg8WFA8XFxcYFB4gGRgWFBYdHRkaHQ8RFhMXHxUfHhYTGRkfFxUa"
+        "GRkgHBoYGBQPERUVHBkfIyMXGhkgIiAaGiQsKCUdJh4cGhwfIB0lHh0gJCgiIBwXGRwYHRQUGRkXFRMUFhobODg2LSkr"
+        "IR0fGBkTFBMbDw8PDxMXERETDw4TERIUFRkXFRwXIR0eHBsVFBkaGxgbFRQTDxAQExkYGhAaHCAUGBQSGh8lHBcXEAwP"
+        "EhIdGx8hGRYdHiIgJSEbHiQfHyAlHRocHiAkIiIdHCMeIRsdGBgWFhMZGBcXFRUTFxkWGx06NjMvLCsnIB0aHxUWFh0Q"
+        "DwsTFRcRDQsODxIXEg8UFBIUFxgdGxUWFxMVExQYGRcQFBISEQ0WEhAWFx8gIhsZFBkbHB8aFhQOEBAVExodJRocHhIe"
+        "Hx4iHhseJSMlGxscIiEjHx8hKCQeHBsfGiEYGBcaFBcYFhEYExYVGhodIDg1NjMuJiUiIyIeGRgSFA0PEBIVERERCgoQ"
+        "ExUWGRITFBYcGhsVGBkWFx0SExcYGREWFhYWERcaFhUZGh4dHRsSGBggGxsRERMRFR0UHyUkHh4YFRkdGhwdHCIqJici"
+        "GRgbHB8fGh4iJiAeHB4gJRoXFxoVHRwYFRgZHRMSFyIhODQyMC8rHR4dHB4VEhUYDg8OFRURFBgNDxARFhkVEhMWERoX"
+        "GRoXFhQbHBcZFBgdEhcTDxMWFRkUExgZGh8YFxMZFhseGxUWFxcUFhIeIB8bHRwaEx4aHB0cISQiJRwbIBsdIScfISAj"
+        "Hx0gIh8fGx0UGhMYGxoTGhUYGhUXHCM4LzQwMCUbExcWHRUXFRgQFA0VExUYGBcRDQ4SHBYUFRcPEhsgFRYWFB0YGxsU"
+        "GxwPFhIVFhsRGhIRFBccJRsVFBkbGhwXFRwaFRAWFCAfHx0gHR4XIhkXHR0ZGiUhHiQhHR4iIiMgHiQdHyAjJSMaHBch"
+        "GRYVFxMUEhMWIB4XHDc0NDMkHCIaGxYaEhYRExIODBURFRoWFRIRERAVGhUREhQeHh0dGB4aFhQZHRoZHRQMFRUSHRYY"
+        "FQ4VHBofFxYYHBgbGxweHhoTEhcWGR0hHRwbExkkFxsfFhUdISIfHh8ZICMiHB0fHyMiHCMiJR8ZFBgTFRIeFA4TFRUa"
+        "GhsjNzQyNi4nIRkdGh0REhQPDwsMEhEOFhYVFQ0TGhQaFxEXHBURGR0YGBYaGRwcGxUVExQVEBEfHRYUDg0VGBYVHhYY"
+        "FRoWIhweFBQSFxocHiEaHB4YGhchIBgVFB8cJCcbHRsaICEdHiMkIRoeJR4fISARGRUXGB8cGhIUFBcaHSA4ODU1MCsp"
+        "GBMUGBERERULCw8WExIRFxcSDhIXEg4TExQXExMhHRgYGR8jJB4dFRQUFxUPExsVFxsSDBUXHBkUGBkZIRYZIR8bHBEV"
+        "HR0ZHhweHhwWFxwbGBkcISEiJSEdGhshIyElHyMdIR0kHCIaGBMYFhcaHhseFg8XGR0eHzk3ODQwJygcERIUFBAPFA4R"
+        "DRIQERUdFxALDBIbFhQSFxUXGSceGx8ZHRwhHhkaHhgcHRkaFxUVFRQQFRAXFhcXHhYYFhgaHBsaFRghIB0WGBkXHBsb"
+        "HxYVGRMbHx0gHh4XFR0lJSMjIBweJCgdIBkdFhoZHBUbGxwcFBUfGRwdOzc1NS0qKiIdFRsRDwsQDQ4PEQ0UGRcQDA0K"
+        "DiAaFQ8QDxUVGxsbHxghFxcWGRYeFhodHRQTFx4QExQYCxQVGRMaHB0WGxMXFhoXFxkgHhsWFQ4WGxUeGhQSFxwcGx8a"
+        "FxoYGCQlIyMnHCIeIh8aFx8YHB4aEh0cFhUVFxwdGRw5ODcxLiolGxcTDwsNEQ8MCgoNDQ8QDwoSNS8XGh8ZDQ4TEhEW"
+        "HB4bGh0gHhQWFw4VHiAbGhYYGRMTFxcRGxUWFyIcGxUYFxcbIRsaGBcbFRITERARFh4eFhQaGxkcGBQaIBwZKCcrJSYe"
+        "JSQjHB0YGxYZFxgYHR0dFxcZGx4gHjg3ODEvKSAbGRETDw4RDxANCA4PEA8VDRUgHRITHRsRDhEREhwaHB0UFxwhHxsX"
+        "GhYZGRoZGhsUFhkTEhEWFBoXHRUWFRsXHBgYFhgdHyEZFRYMEBUbGBsdFBscGSQYGR0bIBYgJSopKSEmIygcIBwTESEb"
+        "GRgeHBwWFBsfHSAkOzk5MzMrLCIcGhkNEA8NDgoLEA4TExMMERUZFxcYFRMSDxQTGxoZFxQcFhseHR0WFRkbGBsfJB8Z"
+        "GxkfEBEWGxkYFRUVHBYjHBcaGxUbGhgXFRAWFxQXGRUVGx0cHSQYGR4gHiMoKiUjHiMdJSAeGBcVHhwbGhkZGBYdHBYV"
+        "HyA7ODY1MickFRURDgoMDwwKDAsRFBQWFQ8TFhkbHR8ZDhUSDxgaHRgfGhUWHxMXGxUOEx4lGCIjIBYcHCAXGRgZFhQZ"
+        "FBQXGR4cHRkfGRcaHxQNDxIRFBoUFBESFx8dJBsXGiIgKSYnKiokKisrJyMjIB0lISQhKSMdJSUhDwMhKjo3NTMxKxsY"
+        "FA8PEQ0NDAwODAwPEBMSEREVFBEcGxkcFxMSGRohGRsWFhkTFRsQEBAZFRkZGR4bGB4aHhoeFxkVGh4YFxshHxsbGh0d"
+        "GxwcFhQRDxEQDQwTHR4aHCAhGh4bJSkrKiotMjExKC0uLyspIicmKScpIxwkJxkMHzArOjc3NTMlGxgWFBEMDQoNCgkO"
+        "Dw8REBETERUXER0hExkYFx4WGRoYIBYVGhMcGxkUFBYdHhkbGhodHRkkHCEZFBEaHSEgJiYqKyomJycnIyEkHx0eGQMF"
+        "Gx0kJCUoKiopLCovMjEuMzMxMiweIhohGxoTFxMUFhsWEhQZHyUxKSA6NTc4MCIdFRYMDg4NCgsMCQ4PDhMRFBUPFxQV"
+        "HSMaFhsgGxsjIhwXExUVFBUXEwoMFRgdFSMaGiIgHSQbIx8eGyQoLCosKSIjJiEfICMiHB8aExUODSEfHBkZGx0bHSAk"
+        "KiUlKCoqKS0qIx0lFxogGhEaFhUXHhoVGh4mJScoJw=="
+    )
+    # END MARINER DATA
+    mars = np.frombuffer(base64.b64decode(image_b64), dtype=np.uint8).reshape(image_shape)
+    return (mars,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Building RM(1,5)
+
+    Number the 32 transmitted positions $0, 1, \dots, 31$ and write each position in binary as
+    $(x_0, x_1, x_2, x_3, x_4)$. The generator matrix has 6 rows: the all-ones row, and for each $i$
+    the row whose entry at each position is the bit $x_i$ of that position. A codeword is
+    $a_0 \mathbf{1} + a_1 x_0 + \cdots + a_5 x_4$ modulo 2, so the 64 codewords are the 64 affine
+    functions on $\mathrm{GF}(2)^5$, each listed by its values at all 32 points.
+    """)
+    return
+
+
+@app.cell
+def _(np):
+    _pos = np.arange(32)
+    G_rm = np.vstack([np.ones(32, dtype=int)] + [(_pos >> i) & 1 for i in range(5)])   # 6 x 32
+    pixel_msgs = np.array([[(v >> i) & 1 for i in range(6)] for v in range(64)])       # 64 x 6
+    rm_codebook = pixel_msgs @ G_rm % 2                                                # 64 x 32
+    rm_weights = rm_codebook.sum(axis=1)
+    # weight distribution of RM(1,5): one 0, one 32, and sixty-two codewords of weight 16
+    assert sorted(set(rm_weights)) == [0, 16, 32] and (rm_weights == 16).sum() == 62
+    return G_rm, pixel_msgs, rm_codebook
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Decoding with a dot product
+
+    With 64 codewords, the receiver can simply compare what arrived with all of them and pick the
+    nearest. Linear algebra makes that one matrix product. Replace each bit $b$ by the real number
+    $(-1)^b$, so 0 becomes $+1$ and 1 becomes $-1$. For two 32-bit words that differ in $\delta$
+    positions, the dot product of their $\pm 1$ versions is $(32 - \delta) - \delta = 32 - 2\delta$.
+    **The largest dot product is the nearest codeword.**
+
+    So, with the received words as rows of $R$ and the codewords as rows of $S$, both in $\pm1$ form,
+    the scores of every received word against every codeword are the matrix $R S^{\mathsf T}$. Note
+    the move: the GF(2) problem has no lengths, but the $\pm 1$ trick moves it into $\mathbb{R}^{32}$,
+    where dot products do measure closeness. JPL built dedicated hardware for this decoding step,
+    nicknamed the "Green Machine".
+    """)
+    return
+
+
+@app.cell
+def _(np, rm_codebook):
+    rm_signs = 1 - 2 * rm_codebook                     # 64 x 32, entries +1 / -1
+
+    def rm_decode(received):
+        """Nearest-codeword decoding for rows of 32 received bits; returns pixel values 0..63."""
+        scores = (1 - 2 * received) @ rm_signs.T       # entry = 32 - 2 * (Hamming distance)
+        return scores.argmax(axis=1)
+    return rm_decode, rm_signs
+
+
+@app.cell
+def _(mo):
+    flip_p = mo.ui.slider(0.0, 0.30, step=0.01, value=0.10,
+                          label="Probability that the channel flips each bit", show_value=True)
+    flip_p
+    return (flip_p,)
+
+
+@app.cell
+def _(mars, np):
+    # One fixed set of random draws, thresholded by p, so raising p only adds flips.
+    _rng = np.random.default_rng(1971)
+    pixel_values = mars.ravel().astype(int)
+    draws_coded = _rng.random((pixel_values.size, 32))
+    draws_plain = _rng.random((pixel_values.size, 6))
+    return draws_coded, draws_plain, pixel_values
+
+
+@app.cell
+def _(draws_coded, draws_plain, flip_p, mars, np, pixel_msgs, pixel_values, rm_codebook,
+      rm_decode):
+    _p = flip_p.value
+    # uncoded: send the 6 bits of each pixel as they are
+    _plain = (pixel_msgs[pixel_values] + (draws_plain < _p)) % 2
+    received_plain = _plain @ (1 << np.arange(6))
+    # coded: send each pixel's 32-bit RM(1,5) codeword, decode by nearest codeword
+    _sent = rm_codebook[pixel_values]
+    _received = (_sent + (draws_coded < _p)) % 2
+    received_coded = rm_decode(_received)
+    wrong_plain = (received_plain != pixel_values).mean()
+    wrong_coded = (received_coded != pixel_values).mean()
+    img_plain = received_plain.reshape(mars.shape)
+    img_coded = received_coded.reshape(mars.shape)
+    return img_coded, img_plain, wrong_coded, wrong_plain
+
+
+@app.cell
+def _(flip_p, img_coded, img_plain, mars, plt, wrong_coded, wrong_plain):
+    _fig, _axes = plt.subplots(1, 3, figsize=(10, 3.8))
+    _p = flip_p.value
+    _panels = [(mars, "Sent: Mariner 9 image\n(64 grey levels)"),
+               (img_plain, f"No code, p = {_p:.2f}\n{100 * wrong_plain:.1f}% of pixels wrong"),
+               (img_coded, f"RM(1,5), p = {_p:.2f}\n{100 * wrong_coded:.2f}% of pixels wrong")]
+    for _ax, (_img, _title) in zip(_axes, _panels):
+        _ax.imshow(_img, cmap="gray", vmin=0, vmax=63, interpolation="nearest")
+        _ax.set_title(_title, fontsize=10)
+        _ax.set_axis_off()
+    _fig.tight_layout()
+    _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### How the two compare as the channel gets worse
+
+    Without a code, a pixel is wrong if any of its 6 bits flips: probability $1 - (1-p)^6$.
+
+    With RM(1,5), up to 7 flips are always corrected, so a pixel can be wrong only if more than 7 of
+    its 32 bits flip (dashed line). That is a guarantee, not the actual error rate. Nearest-codeword
+    decoding often fixes 8 or more flips as well, whenever the received word is still closer to the
+    right codeword than to any other. The solid blue line is the actual rate, found by simulation.
+
+    The simulation uses linearity. The difference between the received word and the sent codeword
+    is the error pattern alone, and the set of codewords looks the same from every codeword. So
+    the chance of a decoding error is the same whichever codeword was sent, and the simulation can
+    send the all-zero codeword every time. (When the received word is equally close to two
+    codewords, the simulation counts it as a failure.) The dots are the image you just saw.
+    """)
+    return
+
+
+@app.cell
+def _(np, rm_signs):
+    # Decoding-error rate of RM(1,5) by simulation, sending the all-zero codeword (see text).
+    # A tie between the sent codeword (row 0) and another counts as a failure.
+    _rng = np.random.default_rng(32)
+    _draws = _rng.random((20000, 32))
+    sim_p = np.linspace(0.02, 0.30, 15)
+
+    def _failure_rate(q):
+        _scores = (1 - 2 * (_draws < q)) @ rm_signs.T
+        return (_scores[:, 1:].max(axis=1) >= _scores[:, 0]).mean()
+    sim_coded = np.array([_failure_rate(q) for q in sim_p])
+    return sim_coded, sim_p
+
+
+@app.cell
+def _(flip_p, math, np, plt, sim_coded, sim_p, wrong_coded, wrong_plain):
+    _p = np.linspace(0.001, 0.30, 200)
+    _plain = 1 - (1 - _p) ** 6
+    _over7 = sum(math.comb(32, j) * _p ** j * (1 - _p) ** (32 - j) for j in range(8, 33))
+    _fig, _ax = plt.subplots(figsize=(6.5, 3.4))
+    _ax.semilogy(_p, _plain, color="#d97706", label="no code: any of 6 bits flips")
+    _ax.semilogy(_p, _over7, "--", color="#1d4ed8", lw=1,
+                 label="RM(1,5) guarantee: more than 7 of 32 flip")
+    _ok = sim_coded > 0
+    _ax.semilogy(sim_p[_ok], sim_coded[_ok], "-", color="#1d4ed8",
+                 label="RM(1,5) actual, nearest codeword (simulated)")
+    _ax.semilogy([flip_p.value], [max(wrong_plain, 1e-6)], "o", color="#d97706")
+    if wrong_coded > 0:
+        _ax.semilogy([flip_p.value], [wrong_coded], "o", color="#1d4ed8")
+    _ax.set_ylim(1e-6, 1.2)
+    _ax.set_xlabel("probability that each bit flips")
+    _ax.set_ylabel("fraction of pixels wrong")
+    _ax.legend(frameon=False, loc="lower right")
+    _fig.tight_layout()
+    _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Notes
+
+    - **The price is bandwidth.** RM(1,5) sends 32 bits for every 6 bits of picture, a rate of
+      $6/32$. At a fixed transmission speed, pictures take 5.3 times as long. This plot holds the
+      flip probability fixed; in a real radio link, squeezing more bits into the same time and power
+      makes each bit noisier, so the advantage is smaller than it looks here.
+    - **Hamming(7,4) would not have been enough.** At $p = 0.1$, a 7-bit block has two or more flips
+      about 15% of the time, and Hamming(7,4) decodes every one of those blocks wrongly.
+    - **Nearest-codeword decoding by brute force only works because there are 64 codewords.** Codes
+      in current use have far too many codewords to compare one by one, which is why they are
+      designed so that decoding can work from the syndrome or from a sparse $H$ instead.
+    """)
+    return
+
+
+if __name__ == "__main__":
+    app.run()

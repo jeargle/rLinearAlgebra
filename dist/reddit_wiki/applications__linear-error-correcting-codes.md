@@ -24,6 +24,8 @@ does.
 **Vectors:** GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - [Hamming weight](https://en.wikipedia.org/wiki/Hamming_distance) is a metric, not a norm from an inner product  
 **Underlying equations:** None: algebraic constraints over GF(2)
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/07-linear-error-correcting-codes.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 Send bits over a channel that flips some of them. Detect and correct the errors without retransmission.

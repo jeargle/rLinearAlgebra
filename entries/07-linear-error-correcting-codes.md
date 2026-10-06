@@ -24,7 +24,7 @@ la_concepts: linear algebra over GF(2); null space; rank conditions; Vandermonde
 primary_method: Syndrome decoding; belief propagation
 matrix_structure: GF(2) entries; sparse H for LDPC
 typical_size: n up to 1e4
-worked_example_size: Hamming(7 4) full decode table
+worked_example_size: Hamming(7 4) full decode table; RM(1 5) on a 128x128 Mariner 9 image
 terminology:
   codeword: an element of the k-dimensional subspace of GF(2)^n
   generator matrix G: a basis of the code, written as rows
