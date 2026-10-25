@@ -45,9 +45,10 @@ def main():
         writer.writerows(rows)
 
     seed = sum(1 for r in rows if r["status"] == "seed")
+    written = sum(1 for r in rows if r["status"] == "written")
     tiers = {t: sum(1 for r in rows if r["tier"] == t) for t in (1, 2, 3)}
     print(f"wrote {path.relative_to(DIST.parent)}: {len(rows)} entries "
-          f"({seed} seed), tiers {tiers[1]}/{tiers[2]}/{tiers[3]}")
+          f"({seed} seed, {written} written), tiers {tiers[1]}/{tiers[2]}/{tiers[3]}")
     return 0
 
 

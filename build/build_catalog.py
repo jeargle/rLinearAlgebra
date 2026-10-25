@@ -37,11 +37,11 @@ def coverage_table():
     """Editorial per-entry labels live in docs/coverage_labels.tsv; ids are verified."""
     path = DOCS / "coverage_labels.tsv"
     body = [ln for ln in path.read_text().splitlines() if ln.strip()]
-    seed_ids = {m["id"] for m in load_entries()}
+    entry_ids = {m["id"] for m in load_entries()}
     labelled = {int(ln.strip().strip("|").split("|")[0]) for ln in body}
-    if labelled != seed_ids:
+    if labelled != entry_ids:
         raise ValueError(
-            f"coverage_labels.tsv covers {sorted(labelled)}, seed entries are {sorted(seed_ids)}"
+            f"coverage_labels.tsv covers {sorted(labelled)}, written entries are {sorted(entry_ids)}"
         )
     header = ["| # | Field | Core linear-algebra object | Dominant method |",
               "|---|-------|---------------------------|-----------------|"]
@@ -79,21 +79,29 @@ def render_entry(meta):
 
 def main():
     entries = load_entries()
+    seed = [m for m in entries if m["status"] == "seed"]
+    written = [m for m in entries if m["status"] == "written"]
     rows = load_all()
     tiers = Counter(r["tier"] for r in rows)
-    seed_tiers = Counter(m["tier"] for m in entries)
-    ceiling3 = sum(1 for m in entries if m["tier_ceiling"] == 3)
+    seed_tiers = Counter(m["tier"] for m in seed)
+    entry_tiers = Counter(m["tier"] for m in entries)
+    ceiling3 = sum(1 for m in seed if m["tier_ceiling"] == 3)
 
     values = {
         "NAV_TABLE": nav_table(rows),
         "COVERAGE_TABLE": coverage_table(),
         "N_TOTAL": str(len(rows)),
-        "N_SEED": str(len(entries)),
+        "N_SEED": str(len(seed)),
         "N_SEED_TIER1": str(seed_tiers[1]),
         "N_SEED_TIER2": str(seed_tiers[2]),
         "N_SEED_TIER3": str(seed_tiers[3]),
         "SEED_TIER1_TITLES": "; ".join(
-            m["short_title"] for m in entries if m["tier"] == 1) or "none",
+            m["short_title"] for m in seed if m["tier"] == 1) or "none",
+        "N_WRITTEN": str(len(written)),
+        "N_ENTRIES": str(len(entries)),
+        "N_ENTRIES_TIER1": str(entry_tiers[1]),
+        "N_ENTRIES_TIER2": str(entry_tiers[2]),
+        "N_ENTRIES_TIER3": str(entry_tiers[3]),
         "N_SEED_CEIL3": str(ceiling3),
         "TIER_SPLIT": f"{tiers[1]} / {tiers[2]} / {tiers[3]}",
         "N_TERMS": str(sum(len(m.get("terminology") or {}) for m in entries)),

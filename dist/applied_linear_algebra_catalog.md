@@ -1,13 +1,18 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.1 — seed set of 10 problems**
+**Version 0.2 — a seed set of 10 problems, and 3 further written entries**
 
-Selection criteria for this first pass:
+Selection criteria for the seed set:
 
 1. **One application domain each.** No two entries come from the same subfield or community of practice. At the coarse level used in the companion index, three entries fall under Engineering (civil/mechanical FEA, aerospace/control, communications) and two under Computer Science (network science, computer vision); these are distinct disciplines in practice, sharing only a top-level bucket. The set spans seven coarse fields and ten distinct subfields.
 2. **One distinct linear-algebra concept each.** Entry 1 is a sparse SPD solve; entry 5 is a nonnegative-matrix spectral radius; entry 7 is linear algebra over a finite field, a number system with finitely many elements (defined under Difficulty tiers). If two problems reduce to the same mathematical object, only one is in the seed set and the other is in the backlog.
 3. **Deployed, not illustrative.** Every entry is something an engineer, scientist, or company actually runs in production or in published research — not a textbook exercise dressed in application clothing.
 4. **The matrix structure is the point.** In each case, *what kind of matrix it is* (sparse, symmetric, stochastic, rank-deficient, over GF(2), the numbers 0 and 1 with arithmetic modulo 2) determines which algorithm is viable. That is the through-line worth teaching.
+
+Entries written after the seed set have status `written` in the index. They keep criteria 3 and 4
+but not 1 and 2. Field is the organizing axis, so the same linear-algebra concept appears in the
+vocabulary of several fields, and an entry for each field is the point; entries that share a concept
+name each other under Extensions.
 
 ## Entry template
 
@@ -194,7 +199,8 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 10 seed entries, 2 are Tier 1
+**Current distribution.** Of the 13 written entries, 5 are Tier 1,
+3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
 
@@ -1210,7 +1216,513 @@ so its eigenvectors are exactly those of the ring's [adjacency matrix](https://e
 
 ---
 
-# Coverage of the seed set
+## 12. Resistor networks: Kirchhoff's laws as a graph Laplacian
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A circuit board, a [strain gauge](https://en.wikipedia.org/wiki/Strain_gauge), or the metal wiring that carries power across a computer chip can be
+pictured as wires meeting at junctions, with a resistor on each wire. Push current in at one junction
+and take it out at another: how much current flows along each wire, and what is the voltage at every
+junction?
+
+Two rules decide it. First, current through a resistor is proportional to the voltage difference across
+it. Second, at every junction, the current flowing in equals the current flowing out, because charge does
+not pile up. Write the second rule once per junction and substitute the first, and you get one equation
+per junction with the junction voltages as the unknowns.
+
+One thing is odd about the answer. Raising every voltage by the same amount changes no current, because
+only differences matter. So the equations cannot pin down the voltages until one junction is declared
+to be zero, which is what electricians call [ground](https://en.wikipedia.org/wiki/Ground_%28electricity%29). In linear algebra terms, that missing piece of
+information is a null space, and choosing a ground is how it is removed.
+
+</details>
+
+**Field:** Electrical engineering, circuit theory, chip power-grid analysis
+
+**Tier:** 1 — a DC network of resistors is one symmetric linear system L φ = s, and grounding a node is removing a one-dimensional null space. [Effective resistance](https://en.wikipedia.org/wiki/Resistance_distance) through the [pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse) and its link to random walks are Tier 2; circuits with capacitors or inductors involve ODEs and are Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: two different spaces: node potentials in R^n (n nodes) and edge currents in R^m (m resistors). The [incidence matrix](https://en.wikipedia.org/wiki/Incidence_matrix) maps the first to the second. Potentials are only defined up to adding the same constant to every node, so physically they live in R^n modulo the all-ones vector.
+
+**Underlying equations.** None: [Ohm's law](https://en.wikipedia.org/wiki/Ohm's_law) and [Kirchhoff's](https://en.wikipedia.org/wiki/Kirchhoff's_circuit_laws) current law are algebraic for a direct-current network of resistors (capacitors and inductors would add ODEs; see the AC circuits entry).
+
+**The problem.** Given a network of resistors and the currents injected at some nodes (or the voltages held fixed at
+some nodes by sources), find the potential at every node and the current through every resistor. A
+common special case is to find the single resistance the whole network presents between two terminals.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of nodes | junctions in the network | integer | — |
+| m | number of edges | resistors, each joining two nodes | integer | — |
+| R_e | resistance of edge e | — | scalar per edge | ohms (Ω) |
+| C | conductance matrix | diagonal, with 1/R_e for each edge | m × m | siemens (S) |
+| A | incidence matrix | row e has +1 at the node where edge e starts and −1 where it ends (the direction is an arbitrary bookkeeping choice) | m × n | dimensionless |
+| φ | node potentials | the voltage at each node, relative to an arbitrary reference | n × 1 | volts (V) |
+| v | voltage drops | v = A φ, the drop along each edge in its chosen direction | m × 1 | volts |
+| I | edge currents | current through each resistor, positive in the edge's direction | m × 1 | amperes (A) |
+| s | injected currents | current fed into each node from outside; 0 at internal junctions | n × 1 | amperes |
+| L | Laplacian (nodal conductance matrix) | L = Aᵀ C A | n × n | siemens |
+| 1 | all-ones vector | — | n × 1 | — |
+| R_eff | effective resistance | the resistance the whole network presents between two nodes | scalar | ohms |
+
+Potentials and currents live in different spaces: φ has one entry per node and I has one entry per
+edge. The incidence matrix A carries potentials to edge drops, and its transpose Aᵀ carries edge
+currents back to node totals.
+
+**Formulation.** **Where the equations come from.** There is no differential equation. A direct-current network of
+resistors is described by two algebraic laws, one per edge and one per node.
+
+**Ohm's law, one equation per edge.** For a single resistor, Ohm's law is the familiar V = IR: the
+voltage V across it equals the current I through it times its resistance R. Solved for the current,
+I = V/R. With the drops v = A φ in place of V and the conductances 1/R_e on the diagonal of C, all m
+resistors at once read
+
+```
+I = C A φ
+```
+
+Row e reads I_e = (φ_start − φ_end) / R_e, which is V = IR for resistor e.
+
+**Kirchhoff's current law, one equation per node.** Charge does not accumulate at a junction, so the
+current leaving each node through its resistors equals the current injected there from outside:
+
+```
+Aᵀ I = s
+```
+
+Row i of Aᵀ adds the currents on edges leaving node i and subtracts those on edges arriving.
+
+**The node equations.** Substituting the first law into the second gives one symmetric system in the
+potentials alone:
+
+```
+L φ = s,     L = Aᵀ C A
+```
+
+Entry L_ii is the total conductance of the resistors touching node i, and L_ij is minus the conductance
+of the resistor joining i and j (0 if there is none). This is the weighted [Laplacian](https://en.wikipedia.org/wiki/Laplacian_matrix) of the network
+graph, and in circuit theory it is called the nodal conductance or admittance matrix.
+
+**The null space, and grounding.** Every row of L sums to zero, so L 1 = 0: adding the same constant to
+every potential changes no drop and no current. For a connected network the null space is exactly the
+span of 1, so the rank of L is n − 1 and the potentials are determined only up to that constant. Fixing
+one node's potential at 0 (grounding it) and deleting its row and column leaves an (n − 1) × (n − 1)
+matrix that is symmetric positive definite and therefore invertible.
+
+**The solvability condition.** L φ = s has a solution only if s is in the column space of L, which for a
+symmetric matrix is the orthogonal complement of its null space. Here that means 1ᵀ s = 0: the injected
+currents must add up to zero, because whatever current goes in must come out somewhere. The
+mathematics and the physics state the same condition.
+
+**Effective resistance.** Inject 1 A at node a and remove it at node b, so s = e_a − e_b. The resulting
+potential difference φ_a − φ_b, in volts per ampere, is the effective resistance between the two nodes.
+
+**Worked case: a [Wheatstone bridge](https://en.wikipedia.org/wiki/Wheatstone_bridge).** Four nodes: the top a, two middle nodes b and c, and the bottom g.
+The resistors are a–b 100 Ω, a–c 150 Ω, b–g 200 Ω, c–g 300 Ω, and a 50 Ω meter across b–c. A 10 V
+source holds φ_a = 10 V and φ_g = 0 V. With the known potentials moved to the right-hand side, the two
+equations for the unknown middle nodes are
+
+```
+(1/100 + 1/200 + 1/50) φ_b − (1/50) φ_c = 10/100
+−(1/50) φ_b + (1/150 + 1/300 + 1/50) φ_c = 10/150
+```
+
+and their solution is φ_b = φ_c = 20/3 V, so no current flows through the meter. The bridge is
+balanced, because 100/200 = 150/300. Change the 300 Ω resistor to 330 Ω, as a strain gauge does when it
+is stretched, and about 0.95 mA flows through the meter. Measuring that current is how a strain gauge,
+a load cell, or a pressure sensor turns a tiny resistance change into a reading.
+
+**Matrix structure.** `L` is sparse, with one nonzero per node on the diagonal and two off-diagonal nonzeros per resistor. It
+is symmetric positive semidefinite with zero row sums, and singular with rank n − (number of connected
+components). After grounding it is symmetric positive definite and [diagonally dominant](https://en.wikipedia.org/wiki/Diagonally_dominant_matrix), the best-behaved
+kind of large linear system there is.
+
+**What is computed.** Ground a node (or eliminate every node held at a known voltage), then solve the remaining symmetric
+positive definite system. Circuit-sized problems use a sparse Cholesky factorization. The power grids
+that deliver current across a modern chip have tens of millions of nodes, and checking them for voltage
+droop is done with preconditioned conjugate gradient or [multigrid](https://en.wikipedia.org/wiki/Multigrid_method). Graph theory has its own fast
+Laplacian solvers, which run in nearly linear time in the number of edges.
+
+**Why linear algebra is the right tool.** Each of the circuit-theory rules is a statement about the four fundamental subspaces of the incidence
+matrix A. Kirchhoff's voltage law says that edge drops are in the column space of A. Kirchhoff's current
+law constrains Aᵀ I. Ground is the null space of A, and the loops that [mesh analysis](https://en.wikipedia.org/wiki/Mesh_analysis) works with form a
+basis of the null space of Aᵀ, whose dimension m − n + 1 counts the independent loops. The textbook
+choice between [nodal analysis](https://en.wikipedia.org/wiki/Nodal_analysis) and mesh analysis is a choice of which of two complementary subspaces to
+solve in: nodal analysis needs n − 1 unknowns, mesh analysis needs m − n + 1, and engineers pick
+whichever is smaller. Reciprocity, the surprising fact that swapping where a source is applied and where
+the response is measured gives the same reading, is just the symmetry of L.
+
+**Pitfall worth teaching.** Two mistakes produce a singular or meaningless system. The first is forgetting to ground. L itself is
+singular, so a direct solver either fails or, worse, returns potentials offset by an arbitrary constant
+because of rounding. The second is inconsistent sources: injected currents that do not sum to zero put s
+outside the column space, and no potentials satisfy the equations. Voltage sources need a third kind of
+care. A node whose voltage is fixed is not an unknown, so its known potential moves to the right-hand
+side, as in the bridge example. The current the source supplies is unknown, so that node's row of
+L φ = s cannot be used as an equation; it gives the source current afterwards. Keeping that row with
+s set to 0 is a common source of wrong answers. In each case the system was set up before deciding which
+quantities are known, which are unknown, and what fixes the free constant.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| node voltage (potential) | one entry of the vector φ in R^n |
+| ground (reference node) | the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector |
+| nodal conductance (admittance) matrix | the weighted graph Laplacian L = A^T C A |
+| Kirchhoff's current law (KCL) | A^T I = s, a statement about the left null space of A |
+| Kirchhoff's voltage law (KVL) | voltage drops lie in the column space of A, so they sum to zero around every loop |
+| loop (mesh) currents | coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1 |
+| nodal analysis vs mesh analysis | solving in potential space (dimension n - 1) vs in cycle space (dimension m - n + 1) |
+| effective (Thevenin) resistance | (e_a - e_b)^T L^+ (e_a - e_b), a quadratic form in the pseudoinverse |
+| superposition | linearity of the solution map s -> φ |
+| reciprocity | symmetry of L, so the potential at b due to a source at a equals the potential at a due to the same source at b |
+| bridge balance | a choice of resistances that puts one edge current at zero |
+
+**Extensions.** Effective resistance between every pair of nodes can be read from the pseudoinverse L⁺, and it equals
+the expected time for a random walk to go from one node to the other and back, divided by twice the
+total conductance; both facts are Tier 2. The same Laplacian appears as the Y-bus matrix of power-grid
+load flow, in modified nodal analysis inside circuit simulators such as [SPICE](https://en.wikipedia.org/wiki/SPICE), and in spectral graph
+clustering, where its eigenvectors rather than its solves are the object of interest. Adding capacitors
+and inductors turns the network equations into ODEs; with sinusoidal sources, phasors turn them back into
+a complex linear system (the AC circuits entry, Tier 3). The same incidence-matrix structure, with flows
+and conservation at nodes, appears in the traffic-flow and process mass-balance entries.
+
+---
+
+## 42. Bézier curves: every letter on the screen is a point in a polynomial space
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Every letter in a modern font is drawn from a short list of curved pieces. A designer does not store the
+thousands of pixels in a letter "S"; the font file stores a few points, and the computer works out a
+smooth curve from them at whatever size the letter is printed, from a phone screen to a billboard.
+
+For each curved piece the font stores four points. The curve starts at the first and ends at the fourth.
+The two middle points are not on the curve at all: they act like magnets that pull it towards themselves,
+setting the direction in which it leaves the start and arrives at the end. Moving one of them reshapes
+the curve smoothly, which is why the "handles" in a drawing program behave the way they do.
+
+The mathematics underneath is that each piece is a polynomial of degree 3, and the four points are the
+polynomial's coordinates in a well-chosen basis. The everyday operations of a font or drawing program —
+scaling a letter, converting a font between formats, cutting a curve in two — all turn out to be changes
+of basis or other linear maps between spaces of polynomials.
+
+</details>
+
+**Field:** Typography, [vector graphics](https://en.wikipedia.org/wiki/Vector_graphics), computer-aided design, animation
+
+**Tier:** 1 — a [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) is a polynomial written in a particular basis, and every common operation on it is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) or a linear map between polynomial spaces of degree at most 3. No eigenvalues and no differential equations are involved.
+
+**Scalars and vectors.** Scalar field: R. Vectors: P_3, the real polynomials of degree at most 3 in a parameter t, which has dimension 4. Each coordinate x(t) and y(t) of a cubic curve is one element of P_3, so a planar cubic segment is a pair of them, a vector in P_3 × P_3 of dimension 8. The control points are its coordinates in the [Bernstein](https://en.wikipedia.org/wiki/Bernstein_polynomial) basis, not points the curve passes through. [TrueType](https://en.wikipedia.org/wiki/TrueType) fonts use quadratic segments, in P_2 (dimension 3).
+
+**Underlying equations.** None: polynomial curves written in a chosen basis.
+
+**The problem.** An image can be stored in two fundamentally different ways. [Raster graphics](https://en.wikipedia.org/wiki/Raster_graphics) (photographs, PNG and
+JPEG files, the screen itself) store a grid of pixels: a fixed number of samples of the picture,
+taken at one resolution. Enlarge a raster image and nothing new can appear between the samples, so
+each pixel just becomes a bigger square and edges turn jagged and blurry. Vector graphics (fonts, SVG
+and PDF drawings, logos, CAD drawings) store the shapes themselves, as curves described by a few numbers
+each. The picture is computed from those numbers only when it is shown, so it can be drawn at any
+resolution, and a letter zoomed in a hundredfold is as sharp as it was at normal size. It is only turned into pixels
+([rasterized](https://en.wikipedia.org/wiki/Rasterisation)) at the last moment, for the particular screen or printer in use.
+
+Both kinds of image are vectors in the linear-algebra sense, but in different spaces. A raster image
+is a point in ℝ^(width × height), one coordinate per pixel, and its resolution is fixed by the
+dimension of that space. A vector-graphics curve is a point in a space of polynomials, which can be
+evaluated at as many parameter values as the output needs.
+
+The problem is to represent smooth curves (glyph outlines, vector illustrations, animation timing) in
+that second way, as Bézier curves, and then to draw them at any resolution, transform them, split them,
+and convert them between formats that use different polynomial degrees: exactly where possible, and
+approximately otherwise.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| t | parameter | position along the segment, from its start (t = 0) to its end (t = 1); not distance along the curve | scalar in [0, 1] | dimensionless |
+| P_0, …, P_3 | control points | coordinates of the curve in the Bernstein basis | each a 2 × 1 point | font units (often 1/1000 or 1/2048 of the em size) |
+| b_0, …, b_3 | Bernstein polynomials | b_k(t) = C(3, k) t^k (1 − t)^(3−k), the basis functions of P_3 | functions in P_3 | dimensionless |
+| B(t) | the curve | B(t) = Σ b_k(t) P_k, the point drawn at parameter t | 2 × 1 for each t | font units |
+| X | control-point matrix | the control points as rows, (P_0; P_1; P_2; P_3) | 4 × 2 | font units |
+| M | change-of-basis matrix | converts Bernstein coordinates to monomial coefficients | 4 × 4 | dimensionless |
+| a_0, …, a_3 | monomial coefficients | B(t) = a_0 + a_1 t + a_2 t² + a_3 t³ | each 2 × 1 | font units |
+| Q_0, Q_1, Q_2 | quadratic control points | a TrueType segment, in the Bernstein basis of P_2 | each 2 × 1 | font units |
+
+**Formulation.** **Where the equations come from.** There is no differential equation. A segment is a polynomial curve,
+and the modelling choice is only which basis to write it in.
+
+**The Bernstein basis.** For cubics the basis polynomials are
+
+```
+b_0 = (1 − t)³,   b_1 = 3t(1 − t)²,   b_2 = 3t²(1 − t),   b_3 = t³
+```
+
+They are linearly independent, so they form a basis of the 4-dimensional space P_3. Each is
+nonnegative on [0, 1], and by the binomial theorem they add up to ((1 − t) + t)³ = 1. The curve is
+
+```
+B(t) = b_0(t) P_0 + b_1(t) P_1 + b_2(t) P_2 + b_3(t) P_3
+```
+
+so its x-coordinate is the element of P_3 whose Bernstein coordinates are the four x-values of the
+control points, and likewise for y. At t = 0 only b_0 is nonzero, and at t = 1 only b_3, so the curve
+passes through P_0 and P_3 and in general through neither middle point.
+
+**Change of basis to monomials.** Expanding the Bernstein polynomials in powers of t gives
+
+```
+(a_0; a_1; a_2; a_3) = M X,      M = [  1   0   0   0 ]
+                                     [ −3   3   0   0 ]
+                                     [  3  −6   3   0 ]
+                                     [ −1   3  −3   1 ]
+```
+
+Column k of M⁻¹ would give the monomial t^k in Bernstein coordinates. The monomial form is convenient for
+evaluating derivatives; the Bernstein form is the one people can edit, because its coordinates are points
+in the plane.
+
+**Degree elevation.** A quadratic is also a cubic, because P_2 is a subspace of P_3. In Bernstein
+coordinates the inclusion is the linear map
+
+```
+P_0 = Q_0,   P_1 = (Q_0 + 2 Q_1)/3,   P_2 = (2 Q_1 + Q_2)/3,   P_3 = Q_2
+```
+
+So converting a TrueType outline to cubic (CFF) form is exact. The reverse direction is not: a cubic lies
+in P_2 only when its t³ coefficient, a_3 = −P_0 + 3P_1 − 3P_2 + P_3, is zero.
+
+**Worked case: a cubic that is secretly a quadratic.** Take P_0 = (0, 0), P_1 = (2, 2), P_2 = (4, 2),
+P_3 = (6, 0). Multiplying by M gives
+
+```
+x(t) = 6t,     y(t) = 6t − 6t²
+```
+
+Both t³ coefficients vanish, and so does the t² coefficient of x: the curve is the parabola from the
+quadratic segment Q_0 = (0, 0), Q_1 = (3, 3), Q_2 = (6, 0), which the degree-elevation formulas send back
+to exactly these four points. Its midpoint is B(1/2) = (P_0 + 3P_1 + 3P_2 + P_3)/8 = (3, 1.5), and it
+never comes near the middle control points, whose height is 2.
+
+**Evaluation and subdivision by [de Casteljau](https://en.wikipedia.org/wiki/De_Casteljau's_algorithm).** Interpolate linearly between neighbouring control points
+at the fraction t, and repeat on the new points until one is left; that point is B(t). At t = 1/2 the
+example gives (1, 1), (3, 2), (5, 1), then (2, 1.5), (4, 1.5), then (3, 1.5). The points produced along
+the way are, read down the left and right edges, the control points of the two halves:
+(0, 0), (1, 1), (2, 1.5), (3, 1.5) and (3, 1.5), (4, 1.5), (5, 1), (6, 0). Splitting a curve is
+therefore a change of basis: each half is the same polynomial, written in the Bernstein basis of a
+shorter interval.
+
+**Matrix structure.** Every map is a small dense matrix acting on the 4 × 2 array of control points: the 4 × 4 lower
+triangular Bernstein-to-monomial matrix M, a 4 × 4 subdivision matrix for each half, and a 4 × 3
+degree-elevation matrix from P_2 to P_3. Their entries are fixed rational numbers, so they are computed
+once and applied to every segment.
+
+**What is computed.** A renderer evaluates or subdivides each segment (often with de Casteljau steps, which only average
+points and are numerically stable) until the pieces are flat enough to treat as straight lines, then
+fills the outline. Font-conversion tools elevate quadratic outlines to cubic exactly, and approximate
+each cubic by one or more quadratics, splitting it until the error is within a tolerance; the cu2qu
+module of the fontTools library does this when fonts are compiled to TrueType.
+
+**Why linear algebra is the right tool.** The control points are coordinates, so every operation that a font or drawing program performs is
+linear in them. Changing format is a change of basis or an inclusion of one polynomial space in another;
+splitting a curve is a change of basis to a subinterval; and the question "is this cubic really a
+quadratic" is whether a vector lies in a subspace, settled by one linear functional. The Bernstein basis
+is chosen for geometric reasons (nonnegative functions that sum to 1), which make its coordinates behave
+like weighted averages of points. That property is what makes them meaningful to a designer.
+
+**Pitfall worth teaching.** The control points transform correctly under [affine](https://en.wikipedia.org/wiki/Affine_transformation) maps, and only under them. Because the basis
+polynomials sum to 1, B(t) is a weighted average of the control points with weights that add up to 1,
+so scaling, rotating, shearing or moving the control points does the same to every point of the curve.
+That is why a font can be scaled by transforming a few points. A perspective ([projective) transformation](https://en.wikipedia.org/wiki/Homography)
+is not affine: it divides by a quantity that depends on the point, which does not distribute over a
+weighted average. Applying a perspective map to the control points and redrawing gives a visibly
+different curve from applying it to the curve itself. Representing curves exactly under perspective
+requires rational Bézier curves, which use homogeneous coordinates (see the 3D viewing entry). A second
+misconception has the same root: the parameter t is not distance along the curve, so equally spaced
+values of t give unequally spaced points.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| raster image (bitmap) | a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension |
+| vector graphics | shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs |
+| rasterization | sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height) |
+| control points | coordinates of the curve in the Bernstein basis, one point in the plane per basis polynomial |
+| on-curve and off-curve points (font editors) | the end control points, which the curve passes through, and the inner control points, which it generally does not |
+| control polygon | the broken line through the control points; the curve lies in its convex hull |
+| Bernstein polynomials | a basis of P_3 consisting of nonnegative functions that sum to 1 |
+| cubic vs quadratic outlines (CFF/PostScript vs TrueType) | curves in P_3 vs curves in P_2 |
+| degree elevation | the inclusion P_2 → P_3, written in Bernstein coordinates |
+| de Casteljau algorithm | evaluation by repeated linear interpolation |
+| subdivision (splitting a curve) | change of basis to the Bernstein basis of a subinterval |
+| affine invariance | transforming the control points transforms the curve, because the basis sums to 1 |
+| easing curve (CSS cubic-bezier) | a cubic in the same basis, used for timing instead of shape |
+
+**Extensions.** [B-splines](https://en.wikipedia.org/wiki/B-spline) join many polynomial pieces with a basis of a whole space of smooth piecewise polynomials, and
+[NURBS](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline) add weights, which is why CAD systems use them. [Bézier surfaces](https://en.wikipedia.org/wiki/B%C3%A9zier_surface) use the tensor-product basis
+b_i(u) b_j(v) of a 16-dimensional space; the [Utah teapot](https://en.wikipedia.org/wiki/Utah_teapot) is 32 such patches. CSS animation timing
+functions (cubic-bezier) are cubics in the same basis. Polynomial interpolation through given points is
+the same space with a different basis (the polynomial interpolation entry), and least-squares fitting of
+a curve to scanned points is the basis-fitting entry. The affine-transform and 3D viewing entries are the
+matrices that act on control points.
+
+---
+
+## 48. Shamir secret sharing: a threshold is a theorem about interpolation
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Suppose a company's master password must never be in one person's hands, but any three of its five
+directors acting together should be able to recover it. Splitting the password into five pieces does not
+work: each piece gives part of the password away, and losing one piece loses the password.
+
+The trick uses a fact from school algebra: two points determine a line, three points determine a
+parabola, and in general k points determine a polynomial of degree k − 1. Hide the password as the
+height of a parabola where it crosses the vertical axis, choose the rest of the parabola at random, and
+give each director one point on it. Any three directors can rebuild the parabola and read off the
+password. Any two cannot, and this is the surprising part: through two points there is a parabola
+crossing the axis at every possible height, all equally likely, so two points reveal nothing at all.
+
+For this to be exact, the arithmetic is done with whole numbers that wrap around at a fixed prime, like
+the hours on a clock. That number system still allows division, which interpolation needs, and it has no
+rounding and no sizes that leak information.
+
+</details>
+
+**Field:** Cryptography, key management, distributed systems security
+
+**Tier:** 1 — everything is polynomial interpolation, a Vandermonde solve, done in the integers [modulo](https://en.wikipedia.org/wiki/Modular_arithmetic) a prime p. Arithmetic modulo a prime obeys the usual rules of algebra, including division by any nonzero number, and nothing more from abstract algebra is needed. The byte-wise version used in practice works in GF(2^8), which is Tier 3.
+
+**Scalars and vectors.** Scalar field: GF(p), the integers 0 to p − 1 with arithmetic modulo a prime p (in practice p is a prime larger than any possible secret, often 127 or more bits). Vectors: P_(k−1)(GF(p)), the polynomials of degree at most k − 1 with coefficients in GF(p), a k-dimensional space; the n shares are a vector in GF(p)^n, the image of a polynomial under the evaluation map.
+
+**Underlying equations.** None: polynomial evaluation and interpolation over a finite field.
+
+**The problem.** Split a secret s into n shares so that any k of them determine s, while any k − 1 of them give no
+information about s whatsoever.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| p | modulus | a prime larger than the secret and than n | integer | — |
+| s | secret | the value to be protected, an element of GF(p) | scalar | — |
+| k | threshold | number of shares needed to reconstruct | integer | — |
+| n | number of shares | number of parties | integer | — |
+| a_1, …, a_(k−1) | random coefficients | chosen uniformly at random from GF(p) by the dealer | scalars | — |
+| f | sharing polynomial | f(x) = s + a_1 x + … + a_(k−1) x^(k−1), so f(0) = s | element of P_(k−1) | — |
+| x_i | evaluation point | the public label of party i; distinct and nonzero | scalar per party | — |
+| y_i | share value | y_i = f(x_i), kept secret by party i | scalar per party | — |
+| V | Vandermonde matrix | row i is (1, x_i, x_i², …, x_i^(k−1)) | k × k for k parties | — |
+| c | coefficient vector | (s, a_1, …, a_(k−1)), the coordinates of f in the basis 1, x, …, x^(k−1) | k × 1 | — |
+| λ_i | Lagrange coefficients | weights such that s = Σ λ_i y_i | one per participating party | — |
+
+Every quantity is an element of GF(p), the integers 0, 1, …, p − 1 with addition and multiplication
+modulo p, so there are no physical units. Because p is prime, every nonzero element has a reciprocal:
+in GF(13), for example, 1/2 = 7, since 2 × 7 = 14 = 1 modulo 13.
+
+**Formulation.** **Where the equations come from.** There is no differential equation. The model is polynomial evaluation
+over the finite field GF(p).
+
+**Sharing.** The dealer puts the secret in the constant term and picks the other k − 1 coefficients at
+random:
+
+```
+f(x) = s + a_1 x + a_2 x² + … + a_(k−1) x^(k−1)
+y_i = f(x_i)          for i = 1, …, n
+```
+
+The map that sends a polynomial to its values at x_1, …, x_n is linear, from the k-dimensional space
+P_(k−1) to GF(p)^n. In coordinates it is the n × k Vandermonde matrix with rows (1, x_i, …, x_i^(k−1)).
+
+**Reconstruction from k shares.** Any k parties hold k equations in the k unknown coefficients:
+
+```
+V c = y
+```
+
+A square Vandermonde matrix with distinct x_i has determinant Π_(i<j) (x_j − x_i), which is nonzero, so
+the system has exactly one solution, and the secret is its first entry. Nobody needs the full solution.
+Writing f in the [Lagrange](https://en.wikipedia.org/wiki/Lagrange_polynomial) basis gives the secret directly as a fixed linear combination of the shares:
+
+```
+s = f(0) = Σ λ_i y_i,     λ_i = Π_(j ≠ i) x_j / (x_j − x_i)
+```
+
+The weights depend only on which parties are present, not on the secret.
+
+**Secrecy against k − 1 shares.** With only k − 1 equations, V is (k − 1) × k and has a one-dimensional
+null space. For every candidate secret s′, adding the equation f(0) = s′ gives a square Vandermonde
+system (with the extra point x = 0), which has exactly one solution. So each of the p possible secrets is
+consistent with exactly one polynomial, and since the dealer chose the coefficients uniformly, every
+secret is equally likely given what the k − 1 parties see.
+
+**Worked case: 3 of 5 over GF(13).** Take s = 7 and f(x) = 7 + 3x + 5x² modulo 13. The five shares are
+(1, 2), (2, 7), (3, 9), (4, 8), (5, 4). Parties 1, 2 and 3 compute
+
+```
+λ_1 = (2·3)/((2−1)(3−1)) = 3
+λ_2 = (1·3)/((1−2)(3−2)) = −3 = 10
+λ_3 = (1·2)/((1−3)(2−3)) = 1
+s = 3·2 + 10·7 + 1·9 = 85 = 7   (mod 13)
+```
+
+Parties 1 and 2 alone, holding (1, 2) and (2, 7), find that s = 0 fits f(x) = 7x + 8x², s = 1 fits
+1 + 12x + 2x², s = 2 fits 2 + 4x + 9x², and so on through all thirteen values: one polynomial for each
+possible secret.
+
+**Matrix structure.** A small dense k × k Vandermonde matrix over GF(p), never formed explicitly in practice: the Lagrange
+weights are computed directly, at a cost of O(k²) multiplications and k modular inverses.
+
+**What is computed.** Sharing is k − 1 random draws and n polynomial evaluations by [Horner's](https://en.wikipedia.org/wiki/Horner's_method) rule. Reconstruction is the
+Lagrange combination at x = 0. Each [reciprocal modulo](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse) p is computed with the [extended Euclidean](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm) algorithm
+or as a^(p−2) by [Fermat's little theorem](https://en.wikipedia.org/wiki/Fermat's_little_theorem). Real tools, such as the unseal keys of HashiCorp Vault, split
+a key byte by byte and do the same arithmetic in GF(2^8), a 256-element field.
+
+**Why linear algebra is the right tool.** The security claim is a rank statement. Reconstruction works because k distinct evaluation points give
+an invertible Vandermonde matrix, and secrecy holds because k − 1 points leave a one-dimensional space
+of polynomials, every point of which corresponds to a different secret. Both halves of the threshold
+property are the single fact that the evaluation map from P_(k−1) to k distinct points is invertible.
+The same fact also gives the extras for free: adding two sharings gives a sharing of the sum, which is
+the starting point for computing on secrets without revealing them.
+
+**Pitfall worth teaching.** The arithmetic must be done in a field. Over the ordinary integers a single share already leaks: with
+x_1 = 2, the share f(2) = s + 2a_1 + 4a_2 has the same parity as s, so the party holding it knows whether
+the secret is even or odd. The secrecy argument needs every value of the free coefficient to be equally
+likely, and there is no uniform choice of a whole number. Modulo a composite number such as 256 the
+argument breaks differently: x_j − x_i can share a factor with the modulus, the reciprocal that the
+Lagrange formula needs does not exist, and the Vandermonde determinant Π (x_j − x_i) can be 0 even
+though the x_i are distinct. A byte-wise implementation that reduces "modulo 256" instead of working in
+the field GF(2^8) is broken in exactly this way. Two further rules are easy to forget: x = 0 must never
+be handed out as a share, because f(0) is the secret, and the coefficients a_i must be genuinely random.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| dealer | whoever chooses the polynomial and hands out the shares |
+| share | a point (x_i, f(x_i)), one coordinate of the evaluation map's output |
+| threshold k | the dimension of the polynomial space, deg f + 1 |
+| (k, n) scheme | a polynomial in a k-dimensional space evaluated at n distinct points |
+| reconstruction | Lagrange interpolation evaluated at x = 0, a fixed linear combination of the shares |
+| Lagrange coefficients | the weights λ_i, which depend only on which parties are present |
+| perfect (information-theoretic) secrecy | every candidate secret is consistent with the same number of polynomials through any k − 1 shares |
+| share refresh (proactive sharing) | adding a sharing of 0, a polynomial from the subspace with f(0) = 0 |
+| corrupted share | an error in a Reed-Solomon codeword |
+
+**Extensions.** The shares of one secret form a codeword of a Reed–Solomon code, so a corrupted or dishonest share is a
+codeword error, and the [Berlekamp–Welch](https://en.wikipedia.org/wiki/Berlekamp%E2%80%93Welch_algorithm) decoder (one more linear solve) identifies and corrects it
+(see the [error-correcting](https://en.wikipedia.org/wiki/Error_correction_code) codes entry). [Verifiable secret sharing](https://en.wikipedia.org/wiki/Verifiable_secret_sharing) lets parties check their shares against
+public commitments, which needs exponentiation in a cyclic group (Tier 3). [Threshold signatures](https://en.wikipedia.org/wiki/Threshold_cryptosystem) and
+secure [multiparty computation](https://en.wikipedia.org/wiki/Secure_multi-party_computation) build on the linearity noted above. The same interpolation over the reals
+is the polynomial interpolation entry, with conditioning problems that a finite field does not have, and
+finite-difference stencils solve a similar small Vandermonde system. RAID-6 storage uses the same
+Reed–Solomon arithmetic to survive two failed disks (compare the RAID-5 parity entry).
+
+---
+
+# Coverage of the written entries
 
 | # | Field | Core linear-algebra object | Dominant method |
 |---|-------|---------------------------|-----------------|
@@ -1224,6 +1736,9 @@ so its eigenvectors are exactly those of the ring's [adjacency matrix](https://e
 | 8 | Computer vision | Homogeneous least squares; rank truncation | SVD; sparse Levenberg–Marquardt |
 | 9 | Climate science | Low-rank approximation | Truncated / randomized SVD |
 | 10 | Physics / quantum chemistry | Hermitian eigenproblem; tensor products | Lanczos, Davidson; SCF |
+| 12 | Electrical engineering | Graph Laplacian; null space and column space | Grounded sparse Cholesky; PCG |
+| 42 | Typography / vector graphics | Polynomial space; Bernstein basis; change of basis | de Casteljau subdivision |
+| 48 | Cryptography | Vandermonde system over GF(p) | Lagrange interpolation mod p |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -1253,8 +1768,6 @@ the one exception marked below.
 *Polynomial and function spaces (index 41–45)*
 - **Polynomial interpolation and change of basis** — Vandermonde systems; monomial vs Lagrange vs Chebyshev
   bases, and the conditioning consequences of the choice
-- **Bézier curves and font rendering** — the Bernstein basis; every glyph on this page is an element of a
-  4-dimensional polynomial space
 - **Finite-difference stencils by undetermined coefficients** — derivative weights as the solution of a small
   linear system; differentiation as a linear operator
 - **Fourier series as orthogonal projection** — an inner-product space of functions; best approximation
@@ -1269,8 +1782,6 @@ the one exception marked below.
 - **The small DFT as a complex unitary matrix** — the 8-point transform written out; complex inner products
 
 *Finite fields (index 48–50)*
-- **Shamir secret sharing** — Lagrange interpolation over GF(p); the threshold property *is* a uniqueness
-  theorem about interpolation
 - **RAID-5 parity and XOR recovery** — one linear equation over GF(2), running in every storage array
 - **CRC checksums** — polynomials over GF(2) modulo a generator
 
@@ -1281,7 +1792,6 @@ the one exception marked below.
 
 ### Would add: graph Laplacians and spectral methods
 - **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
-- **Resistor networks and Kirchhoff's laws** — the Laplacian as a physical object; effective resistance and commute times
 - **Laplacian eigenmaps and diffusion maps** — nonlinear dimensionality reduction with a linear core
 - **Consensus and opinion dynamics (DeGroot models)** — convergence rate set by the algebraic connectivity
   (Tier 2 in its discrete-time DeGroot form, a difference equation; the continuous-time version,
@@ -1332,13 +1842,13 @@ the one exception marked below.
 
 1. **Add a runnable notebook per entry.** Each of these can be posed at a size that runs in seconds and still shows the real phenomenon — a 12-bar truss, a 32×32 tomographic phantom, a 10-sector I/O table, a Hamming(7,4) code. The pedagogical payload is usually in the failure mode (ill-conditioning, rank deficiency, slow convergence), which small examples show faithfully.
 2. ~~Standardize a difficulty tier per entry.~~ **Decided:** the three-tier scheme above, recorded per
-   entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Remaining work is to
-   promote Tier 1 entries into the seed set. Under the rule that any differential equation means Tier 3,
-   only 2 of the 10 seed entries are Tier 1, which is the wrong first impression for a
-   general audience. The Tier 1 backlog group above is the natural source.
+   entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
+   any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
+   which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
+   backlog, which is under way: 5 of the 13 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
-   cross-reference. Remaining work: extend the terminology map beyond the ten seed entries — it
-   currently covers 84 terms across those ten only, and the backlog entries most likely to generate
+   cross-reference. Remaining work: extend the terminology map as entries are written — it
+   currently covers 117 terms across the 13 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

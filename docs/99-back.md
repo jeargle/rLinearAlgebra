@@ -1,5 +1,5 @@
 
-# Coverage of the seed set
+# Coverage of the written entries
 
 {{COVERAGE_TABLE}}
 
@@ -31,8 +31,6 @@ the one exception marked below.
 *Polynomial and function spaces (index 41–45)*
 - **Polynomial interpolation and change of basis** — Vandermonde systems; monomial vs Lagrange vs Chebyshev
   bases, and the conditioning consequences of the choice
-- **Bézier curves and font rendering** — the Bernstein basis; every glyph on this page is an element of a
-  4-dimensional polynomial space
 - **Finite-difference stencils by undetermined coefficients** — derivative weights as the solution of a small
   linear system; differentiation as a linear operator
 - **Fourier series as orthogonal projection** — an inner-product space of functions; best approximation
@@ -47,8 +45,6 @@ the one exception marked below.
 - **The small DFT as a complex unitary matrix** — the 8-point transform written out; complex inner products
 
 *Finite fields (index 48–50)*
-- **Shamir secret sharing** — Lagrange interpolation over GF(p); the threshold property *is* a uniqueness
-  theorem about interpolation
 - **RAID-5 parity and XOR recovery** — one linear equation over GF(2), running in every storage array
 - **CRC checksums** — polynomials over GF(2) modulo a generator
 
@@ -59,7 +55,6 @@ the one exception marked below.
 
 ### Would add: graph Laplacians and spectral methods
 - **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
-- **Resistor networks and Kirchhoff's laws** — the Laplacian as a physical object; effective resistance and commute times
 - **Laplacian eigenmaps and diffusion maps** — nonlinear dimensionality reduction with a linear core
 - **Consensus and opinion dynamics (DeGroot models)** — convergence rate set by the algebraic connectivity
   (Tier 2 in its discrete-time DeGroot form, a difference equation; the continuous-time version,
@@ -110,13 +105,13 @@ the one exception marked below.
 
 1. **Add a runnable notebook per entry.** Each of these can be posed at a size that runs in seconds and still shows the real phenomenon — a 12-bar truss, a 32×32 tomographic phantom, a 10-sector I/O table, a Hamming(7,4) code. The pedagogical payload is usually in the failure mode (ill-conditioning, rank deficiency, slow convergence), which small examples show faithfully.
 2. ~~Standardize a difficulty tier per entry.~~ **Decided:** the three-tier scheme above, recorded per
-   entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Remaining work is to
-   promote Tier 1 entries into the seed set. Under the rule that any differential equation means Tier 3,
-   only {{N_SEED_TIER1}} of the {{N_SEED}} seed entries are Tier 1, which is the wrong first impression for a
-   general audience. The Tier 1 backlog group above is the natural source.
+   entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
+   any differential equation means Tier 3, only {{N_SEED_TIER1}} of the {{N_SEED}} seed entries are Tier 1,
+   which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
+   backlog, which is under way: {{N_ENTRIES_TIER1}} of the {{N_ENTRIES}} written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
-   cross-reference. Remaining work: extend the terminology map beyond the ten seed entries — it
-   currently covers {{N_TERMS}} terms across those ten only, and the backlog entries most likely to generate
+   cross-reference. Remaining work: extend the terminology map as entries are written — it
+   currently covers {{N_TERMS}} terms across the {{N_ENTRIES}} written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

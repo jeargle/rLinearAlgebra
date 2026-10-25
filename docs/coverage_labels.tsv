@@ -8,3 +8,6 @@
 | 8 | Computer vision | Homogeneous least squares; rank truncation | SVD; sparse Levenberg–Marquardt |
 | 9 | Climate science | Low-rank approximation | Truncated / randomized SVD |
 | 10 | Physics / quantum chemistry | Hermitian eigenproblem; tensor products | Lanczos, Davidson; SCF |
+| 12 | Electrical engineering | Graph Laplacian; null space and column space | Grounded sparse Cholesky; PCG |
+| 42 | Typography / vector graphics | Polynomial space; Bernstein basis; change of basis | de Casteljau subdivision |
+| 48 | Cryptography | Vandermonde system over GF(p) | Lagrange interpolation mod p |

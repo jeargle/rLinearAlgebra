@@ -25,7 +25,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 * 3D viewing and perspective projection pipeline — Tier 1 *(planned)*
 * Barycentric coordinates and triangle rasterization — Tier 1 *(planned)*
 * Color spaces as change of basis — Tier 1 *(planned)*
-* Bezier curves and font rendering — Tier 1 *(planned)*
+* [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) — Tier 1
 
 ## Computer Science & Networks
 
@@ -41,7 +41,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Cryptography & Security
 
 * Sparse GF(2) nullspace in the number field sieve — Tier 3 *(planned)*
-* Shamir secret sharing — Tier 1 *(planned)*
+* [Shamir secret sharing](applications/shamir-secret-sharing) — Tier 1
 
 ## Earth & Climate Science
 
@@ -57,7 +57,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Electrical Engineering
 
-* Resistor networks and Kirchhoff's laws — Tier 1 *(planned)*
+* [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) — Tier 1
 * Power-grid load flow and state estimation — Tier 3 *(planned)*
 * AC circuit analysis with complex impedance — Tier 3 *(planned)*
 

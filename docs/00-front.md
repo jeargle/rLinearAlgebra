@@ -1,13 +1,18 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.1 — seed set of 10 problems**
+**Version 0.2 — a seed set of {{N_SEED}} problems, and {{N_WRITTEN}} further written entries**
 
-Selection criteria for this first pass:
+Selection criteria for the seed set:
 
 1. **One application domain each.** No two entries come from the same subfield or community of practice. At the coarse level used in the companion index, three entries fall under Engineering (civil/mechanical FEA, aerospace/control, communications) and two under Computer Science (network science, computer vision); these are distinct disciplines in practice, sharing only a top-level bucket. The set spans seven coarse fields and ten distinct subfields.
 2. **One distinct linear-algebra concept each.** Entry 1 is a sparse SPD solve; entry 5 is a nonnegative-matrix spectral radius; entry 7 is linear algebra over a finite field, a number system with finitely many elements (defined under Difficulty tiers). If two problems reduce to the same mathematical object, only one is in the seed set and the other is in the backlog.
 3. **Deployed, not illustrative.** Every entry is something an engineer, scientist, or company actually runs in production or in published research — not a textbook exercise dressed in application clothing.
 4. **The matrix structure is the point.** In each case, *what kind of matrix it is* (sparse, symmetric, stochastic, rank-deficient, over GF(2), the numbers 0 and 1 with arithmetic modulo 2) determines which algorithm is viable. That is the through-line worth teaching.
+
+Entries written after the seed set have status `written` in the index. They keep criteria 3 and 4
+but not 1 and 2. Field is the organizing axis, so the same linear-algebra concept appears in the
+vocabulary of several fields, and an entry for each field is the point; entries that share a concept
+name each other under Extensions.
 
 ## Entry template
 
@@ -176,7 +181,8 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the {{N_SEED}} seed entries, {{N_SEED_TIER1}} are Tier 1
+**Current distribution.** Of the {{N_ENTRIES}} written entries, {{N_ENTRIES_TIER1}} are Tier 1,
+{{N_ENTRIES_TIER2}} are Tier 2, and {{N_ENTRIES_TIER3}} are Tier 3. Of the {{N_SEED}} seed entries, {{N_SEED_TIER1}} are Tier 1
 ({{SEED_TIER1_TITLES}}), {{N_SEED_TIER2}} are Tier 2, and {{N_SEED_TIER3}} are Tier 3. Across all
 {{N_TOTAL}} catalogued problems the split is {{TIER_SPLIT}}.
 

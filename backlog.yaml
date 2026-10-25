@@ -17,24 +17,6 @@ backlog:
   matrix_structure: sparse symmetric PSD
   typical_size: 1e4-1e7
   worked_example_size: ''
-- id: 12
-  slug: resistor-networks-and-kirchhoff-s-laws
-  status: backlog
-  short_title: Resistor networks and Kirchhoff's laws
-  nav_field: Electrical Engineering
-  field: Physics
-  subfield: Circuit theory
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^n node potentials, R^m edge currents
-  core_la_object: Graph Laplacian as a physical operator
-  la_concepts: Laplacian; effective resistance; pseudoinverse
-  primary_method: Sparse solve
-  matrix_structure: sparse symmetric PSD, rank n-1
-  typical_size: 1e3-1e6
-  worked_example_size: ''
 - id: 13
   slug: poisson-and-navier-stokes-discretization
   status: backlog
@@ -559,24 +541,6 @@ backlog:
   matrix_structure: dense Vandermonde, ill-conditioned
   typical_size: 8x8
   worked_example_size: monomial vs Lagrange vs Chebyshev basis on 8 nodes
-- id: 42
-  slug: bezier-curves-and-font-rendering
-  status: backlog
-  short_title: Bezier curves and font rendering
-  nav_field: Computer Graphics & Vision
-  field: Computer Science
-  subfield: Typography/vector graphics
-  tier: 1
-  tier_ceiling: 1
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: P_3, cubic polynomials, dimension 4 per coordinate
-  core_la_object: Bernstein basis of a polynomial space
-  la_concepts: basis change; linear operators on function spaces
-  primary_method: Basis-change matrix; de Casteljau
-  matrix_structure: dense 4x4
-  typical_size: 4x4
-  worked_example_size: cubic Bezier glyph segment; monomial-Bernstein conversion
 - id: 43
   slug: finite-difference-stencils-by-undetermined-coefficients
   status: backlog
@@ -669,24 +633,6 @@ backlog:
   matrix_structure: dense complex unitary
   typical_size: 8x8
   worked_example_size: 8-point DFT written out, applied, and inverted
-- id: 48
-  slug: shamir-secret-sharing
-  status: backlog
-  short_title: Shamir secret sharing
-  nav_field: Cryptography & Security
-  field: Computer Science
-  subfield: Cryptography
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: modular arithmetic
-  scalar_field: GF(p) for a prime p
-  vector_space: polynomials of degree < k over GF(p), a k-dimensional space
-  core_la_object: Polynomial interpolation over GF(p)
-  la_concepts: vector spaces over a finite field; Lagrange interpolation; uniqueness from rank
-  primary_method: Interpolation over GF(p)
-  matrix_structure: small Vandermonde over GF(p)
-  typical_size: 3x3 over GF(251)
-  worked_example_size: 3-of-5 threshold split and reconstruction of a secret
 - id: 49
   slug: raid-5-parity-and-xor-recovery
   status: backlog

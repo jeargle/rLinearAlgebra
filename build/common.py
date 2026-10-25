@@ -73,6 +73,8 @@ def load_entries():
     out = []
     for path in sorted(ENTRIES_DIR.glob("*.md")):
         meta, sections = parse_entry(path)
+        if meta.get("status") not in ("seed", "written"):
+            raise ValueError(f"{path}: status must be 'seed' or 'written', not {meta.get('status')!r}")
         meta["_sections"] = sections
         meta["_path"] = path
         out.append(meta)
