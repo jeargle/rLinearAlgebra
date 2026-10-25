@@ -22,7 +22,7 @@ la_concepts: Perron-Frobenius; power iteration; rank-one update; stationary dist
 primary_method: Power iteration
 matrix_structure: sparse column-stochastic plus rank-one
 typical_size: 1e9 nodes
-worked_example_size: 50-node synthetic web graph
+worked_example_size: 4-page toy web; 137 Wikipedia linear-algebra articles (Oct 2026)
 terminology:
   link matrix: the column-stochastic matrix P built from the graph
   dangling node: a zero column, which breaks stochasticity

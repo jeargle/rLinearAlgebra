@@ -23,6 +23,8 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 **Vectors:** R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace  
 **Underlying equations:** None; a linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time [Markov chain](https://en.wikipedia.org/wiki/Markov_chain)
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/06-pagerank-and-network-centrality.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 Order the pages of the web (or papers in a citation graph, or proteins in an interaction network) by importance, where importance is recursive: a page is important if important pages link to it.
