@@ -17,10 +17,10 @@ scaling a letter, converting a font between formats, cutting a curve in two — 
 of basis or other linear maps between spaces of polynomials.
 
 **Field:** Typography, [vector graphics](https://en.wikipedia.org/wiki/Vector_graphics), computer-aided design, animation  
-**Tier:** 1 — a [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) is a polynomial written in a particular basis, and every common operation on it is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) or a linear map between polynomial spaces of degree at most 3. No [eigenvalues](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) and no differential equations are involved.  
+**Tier:** 1 — a [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) is a polynomial written in a particular basis, and every common operation on it is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) or a linear map between polynomial spaces of degree at most 3. No [eigenvalues](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) are involved.  
 **Scalar field:** R  
 **Vectors:** P_3, the real polynomials of degree at most 3 in a parameter t, which has dimension 4. Each coordinate x(t) and y(t) of a cubic curve is one element of P_3, so a planar cubic segment is a pair of them, a vector in P_3 × P_3 of dimension 8. The control points are its coordinates in the [Bernstein](https://en.wikipedia.org/wiki/Bernstein_polynomial) basis, not points the curve passes through. [TrueType](https://en.wikipedia.org/wiki/TrueType) fonts use quadratic segments, in P_2 (dimension 3)  
-**Underlying equations:** None: polynomial curves written in a chosen basis
+**Underlying equations:** Polynomial parametric curves, B(t) = Σ b_k(t) P_k, written in a chosen basis
 
 ### The problem
 
@@ -58,7 +58,7 @@ approximately otherwise.
 
 ### Formulation
 
-**Where the equations come from.** There is no differential equation. A segment is a polynomial curve,
+**Where the equations come from.** A segment is a polynomial curve,
 and the modelling choice is only which basis to write it in.
 
 **The Bernstein basis.** For cubics the basis polynomials are

@@ -15,8 +15,7 @@ prereq_beyond_la: ''
 scalar_field: R
 vector_space: R^n over pages, but the solution is constrained to the probability simplex (nonnegative,
   entries summing to 1), which is NOT a subspace
-underlying_equations: None; a linear difference equation π_{t+1} = G π_t, i.e. a discrete-time Markov
-  chain
+underlying_equations: 'A linear difference equation π_{t+1} = G π_t, i.e. a discrete-time Markov chain'
 core_la_object: Stochastic matrix and dominant eigenvector
 la_concepts: Perron-Frobenius; power iteration; rank-one update; stationary distribution
 primary_method: Power iteration
@@ -70,7 +69,7 @@ Order the pages of the web (or papers in a citation graph, or proteins in an int
 
 ## Formulation
 
-**Where the equations come from.** There is no differential equation, but there is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
+**Where the equations come from.** The model is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
 
 ```
 π_{t+1} = G π_t

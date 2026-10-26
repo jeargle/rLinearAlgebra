@@ -7,7 +7,7 @@ short_title: Resistor networks and Kirchhoff's laws
 field_label: Electrical engineering, circuit theory, chip power-grid analysis
 tier_note: a DC network of resistors is one symmetric linear system L φ = s, and grounding a node is
   removing a one-dimensional null space. Effective resistance through the pseudoinverse and its link to
-  random walks are Tier 2; circuits with capacitors or inductors involve ODEs and are Tier 3.
+  random walks are Tier 2.
 nav_field: Electrical Engineering
 field: Physics
 subfield: Circuit theory
@@ -18,8 +18,7 @@ scalar_field: R
 vector_space: 'two different spaces: node potentials in R^n (n nodes) and edge currents in R^m (m resistors).
   The incidence matrix maps the first to the second. Potentials are only defined up to adding the same
   constant to every node, so physically they live in R^n modulo the all-ones vector'
-underlying_equations: 'None: Ohm''s law and Kirchhoff''s current law are algebraic for a direct-current
-  network of resistors (capacitors and inductors would add ODEs; see the AC circuits entry)'
+underlying_equations: 'Algebraic circuit laws: Ohm''s law (V = IR) for each resistor and Kirchhoff''s current law at each node'
 core_la_object: Graph Laplacian as a physical operator
 la_concepts: incidence matrix; Laplacian L = A^T C A; null space and grounding; column space and the
   solvability condition; cycle space; effective resistance; pseudoinverse
@@ -92,7 +91,7 @@ currents back to node totals.
 
 ## Formulation
 
-**Where the equations come from.** There is no differential equation. A direct-current network of
+**Where the equations come from.** A direct-current network of
 resistors is described by two algebraic laws, one per edge and one per node.
 
 **Ohm's law, one equation per edge.** For a single resistor, Ohm's law is the familiar V = IR: the

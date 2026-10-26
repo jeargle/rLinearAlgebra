@@ -17,7 +17,7 @@ scalar_field: R
 vector_space: scene points in R^3, written in homogeneous R^4 up to scale (projective space P^3); image
   points in R^2 as homogeneous R^3 up to scale (P^2). The unknown essential matrix is vectorized to R^9
   and recovered only up to scale, so it is really a point of P^8
-underlying_equations: 'None: projective geometry of the pinhole camera'
+underlying_equations: 'Projective geometry of the ideal pinhole camera'
 core_la_object: Homogeneous least squares and rank truncation
 la_concepts: SVD; homogeneous systems; rank-constrained projection; preconditioning
 primary_method: SVD; sparse Levenberg-Marquardt with Schur complement
@@ -84,7 +84,7 @@ Primes mark the second view: x̂′ is the same scene point seen by the second c
 
 ## Formulation
 
-**Where the equations come from.** There is no differential equation; the model is the geometry of an ideal pinhole camera.
+**Where the equations come from.** The model is the geometry of an ideal pinhole camera.
 
 **Projection.**
 

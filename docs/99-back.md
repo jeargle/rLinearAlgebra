@@ -29,8 +29,6 @@ the one exception marked below.
 - **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
 *Polynomial and function spaces (index 41–45)*
-- **Polynomial interpolation and change of basis** — Vandermonde systems; monomial vs Lagrange vs Chebyshev
-  bases, and the conditioning consequences of the choice
 - **Finite-difference stencils by undetermined coefficients** — derivative weights as the solution of a small
   linear system; differentiation as a linear operator
 - **Fourier series as orthogonal projection** — an inner-product space of functions; best approximation
@@ -40,9 +38,8 @@ the one exception marked below.
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
   equation into an algebraic one. *Tier 3, not Tier 1:* the phasor method is a technique for solving
   linear ODEs with sinusoidal forcing, so reading the entry requires the ODE. It stays in this group
-  because it is the clearest example of complex scalars doing real work; the small DFT below is the
-  Tier 1 complex-scalar entry.
-- **The small DFT as a complex unitary matrix** — the 8-point transform written out; complex inner products
+  because it is the clearest example of complex scalars doing real work; the small DFT entry, now
+  written, is the Tier 1 complex-scalar entry.
 
 *Finite fields (index 48–50)*
 - **RAID-5 parity and XOR recovery** — one linear equation over GF(2), running in every storage array
@@ -76,7 +73,6 @@ the one exception marked below.
 - **JPEG and video compression** — the DCT as a fixed orthogonal basis chosen for decorrelation
 
 ### Would add: statistics and machine learning proper
-- **Least squares regression and the hat matrix** — QR vs normal equations, leverage, collinearity diagnostics
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
 - **Word embeddings and latent semantic analysis** — factorization of a co-occurrence matrix
 - **Attention in transformers** — QKᵀ as a learned bilinear form; low-rank adapters (LoRA) as explicit rank constraints on weight updates

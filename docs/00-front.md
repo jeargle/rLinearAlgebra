@@ -30,10 +30,11 @@ Each entry follows the same template so the collection can grow uniformly.
    concentration vectors inhabit *different* spaces, that a probability distribution is not a subspace,
    that a covariance matrix is a vector in the space of symmetric matrices, that an essential matrix is
    determined only up to scale. Both values are also index columns (`scalar_field`, `vector_space`).
-4. **Underlying equations** — one line saying whether a differential equation sits underneath the
-   linear algebra, and which kind: ordinary or partial, deterministic or stochastic, linear or not. When
-   there is none, the entry says so and names what the model is instead (an accounting identity, a
-   difference equation, projective geometry, a statistical decomposition). Also an index column.
+4. **Underlying equations** — one line naming the kind of equation the linear algebra comes from. A
+   differential equation is named as one, with its kind: ordinary or partial, deterministic or
+   stochastic, linear or not. Otherwise the line names what the model is (an accounting identity, a
+   difference equation, algebraic laws, projective geometry, a statistical model, polynomial
+   evaluation). Also an index column.
 5. **The problem**.
 6. **Variables** — a table introducing every scalar, vector, and matrix before it is used: its symbol,
    its name in the field, what information it holds, its shape, and its physical units (or

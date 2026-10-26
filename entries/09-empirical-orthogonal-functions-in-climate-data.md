@@ -5,7 +5,7 @@ status: seed
 title: 'Empirical orthogonal functions: finding the dominant patterns in climate data'
 short_title: Empirical orthogonal functions in climate data
 field_label: Atmospheric and ocean science, climatology
-tier_note: truncated SVD and the Eckart–Young optimality statement; no differential equation is used.
+tier_note: truncated SVD and the Eckart–Young optimality statement.
   Relating EOFs to the dynamics through a stochastic ODE is a Tier 3 extension.
 nav_field: Earth & Climate Science
 field: Earth Science
@@ -16,8 +16,7 @@ prereq_beyond_la: ''
 scalar_field: R
 vector_space: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and principal-component
   series in R^t (t time steps)
-underlying_equations: 'None used: a statistical decomposition of observed data (the ocean itself obeys
-  PDEs that the method ignores)'
+underlying_equations: 'A statistical decomposition of observed data; no physical model of the ocean or atmosphere is used'
 core_la_object: Low-rank approximation of a data matrix
 la_concepts: SVD; Eckart-Young optimality; variance partitioning; interpretability limits
 primary_method: Truncated/randomized SVD
@@ -74,7 +73,7 @@ A century of monthly sea-surface temperatures on a global grid is a matrix with 
 | C | spatial covariance | C = X Xᵀ / (t − 1) | s × s | K² |
 
 ## Formulation
-**Where the equations come from.** No differential equation is used. The ocean and atmosphere obey partial differential equations of fluid flow and heat transport, but EOF analysis ignores them entirely: it is a statistical decomposition of observed data. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
+**Where the equations come from.** EOF analysis is a statistical decomposition of observed data and uses no physical model of the ocean or atmosphere. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
 
 **The decomposition.**
 

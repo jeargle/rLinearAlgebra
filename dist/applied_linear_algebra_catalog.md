@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 3 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 6 further written entries**
 
 Selection criteria for the seed set:
 
@@ -30,10 +30,11 @@ Each entry follows the same template so the collection can grow uniformly.
    concentration vectors inhabit *different* spaces, that a probability distribution is not a subspace,
    that a covariance matrix is a vector in the space of symmetric matrices, that an essential matrix is
    determined only up to scale. Both values are also index columns (`scalar_field`, `vector_space`).
-4. **Underlying equations** — one line saying whether a differential equation sits underneath the
-   linear algebra, and which kind: ordinary or partial, deterministic or stochastic, linear or not. When
-   there is none, the entry says so and names what the model is instead (an accounting identity, a
-   difference equation, projective geometry, a statistical decomposition). Also an index column.
+4. **Underlying equations** — one line naming the kind of equation the linear algebra comes from. A
+   differential equation is named as one, with its kind: ordinary or partial, deterministic or
+   stochastic, linear or not. Otherwise the line names what the model is (an accounting identity, a
+   difference equation, algebraic laws, projective geometry, a statistical model, polynomial
+   evaluation). Also an index column.
 5. **The problem**.
 6. **Variables** — a table introducing every scalar, vector, and matrix before it is used: its symbol,
    its name in the field, what information it holds, its shape, and its physical units (or
@@ -199,7 +200,7 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 13 written entries, 5 are Tier 1,
+**Current distribution.** Of the 16 written entries, 8 are Tier 1,
 3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
@@ -649,11 +650,11 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Field:** Economics (and, in its modern form, environmental footprint accounting)
 
-**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The [Perron–Frobenius](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) convergence condition is Tier 2; the dynamic [Leontief](https://en.wikipedia.org/wiki/Input%E2%80%93output_model) model, an ODE, is Tier 3.
+**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve. The [Perron–Frobenius](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) convergence condition is Tier 2; the dynamic [Leontief](https://en.wikipedia.org/wiki/Input%E2%80%93output_model) model, an ODE, is Tier 3.
 
 **Scalars and vectors.** Scalar field: R (nonnegative). Vectors: outputs and demands in R^n, n = number of sectors.
 
-**Underlying equations.** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE).
+**Underlying equations.** A static accounting identity for one period: each sector's output is used by other industries or by final users, x = A x + d.
 
 **The problem.** Industries consume each other's output. Making a car needs steel; making steel needs electricity; making electricity needs steel. Given final consumer demand, find the total production every sector must run.
 
@@ -671,7 +672,7 @@ usually estimated — including all the emissions from its suppliers' suppliers.
 
 Everything is measured in money at base-year prices, which is why a_ij is dimensionless. Physical tables in tonnes or joules exist, but then A carries mixed units and the coefficients are no longer comparable across rows.
 
-**Formulation.** **Where the equations come from.** There is no differential equation here. The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
+**Formulation.** **Where the equations come from.** The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
 
 ```
 x_i = Σ_j z_ij + d_i
@@ -748,7 +749,7 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace.
 
-**Underlying equations.** None; a linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time Markov chain.
+**Underlying equations.** A linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time Markov chain.
 
 **The problem.** Order the pages of the web (or papers in a citation graph, or proteins in an interaction network) by importance, where importance is recursive: a page is important if important pages link to it.
 
@@ -765,7 +766,7 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 | π_t | distribution after t clicks | probability that the surfer is on each page after t clicks; entries are nonnegative and sum to 1 | n × 1 | dimensionless |
 | r | PageRank vector | long-run fraction of time spent on each page | n × 1 | dimensionless; entries sum to 1 |
 
-**Formulation.** **Where the equations come from.** There is no differential equation, but there is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
+**Formulation.** **Where the equations come from.** The model is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
 
 ```
 π_{t+1} = G π_t
@@ -840,7 +841,7 @@ does.
 
 **Scalars and vectors.** Scalar field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, multiplication is AND); Reed–Solomon codes use GF(2^m). Vectors: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here - [Hamming weight](https://en.wikipedia.org/wiki/Hamming_distance) is a metric, not a norm from an inner product.
 
-**Underlying equations.** None: algebraic constraints over GF(2).
+**Underlying equations.** Linear algebraic constraints over GF(2), arithmetic modulo 2: every codeword c satisfies H cᵀ = 0.
 
 **The problem.** Send bits over a channel that flips some of them. Detect and correct the errors without retransmission.
 
@@ -861,7 +862,7 @@ does.
 
 There are no physical units: every entry is a bit, and all arithmetic is modulo 2, so 1 + 1 = 0 and subtraction is the same as addition. Coding theory conventionally writes messages and codewords as row vectors; that convention is used throughout this entry.
 
-**Formulation.** **Where the equations come from.** There is no differential equation; the model is a set of linear constraints over the two-element field GF(2).
+**Formulation.** **Where the equations come from.** The model is a set of linear constraints over the two-element field GF(2).
 
 **Encoding.**
 
@@ -942,7 +943,7 @@ why graphics hardware is built the way it is.
 
 **Scalars and vectors.** Scalar field: R. Vectors: scene points in R^3, written in homogeneous R^4 up to scale ([projective space](https://en.wikipedia.org/wiki/Projective_space) P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown [essential matrix](https://en.wikipedia.org/wiki/Essential_matrix) is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8.
 
-**Underlying equations.** None: projective geometry of the [pinhole camera](https://en.wikipedia.org/wiki/Pinhole_camera_model).
+**Underlying equations.** Projective geometry of the ideal [pinhole camera](https://en.wikipedia.org/wiki/Pinhole_camera_model).
 
 **The problem.** Given photographs of a scene from unknown viewpoints, recover both the camera positions and the 3D geometry. This is the engine behind phone [panorama stitching](https://en.wikipedia.org/wiki/Image_stitching), drone mapping, visual SLAM, and photogrammetric reconstruction.
 
@@ -969,7 +970,7 @@ why graphics hardware is built the way it is.
 
 Primes mark the second view: x̂′ is the same scene point seen by the second camera, and K′ is that camera's [intrinsic](https://en.wikipedia.org/wiki/Camera_resectioning#Intrinsic_parameters) matrix.
 
-**Formulation.** **Where the equations come from.** There is no differential equation; the model is the geometry of an ideal pinhole camera.
+**Formulation.** **Where the equations come from.** The model is the geometry of an ideal pinhole camera.
 
 **Projection.**
 
@@ -1044,11 +1045,11 @@ of two unrelated physical processes.
 
 **Field:** Atmospheric and ocean science, climatology
 
-**Tier:** 2 — truncated SVD and the [Eckart–Young](https://en.wikipedia.org/wiki/Low-rank_approximation) optimality statement; no differential equation is used. Relating [EOFs](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions) to the dynamics through a stochastic ODE is a Tier 3 extension.
+**Tier:** 2 — truncated SVD and the [Eckart–Young](https://en.wikipedia.org/wiki/Low-rank_approximation) optimality statement. Relating [EOFs](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions) to the dynamics through a stochastic ODE is a Tier 3 extension.
 
 **Scalars and vectors.** Scalar field: R. Vectors: each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and [principal-component](https://en.wikipedia.org/wiki/Principal_component_analysis) series in R^t (t time steps).
 
-**Underlying equations.** None used: a statistical decomposition of observed data (the ocean itself obeys PDEs that the method ignores).
+**Underlying equations.** A statistical decomposition of observed data; no physical model of the ocean or atmosphere is used.
 
 **The problem.** A century of monthly sea-surface temperatures on a global grid is a matrix with 10⁴–10⁵ spatial points and 10³ time steps. Extract the few spatial patterns that account for most of the variability — the objects a climatologist can actually reason about, like El Niño.
 
@@ -1068,7 +1069,7 @@ of two unrelated physical processes.
 | q | modes retained | how many patterns are kept after truncation | integer | — |
 | C | spatial covariance | C = X Xᵀ / (t − 1) | s × s | K² |
 
-**Formulation.** **Where the equations come from.** No differential equation is used. The ocean and atmosphere obey partial differential equations of fluid flow and heat transport, but EOF analysis ignores them entirely: it is a statistical decomposition of observed data. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
+**Formulation.** **Where the equations come from.** EOF analysis is a statistical decomposition of observed data and uses no physical model of the ocean or atmosphere. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
 
 **The decomposition.**
 
@@ -1240,11 +1241,11 @@ information is a null space, and choosing a ground is how it is removed.
 
 **Field:** Electrical engineering, circuit theory, chip power-grid analysis
 
-**Tier:** 1 — a DC network of resistors is one symmetric linear system L φ = s, and grounding a node is removing a one-dimensional null space. [Effective resistance](https://en.wikipedia.org/wiki/Resistance_distance) through the [pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse) and its link to random walks are Tier 2; circuits with capacitors or inductors involve ODEs and are Tier 3.
+**Tier:** 1 — a DC network of resistors is one symmetric linear system L φ = s, and grounding a node is removing a one-dimensional null space. [Effective resistance](https://en.wikipedia.org/wiki/Resistance_distance) through the [pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse) and its link to random walks are Tier 2.
 
 **Scalars and vectors.** Scalar field: R. Vectors: two different spaces: node potentials in R^n (n nodes) and edge currents in R^m (m resistors). The [incidence matrix](https://en.wikipedia.org/wiki/Incidence_matrix) maps the first to the second. Potentials are only defined up to adding the same constant to every node, so physically they live in R^n modulo the all-ones vector.
 
-**Underlying equations.** None: [Ohm's law](https://en.wikipedia.org/wiki/Ohm's_law) and [Kirchhoff's](https://en.wikipedia.org/wiki/Kirchhoff's_circuit_laws) current law are algebraic for a direct-current network of resistors (capacitors and inductors would add ODEs; see the AC circuits entry).
+**Underlying equations.** Algebraic circuit laws: [Ohm's law](https://en.wikipedia.org/wiki/Ohm's_law) (V = IR) for each resistor and [Kirchhoff's](https://en.wikipedia.org/wiki/Kirchhoff's_circuit_laws) current law at each node.
 
 **The problem.** Given a network of resistors and the currents injected at some nodes (or the voltages held fixed at
 some nodes by sources), find the potential at every node and the current through every resistor. A
@@ -1270,7 +1271,7 @@ Potentials and currents live in different spaces: φ has one entry per node and 
 edge. The incidence matrix A carries potentials to edge drops, and its transpose Aᵀ carries edge
 currents back to node totals.
 
-**Formulation.** **Where the equations come from.** There is no differential equation. A direct-current network of
+**Formulation.** **Where the equations come from.** A direct-current network of
 resistors is described by two algebraic laws, one per edge and one per node.
 
 **Ohm's law, one equation per edge.** For a single resistor, Ohm's law is the familiar V = IR: the
@@ -1390,6 +1391,319 @@ and conservation at nodes, appears in the traffic-flow and process mass-balance 
 
 ---
 
+## 20. Least-squares regression: fitting a model is projecting onto a column space
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+You have measured something at several settings — sales at several prices, a plant's height on
+several days, a reaction's speed at several temperatures — and you want the straight line that best
+describes the trend. The points never lie exactly on a line, so "best" needs a definition. The usual
+one is to make the vertical misses as small as possible overall, by minimizing the sum of their
+squares.
+
+Here is the picture that makes the whole subject simple. List all the measured values as one long
+list of numbers, one per data point. Every possible straight line, evaluated at the same settings,
+gives another such list, and all of those lists together form a flat sheet through the origin of a
+high-dimensional space. Your data sit somewhere off that sheet. The best-fitting line is the point
+on the sheet directly beneath the data, found by dropping a perpendicular, exactly as the shortest
+path from a point to a floor goes straight down.
+
+Everything a statistician computes about a fit — the fitted values, the leftovers, how much each
+data point influences its own fit — comes from that one perpendicular drop.
+
+</details>
+
+**Field:** Statistics, econometrics, data science, every experimental science
+
+**Tier:** 1 — fitting, fitted values, residuals and [leverage](https://en.wikipedia.org/wiki/Leverage_%28statistics%29) all come from an orthogonal projection, with no eigenvalues needed. Conditioning and the SVD view of [collinearity](https://en.wikipedia.org/wiki/Multicollinearity) are Tier 2; confidence intervals and p-values need statistical inference beyond linear algebra.
+
+**Scalars and vectors.** Scalar field: R. Vectors: two spaces: the observations y, fitted values and residuals live in R^n (one coordinate per data point), while the coefficients β live in R^k (one per predictor). The [design matrix](https://en.wikipedia.org/wiki/Design_matrix) maps R^k into R^n, and the fitted values fill out only a k-dimensional subspace of R^n, its column space.
+
+**Underlying equations.** A statistical model, y = X β + noise, fitted by minimizing a sum of squares.
+
+**The problem.** Given n observations of a response and k predictors, find the coefficients of the linear model that
+minimize the sum of squared residuals, and describe the fit: fitted values, residuals, and how much
+influence each observation has.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of observations | data points | integer | — |
+| k | number of coefficients | predictors, counting the intercept | integer | — |
+| y | response vector | the measured values | n × 1 | units of the response |
+| X | design matrix | column j holds predictor j at every observation; the first column is all 1s | n × k | each column in its predictor's units |
+| β | coefficients | intercept and slopes | k × 1 | response units per predictor unit |
+| β̂ | fitted coefficients | the least-squares solution | k × 1 | as β |
+| ŷ | fitted values | ŷ = X β̂ | n × 1 | response units |
+| r | residuals | r = y − ŷ | n × 1 | response units |
+| H | hat matrix | H = X (XᵀX)⁻¹ Xᵀ, which maps y to ŷ | n × n | dimensionless |
+| h_ii | leverage | diagonal entry i of H | scalar per observation | dimensionless |
+| Q, R | QR factors | X = Q R with Q having orthonormal columns and R upper triangular | n × k and k × k | Q dimensionless; R in X's units |
+
+**Formulation.** **Where the equations come from.** The model is a statistical
+assumption: each response is a linear combination of the predictors plus random noise,
+
+```
+y = X β + noise
+```
+
+and the coefficients are chosen to minimize the sum of squared residuals ‖y − X β‖².
+
+**The familiar case.** For a straight line, y ≈ b_0 + b_1 x, X has two columns, the 1s and the x
+values, and β = (b_0, b_1). The answer from a first statistics course,
+
+```
+b_1 = Σ (x_i − x̄)(y_i − ȳ) / Σ (x_i − x̄)²,     b_0 = ȳ − b_1 x̄
+```
+
+is the general formula below worked out for two columns.
+
+**The geometry.** As β ranges over ℝ^k, the vector X β ranges over the column space of X, a
+k-dimensional subspace of ℝ^n. Minimizing ‖y − X β‖ asks for the point of that subspace closest to y.
+The closest point is the orthogonal projection, characterized by a residual perpendicular to every
+column of X:
+
+```
+Xᵀ (y − X β̂) = 0     ⟺     Xᵀ X β̂ = Xᵀ y
+```
+
+These are the normal equations, "normal" meaning perpendicular. When the columns of X are linearly
+independent, XᵀX is invertible and
+
+```
+β̂ = (XᵀX)⁻¹ Xᵀ y,     ŷ = H y,     H = X (XᵀX)⁻¹ Xᵀ
+```
+
+H is called the [hat matrix](https://en.wikipedia.org/wiki/Projection_matrix) because it puts the hat on y, turning the data y into the fitted values ŷ.
+It is a projection: H² = H (projecting twice changes nothing) and Hᵀ = H (the
+projection is orthogonal). Its trace is k, the dimension of the subspace it projects onto, which is
+why a fit with k coefficients uses up k [degrees of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_%28statistics%29) and leaves n − k for the residuals.
+
+**Worked case: a line through four points.** Take the points (0, 1), (1, 3), (2, 4), (3, 4). Then
+x̄ = 1.5, ȳ = 3, Σ (x_i − x̄)(y_i − ȳ) = 5 and Σ (x_i − x̄)² = 5, so the slope is 1 and the intercept is
+1.5. The fitted values are (1.5, 2.5, 3.5, 4.5) and the residuals (−0.5, 0.5, 0.5, −0.5). They add
+up to zero, which is their orthogonality to the column of 1s, and (0, 1, 2, 3) · (−0.5, 0.5, 0.5, −0.5) = 0
+is their orthogonality to the x column. The hat matrix is
+
+```
+H = [  0.7   0.4   0.1  −0.2 ]
+    [  0.4   0.3   0.2   0.1 ]
+    [  0.1   0.2   0.3   0.4 ]
+    [ −0.2   0.1   0.4   0.7 ]
+```
+
+Its diagonal, the leverages (0.7, 0.3, 0.3, 0.7), adds up to k = 2. The two end points have more than
+twice the leverage of the middle two, because a line pivots about its centre.
+
+**Matrix structure.** `X` is tall and thin. It is dense for ordinary regression and sparse when most predictors are
+indicator variables (categories, fixed effects). `XᵀX` is k × k, symmetric and positive semidefinite,
+and positive definite exactly when the columns of X are independent. `H` is n × n, symmetric,
+idempotent and of rank k. It is never formed for large n; its diagonal can be read from the rows of Q.
+
+**What is computed.** The careful method factors X = Q R with [Householder](https://en.wikipedia.org/wiki/Householder_transformation) reflections and solves R β̂ = Qᵀ y by back
+substitution; R's `lm` does this. Other packages use the SVD, or a Cholesky factorization of XᵀX,
+which is fast but inherits the pitfall below. With [QR](https://en.wikipedia.org/wiki/QR_decomposition),
+ŷ = Q Qᵀ y and h_ii = ‖row i of Q‖². Forming XᵀX and solving the normal equations is faster but loses
+accuracy when the columns are nearly dependent, as the pitfall shows. Very large sparse problems use
+iterative solvers such as LSQR.
+
+**Why linear algebra is the right tool.** The geometry answers questions that formulas alone obscure. Residuals sum to zero because the column
+of 1s is in the subspace. Adding a predictor can never increase the residual sum of squares, because
+it enlarges the subspace. A predictor that is a combination of others adds nothing, because it leaves
+the subspace unchanged, and it makes β not unique, because X then has a null space. Leverage is a
+property of X alone, so an influential design point can be spotted before any response is measured.
+Even [R²](https://en.wikipedia.org/wiki/Coefficient_of_determination) is a squared cosine: that of the angle between the centered data vector and the centered
+fitted vector.
+
+**Pitfall worth teaching.** Solving the normal equations squares the difficulty of the problem. A measure of how close the columns
+of X are to dependent is its condition number, the factor by which relative errors in the data can be
+magnified in the answer. XᵀX has the square of X's condition number. Regress the worked example's y on
+the calendar years 2001–2004 instead of 0–3, and the column of years is almost parallel to the column
+of 1s. The condition number of X becomes about 3.6 million and that of XᵀX about 1.3 × 10¹³, close to
+the limit of double-precision arithmetic, so the normal equations lose about 13 of the 16 significant
+digits available. QR works with X directly, and for a fit with small residuals its accuracy depends
+on the condition number of X rather than its square. Centering the predictor (using
+years since 2000, or deviations from the mean) removes the problem, which is the linear-algebra reason
+for statisticians' standard advice to center. The exactly dependent version is the [dummy variable](https://en.wikipedia.org/wiki/Dummy_variable_%28statistics%29) trap:
+one indicator column per category plus an intercept makes X rank-deficient, and β̂ is not unique.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| design matrix (model matrix) X | the n × k matrix whose columns are the predictors, including a column of 1s for the intercept |
+| regression coefficients β | coordinates of the fitted vector in the basis given by the columns of X |
+| fitted values ŷ | the orthogonal projection of y onto the column space of X |
+| residuals | the component of y in the orthogonal complement of the column space |
+| hat matrix H | the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y |
+| leverage h_ii | the i-th diagonal entry of H; how strongly observation i pulls its own fitted value |
+| degrees of freedom | dimensions; k for the model (the trace of H) and n − k for the residuals |
+| normal equations | Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X |
+| multicollinearity | columns of X that are nearly linearly dependent, so β is poorly determined |
+| dummy variable trap | an exactly dependent set of indicator columns, which makes X rank-deficient |
+| R² | the squared length of the centered fitted vector over that of the centered data vector |
+
+**Extensions.** Weighted and generalized least squares change the inner product, so the projection is orthogonal in a
+different geometry. [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) adds a multiple of the identity to XᵀX. The SVD of X shows which
+combinations of predictors are poorly determined and is the natural language for collinearity (Tier 2).
+The same projection is used in other fields' vocabularies in the basis-fitting entry (fitting curves
+with chosen basis functions), the Massey and Colley ranking entry (least squares on pairwise game
+results), and the geodetic network adjustment entry, where least squares was invented. Recursive
+least squares, which updates β̂ as data arrive, leads to the Kalman filter.
+
+---
+
+## 41. Polynomial interpolation: one polynomial, many bases, very different arithmetic
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Through two points there is exactly one straight line, and through three points (with different
+x-values) exactly one parabola. In general, n points with different x-values determine exactly one
+polynomial of degree n − 1 passing through all of them. Finding that polynomial is called
+[interpolation](https://en.wikipedia.org/wiki/Polynomial_interpolation), and it sits underneath numerical integration, root finding, graphics, and the formulas
+that let a computer estimate a derivative from a table of numbers.
+
+The polynomial itself is unambiguous, but there are many ways to write it down. The familiar way is as
+a sum of powers of x with coefficients. Another way chooses building-block polynomials so that the
+coefficients turn out to be the data values themselves. A third adds one point at a time. They are all
+the same polynomial, written in different coordinates.
+
+Which way you choose has dramatic consequences on a computer. Written as powers of x, the coefficients
+of a polynomial through twenty points can be so sensitive that rounding errors destroy every digit.
+Written in a better choice of building blocks, the same polynomial can be computed to full accuracy.
+Choosing the building blocks is choosing a basis, and that is the whole subject of this entry.
+
+</details>
+
+**Field:** Numerical analysis, scientific computing, approximation theory
+
+**Tier:** 1 — interpolation is one square linear system in a polynomial space, and the monomial, [Lagrange](https://en.wikipedia.org/wiki/Lagrange_polynomial), Newton and Chebyshev forms are four bases for the same space. Measuring how badly a basis behaves uses the condition number, which is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: P_d, the real polynomials of degree at most d, a vector space of dimension d + 1 whose vectors are functions. Interpolating at d + 1 distinct nodes is a linear map from P_d to R^(d+1) (a polynomial goes to its list of values), and it is invertible.
+
+**Underlying equations.** Polynomial evaluation: the interpolant must satisfy p(x_i) = y_i at each node.
+
+**The problem.** Given d + 1 data points (x_0, y_0), …, (x_d, y_d) with distinct x_i, find the polynomial of degree at
+most d that passes through all of them, represent it in a form that is accurate and cheap to evaluate,
+and choose the nodes x_i, when one has that freedom, so that the answer is not overly sensitive to
+errors in the data.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| d | degree | highest power allowed | integer | — |
+| x_0, …, x_d | nodes | distinct points where the data are given | d + 1 numbers | units of x |
+| y_0, …, y_d | data values | values the polynomial must take at the nodes | (d + 1) × 1 | units of y |
+| p | interpolant | the polynomial with p(x_i) = y_i | element of P_d | maps x units to y units |
+| V | Vandermonde matrix | row i is (1, x_i, x_i², …, x_i^d) | (d + 1) × (d + 1) | mixed: column j has units of x^j |
+| a | monomial coefficients | p(x) = a_0 + a_1 x + … + a_d x^d | (d + 1) × 1 | a_j in y units per x^j |
+| ℓ_0, …, ℓ_d | Lagrange basis | ℓ_j(x_i) = 1 if i = j and 0 otherwise | elements of P_d | dimensionless |
+| c | Newton coefficients | p(x) = c_0 + c_1 (x − x_0) + c_2 (x − x_0)(x − x_1) + … | (d + 1) × 1 | mixed |
+| T_j | Chebyshev polynomials | T_j(cos θ) = cos(j θ) | elements of P_d | dimensionless |
+
+**Formulation.** **Where the equations come from.** The conditions are that a
+polynomial takes given values at given points, and each condition is linear in the polynomial.
+
+**The space and the map.** The polynomials of degree at most d form a vector space P_d of dimension
+d + 1: they can be added and scaled, and 1, x, …, x^d is a basis. Evaluating at the nodes,
+
+```
+p  ↦  (p(x_0), p(x_1), …, p(x_d))
+```
+
+is a linear map from P_d to ℝ^(d+1). Both spaces have dimension d + 1, and a nonzero polynomial of
+degree at most d has at most d roots, so the only polynomial sent to zero is the zero polynomial. The
+map is therefore invertible, and every set of data values has exactly one interpolant.
+
+**The monomial basis gives a Vandermonde system.** Writing p in powers of x turns the conditions into
+
+```
+V a = y
+```
+
+with det V = Π_(i<j) (x_j − x_i), nonzero exactly when the nodes are distinct.
+
+**The Lagrange basis gives the identity.** The basis polynomials
+
+```
+ℓ_j(x) = Π_(m ≠ j) (x − x_m) / (x_j − x_m)
+```
+
+are 1 at node j and 0 at the others. In this basis the matrix of the evaluation map is the identity,
+so the coordinates of p are the data values: p = y_0 ℓ_0 + … + y_d ℓ_d. Nothing needs to be solved.
+
+**The [Newton basis](https://en.wikipedia.org/wiki/Newton_polynomial) gives a triangular system.** Each Newton basis polynomial vanishes at all earlier
+nodes, so the matrix is lower triangular, and the coefficients (the [divided differences](https://en.wikipedia.org/wiki/Divided_differences)) come from
+forward substitution. Adding a new node adds a row and a column without changing the earlier
+coefficients.
+
+**Worked case: a parabola through (0, 1), (1, 3), (2, 2).**
+
+```
+monomial:  V a = y  with  V = [1 0 0; 1 1 1; 1 2 4],  so  a = (1, 3.5, −1.5)
+           p(x) = 1 + 3.5x − 1.5x²
+Newton:    c_0 = 1,  c_1 = (3 − 1)/(1 − 0) = 2,  c_2 = ((2 − 3)/(2 − 1) − 2)/(2 − 0) = −1.5
+           p(x) = 1 + 2x − 1.5 x(x − 1)
+Lagrange:  p(x) = 1·ℓ_0(x) + 3·ℓ_1(x) + 2·ℓ_2(x)
+```
+
+Expanding the Newton or Lagrange form gives back the monomial coefficients: three coordinate vectors
+for one element of P_2.
+
+**Matrix structure.** The same linear map has a dense matrix in the monomial basis, a lower-triangular one in the Newton
+basis, and the identity in the Lagrange basis. The change-of-basis matrices between them are dense. With
+[Chebyshev polynomials](https://en.wikipedia.org/wiki/Chebyshev_polynomials) as the basis and [Chebyshev points](https://en.wikipedia.org/wiki/Chebyshev_nodes) x_i = cos((2i + 1)π / (2d + 2)) as the nodes,
+the matrix has orthogonal columns, and its condition number is √2 whatever the number of nodes.
+
+**What is computed.** Practical codes avoid the Vandermonde system altogether. They evaluate the Lagrange form with the
+barycentric formula, which costs O(d) per point once O(d²) weights are computed and is numerically
+stable, or build the Newton form when nodes arrive one at a time. For approximating a function on an
+interval they use Chebyshev points and coefficients, as the [Chebfun](https://en.wikipedia.org/wiki/Chebfun) system does, computed with the fast
+cosine transform.
+
+**Why linear algebra is the right tool.** Existence and uniqueness of the interpolant are a dimension count: an injective linear map between
+spaces of the same finite dimension is invertible. The various interpolation formulas taught as
+separate recipes are coordinates of one vector in different bases, and the work each requires is
+visible in the shape of its matrix: dense, triangular or diagonal. The numerical trouble with
+high-degree interpolation is a property of the basis and the nodes, not of the polynomial, which is
+why it can be cured by changing them.
+
+**Pitfall worth teaching.** The monomial basis is a poor basis on a computer even though it is the one everyone learns. On [0, 1]
+the functions x^6 and x^7 are nearly indistinguishable, so the columns of V are nearly parallel. With
+8 equally spaced nodes on [0, 1] the condition number of V is about 2.7 × 10⁵, with 16 about
+3 × 10¹², and with 20 about 10¹⁶, at which point a double-precision solve can lose every digit. The
+interpolating polynomial is perfectly well defined throughout; only its monomial coordinates are
+unstable. Changing the basis to Chebyshev polynomials at Chebyshev nodes brings the condition number
+down to √2 for any number of nodes. A second, separate failure is the [Runge phenomenon](https://en.wikipedia.org/wiki/Runge's_phenomenon): at equally
+spaced nodes, high-degree interpolants of perfectly smooth functions oscillate wildly near the ends of
+the interval, whichever basis is used. That one is cured by moving the nodes, not by changing the basis.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| nodes (interpolation points) | the d + 1 distinct x-values where the polynomial must match the data |
+| interpolant | the unique element of P_d with the prescribed values at the nodes |
+| monomial (power) form | coordinates in the basis 1, x, x², …, x^d |
+| Lagrange form | coordinates in the basis that is dual to evaluation at the nodes, so the coordinates are the data values themselves |
+| Newton form and divided differences | coordinates in the basis 1, (x − x_0), (x − x_0)(x − x_1), …, computed by a triangular solve |
+| Chebyshev polynomials and nodes | a basis and a set of nodes for which the interpolation problem is well conditioned |
+| barycentric formula | a stable way to evaluate the Lagrange form |
+| Runge phenomenon | large oscillations of high-degree interpolants at equally spaced nodes |
+| Lebesgue constant | how much the interpolation map can amplify errors in the data |
+
+**Extensions.** Least-squares fitting with more points than coefficients is the basis-fitting entry, and the same
+Vandermonde matrix appears there as a design matrix. Shamir secret sharing interpolates over GF(p),
+where there is no rounding and the conditioning problem disappears. Finite-difference stencils solve a
+small Vandermonde system for derivative weights. [Bézier curves](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) use the [Bernstein](https://en.wikipedia.org/wiki/Bernstein_polynomial) basis of the same
+polynomial space. [Splines](https://en.wikipedia.org/wiki/Spline_interpolation) interpolate with piecewise polynomials and avoid the Runge phenomenon.
+[Gaussian quadrature](https://en.wikipedia.org/wiki/Gaussian_quadrature) chooses its nodes as the roots of orthogonal polynomials, and the [Lebesgue constant](https://en.wikipedia.org/wiki/Lebesgue_constant)
+measures how much a choice of nodes can amplify data errors.
+
+---
+
 ## 42. Bézier curves: every letter on the screen is a point in a polynomial space
 
 <details>
@@ -1413,11 +1727,11 @@ of basis or other linear maps between spaces of polynomials.
 
 **Field:** Typography, [vector graphics](https://en.wikipedia.org/wiki/Vector_graphics), computer-aided design, animation
 
-**Tier:** 1 — a [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) is a polynomial written in a particular basis, and every common operation on it is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) or a linear map between polynomial spaces of degree at most 3. No eigenvalues and no differential equations are involved.
+**Tier:** 1 — a Bézier curve is a polynomial written in a particular basis, and every common operation on it is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) or a linear map between polynomial spaces of degree at most 3. No eigenvalues are involved.
 
-**Scalars and vectors.** Scalar field: R. Vectors: P_3, the real polynomials of degree at most 3 in a parameter t, which has dimension 4. Each coordinate x(t) and y(t) of a cubic curve is one element of P_3, so a planar cubic segment is a pair of them, a vector in P_3 × P_3 of dimension 8. The control points are its coordinates in the [Bernstein](https://en.wikipedia.org/wiki/Bernstein_polynomial) basis, not points the curve passes through. [TrueType](https://en.wikipedia.org/wiki/TrueType) fonts use quadratic segments, in P_2 (dimension 3).
+**Scalars and vectors.** Scalar field: R. Vectors: P_3, the real polynomials of degree at most 3 in a parameter t, which has dimension 4. Each coordinate x(t) and y(t) of a cubic curve is one element of P_3, so a planar cubic segment is a pair of them, a vector in P_3 × P_3 of dimension 8. The control points are its coordinates in the Bernstein basis, not points the curve passes through. [TrueType](https://en.wikipedia.org/wiki/TrueType) fonts use quadratic segments, in P_2 (dimension 3).
 
-**Underlying equations.** None: polynomial curves written in a chosen basis.
+**Underlying equations.** Polynomial parametric curves, B(t) = Σ b_k(t) P_k, written in a chosen basis.
 
 **The problem.** An image can be stored in two fundamentally different ways. [Raster graphics](https://en.wikipedia.org/wiki/Raster_graphics) (photographs, PNG and
 JPEG files, the screen itself) store a grid of pixels: a fixed number of samples of the picture,
@@ -1450,7 +1764,7 @@ approximately otherwise.
 | a_0, …, a_3 | monomial coefficients | B(t) = a_0 + a_1 t + a_2 t² + a_3 t³ | each 2 × 1 | font units |
 | Q_0, Q_1, Q_2 | quadratic control points | a TrueType segment, in the Bernstein basis of P_2 | each 2 × 1 | font units |
 
-**Formulation.** **Where the equations come from.** There is no differential equation. A segment is a polynomial curve,
+**Formulation.** **Where the equations come from.** A segment is a polynomial curve,
 and the modelling choice is only which basis to write it in.
 
 **The Bernstein basis.** For cubics the basis polynomials are
@@ -1570,6 +1884,186 @@ matrices that act on control points.
 
 ---
 
+## 47. The discrete Fourier transform: a change to a basis of complex waves
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Any sound, radio signal or row of pixels can be recorded as a list of numbers: the signal's value at
+equally spaced moments. For many purposes that list is the wrong description. A musician wants to know
+which notes are present, an engineer which frequencies carry interference, and a compression program
+which parts can be thrown away without anyone noticing.
+
+The [discrete Fourier transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform) answers by rewriting the list as a combination of pure waves: a
+constant, a wave that goes up and down once over the block of samples, one that goes twice, and so on.
+Each wave gets one coefficient, telling how much of it is present and where in its cycle it starts.
+The list of coefficients is the signal's spectrum.
+
+That rewriting is a change of coordinates, from "value at each moment" to "amount of each wave". The
+waves are perpendicular to each other, which makes the change easy to undo and means it preserves the
+total energy of the signal. To describe both how much of a wave is present and where it starts with a
+single number, the coordinates are complex numbers, so this is linear algebra over the complex numbers
+instead of the real ones.
+
+</details>
+
+**Field:** Signal processing, audio, communications, image processing, spectroscopy
+
+**Tier:** 1 — the DFT is multiplication by one explicit complex matrix whose columns form an orthogonal basis, so it needs complex numbers but no eigenvalues. That the DFT diagonalizes every [circulant](https://en.wikipedia.org/wiki/Circulant_matrix) matrix, the reason convolution becomes multiplication, is an eigenvector statement and Tier 2.
+
+**Scalars and vectors.** Scalar field: C, the complex numbers, even when the signal itself is real: the basis vectors are complex waves, so the coordinates are complex. Vectors: C^N for a block of N samples, with the complex inner product ⟨u, v⟩ = Σ conj(u_n) v_n. A real signal lies in the real subset R^N, which is not a complex subspace, and its transform has the conjugate symmetry X_(N−k) = conj(X_k).
+
+**Underlying equations.** A change of basis on a finite block of samples, X = F x.
+
+**The problem.** Given a block of N equally spaced samples of a signal, find how much of each of the N basic
+frequencies it contains, and be able to rebuild the samples exactly from those amounts.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| N | block length | number of samples | integer | — |
+| x | signal | samples x_0, …, x_(N−1) | N × 1, complex in general (often real) | signal units (volts, pressure, brightness) |
+| ω | root of unity | ω = e^(−2πi/N), so ω^N = 1 | complex scalar | dimensionless |
+| w_k | wave of frequency k | (w_k)_n = e^(2πi kn/N): k complete cycles over the block | N × 1 complex | dimensionless |
+| F | DFT matrix | F_kn = ω^(kn), for k, n = 0, …, N − 1; row k is the conjugated wave w_k | N × N complex | dimensionless |
+| X | spectrum | X = F x; X_k is the coefficient of frequency k | N × 1 complex | signal units |
+| U | unitary DFT | U = F / √N | N × N complex | dimensionless |
+| Fᴴ | conjugate transpose | the transpose with every entry replaced by its complex conjugate | N × N | dimensionless |
+
+Bin k corresponds to k cycles per block, which is k / (N Δt) cycles per second if the samples are Δt
+seconds apart.
+
+**Formulation.** **Where the equations come from.** The model is a choice of basis
+for the space of length-N blocks of samples.
+
+**One frequency at a time.** The wave of frequency k is the vector w_k whose n-th entry is
+
+```
+(w_k)_n = e^(2πi kn/N) = cos(2π kn/N) + i sin(2π kn/N),     n = 0, …, N − 1
+```
+
+As n runs through the block, its angle 2π kn/N goes round the unit circle exactly k times, so w_k
+makes k complete cycles: w_0 is the constant vector, w_1 one slow cycle, and so on. To measure how much
+of this wave the signal contains, multiply each sample by the complex conjugate of the wave's value at
+that moment and add the results:
+
+```
+X_k = Σ_(n=0)^(N−1) x_n · conj((w_k)_n) = Σ_(n=0)^(N−1) x_n e^(−2πi kn/N)
+```
+
+This is the familiar DFT formula from signal processing. It is the complex inner product of the wave
+with the signal, X_k = ⟨w_k, x⟩, where the inner product on ℂ^N conjugates its first argument,
+⟨u, v⟩ = Σ conj(u_n) v_n, so that ⟨v, v⟩ = Σ |v_n|² is a length squared. Splitting the exponential
+into its cosine and sine parts shows what the number means. The real part of X_k is Σ x_n cos(2π kn/N),
+the correlation of the signal with a cosine of frequency k, and the imaginary part is
+−Σ x_n sin(2π kn/N), the correlation with a sine. Together they say how large the frequency-k
+component is, |X_k|, and where in its cycle it starts, the angle of X_k.
+
+**All frequencies at once.** Doing this for every k = 0, …, N − 1 gives N inner products, one per
+frequency. Stacking them, row k of a matrix holds the conjugated wave, e^(−2πi kn/N) = ω^(kn) in
+column n, and the whole spectrum is one matrix-vector product:
+
+```
+X = F x,     F_kn = ω^(kn)
+```
+
+**Orthogonality, and the inverse.** With the complex inner product, the N waves w_0, …, w_(N−1) are
+mutually orthogonal and each has squared length N:
+
+```
+Fᴴ F = N I
+```
+
+So the inverse is just the [conjugate transpose](https://en.wikipedia.org/wiki/Conjugate_transpose), scaled: x = (1/N) Fᴴ X, which is the inverse DFT
+formula x_n = (1/N) Σ X_k e^(2πi kn/N). Scaled to U = F/√N, the matrix is unitary, Uᴴ U = I: the
+complex version of an [orthogonal matrix](https://en.wikipedia.org/wiki/Orthogonal_matrix), a rotation of ℂ^N.
+
+**[Parseval](https://en.wikipedia.org/wiki/Parseval's_theorem)'s identity.** A unitary change of basis preserves length, so Σ |x_n|² = (1/N) Σ |X_k|²:
+the energy of the signal can be added up over time or over frequency.
+
+**Worked case: N = 4.** Here ω = e^(−2πi/4) = −i, so every entry of F is 1, −i, −1 or i:
+
+```
+F = [ 1    1    1    1 ]
+    [ 1   −i   −1    i ]
+    [ 1   −1    1   −1 ]
+    [ 1    i   −1   −i ]
+```
+
+For x = (1, 2, 3, 4), one coefficient at a time, X_1 multiplies the samples by the row
+(1, −i, −1, i) and adds them:
+
+```
+X_1 = 1·1 + 2·(−i) + 3·(−1) + 4·(i) = −2 + 2i
+```
+
+and doing the same with every row gives the whole spectrum:
+
+```
+X = F x = (10,  −2 + 2i,  −2,  −2 − 2i)
+```
+
+X_0 = 10 is the sum, four times the mean (the DC component). X_2 = −2 is the alternating pattern
++ − + −, the fastest wave four samples can hold. X_3 is the complex conjugate of X_1, as it must be for
+a real signal. Parseval checks: 1 + 4 + 9 + 16 = 30, and (100 + 8 + 4 + 8)/4 = 30. Multiplying X by
+Fᴴ/4 returns (1, 2, 3, 4).
+
+**Matrix structure.** `F` is dense, complex and symmetric (F_kn = F_nk), but it is not Hermitian, because the conjugate of
+its transpose is a different matrix. Scaled by 1/√N it is unitary. All its entries are powers of a
+single number ω, which lie on the unit circle, and that repetition is what lets the matrix be factored
+into about log₂ N sparse factors.
+
+**What is computed.** For small N, or a handful of frequencies, the transform is computed directly as a matrix-vector
+product. For anything larger, the [fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) computes exactly the same product in
+O(N log N) operations instead of O(N²) by factoring F into sparse matrices (the FFT entry). Libraries
+such as FFTW, numpy.fft and Julia's FFTW.jl differ in scaling conventions, which the pitfall
+discusses.
+
+**Why linear algebra is the right tool.** Seeing the DFT as a change of basis explains its properties without computation. It is invertible
+because the waves are a basis. The inverse is cheap because the basis is orthogonal, and energy is
+preserved because the change is unitary. Filtering is "change basis, scale some coordinates, change
+back". [Leakage](https://en.wikipedia.org/wiki/Spectral_leakage), the spreading of a pure tone across many bins, happens because a wave whose frequency
+is not a whole number of cycles per block is not one of the N basis vectors, so its coordinates in that
+basis are spread out. Compression works because many real signals have most of their length in a few
+coordinates of a well-chosen basis.
+
+**Pitfall worth teaching.** In ℂ^N, the transpose is not the inverse of a unitary matrix; the conjugate transpose is. Using the
+plain transpose, as one would for a real orthogonal matrix, is a common bug: Uᵀ U is not the identity.
+For N = 4 it is the matrix that reverses the order of bins 1 to 3, so "inverting" with the transpose
+returns the signal with time running backwards (x_0, x_3, x_2, x_1) instead of an error message. In
+NumPy, `U.T` is the transpose and `U.conj().T` the conjugate transpose; in MATLAB and Julia, `'`
+conjugates and `.'` or `transpose` does not. The same bug appears as forgetting to conjugate when
+computing a complex inner product. A second source of disagreement is convention: libraries put the
+1/N on the inverse (NumPy, MATLAB), split it as 1/√N on both sides (the unitary convention), or
+leave it to the user (FFTW), and some fields use e^(+2πi kn/N) in the forward transform. All of them
+are the same change of basis with differently scaled or conjugated basis vectors.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| samples | the coordinates of the signal in the standard basis (one per time step) |
+| frequency bin k | the coefficient of the k-th complex wave in the Fourier basis |
+| spectrum | the coordinate vector in the Fourier basis; its magnitudes are what a spectrum analyzer shows |
+| inverse DFT | the change of basis back, using the conjugate transpose |
+| twiddle factor ω^(kn) | an entry of the DFT matrix |
+| DC component | bin 0, the coefficient of the constant vector, N times the mean |
+| Nyquist bin | bin N/2, the fastest wave a block of N samples can represent |
+| negative frequencies | bins N/2 + 1 to N − 1, the complex conjugates of positive ones for a real signal |
+| Parseval's theorem | the change of basis preserves length (energy), up to the factor N |
+| spectral leakage | energy of a wave that is not one of the N basis waves, spread across many coordinates |
+| FFT | a factorization of the DFT matrix into sparse factors, not a different transform |
+
+**Extensions.** The DFT matrix diagonalizes every circulant matrix, which is why convolution in time becomes
+multiplication in frequency; that is an eigenvector statement (Tier 2). The FFT as a matrix
+factorization is its own entry. The [discrete cosine transform](https://en.wikipedia.org/wiki/Discrete_cosine_transform) of JPEG compression is a real orthogonal
+cousin (the JPEG entry), and Fourier series are the same idea for functions on an interval rather than
+finite blocks (the Fourier series entry). Orthogonal [frequency-division multiplexing](https://en.wikipedia.org/wiki/Orthogonal_frequency-division_multiplexing) (OFDM), used in
+Wi-Fi, 4G and 5G, transmits data directly as DFT coordinates. Quantum computing's quantum Fourier
+transform is this unitary matrix acting on the amplitudes of n qubits, with N = 2^n.
+
+---
+
 ## 48. Shamir secret sharing: a threshold is a theorem about interpolation
 
 <details>
@@ -1598,7 +2092,7 @@ rounding and no sizes that leak information.
 
 **Scalars and vectors.** Scalar field: GF(p), the integers 0 to p − 1 with arithmetic modulo a prime p (in practice p is a prime larger than any possible secret, often 127 or more bits). Vectors: P_(k−1)(GF(p)), the polynomials of degree at most k − 1 with coefficients in GF(p), a k-dimensional space; the n shares are a vector in GF(p)^n, the image of a polynomial under the evaluation map.
 
-**Underlying equations.** None: polynomial evaluation and interpolation over a finite field.
+**Underlying equations.** Polynomial evaluation and interpolation over the finite field GF(p).
 
 **The problem.** Split a secret s into n shares so that any k of them determine s, while any k − 1 of them give no
 information about s whatsoever.
@@ -1622,7 +2116,7 @@ Every quantity is an element of GF(p), the integers 0, 1, …, p − 1 with addi
 modulo p, so there are no physical units. Because p is prime, every nonzero element has a reciprocal:
 in GF(13), for example, 1/2 = 7, since 2 × 7 = 14 = 1 modulo 13.
 
-**Formulation.** **Where the equations come from.** There is no differential equation. The model is polynomial evaluation
+**Formulation.** **Where the equations come from.** The model is polynomial evaluation
 over the finite field GF(p).
 
 **Sharing.** The dealer puts the secret in the constant term and picks the other k − 1 coefficients at
@@ -1644,7 +2138,7 @@ V c = y
 
 A square Vandermonde matrix with distinct x_i has determinant Π_(i<j) (x_j − x_i), which is nonzero, so
 the system has exactly one solution, and the secret is its first entry. Nobody needs the full solution.
-Writing f in the [Lagrange](https://en.wikipedia.org/wiki/Lagrange_polynomial) basis gives the secret directly as a fixed linear combination of the shares:
+Writing f in the Lagrange basis gives the secret directly as a fixed linear combination of the shares:
 
 ```
 s = f(0) = Σ λ_i y_i,     λ_i = Π_(j ≠ i) x_j / (x_j − x_i)
@@ -1739,6 +2233,9 @@ Reed–Solomon arithmetic to survive two failed disks (compare the RAID-5 parity
 | 12 | Electrical engineering | Graph Laplacian; null space and column space | Grounded sparse Cholesky; PCG |
 | 42 | Typography / vector graphics | Polynomial space; Bernstein basis; change of basis | de Casteljau subdivision |
 | 48 | Cryptography | Vandermonde system over GF(p) | Lagrange interpolation mod p |
+| 20 | Statistics | Orthogonal projection onto a column space | Householder QR |
+| 41 | Numerical analysis | Polynomial space; change of basis; Vandermonde system | Barycentric Lagrange; Chebyshev basis |
+| 47 | Signal processing | Unitary change of basis over ℂ | Direct product; FFT |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -1766,8 +2263,6 @@ the one exception marked below.
 - **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
 *Polynomial and function spaces (index 41–45)*
-- **Polynomial interpolation and change of basis** — Vandermonde systems; monomial vs Lagrange vs Chebyshev
-  bases, and the conditioning consequences of the choice
 - **Finite-difference stencils by undetermined coefficients** — derivative weights as the solution of a small
   linear system; differentiation as a linear operator
 - **Fourier series as orthogonal projection** — an inner-product space of functions; best approximation
@@ -1777,9 +2272,8 @@ the one exception marked below.
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
   equation into an algebraic one. *Tier 3, not Tier 1:* the phasor method is a technique for solving
   linear ODEs with sinusoidal forcing, so reading the entry requires the ODE. It stays in this group
-  because it is the clearest example of complex scalars doing real work; the small DFT below is the
-  Tier 1 complex-scalar entry.
-- **The small DFT as a complex unitary matrix** — the 8-point transform written out; complex inner products
+  because it is the clearest example of complex scalars doing real work; the small DFT entry, now
+  written, is the Tier 1 complex-scalar entry.
 
 *Finite fields (index 48–50)*
 - **RAID-5 parity and XOR recovery** — one linear equation over GF(2), running in every storage array
@@ -1813,7 +2307,6 @@ the one exception marked below.
 - **JPEG and video compression** — the DCT as a fixed orthogonal basis chosen for decorrelation
 
 ### Would add: statistics and machine learning proper
-- **Least squares regression and the hat matrix** — QR vs normal equations, leverage, collinearity diagnostics
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
 - **Word embeddings and latent semantic analysis** — factorization of a co-occurrence matrix
 - **Attention in transformers** — QKᵀ as a learned bilinear form; low-rank adapters (LoRA) as explicit rank constraints on weight updates
@@ -1845,10 +2338,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 5 of the 13 written entries are now Tier 1.
+   backlog, which is under way: 8 of the 16 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 117 terms across the 13 written entries, and the backlog entries most likely to generate
+   currently covers 148 terms across the 16 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

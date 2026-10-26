@@ -20,7 +20,7 @@ scalar_field: GF(p), the integers 0 to p − 1 with arithmetic modulo a prime p 
 vector_space: P_(k−1)(GF(p)), the polynomials of degree at most k − 1 with coefficients in GF(p), a
   k-dimensional space; the n shares are a vector in GF(p)^n, the image of a polynomial under the evaluation
   map
-underlying_equations: 'None: polynomial evaluation and interpolation over a finite field'
+underlying_equations: 'Polynomial evaluation and interpolation over the finite field GF(p)'
 core_la_object: Polynomial interpolation over GF(p)
 la_concepts: vector spaces over a finite field; evaluation map; Vandermonde matrix; Lagrange basis;
   uniqueness from rank; affine solution sets
@@ -85,7 +85,7 @@ in GF(13), for example, 1/2 = 7, since 2 × 7 = 14 = 1 modulo 13.
 
 ## Formulation
 
-**Where the equations come from.** There is no differential equation. The model is polynomial evaluation
+**Where the equations come from.** The model is polynomial evaluation
 over the finite field GF(p).
 
 **Sharing.** The dealer puts the secret in the constant term and picks the other k − 1 coefficients at

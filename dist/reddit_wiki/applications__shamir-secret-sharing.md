@@ -21,7 +21,7 @@ rounding and no sizes that leak information.
 **Tier:** 1 — everything is polynomial interpolation, a [Vandermonde](https://en.wikipedia.org/wiki/Vandermonde_matrix) solve, done in the integers [modulo](https://en.wikipedia.org/wiki/Modular_arithmetic) a prime p. Arithmetic modulo a prime obeys the usual rules of algebra, including division by any nonzero number, and nothing more from abstract algebra is needed. The byte-wise version used in practice works in GF(2^8), which is Tier 3.  
 **Scalar field:** GF(p), the integers 0 to p − 1 with arithmetic modulo a prime p (in practice p is a prime larger than any possible secret, often 127 or more bits)  
 **Vectors:** P_(k−1)(GF(p)), the polynomials of degree at most k − 1 with coefficients in GF(p), a k-dimensional space; the n shares are a vector in GF(p)^n, the image of a polynomial under the evaluation map  
-**Underlying equations:** None: polynomial evaluation and interpolation over a [finite field](https://en.wikipedia.org/wiki/Finite_field)
+**Underlying equations:** Polynomial evaluation and interpolation over the [finite field](https://en.wikipedia.org/wiki/Finite_field) GF(p)
 
 ### The problem
 
@@ -50,7 +50,7 @@ in GF(13), for example, 1/2 = 7, since 2 × 7 = 14 = 1 modulo 13.
 
 ### Formulation
 
-**Where the equations come from.** There is no differential equation. The model is polynomial evaluation
+**Where the equations come from.** The model is polynomial evaluation
 over the finite field GF(p).
 
 **Sharing.** The dealer puts the secret in the constant term and picks the other k − 1 coefficients at

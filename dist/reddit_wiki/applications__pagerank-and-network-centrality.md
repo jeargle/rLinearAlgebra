@@ -21,7 +21,7 @@ permanently stuck in a corner of the web, and the whole thing falls apart.
 **Tier:** 2 — a dominant-eigenvector problem by construction.  
 **Scalar field:** R  
 **Vectors:** R^n over pages, but the solution is constrained to the probability simplex (nonnegative, entries summing to 1), which is NOT a subspace  
-**Underlying equations:** None; a linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time [Markov chain](https://en.wikipedia.org/wiki/Markov_chain)
+**Underlying equations:** A linear [difference equation](https://en.wikipedia.org/wiki/Recurrence_relation) π_{t+1} = G π_t, i.e. a discrete-time [Markov chain](https://en.wikipedia.org/wiki/Markov_chain)
 
 **[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/06-pagerank-and-network-centrality.html)** — an interactive notebook that runs in your browser, with nothing to install.
 
@@ -45,7 +45,7 @@ Order the pages of the web (or papers in a citation graph, or proteins in an int
 
 ### Formulation
 
-**Where the equations come from.** There is no differential equation, but there is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
+**Where the equations come from.** The model is a dynamical system in discrete time: a random surfer who, at each step, follows a random link from the current page with probability α and otherwise jumps to a page chosen uniformly at random. The distribution over pages evolves by a linear difference equation:
 
 ```
 π_{t+1} = G π_t

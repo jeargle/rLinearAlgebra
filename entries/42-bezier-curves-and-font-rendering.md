@@ -7,7 +7,7 @@ short_title: Bezier curves and font rendering
 field_label: Typography, vector graphics, computer-aided design, animation
 tier_note: 'a Bézier curve is a polynomial written in a particular basis, and every common operation on
   it is a change of basis or a linear map between polynomial spaces of degree at most 3. No eigenvalues
-  and no differential equations are involved.'
+  are involved.'
 nav_field: Computer Graphics & Vision
 field: Computer Science
 subfield: Typography/vector graphics
@@ -20,7 +20,7 @@ vector_space: 'P_3, the real polynomials of degree at most 3 in a parameter t, w
   pair of them, a vector in P_3 × P_3 of dimension 8. The control points are its coordinates in the
   Bernstein basis, not points the curve passes through. TrueType fonts use quadratic segments, in P_2
   (dimension 3)'
-underlying_equations: 'None: polynomial curves written in a chosen basis'
+underlying_equations: 'Polynomial parametric curves, B(t) = Σ b_k(t) P_k, written in a chosen basis'
 core_la_object: Bernstein basis of a polynomial space
 la_concepts: basis of a function space; change of basis; coordinates; partition of unity; affine
   combinations; inclusion of subspaces (degree elevation); linear maps between polynomial spaces
@@ -102,7 +102,7 @@ approximately otherwise.
 
 ## Formulation
 
-**Where the equations come from.** There is no differential equation. A segment is a polynomial curve,
+**Where the equations come from.** A segment is a polynomial curve,
 and the modelling choice is only which basis to write it in.
 
 **The Bernstein basis.** For cubics the basis polynomials are

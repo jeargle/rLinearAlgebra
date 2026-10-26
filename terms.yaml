@@ -62,9 +62,11 @@ terms:
   - 1
   - 3
   - 8
+  - 20
+  - 41
   - 48
   lowest_tier: 1
-  uses: 6
+  uses: 16
   match:
   - condition number
   - ill-conditioned
@@ -98,9 +100,11 @@ terms:
   - 9
   - 10
   - 12
+  - 20
   - 42
+  - 47
   lowest_tier: 1
-  uses: 25
+  uses: 29
   match:
   - eigenvalues?
   - eigenvectors?
@@ -156,8 +160,9 @@ terms:
   note: ''
   entries:
   - 10
-  lowest_tier: 3
-  uses: 7
+  - 47
+  lowest_tier: 1
+  uses: 5
   match:
   - Hermitian
 - term: homogeneous coordinates
@@ -201,9 +206,11 @@ terms:
   - 3
   - 7
   - 8
+  - 20
+  - 41
   - 42
   lowest_tier: 1
-  uses: 7
+  uses: 12
   match:
   - least[- ]squares
 - term: low-rank approximation (Eckart–Young)
@@ -275,9 +282,10 @@ terms:
   - 4
   - 7
   - 12
+  - 20
   - 48
   lowest_tier: 1
-  uses: 20
+  uses: 21
   match:
   - null ?space
   - nullity
@@ -291,7 +299,8 @@ terms:
   entries:
   - 8
   - 10
-  lowest_tier: 2
+  - 47
+  lowest_tier: 1
   uses: 2
   match:
   - orthogonal matri
@@ -305,8 +314,9 @@ terms:
   note: Linear-algebra sense only in entry 2; 'projection' in entry 3 means an X-ray projection angle.
   entries:
   - 2
-  lowest_tier: 3
-  uses: 4
+  - 20
+  lowest_tier: 1
+  uses: 10
   match:
   - orthogonal[- ]projection
   - \bprojection\b
@@ -326,8 +336,9 @@ terms:
   - 7
   - 10
   - 12
+  - 20
   lowest_tier: 1
-  uses: 9
+  uses: 11
   match:
   - positive[- ]definite
   - positive semidefinite
@@ -364,8 +375,9 @@ terms:
   - 9
   - 10
   - 12
+  - 20
   lowest_tier: 1
-  uses: 5
+  uses: 6
   match:
   - rank-deficient
   - \brank(?=\([A-Za-z])
@@ -411,8 +423,9 @@ terms:
   - 3
   - 8
   - 9
-  lowest_tier: 2
-  uses: 21
+  - 20
+  lowest_tier: 1
+  uses: 18
   match:
   - singular value decomposition
   - \bSVD\b
@@ -448,8 +461,10 @@ terms:
   - 8
   - 10
   - 12
+  - 20
+  - 47
   lowest_tier: 1
-  uses: 15
+  uses: 19
   match:
   - \bsparse\b
   - sparsity
@@ -496,8 +511,10 @@ terms:
   - 9
   - 10
   - 12
+  - 20
+  - 47
   lowest_tier: 1
-  uses: 13
+  uses: 16
   match:
   - symmetric matri
   - \bsymmetric\b
@@ -523,8 +540,9 @@ terms:
   note: ''
   entries:
   - 10
-  lowest_tier: 3
-  uses: 5
+  - 47
+  lowest_tier: 1
+  uses: 10
   match:
   - \bunitary\b
 - term: Vandermonde matrix
@@ -536,9 +554,10 @@ terms:
   note: ''
   entries:
   - 7
+  - 41
   - 48
   lowest_tier: 1
-  uses: 9
+  uses: 13
   match:
   - Vandermonde
 - term: well-posed / ill-posed problem
@@ -647,8 +666,9 @@ terms:
   - 1
   - 2
   - 12
+  - 20
   lowest_tier: 1
-  uses: 5
+  uses: 7
   match:
   - Cholesky (?:decomposition|factori[sz]ation|factor)
   - Cholesky
@@ -1396,7 +1416,8 @@ terms:
   note: ''
   entries:
   - 2
-  lowest_tier: 3
+  - 20
+  lowest_tier: 1
   uses: 7
   match:
   - Kalman filter
@@ -1816,8 +1837,9 @@ terms:
   note: ''
   entries:
   - 10
-  lowest_tier: 3
-  uses: 5
+  - 47
+  lowest_tier: 1
+  uses: 4
   match:
   - qubits?
 - term: Radon transform
@@ -2323,9 +2345,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 41
   - 48
   lowest_tier: 1
-  uses: 4
+  uses: 9
   match:
   - Lagrange
 - term: modular arithmetic
@@ -2453,9 +2476,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 41
   - 42
   lowest_tier: 1
-  uses: 3
+  uses: 4
   match:
   - Bézier curves?
 - term: Bernstein polynomial
@@ -2466,9 +2490,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 41
   - 42
   lowest_tier: 1
-  uses: 10
+  uses: 11
   match:
   - Bernstein
 - term: de Casteljau's algorithm
@@ -2519,8 +2544,9 @@ terms:
   note: ''
   entries:
   - 42
+  - 47
   lowest_tier: 1
-  uses: 5
+  uses: 9
   match:
   - changes? of basis
 - term: B-spline
@@ -2629,3 +2655,367 @@ terms:
   match:
   - rasteri[sz]ed
   - rasteri[sz]ation
+- term: design matrix
+  aliases: []
+  kind: domain concept
+  wikipedia: Design matrix
+  url: https://en.wikipedia.org/wiki/Design_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - design matri
+- term: hat (projection) matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Projection matrix
+  url: https://en.wikipedia.org/wiki/Projection_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - hat matri
+- term: leverage
+  aliases: []
+  kind: domain concept
+  wikipedia: Leverage (statistics)
+  url: https://en.wikipedia.org/wiki/Leverage_%28statistics%29
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \bleverage
+- term: QR decomposition
+  aliases: []
+  kind: numerical method
+  wikipedia: QR decomposition
+  url: https://en.wikipedia.org/wiki/QR_decomposition
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 2
+  match:
+  - \bQR\b
+- term: Householder reflection
+  aliases: []
+  kind: numerical method
+  wikipedia: Householder transformation
+  url: https://en.wikipedia.org/wiki/Householder_transformation
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Householder
+- term: multicollinearity
+  aliases: []
+  kind: domain concept
+  wikipedia: Multicollinearity
+  url: https://en.wikipedia.org/wiki/Multicollinearity
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 2
+  match:
+  - collinearity
+- term: dummy variable trap
+  aliases: []
+  kind: domain concept
+  wikipedia: Dummy variable (statistics)
+  url: https://en.wikipedia.org/wiki/Dummy_variable_%28statistics%29
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - dummy variable
+- term: coefficient of determination
+  aliases: []
+  kind: domain concept
+  wikipedia: Coefficient of determination
+  url: https://en.wikipedia.org/wiki/Coefficient_of_determination
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - R²
+- term: ridge regression
+  aliases: []
+  kind: domain concept
+  wikipedia: Ridge regression
+  url: https://en.wikipedia.org/wiki/Ridge_regression
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Rr]idge regression'
+- term: degrees of freedom
+  aliases: []
+  kind: domain concept
+  wikipedia: Degrees of freedom (statistics)
+  url: https://en.wikipedia.org/wiki/Degrees_of_freedom_%28statistics%29
+  recommend: link
+  note: ''
+  entries:
+  - 20
+  lowest_tier: 1
+  uses: 1
+  match:
+  - degrees of freedom
+- term: polynomial interpolation
+  aliases: []
+  kind: numerical method
+  wikipedia: Polynomial interpolation
+  url: https://en.wikipedia.org/wiki/Polynomial_interpolation
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \binterpolation\b
+- term: Newton polynomial
+  aliases: []
+  kind: numerical method
+  wikipedia: Newton polynomial
+  url: https://en.wikipedia.org/wiki/Newton_polynomial
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 3
+  match:
+  - Newton (?:form|basis)
+- term: divided differences
+  aliases: []
+  kind: numerical method
+  wikipedia: Divided differences
+  url: https://en.wikipedia.org/wiki/Divided_differences
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 1
+  match:
+  - divided differences
+- term: Chebyshev polynomials
+  aliases: []
+  kind: linear algebra
+  wikipedia: Chebyshev polynomials
+  url: https://en.wikipedia.org/wiki/Chebyshev_polynomials
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Chebyshev polynomials
+- term: Chebyshev nodes
+  aliases: []
+  kind: numerical method
+  wikipedia: Chebyshev nodes
+  url: https://en.wikipedia.org/wiki/Chebyshev_nodes
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 3
+  match:
+  - Chebyshev (?:points|nodes)
+- term: Runge's phenomenon
+  aliases: []
+  kind: domain concept
+  wikipedia: Runge's phenomenon
+  url: https://en.wikipedia.org/wiki/Runge's_phenomenon
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Runge phenomenon
+- term: Lebesgue constant
+  aliases: []
+  kind: domain concept
+  wikipedia: Lebesgue constant
+  url: https://en.wikipedia.org/wiki/Lebesgue_constant
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Lebesgue constant
+- term: Chebfun
+  aliases: []
+  kind: domain concept
+  wikipedia: Chebfun
+  url: https://en.wikipedia.org/wiki/Chebfun
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Chebfun
+- term: Gaussian quadrature
+  aliases: []
+  kind: numerical method
+  wikipedia: Gaussian quadrature
+  url: https://en.wikipedia.org/wiki/Gaussian_quadrature
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Gaussian quadrature
+- term: spline interpolation
+  aliases: []
+  kind: numerical method
+  wikipedia: Spline interpolation
+  url: https://en.wikipedia.org/wiki/Spline_interpolation
+  recommend: link
+  note: ''
+  entries:
+  - 41
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bSplines\b
+- term: discrete Fourier transform
+  aliases: []
+  kind: linear algebra
+  wikipedia: Discrete Fourier transform
+  url: https://en.wikipedia.org/wiki/Discrete_Fourier_transform
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 1
+  match:
+  - discrete Fourier transform
+- term: conjugate transpose
+  aliases: []
+  kind: linear algebra
+  wikipedia: Conjugate transpose
+  url: https://en.wikipedia.org/wiki/Conjugate_transpose
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 3
+  match:
+  - conjugate transpose
+- term: Parseval's theorem
+  aliases: []
+  kind: linear algebra
+  wikipedia: Parseval's theorem
+  url: https://en.wikipedia.org/wiki/Parseval's_theorem
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Parseval
+- term: fast Fourier transform
+  aliases: []
+  kind: numerical method
+  wikipedia: Fast Fourier transform
+  url: https://en.wikipedia.org/wiki/Fast_Fourier_transform
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 1
+  match:
+  - fast Fourier transform
+- term: spectral leakage
+  aliases: []
+  kind: domain concept
+  wikipedia: Spectral leakage
+  url: https://en.wikipedia.org/wiki/Spectral_leakage
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Ll]eakage'
+- term: circulant matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Circulant matrix
+  url: https://en.wikipedia.org/wiki/Circulant_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 2
+  match:
+  - circulant
+- term: discrete cosine transform
+  aliases: []
+  kind: linear algebra
+  wikipedia: Discrete cosine transform
+  url: https://en.wikipedia.org/wiki/Discrete_cosine_transform
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 1
+  match:
+  - discrete cosine transform
+- term: OFDM
+  aliases: []
+  kind: domain concept
+  wikipedia: Orthogonal frequency-division multiplexing
+  url: https://en.wikipedia.org/wiki/Orthogonal_frequency-division_multiplexing
+  recommend: link
+  note: ''
+  entries:
+  - 47
+  lowest_tier: 1
+  uses: 1
+  match:
+  - frequency-division multiplexing

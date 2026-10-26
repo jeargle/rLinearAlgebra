@@ -21,7 +21,7 @@ why graphics hardware is built the way it is.
 **Tier:** 2 — the [SVD](https://en.wikipedia.org/wiki/Singular_value_decomposition) does the work. The 2D [homography](https://en.wikipedia.org/wiki/Homography_%28computer_vision%29) and the transformation pipeline behind it sit at Tier 1; pose refinement on [SE(3)](https://en.wikipedia.org/wiki/Rigid_transformation) is Tier 3.  
 **Scalar field:** R  
 **Vectors:** scene points in R^3, written in homogeneous R^4 up to scale ([projective space](https://en.wikipedia.org/wiki/Projective_space) P^3); image points in R^2 as homogeneous R^3 up to scale (P^2). The unknown [essential matrix](https://en.wikipedia.org/wiki/Essential_matrix) is vectorized to R^9 and recovered only up to scale, so it is really a point of P^8  
-**Underlying equations:** None: projective geometry of the [pinhole camera](https://en.wikipedia.org/wiki/Pinhole_camera_model)
+**Underlying equations:** Projective geometry of the ideal [pinhole camera](https://en.wikipedia.org/wiki/Pinhole_camera_model)
 
 ### The problem
 
@@ -53,7 +53,7 @@ Primes mark the second view: x̂′ is the same scene point seen by the second c
 
 ### Formulation
 
-**Where the equations come from.** There is no differential equation; the model is the geometry of an ideal pinhole camera.
+**Where the equations come from.** The model is the geometry of an ideal pinhole camera.
 
 **Projection.**
 

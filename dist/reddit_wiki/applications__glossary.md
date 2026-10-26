@@ -21,11 +21,13 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | backprojection | applying A transpose to the data | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | balancing an equation | finding an integer null vector of the element-by-species matrix | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | bandwidth / skyline | the sparsity pattern induced by node numbering | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| barycentric formula | a stable way to evaluate the Lagrange form | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | basis set (quantum chemistry) | the chosen basis in which H is expressed | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | Bernstein polynomials | a basis of P_3 consisting of nonnegative functions that sum to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | bridge balance | a choice of resistances that puts one edge current at zero | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | bundle adjustment | sparse nonlinear least squares over all cameras and points at once | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | centrality | a score defined as an eigenvector, or a function, of the graph matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
+| Chebyshev polynomials and nodes | a basis and a set of nodes for which the interpolation problem is well conditioned | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | code rate | k/n, the subspace dimension over the ambient dimension | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | codeword | an element of the k-dimensional subspace of GF(2)^n | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | conserved moiety | a left null vector y; y^T c is constant for all time | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
@@ -36,15 +38,19 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | cubic vs quadratic outlines (CFF/PostScript vs TrueType) | curves in P_3 vs curves in P_2 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | damping factor (alpha) | the weight on P versus the uniform teleportation term | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | dangling node | a zero column, which breaks stochasticity | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
+| DC component | bin 0, the coefficient of the constant vector, N times the mean | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | de Casteljau algorithm | evaluation by repeated linear interpolation | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | dealer | whoever chooses the polynomial and hands out the shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | degenerate configuration | point placement that makes A rank-deficient, so the solution is not unique | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | degree elevation | the inclusion P_2 → P_3, written in Bernstein coordinates | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | degree of freedom (DOF) | one scalar unknown — one component of the displacement vector | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| degrees of freedom | dimensions; k for the model (the trace of H) and n − k for the residuals | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | degrees of freedom of the network | the nullity of S | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | density matrix | a positive semidefinite matrix with trace 1 | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| design matrix (model matrix) X | the n × k matrix whose columns are the predictors, including a column of 1s for the intercept | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | direct vs indirect requirements | the successive terms A, A^2, A^3 of the Neumann series | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | DLT (direct linear transform) | stacking constraints into A and taking the smallest right singular vector | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| dummy variable trap | an exactly dependent set of indicator columns, which makes X rank-deficient | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | easing curve (CSS cubic-bezier) | a cubic in the same basis, used for timing instead of shape | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | effective (Thevenin) resistance | (e_a - e_b)^T L^+ (e_a - e_b), a quadratic form in the pseudoinverse | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | eigenstate / energy level | eigenvector and eigenvalue of the Hamiltonian | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
@@ -58,23 +64,32 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | expectation value | the quadratic form psi^* A psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | explained variance | sigma_i^2 as a fraction of the total | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | extrinsic parameters [R\|t] | the rigid transform from world to camera frame | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| FFT | a factorization of the DFT matrix into sparse factors, not a different transform | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | filter divergence | P losing positive definiteness in finite precision, or an unobservable direction growing without bound | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | filtered backprojection (FBP) | an analytic spectral inverse of the forward operator | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | final demand | the right-hand side d | [Leontief input-output economics](applications/leontief-input-output-economics) |
+| fitted values ŷ | the orthogonal projection of y onto the column space of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | flux | v, the vector of reaction rates | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| frequency bin k | the coefficient of the k-th complex wave in the Fourier basis | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | generator matrix G | a basis of the code, written as rows | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | gross / total output | the unknown x | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | ground (reference node) | the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Hamiltonian | the Hermitian matrix H in H psi = E psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| hat matrix H | the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | homogeneous coordinates | an added coordinate that turns perspective division into a linear map plus a normalization | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | innovation / residual | z - Hx, the part of the measurement the prediction did not explain | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
+| interpolant | the unique element of P_d with the prescribed values at the nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | intrinsic matrix K | the camera's internal calibration, an upper-triangular 3x3 | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| inverse DFT | the change of basis back, using the conjugate transpose | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | Kalman gain | the projection weight matrix that blends prediction and measurement | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | ket / state vector | a unit vector in a complex inner-product space | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | Kirchhoff's current law (KCL) | A^T I = s, a statement about the left null space of A | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Kirchhoff's voltage law (KVL) | voltage drops lie in the column space of A, so they sum to zero around every loop | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Lagrange coefficients | the weights λ_i, which depend only on which parties are present | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| Lagrange form | coordinates in the basis that is dual to evaluation at the nodes, so the coordinates are the data values themselves | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
+| Lebesgue constant | how much the interpolation map can amplify errors in the data | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | Leontief inverse | (I - A)^-1 | [Leontief input-output economics](applications/leontief-input-output-economics) |
+| leverage h_ii | the i-th diagonal entry of H; how strongly observation i pulls its own fitted value | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | link matrix | the column-stochastic matrix P built from the graph | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | load vector | the right-hand side b | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | loading | one entry of an EOF, i.e. one grid point's weight in that pattern | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
@@ -82,17 +97,25 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | mechanism | a nontrivial null space of K — the structure can move with no restoring force | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | minimum distance | the smallest weight of a nonzero codeword | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | mode shape | an eigenvector of K phi = lambda M phi | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| monomial (power) form | coordinates in the basis 1, x, x², …, x^d | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
+| multicollinearity | columns of X that are nearly linearly dependent, so β is poorly determined | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | multiplier | a single entry of the Leontief inverse | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | natural frequency | square root of the corresponding eigenvalue | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| negative frequencies | bins N/2 + 1 to N − 1, the complex conjugates of positive ones for a real signal | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
+| Newton form and divided differences | coordinates in the basis 1, (x − x_0), (x − x_0)(x − x_1), …, computed by a triangular solve | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | nodal analysis vs mesh analysis | solving in potential space (dimension n - 1) vs in cycle space (dimension m - n + 1) | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | nodal conductance (admittance) matrix | the weighted graph Laplacian L = A^T C A | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | node voltage (potential) | one entry of the vector φ in R^n | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
+| nodes (interpolation points) | the d + 1 distinct x-values where the polynomial must match the data | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
+| normal equations | Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | North's rule of thumb | a test for whether two singular values are too close to separate the modes | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
+| Nyquist bin | bin N/2, the fastest wave a block of N samples can represent | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | observability | rank of the stacked matrix [H; HF; HF^2; ...] | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | observable | a Hermitian operator; its eigenvalues are the measurable values | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | observation model H | the linear map from state space to measurement space | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | on-curve and off-curve points (font editors) | the end control points, which the curve passes through, and the inner control points, which it generally does not | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | parity-check matrix H | a basis of the code's orthogonal complement; codewords are its null space | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
+| Parseval's theorem | the change of basis preserves length (energy), up to the factor N | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | perfect (information-theoretic) secrecy | every candidate secret is consistent with the same number of polynomials through any k − 1 shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | power iteration | repeated multiplication by the matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | principal component time series | the corresponding right singular vector, scaled | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
@@ -103,14 +126,21 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | rasterization | sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height) | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | reciprocity | symmetry of L, so the potential at b due to a source at a equals the potential at a due to the same source at b | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | reconstruction | Lagrange interpolation evaluated at x = 0, a fixed linear combination of the shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| regression coefficients β | coordinates of the fitted vector in the basis given by the columns of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | regularization strength | the Tikhonov parameter lambda trading data fit against smoothness | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | reprojection error | the nonlinear least-squares objective minimized in refinement | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| residuals | the component of y in the orthogonal complement of the column space | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | restraint / boundary condition | deleting the corresponding rows and columns, or adding constraint rows | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | rotated EOF (varimax) | a deliberately non-orthogonal re-basis of the leading subspace | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
+| Runge phenomenon | large oscillations of high-degree interpolants at equally spaced nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
+| R² | the squared length of the centered fitted vector over that of the centered data vector | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
+| samples | the coordinates of the signal in the standard basis (one per time step) | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | SCF iteration | fixed-point iteration on an eigenproblem whose matrix depends on its own solution | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | share | a point (x_i, f(x_i)), one coordinate of the evaluation map's output | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | share refresh (proactive sharing) | adding a sharing of 0, a polynomial from the subspace with f(0) = 0 | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | sinogram | the measurement vector b, arranged by angle and detector position | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
+| spectral leakage | energy of a wave that is not one of the N basis waves, spread across many coordinates | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
+| spectrum | the coordinate vector in the Fourier basis; its magnitudes are what a spectrum analyzer shows | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | square-root filter | propagating a Cholesky factor of P instead of P | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | state vector | the unknown x being estimated | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | stationary distribution | the dominant eigenvector, normalized | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
@@ -127,5 +157,6 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | teleportation | the rank-one correction that makes the chain irreducible | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | tensor product | the Kronecker product; why n qubits need dimension 2^n | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | threshold k | the dimension of the polynomial space, deg f + 1 | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| twiddle factor ω^(kn) | an entry of the DFT matrix | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | unitary gate | a norm-preserving complex linear map — the complex analogue of an orthogonal matrix | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | vector graphics | shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |

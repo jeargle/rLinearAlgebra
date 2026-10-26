@@ -17,10 +17,10 @@ The same computation, with pollution added as an extra row, is how the carbon fo
 usually estimated — including all the emissions from its suppliers' suppliers.
 
 **Field:** Economics (and, in its modern form, environmental footprint accounting)  
-**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve, with no differential equation. The [Perron–Frobenius](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) convergence condition is Tier 2; the dynamic [Leontief](https://en.wikipedia.org/wiki/Input%E2%80%93output_model) model, an [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation), is Tier 3.  
+**Tier:** 1 — posing and solving (I − A) x = d needs only a linear solve. The [Perron–Frobenius](https://en.wikipedia.org/wiki/Perron%E2%80%93Frobenius_theorem) convergence condition is Tier 2; the dynamic [Leontief](https://en.wikipedia.org/wiki/Input%E2%80%93output_model) model, an [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation), is Tier 3.  
 **Scalar field:** R (nonnegative)  
 **Vectors:** outputs and demands in R^n, n = number of sectors  
-**Underlying equations:** None: a static accounting identity for one period (the dynamic Leontief model adds an ODE)
+**Underlying equations:** A static accounting identity for one period: each sector's output is used by other industries or by final users, x = A x + d
 
 **[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/05-leontief-input-output-economics.html)** — an interactive notebook that runs in your browser, with nothing to install.
 
@@ -45,7 +45,7 @@ Everything is measured in money at base-year prices, which is why a_ij is dimens
 
 ### Formulation
 
-**Where the equations come from.** There is no differential equation here. The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
+**Where the equations come from.** The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
 
 ```
 x_i = Σ_j z_ij + d_i

@@ -143,24 +143,6 @@ backlog:
   matrix_structure: dense orthogonal 8x8 blocks
   typical_size: 8x8 blocks
   worked_example_size: ''
-- id: 20
-  slug: least-squares-regression-and-the-hat-matrix
-  status: backlog
-  short_title: Least squares regression and the hat matrix
-  nav_field: Statistics
-  field: Statistics
-  subfield: Applied statistics
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: statistical inference for the diagnostics
-  scalar_field: R
-  vector_space: observations in R^n, coefficients in R^k
-  core_la_object: Orthogonal projection onto a column space
-  la_concepts: QR vs normal equations; leverage; collinearity
-  primary_method: QR/householder
-  matrix_structure: dense or sparse design matrix
-  typical_size: 1e2-1e7 rows
-  worked_example_size: ''
 - id: 21
   slug: matrix-completion-and-recommender-systems
   status: backlog
@@ -523,24 +505,6 @@ backlog:
   matrix_structure: dense 3x3
   typical_size: 3x3
   worked_example_size: sRGB to XYZ to LMS with a white-point adaptation
-- id: 41
-  slug: polynomial-interpolation-and-change-of-basis
-  status: backlog
-  short_title: Polynomial interpolation and change of basis
-  nav_field: Mathematics & Numerical Analysis
-  field: Mathematics
-  subfield: Numerical analysis
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: P_n, polynomials of degree at most n, dimension n+1
-  core_la_object: Vandermonde system in a polynomial vector space
-  la_concepts: basis and dimension; change of basis; conditioning
-  primary_method: Dense solve; Lagrange/Newton forms
-  matrix_structure: dense Vandermonde, ill-conditioned
-  typical_size: 8x8
-  worked_example_size: monomial vs Lagrange vs Chebyshev basis on 8 nodes
 - id: 43
   slug: finite-difference-stencils-by-undetermined-coefficients
   status: backlog
@@ -615,24 +579,6 @@ backlog:
   matrix_structure: dense complex 3x3
   typical_size: 3x3
   worked_example_size: three-mesh RLC network at a single frequency
-- id: 47
-  slug: the-small-dft-as-a-complex-unitary-matrix
-  status: backlog
-  short_title: The small DFT as a complex unitary matrix
-  nav_field: Signal Processing
-  field: Mathematics
-  subfield: Signal processing
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: C
-  vector_space: C^8
-  core_la_object: Explicit DFT matrix
-  la_concepts: complex inner products; unitary matrices; orthogonal bases
-  primary_method: Direct matrix-vector product
-  matrix_structure: dense complex unitary
-  typical_size: 8x8
-  worked_example_size: 8-point DFT written out, applied, and inverted
 - id: 49
   slug: raid-5-parity-and-xor-recovery
   status: backlog

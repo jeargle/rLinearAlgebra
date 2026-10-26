@@ -18,7 +18,7 @@ scalar_field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is X
   AND); Reed–Solomon codes use GF(2^m)
 vector_space: GF(2)^n; the code is a k-dimensional subspace of it. There is no Euclidean length here -
   Hamming weight is a metric, not a norm from an inner product
-underlying_equations: 'None: algebraic constraints over GF(2)'
+underlying_equations: 'Linear algebraic constraints over GF(2), arithmetic modulo 2: every codeword c satisfies H cᵀ = 0'
 core_la_object: Subspace over a finite field
 la_concepts: linear algebra over GF(2); null space; rank conditions; Vandermonde structure
 primary_method: Syndrome decoding; belief propagation
@@ -78,7 +78,7 @@ There are no physical units: every entry is a bit, and all arithmetic is modulo 
 
 ## Formulation
 
-**Where the equations come from.** There is no differential equation; the model is a set of linear constraints over the two-element field GF(2).
+**Where the equations come from.** The model is a set of linear constraints over the two-element field GF(2).
 
 **Encoding.**
 

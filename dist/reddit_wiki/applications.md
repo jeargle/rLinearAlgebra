@@ -80,7 +80,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Mathematics & Numerical Analysis
 
 * Poisson and Navier-Stokes discretization — Tier 3 *(planned)*
-* Polynomial interpolation and change of basis — Tier 1 *(planned)*
+* [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) — Tier 1
 * Finite-difference stencils by undetermined coefficients — Tier 1 *(planned)*
 * Fourier series as orthogonal projection — Tier 1 *(planned)*
 
@@ -97,10 +97,10 @@ Real problems from each field, with the domain vocabulary translated into linear
 * The FFT as a matrix factorization — Tier 2 *(planned)*
 * Beamforming and MUSIC direction finding — Tier 2 *(planned)*
 * JPEG and video compression — Tier 1 *(planned)*
-* The small DFT as a complex unitary matrix — Tier 1 *(planned)*
+* [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) — Tier 1
 
 ## Statistics
 
-* Least squares regression and the hat matrix — Tier 1 *(planned)*
+* [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) — Tier 1
 * Sports and citation ranking (Massey/Colley) — Tier 1 *(planned)*
 * Least-squares fitting in a chosen function basis — Tier 1 *(planned)*

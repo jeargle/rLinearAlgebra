@@ -19,10 +19,10 @@ nature is under no obligation to comply. A pattern that is optimal mathematicall
 of two unrelated physical processes.
 
 **Field:** Atmospheric and ocean science, climatology  
-**Tier:** 2 — truncated SVD and the [Eckart–Young](https://en.wikipedia.org/wiki/Low-rank_approximation) optimality statement; no differential equation is used. Relating [EOFs](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions) to the dynamics through a stochastic [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) is a Tier 3 extension.  
+**Tier:** 2 — truncated SVD and the [Eckart–Young](https://en.wikipedia.org/wiki/Low-rank_approximation) optimality statement. Relating [EOFs](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions) to the dynamics through a stochastic [ODE](https://en.wikipedia.org/wiki/Ordinary_differential_equation) is a Tier 3 extension.  
 **Scalar field:** R  
 **Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and [principal-component](https://en.wikipedia.org/wiki/Principal_component_analysis) series in R^t (t time steps)  
-**Underlying equations:** None used: a statistical decomposition of observed data (the ocean itself obeys [PDEs](https://en.wikipedia.org/wiki/Partial_differential_equation) that the method ignores)
+**Underlying equations:** A statistical decomposition of observed data; no physical model of the ocean or atmosphere is used
 
 ### The problem
 
@@ -47,7 +47,7 @@ A century of monthly sea-surface temperatures on a global grid is a matrix with 
 
 ### Formulation
 
-**Where the equations come from.** No differential equation is used. The ocean and atmosphere obey partial differential equations of fluid flow and heat transport, but EOF analysis ignores them entirely: it is a statistical decomposition of observed data. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
+**Where the equations come from.** EOF analysis is a statistical decomposition of observed data and uses no physical model of the ocean or atmosphere. That is its strength, since no model is needed, and its main limitation, since nothing forces the patterns it finds to be dynamical modes of the system.
 
 **The decomposition.**
 

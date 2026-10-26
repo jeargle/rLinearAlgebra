@@ -5,7 +5,7 @@ status: seed
 title: 'Leontief input–output: how much steel does a car actually take?'
 short_title: Leontief input-output economics
 field_label: Economics (and, in its modern form, environmental footprint accounting)
-tier_note: posing and solving (I − A) x = d needs only a linear solve, with no differential equation.
+tier_note: posing and solving (I − A) x = d needs only a linear solve.
   The Perron–Frobenius convergence condition is Tier 2; the dynamic Leontief model, an ODE, is Tier 3.
 nav_field: Economics, Finance & Operations Research
 field: Economics
@@ -15,8 +15,7 @@ tier_ceiling: 3
 prereq_beyond_la: ''
 scalar_field: R (nonnegative)
 vector_space: outputs and demands in R^n, n = number of sectors
-underlying_equations: 'None: a static accounting identity for one period (the dynamic Leontief model adds
-  an ODE)'
+underlying_equations: 'A static accounting identity for one period: each sector''s output is used by other industries or by final users, x = A x + d'
 core_la_object: Nonnegative matrix and its resolvent
 la_concepts: matrix inverse; Neumann series; Perron-Frobenius; spectral radius
 primary_method: Dense LU; Neumann expansion
@@ -70,7 +69,7 @@ Industries consume each other's output. Making a car needs steel; making steel n
 Everything is measured in money at base-year prices, which is why a_ij is dimensionless. Physical tables in tonnes or joules exist, but then A carries mixed units and the coefficients are no longer comparable across rows.
 
 ## Formulation
-**Where the equations come from.** There is no differential equation here. The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
+**Where the equations come from.** The model is a static accounting identity over one period, usually a year: every sector's output goes either to other industries or to final users,
 
 ```
 x_i = Σ_j z_ij + d_i

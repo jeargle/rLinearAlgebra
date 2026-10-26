@@ -18,10 +18,10 @@ to be zero, which is what electricians call [ground](https://en.wikipedia.org/wi
 information is a [null space](https://en.wikipedia.org/wiki/Kernel_%28linear_algebra%29), and choosing a ground is how it is removed.
 
 **Field:** Electrical engineering, circuit theory, chip power-grid analysis  
-**Tier:** 1 — a DC network of resistors is one [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) linear system L φ = s, and grounding a node is removing a one-dimensional null space. [Effective resistance](https://en.wikipedia.org/wiki/Resistance_distance) through the [pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse) and its link to random walks are Tier 2; circuits with capacitors or inductors involve [ODEs](https://en.wikipedia.org/wiki/Ordinary_differential_equation) and are Tier 3.  
+**Tier:** 1 — a DC network of resistors is one [symmetric](https://en.wikipedia.org/wiki/Symmetric_matrix) linear system L φ = s, and grounding a node is removing a one-dimensional null space. [Effective resistance](https://en.wikipedia.org/wiki/Resistance_distance) through the [pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse) and its link to random walks are Tier 2.  
 **Scalar field:** R  
 **Vectors:** two different spaces: node potentials in R^n (n nodes) and edge currents in R^m (m resistors). The [incidence matrix](https://en.wikipedia.org/wiki/Incidence_matrix) maps the first to the second. Potentials are only defined up to adding the same constant to every node, so physically they live in R^n modulo the all-ones vector  
-**Underlying equations:** None: [Ohm's law](https://en.wikipedia.org/wiki/Ohm's_law) and [Kirchhoff's](https://en.wikipedia.org/wiki/Kirchhoff's_circuit_laws) current law are algebraic for a direct-current network of resistors (capacitors and inductors would add ODEs; see the AC circuits entry)
+**Underlying equations:** Algebraic circuit laws: [Ohm's law](https://en.wikipedia.org/wiki/Ohm's_law) (V = IR) for each resistor and [Kirchhoff's](https://en.wikipedia.org/wiki/Kirchhoff's_circuit_laws) current law at each node
 
 ### The problem
 
@@ -52,7 +52,7 @@ currents back to node totals.
 
 ### Formulation
 
-**Where the equations come from.** There is no differential equation. A direct-current network of
+**Where the equations come from.** A direct-current network of
 resistors is described by two algebraic laws, one per edge and one per node.
 
 **Ohm's law, one equation per edge.** For a single resistor, Ohm's law is the familiar V = IR: the
@@ -160,7 +160,7 @@ the expected time for a random walk to go from one node to the other and back, d
 total conductance; both facts are Tier 2. The same Laplacian appears as the Y-bus matrix of power-grid
 load flow, in modified nodal analysis inside circuit simulators such as [SPICE](https://en.wikipedia.org/wiki/SPICE), and in spectral graph
 clustering, where its [eigenvectors](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) rather than its solves are the object of interest. Adding capacitors
-and inductors turns the network equations into ODEs; with sinusoidal sources, phasors turn them back into
+and inductors turns the network equations into [ODEs](https://en.wikipedia.org/wiki/Ordinary_differential_equation); with sinusoidal sources, phasors turn them back into
 a complex linear system (the AC circuits entry, Tier 3). The same incidence-matrix structure, with flows
 and conservation at nodes, appears in the traffic-flow and process mass-balance entries.
 
