@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 6 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 9 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,7 +200,7 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 16 written entries, 8 are Tier 1,
+**Current distribution.** Of the 19 written entries, 11 are Tier 1,
 3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
@@ -2216,6 +2216,498 @@ Reed–Solomon arithmetic to survive two failed disks (compare the RAID-5 parity
 
 ---
 
+## 49. RAID-5: rebuilding a lost disk by solving one linear equation
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A storage array spreads data across several disks. Disks fail, and copying everything twice to survive
+a failure would halve the usable space. RAID-5 survives the loss of any one disk at the cost of just one
+disk's worth of extra space.
+
+The trick is a [checksum](https://en.wikipedia.org/wiki/Checksum) of the simplest possible kind. For each group of blocks stored at the same
+position on the data disks, the array stores one extra block, built bit by bit: each bit records
+whether the matching bits of the data blocks contain an even or an odd number of 1s. If one disk dies,
+every one of its bits can be worked out from the others, because the count of 1s in each position has
+to come out even again. The missing bit is whatever makes it so.
+
+In algebra this is one equation, data plus check equals zero, in the arithmetic where 1 + 1 = 0, and
+recovering a lost disk is solving that equation for its single unknown. Everything about what RAID-5
+can and cannot do follows from it being one equation: one unknown can be found, but two cannot, and a
+block that is wrong rather than missing can be noticed but not located.
+
+</details>
+
+**Field:** Storage systems, system administration, distributed storage
+
+**Tier:** 1 — one parity equation over GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is [XOR](https://en.wikipedia.org/wiki/Exclusive_or)), solved for one unknown. Surviving two failures needs a second independent equation over the larger field GF(2^8), which is Tier 3.
+
+**Scalars and vectors.** Scalar field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, and subtraction is the same as addition). Vectors: GF(2)^w for a block of w bits: every block of a stripe is a vector, and the parity equation holds coordinate by coordinate, one bit position at a time. A stripe across n disks is a point of (GF(2)^w)^n, and the valid stripes form the subspace cut out by the parity equation.
+
+**Underlying equations.** One linear equation over GF(2) per stripe, applied to each bit position: the data blocks and the parity block add up to zero modulo 2.
+
+**The problem.** Two words carry the whole subject. A **block** is a fixed-size piece of one disk: a run of consecutive
+bits, typically 4 KiB to 1 MiB, and the unit that the array reads, writes and protects (storage
+engineers also call it a chunk or stripe unit). The array divides every disk into blocks and lines them
+up across the disks. A **stripe** is then the set of n blocks at the same position, one on each disk:
+the first block of every disk forms stripe 1, the second block of every disk forms stripe 2, and so on.
+In RAID-5, n − 1 blocks of each stripe hold data and the remaining one, the parity block, is computed
+from them. Each stripe is protected on its own, so recovering a failed disk means recovering its block
+in every stripe, one stripe at a time.
+
+The problem is to store data on n disks so that the contents of any one failed disk can be
+reconstructed from the other n − 1, using one block of redundancy per stripe (one disk's worth in
+total), and to keep the parity correct as data change.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of disks | disks in the array, including parity | integer | — |
+| w | block size | bits per block | integer | bits |
+| d_1, …, d_(n−1) | data blocks | the data in one stripe | each a w × 1 vector over GF(2) | bits |
+| p | parity block | the check block of the stripe | w × 1 over GF(2) | bits |
+| d_old, d_new | one data block | before and after an update | w × 1 | bits |
+| p_old, p_new | parity block | before and after the update | w × 1 | bits |
+
+All arithmetic is in GF(2): 0 + 0 = 1 + 1 = 0 and 0 + 1 = 1, which on blocks is the bitwise exclusive
+OR (XOR). Since 1 + 1 = 0, every block is its own negative, and subtracting is the same as adding.
+
+**Formulation.** **Where the equations come from.** The model is a design choice: the parity block of every stripe is
+defined to make one linear equation hold.
+
+**One bit position.** Look at bit position k of every block in a stripe. The [parity bit](https://en.wikipedia.org/wiki/Parity_bit) is defined by
+
+```
+p[k] = d_1[k] + d_2[k] + ⋯ + d_(n−1)[k]     (mod 2)
+```
+
+which is the even-or-odd count of 1s: p[k] is 1 exactly when the data bits in position k contain an odd
+number of 1s. Moving p[k] to the left side, which costs nothing because subtraction is addition, gives
+the equation that every stripe satisfies:
+
+```
+d_1[k] + d_2[k] + ⋯ + d_(n−1)[k] + p[k] = 0     (mod 2)
+```
+
+**All bit positions at once.** The same equation holds in every one of the w positions, so for whole
+blocks it reads d_1 + ⋯ + d_(n−1) + p = 0 in GF(2)^w. In matrix terms each bit position is the 1 × n
+system (1 1 ⋯ 1) v = 0, with v the n bits of that position across the disks. Its rank is 1, so the
+valid stripes form a subspace of dimension n − 1: any n − 1 blocks can be chosen freely, and the last
+is determined.
+
+**Recovering a lost disk.** If disk j fails, its block is the only unknown in the equation. Solving
+for it, and remembering that subtraction is addition,
+
+```
+d_j = (sum of all the other blocks of the stripe)     (mod 2)
+```
+
+so the lost block is the XOR of the survivors.
+
+**Updating one block.** When block d_i changes from d_old to d_new, the equation still has to hold.
+Because it is linear, the parity changes by the same amount as the data:
+
+```
+p_new = p_old + d_old + d_new
+```
+
+so a small write reads only the old data and old parity, not the rest of the stripe.
+
+**Worked case: four disks, 4-bit blocks.** Data d_1 = 1011, d_2 = 0110, d_3 = 1100 give parity
+p = 1011 + 0110 + 1100 = 0001. If disk 2 fails, d_2 = d_1 + d_3 + p = 1011 + 1100 + 0001 = 0110, as
+stored. If d_2 is then rewritten as 0011, the new parity is 0001 + 0110 + 0011 = 0100, and indeed
+1011 + 0011 + 1100 = 0100.
+
+**Matrix structure.** One row of 1s, 1 × n, applied independently to each of the w bit positions, so the whole stripe is a
+w × nw system made of w identical copies. Real arrays also rotate which disk holds the parity from
+stripe to stripe, so that parity updates do not all land on one disk. That changes which coordinate is
+called p, not the equation.
+
+**What is computed.** Writing a full stripe: one XOR across the data blocks. Updating one block: read the old data and
+parity, XOR in the change, write both back, which is four disk operations and the reason small writes
+are slow on RAID-5. Reading in degraded mode or rebuilding: XOR the surviving blocks of each stripe.
+Processors provide vector instructions that XOR many bytes at once, and the Linux md driver chooses the
+fastest routine at boot.
+
+**Why linear algebra is the right tool.** Every capability and limit of RAID-5 is a statement about one linear equation. One unknown can be
+solved for; two unknowns in one equation leave a one-dimensional solution set, so a second failure
+during a rebuild loses data. Updating parity from the change alone works because the equation is
+linear. The design generalizes exactly as linear algebra suggests: to survive two failures, add a second
+equation independent of the first (RAID-6), and to survive r failures, use r independent equations,
+which is an [erasure code](https://en.wikipedia.org/wiki/Erasure_code).
+
+**Pitfall worth teaching.** Parity corrects erasures, not errors. If a disk reports that it has failed, the unknown's position is
+known and the equation can be solved. If instead a block is silently wrong, through a firmware bug, a
+bit flip or the write hole (a crash after the data block was written but before its parity), the stripe
+simply violates its equation. The array can detect that something is wrong, but one equation cannot say
+which of the n blocks is the culprit: changing any one of them would restore it. Worse, if the mismatch
+goes unnoticed and a disk later fails, the rebuild solves the equation using the wrong block and
+reconstructs wrong data without any warning. This is the linear-algebra content of the advice that
+RAID is not a backup, and the reason file systems such as [ZFS](https://en.wikipedia.org/wiki/ZFS) add checksums: a checksum locates the bad
+block, turning the error back into an erasure.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| stripe | one block from each disk at the same position, the unknowns of one parity equation |
+| stripe unit (chunk) | one block of a stripe, a vector in GF(2)^w |
+| parity block | the block chosen so that every stripe satisfies d_1 + ⋯ + d_(n−1) + p = 0 |
+| XOR | addition in GF(2), applied bit by bit |
+| degraded mode | one block of each stripe unknown, recovered on every read by solving the equation |
+| rebuild (resilvering) | solving the equation for the failed disk's block in every stripe |
+| read-modify-write (small write) | updating parity by p_new = p_old + d_old + d_new, which uses linearity |
+| write hole | a crash between writing data and parity, which leaves a stripe that violates its equation |
+| erasure vs error | a lost block at a known position (solvable) vs a wrong block at an unknown position (only detectable) |
+| RAID-6 | a second, independent equation over GF(2^8), so two erasures can be solved |
+
+**Extensions.** RAID-6 adds a second check block, computed with coefficients from the 256-element field GF(2^8), so
+that two erasures give two independent equations; the scheme is a Reed–Solomon code (the
+error-correcting codes entry, Tier 3 for GF(2^m)). Distributed storage systems use the same idea with
+more check blocks, and the error-correcting codes entry shows how several parity checks can locate an
+error as well as fill an erasure. Shamir secret sharing is the same equations-from-redundancy idea over
+GF(p), arranged so that too few shares reveal nothing. [CRC](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) checksums, which detect errors in
+transmitted data, are also linear over GF(2) (the CRC entry).
+
+---
+
+## 51. Traffic flow: why counting cars at the edges leaves a free variable inside
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+At every road intersection, the cars that drive in must drive out again, because cars do not pile up
+or vanish in the middle of a junction (at least not for long). Traffic engineers count cars entering
+and leaving a district at its edges and want to know how many use each street inside it.
+
+Write the in-equals-out rule once for every intersection and you get a set of equations, one per
+intersection, with the unknown street flows as the unknowns. Usually the equations do not pin down an
+answer. Whenever the streets form a loop, some traffic could be circling the loop without ever entering
+or leaving, and the edge counts cannot see it. So there is a whole family of possible answers, and
+exactly as many numbers left undetermined as there are independent loops.
+
+That family has a familiar shape from a first linear algebra course: one particular answer, plus any
+amount of the circling traffic. On one-way streets flows cannot be negative, and that turns the family into a
+range of admissible values: the smallest flow each street must carry, and where the remaining freedom
+lies. Measuring one street inside the loop removes the uncertainty entirely.
+
+</details>
+
+**Field:** Transportation engineering, traffic monitoring, [network flow](https://en.wikipedia.org/wiki/Flow_network)
+
+**Tier:** 1 — conservation at each intersection is a linear system with more unknowns than independent equations, solved by elimination into a particular solution plus the null space. Choosing among the admissible flows by optimization (network flow, [linear programming](https://en.wikipedia.org/wiki/Linear_programming)) is Tier 2.
+
+**Scalars and vectors.** Scalar field: R; flows on one-way streets are further restricted to nonnegative values. Vectors: R^m, one coordinate per internal road segment (m = 4 in the worked case), each the net flow along a chosen reference direction. The equations are indexed by intersections, so the incidence matrix maps R^m to R^n with n intersections. On one-way streets the physically possible flows are the nonnegative solutions, which form a [convex set](https://en.wikipedia.org/wiki/Convex_set) (here a ray), not a subspace.
+
+**Underlying equations.** A conservation law at each intersection: cars per hour in equals cars per hour out.
+
+**The problem.** Given the traffic entering and leaving a road network at each intersection, find all flows on the
+internal road segments that are consistent with conservation, identify which flows are determined and
+which are free, and find the range each flow can take when the streets are one-way, so that no flow
+can be negative.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of intersections | nodes of the network | integer | — |
+| m | number of segments | internal roads joining two intersections, each with a chosen reference direction | integer | — |
+| x | segment flows | x_j is the net flow on segment j along its reference direction | m × 1 | vehicles per hour |
+| A | incidence matrix | A_ij = +1 if segment j's arrow leaves intersection i, −1 if it points to i, 0 otherwise | n × m | dimensionless |
+| u_i | boundary inflow | counted traffic entering the district at intersection i | scalar per intersection | vehicles per hour |
+| w_i | boundary outflow | counted traffic leaving the district at intersection i | scalar per intersection | vehicles per hour |
+| b | net boundary traffic | b_i = u_i − w_i | n × 1 | vehicles per hour |
+| x_p | particular solution | any one solution of A x = b | m × 1 | vehicles per hour |
+| t | free variable | the amount of circulation | scalar | vehicles per hour |
+
+**Formulation.** **Where the equations come from.** The model is conservation of vehicles at each intersection over a
+period of steady traffic, such as an hour of the morning peak.
+
+**Two kinds of road.** Boundary roads cross the edge of the district: traffic on them enters or leaves
+the network, and those flows are counted, so they are known numbers. Internal segments join two
+intersections inside the district, and their flows x_j are the unknowns.
+
+**Directions are bookkeeping.** Each internal segment is given an arrow, a reference direction chosen
+once and for all, just as each resistor in the resistor-network entry is given a direction for its
+current. The arrow does not mean the street is one-way. The unknown x_j is the net flow along the arrow:
+traffic going the arrow's way minus traffic going the other way. So x_j can be negative, meaning more
+traffic travels against the arrow than with it. Only for a one-way street with its arrow pointing the
+legal way (or when each direction of a two-way street is modelled as its own segment) does x_j ≥ 0
+become a physical constraint.
+
+**One intersection.** At intersection i, everything arriving equals everything leaving:
+
+```
+(internal flows arriving at i) + (boundary traffic entering at i)
+    = (internal flows leaving i) + (boundary traffic leaving at i)
+```
+
+Collecting the unknown internal flows on the left and the known boundary counts on the right,
+
+```
+(internal flows leaving i) − (internal flows arriving at i) = u_i − w_i = b_i
+```
+
+So each segment's flow appears with +1 in the equation of the intersection its arrow leaves, with −1 in
+the equation of the intersection its arrow points to, and not at all elsewhere. Everything known about
+intersection i, its boundary traffic, is summarized in the single number b_i.
+
+**Worked case, one intersection at a time.** Four intersections P, Q, R and S are joined in a loop by
+four internal segments, with arrows x_1: P → Q, x_2: Q → R, x_3: R → S and x_4: S → P. The boundary
+counts, in vehicles per hour, are
+
+```
+intersection     entering u_i    leaving w_i    b_i = u_i − w_i
+P                     500            200             300
+Q                     100            200            −100
+R                       0            400            −400
+S                     300            100             200
+```
+
+Altogether 900 vehicles per hour enter and 900 leave. Segment x_1 leaves P and arrives at Q, x_4
+leaves S and arrives at P, and so on, so the four equations are
+
+```
+P:   x_1             − x_4 =  300
+Q:  −x_1 + x_2             = −100
+R:        −x_2 + x_3       = −400
+S:              −x_3 + x_4 =  200
+```
+
+**All intersections at once.** The coefficients of the four equations form the incidence matrix, with
+one row per intersection and one column per segment:
+
+```
+             x_1  x_2  x_3  x_4
+A  =   P  [   1    0    0   −1 ]
+       Q  [  −1    1    0    0 ]
+       R  [   0   −1    1    0 ]
+       S  [   0    0   −1    1 ]
+
+x  =  (x_1, x_2, x_3, x_4)          b  =  (300, −100, −400, 200)
+```
+
+and the system is A x = b. In general A_ij is +1 if segment j's arrow leaves intersection i, −1 if it
+points to intersection i, and 0 otherwise. A describes how the district's streets are connected, x holds
+the unknown internal flows, and b holds what the boundary counts say about each intersection.
+
+**Consistency.** Every column of A has exactly one +1 and one −1, so the n rows add up to the zero row,
+and adding all n equations gives 0 = Σ b_i. The system has a solution only if the traffic entering the
+district equals the traffic leaving it. One equation is therefore redundant, and for a connected network
+the rank of A is n − 1. In the worked case the S equation is minus the sum of the other three.
+
+**The solution set.** With m unknowns and rank n − 1, elimination leaves m − n + 1 free variables, and
+every solution is one particular solution plus a combination of null-space vectors. A null-space vector
+is a circulation: traffic going round a loop, which adds as much to each intersection's leaving flows as
+to its arriving flows. The number of free variables is the number of independent loops. In the worked
+case the rank is 3, x_4 = t is free, and
+
+```
+x = (300 + t,  200 + t,  −200 + t,  t) = (300, 200, −200, 0) + t (1, 1, 1, 1)
+```
+
+where (1, 1, 1, 1) is t vehicles per hour circling the loop. If all four streets are two-way, every
+value of t is possible, and the counts leave the flows undetermined. If they are one-way in the
+direction of the arrows, every flow must be nonnegative, which requires t ≥ 200: S → P must carry at
+least 200 vehicles per hour, R → S at least 0, P → Q at least 500 and Q → R at least 400. Either way, one
+count on any segment of the loop fixes t and so every flow.
+
+**Matrix structure.** `A` is the node-by-segment incidence matrix of a directed graph: sparse, with exactly one +1 and one −1
+in every column. Its rank is n minus the number of connected pieces of the network, and its null space
+is spanned by the loops. These are the same objects, transposed, as the incidence matrix of the
+resistor-network entry, where the null space of Aᵀ was the space of loop currents.
+
+**What is computed.** For a small district: [Gaussian elimination](https://en.wikipedia.org/wiki/Gaussian_elimination) to reduced [echelon form](https://en.wikipedia.org/wiki/Row_echelon_form), which separates pivot variables
+from free ones and writes the solution as a particular solution plus null-space vectors. Traffic
+agencies then add constraints and data: detector counts on some segments, capacity limits, and
+nonnegativity. Estimating flows that fit the counts best is a least-squares or linear programming
+problem, and predicting how drivers will divide among routes is [traffic assignment](https://en.wikipedia.org/wiki/Route_assignment).
+
+**Why linear algebra is the right tool.** The questions an engineer asks are rank questions. Are the edge counts enough? Only if the network
+has no loops, since each loop adds a dimension to the null space. How many segments must be counted
+inside? As many as the null space has dimensions, chosen so that the counted coordinates pin every
+null-space vector down. Which segments are determined by the edge counts alone? Exactly those on which
+every null-space vector is zero, such as a bridge that is the only route between two parts of the
+network. The structure of the answer, a particular solution plus a subspace, is the general theorem
+about solutions of linear systems, with the subspace given a physical meaning.
+
+**Pitfall worth teaching.** On one-way streets, the solution set of the equations is a subspace shifted by a particular solution,
+but the set of physically possible flows is not. Flows against a one-way arrow are impossible, so the
+possible flows are the part of that shifted subspace where every coordinate is at least zero, a convex
+set (in the worked case, the ray t ≥ 200). Software that returns one solution chooses for you. Asked for
+a least-squares or minimum-norm solution of the worked case, a numerical library returns
+x = (225, 125, −275, −75), the solution closest to the origin. On two-way streets that is one
+legitimate pattern among infinitely many, with net traffic flowing S → R and P → S, and nothing in the
+counts singles it out. On one-way streets it is impossible. The same distinction explains closures:
+closing segment S → P forces t = 0 and x_3 = −200. If R–S is a two-way street, that just means 200
+vehicles per hour now drive from S to R. If it is one-way from R to S, no traffic pattern is consistent
+with the counts, and either the counts must change (drivers reroute) or another road must open. A free
+variable means "not determined by these equations", not "anything goes".
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| link (road segment) | one coordinate of the flow vector |
+| reference direction | the arrow chosen for a segment; a negative flow means net traffic against it |
+| boundary (cordon) counts | known traffic entering and leaving at the district's edge, summarized in b |
+| node (intersection) | one row of the conservation system |
+| flow (volume) | cars per hour on a segment, an entry of x |
+| conservation of flow (continuity) | A x = b, one equation per intersection |
+| origin and destination volumes | the entries of b, net traffic entering the network at each node |
+| circulation | traffic going round a closed loop, a vector in the null space of A |
+| traffic counts (detector or loop counts) | measured coordinates of x, used to pin down the free variables |
+| link closure | forcing a coordinate of x to zero, which may leave no admissible solution |
+| network flow problem | choosing among the admissible x by minimizing a cost, a linear program |
+
+**Extensions.** Choosing the cheapest admissible flows is a network flow problem, a linear program whose constraint
+matrix is this incidence matrix. Such matrices are [totally unimodular](https://en.wikipedia.org/wiki/Unimodular_matrix), so whole-number data give
+whole-number optimal flows automatically (see the linear programming entry). Estimating the
+origin-destination table from a few detector counts is an underdetermined least-squares problem with
+nonnegativity (compare the regression entry). The same conservation-at-nodes structure describes
+current in the resistor-network entry, material in the process mass-balance entry, and money between
+sectors in the Leontief entry.
+
+---
+
+## 52. Process mass balances: a recycle loop is what makes it a system of equations
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A chemical plant is a network of units connected by pipes: mixers that combine streams, [reactors](https://en.wikipedia.org/wiki/Chemical_reactor) that
+convert one substance into another, and separators that split a stream into its parts. The first job in
+designing or running one is bookkeeping. Every hour, how much of each substance flows through each
+pipe?
+
+The rule is simple: with the plant running steadily, whatever goes into a unit comes out, except for
+what the reaction makes or uses up. Applying it to each substance at each unit gives one equation each.
+
+Without loops this is easy: start at the feed and work forward, one unit at a time. Real plants almost
+always recycle, though. A reactor rarely converts all of its feed, so the separator sends the unreacted
+material back to the front to try again. Now the reactor's feed depends on the separator's output,
+which depends on the reactor. The equations can no longer be solved one at a time. They have to be
+solved together, which makes the [flowsheet](https://en.wikipedia.org/wiki/Process_flow_diagram) a system of linear equations.
+
+</details>
+
+**Field:** Chemical engineering, process design, plant operations
+
+**Tier:** 1 — with fixed conversions and split fractions every balance is linear, and the flowsheet is one square linear system. Why the unit-by-unit recycle iteration converges, and how fast, is a spectral-radius question and Tier 2.
+
+**Scalars and vectors.** Scalar field: R, with physical flows restricted to nonnegative values. Vectors: R^6 in the worked case: one coordinate per unknown component flow, a component in a given stream (mol/h of A in the reactor feed, mol/h of B in the product, and so on). A stream is not a single coordinate; it contributes one coordinate per component it carries.
+
+**Underlying equations.** Steady-state balances for each unit and each component: input + generation = output + consumption, with fixed conversions and split fractions.
+
+**The problem.** Given the fresh feed to a process and the performance of each unit (how much of each reactant
+converts, and how each separator divides each component), find the flow of every component in every
+stream, and check that the specification determines them uniquely.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| F | fresh feed | pure A fed to the process | scalar | mol/h |
+| X | single-pass conversion | fraction of the A entering the reactor that becomes B | scalar in (0, 1) | dimensionless |
+| s | recycle split fraction | fraction of the separator's A sent back to the mixer | scalar in [0, 1) | dimensionless |
+| A_1, A_2, A_3, A_4 | flows of A | in the reactor feed (1), reactor outlet (2), product (3) and recycle (4) | scalars | mol/h |
+| B_2, B_3 | flows of B | in the reactor outlet (2) and product (3) | scalars | mol/h |
+| u | unknown vector | (A_1, A_2, B_2, A_3, B_3, A_4) | 6 × 1 | mol/h |
+| K | balance matrix | one row per independent balance | 6 × 6 | dimensionless |
+| r | known terms | the fresh feed in the row it enters, zeros elsewhere | 6 × 1 | mol/h |
+
+**Formulation.** **Where the equations come from.** For a unit running at steady state, the familiar balance of
+chemical engineering holds for each component:
+
+```
+input + generation = output + consumption
+```
+
+Mixers and separators neither generate nor consume, so for them input equals output. In the reactor,
+the reaction A → B consumes A and generates the same number of moles of B. With conversions and split
+fractions fixed by the design, every balance is linear in the unknown flows.
+
+**The flowsheet.** Fresh feed F of pure A joins the recycle in a mixer (stream 1), passes through the
+reactor (stream 2), and a separator sends all of the B and a fraction 1 − s of the A to the product
+(stream 3) and returns the remaining fraction s of the A to the mixer (stream 4). One balance per
+component per unit:
+
+```
+mixer, A:      A_1 = F + A_4
+reactor, A:    A_2 = (1 − X) A_1
+reactor, B:    B_2 = X A_1
+separator, A:  A_4 = s A_2        and   A_3 = (1 − s) A_2
+separator, B:  B_3 = B_2
+```
+
+Moved to one side, these six equations are K u = r, a square system in the six unknown component flows.
+
+**Worked case.** Take F = 100 mol/h, X = 0.75 and s = 0.8. Substituting around the loop,
+
+```
+A_1 = 100 + 0.8 × 0.25 × A_1 = 100 + 0.2 A_1     ⟹     A_1 = 125
+```
+
+and then A_2 = 31.25, B_2 = 93.75, A_4 = 25, A_3 = 6.25 and B_3 = 93.75 mol/h. The reactor converts
+only 75% of what it receives, but the process converts 93.75% of its fresh feed, because unreacted A
+gets further passes. Balances check: 100 mol/h of A enters, and 6.25 of A plus 93.75 of B leave.
+
+**Solving unit by unit.** Process simulators often do not form K. They guess the recycle (the tear
+stream), compute each unit in turn, and update the guess. Here that is A_4 ← 0.2 (100 + A_4), which
+from A_4 = 0 gives 20, 24, 24.8, 24.96, … → 25. Each pass multiplies the error by 0.2, the fraction of
+A that survives one trip round the loop. This is the same sum of rounds as the Leontief entry's
+d + A d + A² d + ⋯, and it converges because that loop gain is less than 1.
+
+**Matrix structure.** `K` is square and sparse. Without the recycle it would be triangular: each unit's outputs depend only
+on units upstream, and forward substitution solves it. The recycle adds a single entry above the
+diagonal (A_4 appearing in the mixer's row), and that entry is what makes the system simultaneous.
+Plant-wide models have thousands of such rows, with sparsity reflecting which units are connected.
+
+**What is computed.** For a design calculation, the solution of K u = r, either directly (equation-oriented simulators) or by
+[fixed-point iteration](https://en.wikipedia.org/wiki/Fixed-point_iteration) around each loop, often accelerated (sequential modular simulators such as Aspen
+Plus). Before solving, engineers do a degrees-of-freedom analysis: count the unknowns and the
+independent equations and make sure the specifications close the gap exactly.
+
+**Why linear algebra is the right tool.** The degrees-of-freedom analysis taught in every process-design course is a rank computation: a unique
+solution needs as many independent equations as unknowns, which is a square system with an invertible
+matrix. Over-specifying a process gives an inconsistent system, under-specifying it leaves free
+variables, and an extra equation that adds no information is a dependent row. Recycle loops, which
+make hand calculation tedious, are just off-diagonal entries, and the convergence of the unit-by-unit
+calculation is a property of the loop's coefficients.
+
+**Pitfall worth teaching.** Balances can be linearly dependent, and counting them is not the same as counting independent
+equations. Around any unit, the total [mass balance](https://en.wikipedia.org/wiki/Mass_balance) is the sum of the component balances, so writing all
+of them gives one equation too many. A solver that is handed the redundant set sees a non-square system.
+If the numbers come from plant measurements rather than design values, they almost never satisfy the
+redundant equation exactly, so the system is inconsistent and has no solution at all. The fix is to
+count rank, not equations: keep an independent set for design calculations, and for measured data use
+the redundancy deliberately in [data reconciliation](https://en.wikipedia.org/wiki/Data_validation_and_reconciliation), a least-squares adjustment of the measurements so
+they satisfy every balance. A related failure is an inert component in the feed with no way out: with
+s = 1 for that component, its loop gain is 1, the matrix is singular, and no steady state exists, which
+is why plants add a purge stream.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| stream | a pipe between units; contributes one unknown per component it carries |
+| component balance | one row of the system, for one component around one unit |
+| overall (total) balance | the sum of the component balances, a linearly dependent row |
+| single-pass conversion | the fraction of the reactant entering the reactor that reacts, a fixed coefficient |
+| split fraction | the fraction of a component a separator sends to a given outlet, a fixed coefficient |
+| recycle stream | the coupling that turns a triangular system into a genuinely simultaneous one |
+| tear stream | the unknown guessed to start the unit-by-unit iteration around a loop |
+| sequential modular vs equation-oriented simulation | fixed-point iteration around loops vs solving the whole linear system at once |
+| degrees of freedom | unknowns minus independent equations; it must be zero for a unique answer |
+| purge stream | a small bleed that keeps an inert component from accumulating in the loop |
+
+**Extensions.** Once conversions depend on temperature, or separations on [vapour–liquid equilibrium](https://en.wikipedia.org/wiki/Vapor%E2%80%93liquid_equilibrium), the balances
+become nonlinear and are solved by [Newton's method](https://en.wikipedia.org/wiki/Newton's_method), a sequence of linear systems with this structure.
+Data reconciliation is a constrained least-squares problem (compare the regression entry). The same
+conservation-at-nodes structure, without reactions, is the traffic-flow entry. With reactions written
+out species by species, it is the stoichiometric-matrix entry, and the recycle iteration is the same
+Neumann series as the Leontief entry.
+
+---
+
 # Coverage of the written entries
 
 | # | Field | Core linear-algebra object | Dominant method |
@@ -2236,6 +2728,9 @@ Reed–Solomon arithmetic to survive two failed disks (compare the RAID-5 parity
 | 20 | Statistics | Orthogonal projection onto a column space | Householder QR |
 | 41 | Numerical analysis | Polynomial space; change of basis; Vandermonde system | Barycentric Lagrange; Chebyshev basis |
 | 47 | Signal processing | Unitary change of basis over ℂ | Direct product; FFT |
+| 49 | Storage systems | One linear equation over GF(2); erasures vs errors | XOR reconstruction |
+| 51 | Transportation | Underdetermined system; null space; nonnegativity | Gaussian elimination |
+| 52 | Chemical engineering | Square system with recycle coupling; redundant rows | Simultaneous solve; recycle iteration |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -2275,14 +2770,8 @@ the one exception marked below.
   because it is the clearest example of complex scalars doing real work; the small DFT entry, now
   written, is the Tier 1 complex-scalar entry.
 
-*Finite fields (index 48–50)*
-- **RAID-5 parity and XOR recovery** — one linear equation over GF(2), running in every storage array
+*Finite fields (index 50)*
 - **CRC checksums** — polynomials over GF(2) modulo a generator
-
-*Underdetermined systems with free variables (index 51–52)*
-- **Traffic flow conservation at intersections** — particular plus homogeneous solution, with nonnegativity
-  giving the physically admissible set
-- **Mass balance in a process flowsheet** — recycle loops as coupling between equations
 
 ### Would add: graph Laplacians and spectral methods
 - **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
@@ -2338,10 +2827,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 8 of the 16 written entries are now Tier 1.
+   backlog, which is under way: 11 of the 19 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 148 terms across the 16 written entries, and the backlog entries most likely to generate
+   currently covers 179 terms across the 19 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

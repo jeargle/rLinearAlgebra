@@ -147,8 +147,9 @@ terms:
   note: ''
   entries:
   - 7
+  - 49
   lowest_tier: 1
-  uses: 10
+  uses: 16
   match:
   - GF\(2\)
 - term: Hermitian matrix
@@ -209,8 +210,10 @@ terms:
   - 20
   - 41
   - 42
+  - 51
+  - 52
   lowest_tier: 1
-  uses: 12
+  uses: 17
   match:
   - least[- ]squares
 - term: low-rank approximation (Eckart–Young)
@@ -264,8 +267,9 @@ terms:
   note: ''
   entries:
   - 5
+  - 52
   lowest_tier: 1
-  uses: 3
+  uses: 2
   match:
   - Neumann series
 - term: null space (kernel)
@@ -284,8 +288,9 @@ terms:
   - 12
   - 20
   - 48
+  - 51
   lowest_tier: 1
-  uses: 21
+  uses: 26
   match:
   - null ?space
   - nullity
@@ -376,8 +381,10 @@ terms:
   - 10
   - 12
   - 20
+  - 51
+  - 52
   lowest_tier: 1
-  uses: 6
+  uses: 8
   match:
   - rank-deficient
   - \brank(?=\([A-Za-z])
@@ -463,8 +470,10 @@ terms:
   - 12
   - 20
   - 47
+  - 51
+  - 52
   lowest_tier: 1
-  uses: 19
+  uses: 22
   match:
   - \bsparse\b
   - sparsity
@@ -1172,8 +1181,9 @@ terms:
   entries:
   - 7
   - 48
+  - 49
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - error-correcting
   - error correction
@@ -1402,8 +1412,10 @@ terms:
   note: ''
   entries:
   - 5
+  - 51
+  - 52
   lowest_tier: 1
-  uses: 10
+  uses: 7
   match:
   - Leontief
   - input[–-]output
@@ -1866,8 +1878,9 @@ terms:
   entries:
   - 7
   - 48
+  - 49
   lowest_tier: 1
-  uses: 3
+  uses: 10
   match:
   - RAID
 - term: recommender system
@@ -1907,8 +1920,9 @@ terms:
   entries:
   - 7
   - 48
+  - 49
   lowest_tier: 1
-  uses: 7
+  uses: 8
   match:
   - Reed[–-]Solomon
 - term: resonance
@@ -2072,8 +2086,9 @@ terms:
   note: ''
   entries:
   - 4
-  lowest_tier: 3
-  uses: 4
+  - 52
+  lowest_tier: 1
+  uses: 2
   match:
   - stoichiometr
 - term: syndrome decoding
@@ -2164,8 +2179,9 @@ terms:
   note: ''
   entries:
   - 12
+  - 51
   lowest_tier: 1
-  uses: 2
+  uses: 6
   match:
   - incidence matri
 - term: Laplacian matrix
@@ -3019,3 +3035,263 @@ terms:
   uses: 1
   match:
   - frequency-division multiplexing
+- term: exclusive or (XOR)
+  aliases: []
+  kind: domain concept
+  wikipedia: Exclusive or
+  url: https://en.wikipedia.org/wiki/Exclusive_or
+  recommend: link
+  note: ''
+  entries:
+  - 49
+  lowest_tier: 1
+  uses: 8
+  match:
+  - \bXOR\b
+- term: parity bit
+  aliases: []
+  kind: domain concept
+  wikipedia: Parity bit
+  url: https://en.wikipedia.org/wiki/Parity_bit
+  recommend: link
+  note: ''
+  entries:
+  - 49
+  lowest_tier: 1
+  uses: 1
+  match:
+  - parity bits?
+- term: checksum
+  aliases: []
+  kind: domain concept
+  wikipedia: Checksum
+  url: https://en.wikipedia.org/wiki/Checksum
+  recommend: link
+  note: ''
+  entries:
+  - 49
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \bchecksums?\b
+- term: erasure code
+  aliases: []
+  kind: domain concept
+  wikipedia: Erasure code
+  url: https://en.wikipedia.org/wiki/Erasure_code
+  recommend: link
+  note: ''
+  entries:
+  - 49
+  lowest_tier: 1
+  uses: 1
+  match:
+  - erasure code
+- term: ZFS
+  aliases: []
+  kind: domain concept
+  wikipedia: ZFS
+  url: https://en.wikipedia.org/wiki/ZFS
+  recommend: link
+  note: ''
+  entries:
+  - 49
+  lowest_tier: 1
+  uses: 1
+  match:
+  - ZFS
+- term: cyclic redundancy check
+  aliases: []
+  kind: domain concept
+  wikipedia: Cyclic redundancy check
+  url: https://en.wikipedia.org/wiki/Cyclic_redundancy_check
+  recommend: link
+  note: ''
+  entries:
+  - 49
+  lowest_tier: 1
+  uses: 2
+  match:
+  - \bCRC\b
+- term: Gaussian elimination
+  aliases: []
+  kind: numerical method
+  wikipedia: Gaussian elimination
+  url: https://en.wikipedia.org/wiki/Gaussian_elimination
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Gaussian elimination
+- term: row echelon form
+  aliases: []
+  kind: linear algebra
+  wikipedia: Row echelon form
+  url: https://en.wikipedia.org/wiki/Row_echelon_form
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 1
+  match:
+  - echelon form
+- term: flow network
+  aliases: []
+  kind: domain concept
+  wikipedia: Flow network
+  url: https://en.wikipedia.org/wiki/Flow_network
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 3
+  match:
+  - network flow
+- term: linear programming
+  aliases: []
+  kind: numerical method
+  wikipedia: Linear programming
+  url: https://en.wikipedia.org/wiki/Linear_programming
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 4
+  match:
+  - linear program
+- term: totally unimodular matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Unimodular matrix
+  url: https://en.wikipedia.org/wiki/Unimodular_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 1
+  match:
+  - totally unimodular
+- term: convex set
+  aliases: []
+  kind: linear algebra
+  wikipedia: Convex set
+  url: https://en.wikipedia.org/wiki/Convex_set
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 2
+  match:
+  - convex set
+- term: traffic assignment
+  aliases: []
+  kind: domain concept
+  wikipedia: Route assignment
+  url: https://en.wikipedia.org/wiki/Route_assignment
+  recommend: link
+  note: ''
+  entries:
+  - 51
+  lowest_tier: 1
+  uses: 1
+  match:
+  - traffic assignment
+- term: process flow diagram
+  aliases: []
+  kind: domain concept
+  wikipedia: Process flow diagram
+  url: https://en.wikipedia.org/wiki/Process_flow_diagram
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 3
+  match:
+  - flowsheet
+- term: chemical reactor
+  aliases: []
+  kind: domain concept
+  wikipedia: Chemical reactor
+  url: https://en.wikipedia.org/wiki/Chemical_reactor
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 8
+  match:
+  - \breactors?\b
+- term: mass balance
+  aliases: []
+  kind: domain concept
+  wikipedia: Mass balance
+  url: https://en.wikipedia.org/wiki/Mass_balance
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 1
+  match:
+  - mass balance
+- term: data reconciliation
+  aliases: []
+  kind: domain concept
+  wikipedia: Data validation and reconciliation
+  url: https://en.wikipedia.org/wiki/Data_validation_and_reconciliation
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 2
+  match:
+  - data reconciliation
+- term: Newton's method
+  aliases: []
+  kind: numerical method
+  wikipedia: Newton's method
+  url: https://en.wikipedia.org/wiki/Newton's_method
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Newton's method
+- term: vapor–liquid equilibrium
+  aliases: []
+  kind: domain concept
+  wikipedia: Vapor–liquid equilibrium
+  url: https://en.wikipedia.org/wiki/Vapor%E2%80%93liquid_equilibrium
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 1
+  match:
+  - vapour–liquid equilibrium
+- term: fixed-point iteration
+  aliases: []
+  kind: numerical method
+  wikipedia: Fixed-point iteration
+  url: https://en.wikipedia.org/wiki/Fixed-point_iteration
+  recommend: link
+  note: ''
+  entries:
+  - 52
+  lowest_tier: 1
+  uses: 1
+  match:
+  - fixed-point iteration

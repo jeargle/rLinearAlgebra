@@ -6,12 +6,12 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 * [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) — Tier 3
 * X-ray crystallography and the phase problem — Tier 3 *(planned)*
-* Mass balance in a chemical process flowsheet — Tier 1 *(planned)*
+* [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) — Tier 1
 
 ## Civil & Mechanical Engineering
 
 * [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) — Tier 3
-* Traffic flow conservation at intersections — Tier 1 *(planned)*
+* [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) — Tier 1
 
 ## Communications & Information Theory
 
@@ -31,7 +31,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 * [PageRank and network centrality](applications/pagerank-and-network-centrality) — Tier 2
 * Consensus and opinion dynamics — Tier 2 *(planned)*
-* RAID-5 parity and XOR recovery — Tier 1 *(planned)*
+* [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) — Tier 1
 
 ## Control & Robotics
 

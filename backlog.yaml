@@ -579,24 +579,6 @@ backlog:
   matrix_structure: dense complex 3x3
   typical_size: 3x3
   worked_example_size: three-mesh RLC network at a single frequency
-- id: 49
-  slug: raid-5-parity-and-xor-recovery
-  status: backlog
-  short_title: RAID-5 parity and XOR recovery
-  nav_field: Computer Science & Networks
-  field: Computer Science
-  subfield: Storage systems
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: GF(2)
-  vector_space: GF(2)^n, one coordinate per stripe unit
-  core_la_object: Single parity equation over GF(2)
-  la_concepts: GF(2) arithmetic; rank; solving one linear equation
-  primary_method: XOR reconstruction
-  matrix_structure: 1 x n over GF(2)
-  typical_size: 1x5
-  worked_example_size: recover a failed stripe unit from the surviving units
 - id: 50
   slug: crc-checksums-as-polynomial-arithmetic-over-gf-2
   status: backlog
@@ -615,39 +597,3 @@ backlog:
   matrix_structure: sparse GF(2) companion matrix
   typical_size: 8-32 bit
   worked_example_size: CRC-8 of a short message, computed both ways
-- id: 51
-  slug: traffic-flow-conservation-at-intersections
-  status: backlog
-  short_title: Traffic flow conservation at intersections
-  nav_field: Civil & Mechanical Engineering
-  field: Engineering
-  subfield: Transportation
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R (nonnegative)
-  vector_space: R^E over road segments
-  core_la_object: Underdetermined system with free variables
-  la_concepts: null space; particular plus homogeneous solution; nonnegativity
-  primary_method: Gaussian elimination; parametrized solution
-  matrix_structure: sparse incidence-like
-  typical_size: 5x7
-  worked_example_size: one-way grid of four intersections
-- id: 52
-  slug: mass-balance-in-a-chemical-process-flowsheet
-  status: backlog
-  short_title: Mass balance in a chemical process flowsheet
-  nav_field: Chemistry & Chemical Engineering
-  field: Engineering
-  subfield: Chemical engineering
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R (nonnegative)
-  vector_space: R^S over process streams
-  core_la_object: Small dense linear system with recycle coupling
-  la_concepts: linear systems; rank; consistency
-  primary_method: Dense solve
-  matrix_structure: dense 6x6
-  typical_size: 6x6
-  worked_example_size: mixer-reactor-separator loop with recycle

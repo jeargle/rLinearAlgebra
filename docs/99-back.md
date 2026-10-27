@@ -41,14 +41,8 @@ the one exception marked below.
   because it is the clearest example of complex scalars doing real work; the small DFT entry, now
   written, is the Tier 1 complex-scalar entry.
 
-*Finite fields (index 48–50)*
-- **RAID-5 parity and XOR recovery** — one linear equation over GF(2), running in every storage array
+*Finite fields (index 50)*
 - **CRC checksums** — polynomials over GF(2) modulo a generator
-
-*Underdetermined systems with free variables (index 51–52)*
-- **Traffic flow conservation at intersections** — particular plus homogeneous solution, with nonnegativity
-  giving the physically admissible set
-- **Mass balance in a process flowsheet** — recycle loops as coupling between equations
 
 ### Would add: graph Laplacians and spectral methods
 - **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality

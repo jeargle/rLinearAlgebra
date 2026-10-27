@@ -19,9 +19,11 @@ Newton form and divided differences,41,"coordinates in the basis 1, (x − x_0),
 North's rule of thumb,9,a test for whether two singular values are too close to separate the modes,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 Nyquist bin,47,"bin N/2, the fastest wave a block of N samples can represent",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 Parseval's theorem,47,"the change of basis preserves length (energy), up to the factor N",The small DFT as a complex unitary matrix,Mathematics,Signal processing
+RAID-6,49,"a second, independent equation over GF(2^8), so two erasures can be solved",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 Runge phenomenon,41,large oscillations of high-degree interpolants at equally spaced nodes,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 R²,20,the squared length of the centered fitted vector over that of the centered data vector,Least squares regression and the hat matrix,Statistics,Applied statistics
 SCF iteration,10,fixed-point iteration on an eigenproblem whose matrix depends on its own solution,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+XOR,49,"addition in GF(2), applied bit by bit",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 affine invariance,42,"transforming the control points transforms the curve, because the basis sums to 1",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 anomaly field,9,the mean-centered data matrix,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 assembly,1,summing small element matrices into the global matrix at shared DOF indices,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
@@ -31,11 +33,15 @@ balancing an equation,4,finding an integer null vector of the element-by-species
 bandwidth / skyline,1,the sparsity pattern induced by node numbering,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 barycentric formula,41,a stable way to evaluate the Lagrange form,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 basis set (quantum chemistry),10,the chosen basis in which H is expressed,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+boundary (cordon) counts,51,"known traffic entering and leaving at the district's edge, summarized in b",Traffic flow conservation at intersections,Engineering,Transportation
 bridge balance,12,a choice of resistances that puts one edge current at zero,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 bundle adjustment,8,sparse nonlinear least squares over all cameras and points at once,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 centrality,6,"a score defined as an eigenvector, or a function, of the graph matrix",PageRank and network centrality,Computer Science,Network science
+circulation,51,"traffic going round a closed loop, a vector in the null space of A",Traffic flow conservation at intersections,Engineering,Transportation
 code rate,7,"k/n, the subspace dimension over the ambient dimension",Linear error-correcting codes,Engineering,Communications/information theory
 codeword,7,an element of the k-dimensional subspace of GF(2)^n,Linear error-correcting codes,Engineering,Communications/information theory
+component balance,52,"one row of the system, for one component around one unit",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
+conservation of flow (continuity),51,"A x = b, one equation per intersection",Traffic flow conservation at intersections,Engineering,Transportation
 conserved moiety,4,a left null vector y; y^T c is constant for all time,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 control points,42,"coordinates of the curve in the Bernstein basis, one point in the plane per basis polynomial",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 control polygon,42,the broken line through the control points; the curve lies in its convex hull,Bezier curves and font rendering,Computer Science,Typography/vector graphics
@@ -47,9 +53,11 @@ dangling node,6,"a zero column, which breaks stochasticity",PageRank and network
 de Casteljau algorithm,42,evaluation by repeated linear interpolation,Bezier curves and font rendering,Computer Science,Typography/vector graphics
 dealer,48,whoever chooses the polynomial and hands out the shares,Shamir secret sharing,Computer Science,Cryptography
 degenerate configuration,8,"point placement that makes A rank-deficient, so the solution is not unique",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+degraded mode,49,"one block of each stripe unknown, recovered on every read by solving the equation",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 degree elevation,42,"the inclusion P_2 → P_3, written in Bernstein coordinates",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 degree of freedom (DOF),1,one scalar unknown — one component of the displacement vector,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 degrees of freedom,20,dimensions; k for the model (the trace of H) and n − k for the residuals,Least squares regression and the hat matrix,Statistics,Applied statistics
+degrees of freedom,52,unknowns minus independent equations; it must be zero for a unique answer,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 degrees of freedom of the network,4,the nullity of S,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 density matrix,10,a positive semidefinite matrix with trace 1,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 design matrix (model matrix) X,20,"the n × k matrix whose columns are the predictors, including a column of 1s for the intercept",Least squares regression and the hat matrix,Statistics,Applied statistics
@@ -63,6 +71,7 @@ embodied / Scope 3 emissions,5,an appended satellite row multiplied through the 
 entangled state,10,a vector that does not factor as a tensor product,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 epipolar constraint,8,the bilinear equation relating corresponding points in two views,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 erasure vs error,7,known vs unknown error position — a column selection vs a search,Linear error-correcting codes,Engineering,Communications/information theory
+erasure vs error,49,a lost block at a known position (solvable) vs a wrong block at an unknown position (only detectable),RAID-5 parity and XOR recovery,Computer Science,Storage systems
 essential / fundamental matrix,8,the rank-2 bilinear form satisfying x'^T E x = 0,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 expectation value,10,the quadratic form psi^* A psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 explained variance,9,sigma_i^2 as a fraction of the total,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
@@ -71,6 +80,7 @@ filter divergence,2,"P losing positive definiteness in finite precision, or an u
 filtered backprojection (FBP),3,an analytic spectral inverse of the forward operator,Computed tomography reconstruction,Medicine,Medical imaging
 final demand,5,the right-hand side d,Leontief input-output economics,Economics,Macroeconomics/EEIO
 fitted values ŷ,20,the orthogonal projection of y onto the column space of X,Least squares regression and the hat matrix,Statistics,Applied statistics
+flow (volume),51,"cars per hour on a segment, an entry of x",Traffic flow conservation at intersections,Engineering,Transportation
 flux,4,"v, the vector of reaction rates",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 frequency bin k,47,the coefficient of the k-th complex wave in the Fourier basis,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 generator matrix G,7,"a basis of the code, written as rows",Linear error-correcting codes,Engineering,Communications/information theory
@@ -84,6 +94,8 @@ intrinsic matrix K,8,"the camera's internal calibration, an upper-triangular 3x3
 inverse DFT,47,"the change of basis back, using the conjugate transpose",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 ket / state vector,10,a unit vector in a complex inner-product space,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 leverage h_ii,20,the i-th diagonal entry of H; how strongly observation i pulls its own fitted value,Least squares regression and the hat matrix,Statistics,Applied statistics
+link (road segment),51,one coordinate of the flow vector,Traffic flow conservation at intersections,Engineering,Transportation
+link closure,51,"forcing a coordinate of x to zero, which may leave no admissible solution",Traffic flow conservation at intersections,Engineering,Transportation
 link matrix,6,the column-stochastic matrix P built from the graph,PageRank and network centrality,Computer Science,Network science
 load vector,1,the right-hand side b,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 loading,9,"one entry of an EOF, i.e. one grid point's weight in that pattern",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
@@ -96,8 +108,10 @@ multicollinearity,20,"columns of X that are nearly linearly dependent, so β is 
 multiplier,5,a single entry of the Leontief inverse,Leontief input-output economics,Economics,Macroeconomics/EEIO
 natural frequency,1,square root of the corresponding eigenvalue,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 negative frequencies,47,"bins N/2 + 1 to N − 1, the complex conjugates of positive ones for a real signal",The small DFT as a complex unitary matrix,Mathematics,Signal processing
+network flow problem,51,"choosing among the admissible x by minimizing a cost, a linear program",Traffic flow conservation at intersections,Engineering,Transportation
 nodal analysis vs mesh analysis,12,solving in potential space (dimension n - 1) vs in cycle space (dimension m - n + 1),Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 nodal conductance (admittance) matrix,12,the weighted graph Laplacian L = A^T C A,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
+node (intersection),51,one row of the conservation system,Traffic flow conservation at intersections,Engineering,Transportation
 node voltage (potential),12,one entry of the vector φ in R^n,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 nodes (interpolation points),41,the d + 1 distinct x-values where the polynomial must match the data,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 normal equations,20,"Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X",Least squares regression and the hat matrix,Statistics,Applied statistics
@@ -105,6 +119,9 @@ observability,2,rank of the stacked matrix [H; HF; HF^2; ...],Kalman filtering f
 observable,10,a Hermitian operator; its eigenvalues are the measurable values,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 observation model H,2,the linear map from state space to measurement space,Kalman filtering for navigation,Engineering,Aerospace/control
 on-curve and off-curve points (font editors),42,"the end control points, which the curve passes through, and the inner control points, which it generally does not",Bezier curves and font rendering,Computer Science,Typography/vector graphics
+origin and destination volumes,51,"the entries of b, net traffic entering the network at each node",Traffic flow conservation at intersections,Engineering,Transportation
+overall (total) balance,52,"the sum of the component balances, a linearly dependent row",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
+parity block,49,the block chosen so that every stripe satisfies d_1 + ⋯ + d_(n−1) + p = 0,RAID-5 parity and XOR recovery,Computer Science,Storage systems
 parity-check matrix H,7,a basis of the code's orthogonal complement; codewords are its null space,Linear error-correcting codes,Engineering,Communications/information theory
 perfect (information-theoretic) secrecy,48,every candidate secret is consistent with the same number of polynomials through any k − 1 shares,Shamir secret sharing,Computer Science,Cryptography
 power iteration,6,repeated multiplication by the matrix,PageRank and network centrality,Computer Science,Network science
@@ -112,10 +129,15 @@ principal component time series,9,"the corresponding right singular vector, scal
 process noise / measurement noise,2,the covariance matrices Q and R,Kalman filtering for navigation,Engineering,Aerospace/control
 productive economy,5,"spectral radius of A below 1, so the Neumann series converges",Leontief input-output economics,Economics,Macroeconomics/EEIO
 projection / ray sum,3,one row of A applied to x — a line integral through the object,Computed tomography reconstruction,Medicine,Medical imaging
+purge stream,52,a small bleed that keeps an inert component from accumulating in the loop,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 raster image (bitmap),42,"a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 rasterization,42,"sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height)",Bezier curves and font rendering,Computer Science,Typography/vector graphics
+read-modify-write (small write),49,"updating parity by p_new = p_old + d_old + d_new, which uses linearity",RAID-5 parity and XOR recovery,Computer Science,Storage systems
+rebuild (resilvering),49,solving the equation for the failed disk's block in every stripe,RAID-5 parity and XOR recovery,Computer Science,Storage systems
 reciprocity,12,"symmetry of L, so the potential at b due to a source at a equals the potential at a due to the same source at b",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 reconstruction,48,"Lagrange interpolation evaluated at x = 0, a fixed linear combination of the shares",Shamir secret sharing,Computer Science,Cryptography
+recycle stream,52,the coupling that turns a triangular system into a genuinely simultaneous one,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
+reference direction,51,the arrow chosen for a segment; a negative flow means net traffic against it,Traffic flow conservation at intersections,Engineering,Transportation
 regression coefficients β,20,coordinates of the fitted vector in the basis given by the columns of X,Least squares regression and the hat matrix,Statistics,Applied statistics
 regularization strength,3,the Tikhonov parameter lambda trading data fit against smoothness,Computed tomography reconstruction,Medicine,Medical imaging
 reprojection error,8,the nonlinear least-squares objective minimized in refinement,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
@@ -123,11 +145,14 @@ residuals,20,the component of y in the orthogonal complement of the column space
 restraint / boundary condition,1,"deleting the corresponding rows and columns, or adding constraint rows",Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 rotated EOF (varimax),9,a deliberately non-orthogonal re-basis of the leading subspace,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 samples,47,the coordinates of the signal in the standard basis (one per time step),The small DFT as a complex unitary matrix,Mathematics,Signal processing
+sequential modular vs equation-oriented simulation,52,fixed-point iteration around loops vs solving the whole linear system at once,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 share,48,"a point (x_i, f(x_i)), one coordinate of the evaluation map's output",Shamir secret sharing,Computer Science,Cryptography
 share refresh (proactive sharing),48,"adding a sharing of 0, a polynomial from the subspace with f(0) = 0",Shamir secret sharing,Computer Science,Cryptography
+single-pass conversion,52,"the fraction of the reactant entering the reactor that reacts, a fixed coefficient",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 sinogram,3,"the measurement vector b, arranged by angle and detector position",Computed tomography reconstruction,Medicine,Medical imaging
 spectral leakage,47,"energy of a wave that is not one of the N basis waves, spread across many coordinates",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 spectrum,47,the coordinate vector in the Fourier basis; its magnitudes are what a spectrum analyzer shows,The small DFT as a complex unitary matrix,Mathematics,Signal processing
+split fraction,52,"the fraction of a component a separator sends to a given outlet, a fixed coefficient",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 square-root filter,2,propagating a Cholesky factor of P instead of P,Kalman filtering for navigation,Engineering,Aerospace/control
 state vector,2,the unknown x being estimated,Kalman filtering for navigation,Engineering,Aerospace/control
 stationary distribution,6,"the dominant eigenvector, normalized",PageRank and network centrality,Computer Science,Network science
@@ -135,15 +160,21 @@ steady state,4,Sv = 0 — v lies in the right null space,Stoichiometric matrices
 stiffness matrix,1,the coefficient matrix K; symmetric positive definite once restraints are applied,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 stoichiometric matrix S,4,"species by reactions, signed integer coefficients",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 streak artifact,3,the visible signature of undersampling — energy in the near-null space,Computed tomography reconstruction,Medicine,Medical imaging
+stream,52,a pipe between units; contributes one unknown per component it carries,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
+stripe,49,"one block from each disk at the same position, the unknowns of one parity equation",RAID-5 parity and XOR recovery,Computer Science,Storage systems
+stripe unit (chunk),49,"one block of a stripe, a vector in GF(2)^w",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 subdivision (splitting a curve),42,change of basis to the Bernstein basis of a subinterval,Bezier curves and font rendering,Computer Science,Typography/vector graphics
 superposition,12,linearity of the solution map s -> φ,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 syndrome,7,"H y^T — depends only on the error, not the message",Linear error-correcting codes,Engineering,Communications/information theory
 system matrix / forward projector,3,"A, the discretized Radon transform",Computed tomography reconstruction,Medicine,Medical imaging
 systematic form,7,"G = [I | P], so the message appears verbatim in the codeword",Linear error-correcting codes,Engineering,Communications/information theory
+tear stream,52,the unknown guessed to start the unit-by-unit iteration around a loop,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 technical coefficient matrix A,5,input from sector i per unit output of sector j,Leontief input-output economics,Economics,Macroeconomics/EEIO
 teleportation,6,the rank-one correction that makes the chain irreducible,PageRank and network centrality,Computer Science,Network science
 tensor product,10,the Kronecker product; why n qubits need dimension 2^n,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 threshold k,48,"the dimension of the polynomial space, deg f + 1",Shamir secret sharing,Computer Science,Cryptography
+traffic counts (detector or loop counts),51,"measured coordinates of x, used to pin down the free variables",Traffic flow conservation at intersections,Engineering,Transportation
 twiddle factor ω^(kn),47,an entry of the DFT matrix,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 unitary gate,10,a norm-preserving complex linear map — the complex analogue of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 vector graphics,42,"shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs",Bezier curves and font rendering,Computer Science,Typography/vector graphics
+write hole,49,"a crash between writing data and parity, which leaves a stripe that violates its equation",RAID-5 parity and XOR recovery,Computer Science,Storage systems
