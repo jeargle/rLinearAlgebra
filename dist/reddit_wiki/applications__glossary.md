@@ -13,17 +13,21 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Domain term | In linear algebra | Entry |
 |---|---|---|
 | (k, n) scheme | a polynomial in a k-dimensional space evaluated at n distinct points | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| adjustment | least-squares estimation of the coordinates from redundant, inconsistent observations | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | affine invariance | transforming the control points transforms the curve, because the basis sums to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | anomaly field | the mean-centered data matrix | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | ART / SIRT | Kaczmarz row-action and related simultaneous iterations | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | assembly | summing small element matrices into the global matrix at shared DOF indices | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | attenuation coefficient | the unknown x, one value per voxel | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
+| attitude / orientation | a rotation matrix R relating a body frame to a reference frame | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | backprojection | applying A transpose to the data | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | balancing an equation | finding an integer null vector of the element-by-species matrix | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | bandwidth / skyline | the sparsity pattern induced by node numbering | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | barycentric formula | a stable way to evaluate the Lagrange form | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | basis set (quantum chemistry) | the chosen basis in which H is expressed | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| benchmark (station, control point) | a surveyed point; its coordinates are unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | Bernstein polynomials | a basis of P_3 consisting of nonnegative functions that sum to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| body frame vs world frame | two orthonormal bases; R changes coordinates from one to the other | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | boundary (cordon) counts | known traffic entering and leaving at the district's edge, summarized in b | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | bridge balance | a choice of resistances that puts one edge current at zero | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | bundle adjustment | sparse nonlinear least squares over all cameras and points at once | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
@@ -40,8 +44,11 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | corrupted share | an error in a Reed-Solomon codeword | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | covariance matrix P | the uncertainty ellipsoid; symmetric positive semidefinite | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | cubic vs quadratic outlines (CFF/PostScript vs TrueType) | curves in P_3 vs curves in P_2 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| current transformation matrix (CTM) | the product of every transform in effect for an element | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | damping factor (alpha) | the weight on P versus the uniform teleportation term | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | dangling node | a zero column, which breaks stochasticity | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
+| datum | the choice that fixes the null space, such as a benchmark held at a known height | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
+| datum defect | the dimension of the null space of the design matrix | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | DC component | bin 0, the coefficient of the constant vector, N times the mean | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | de Casteljau algorithm | evaluation by repeated linear interpolation | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | dealer | whoever chooses the polynomial and hands out the shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
@@ -55,6 +62,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | density matrix | a positive semidefinite matrix with trace 1 | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | design matrix (model matrix) X | the n × k matrix whose columns are the predictors, including a column of 1s for the intercept | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | direct vs indirect requirements | the successive terms A, A^2, A^3 of the Neumann series | [Leontief input-output economics](applications/leontief-input-output-economics) |
+| direction cosine matrix (DCM) | the rotation matrix; its entries are cosines of angles between axes | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | DLT (direct linear transform) | stacking constraints into A and taking the smallest right singular vector | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | dummy variable trap | an exactly dependent set of indicator columns, which makes X rank-deficient | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | easing curve (CSS cubic-bezier) | a cubic in the same basis, used for timing instead of shape | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
@@ -68,6 +76,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | erasure vs error | known vs unknown error position — a column selection vs a search | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | erasure vs error | a lost block at a known position (solvable) vs a wrong block at an unknown position (only detectable) | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | essential / fundamental matrix | the rank-2 bilinear form satisfying x'^T E x = 0 | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| estimable quantity | a function of the coordinates that does not depend on the datum, such as a height difference | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | expectation value | the quadratic form psi^* A psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | explained variance | sigma_i^2 as a fraction of the total | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | extrinsic parameters [R\|t] | the rigid transform from world to camera frame | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
@@ -78,13 +87,19 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | fitted values ŷ | the orthogonal projection of y onto the column space of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | flow (volume) | cars per hour on a segment, an entry of x | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | flux | v, the vector of reaction rates | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| forward kinematics | the product of the joint transforms along a robot arm | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| free network | a minimum-norm solution, with no point held fixed | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | frequency bin k | the coefficient of the k-th complex wave in the Fourier basis | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | generator matrix G | a basis of the code, written as rows | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
+| gimbal lock | Euler angles at which two of the three angles turn about the same axis | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | gross / total output | the unknown x | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | ground (reference node) | the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Hamiltonian | the Hermitian matrix H in H psi = E psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| handedness | the sign of the determinant; +1 for rotations, −1 for reflections | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | hat matrix H | the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | homogeneous coordinates | an added coordinate that turns perspective division into a linear map plus a normalization | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| homogeneous transformation | the 4 × 4 matrix [R t; 0 1] | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| identity transform | the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | innovation / residual | z - Hx, the part of the measurement the prediction did not explain | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | interpolant | the unique element of P_d with the prescribed values at the nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | intrinsic matrix K | the camera's internal calibration, an upper-triangular 3x3 | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
@@ -97,15 +112,20 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Lagrange form | coordinates in the basis that is dual to evaluation at the nodes, so the coordinates are the data values themselves | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | Lebesgue constant | how much the interpolation map can amplify errors in the data | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | Leontief inverse | (I - A)^-1 | [Leontief input-output economics](applications/leontief-input-output-economics) |
+| levelling (spirit levelling) | measuring height differences between benchmarks | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | leverage h_ii | the i-th diagonal entry of H; how strongly observation i pulls its own fitted value | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | link (road segment) | one coordinate of the flow vector | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | link closure | forcing a coordinate of x to zero, which may leave no admissible solution | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | link matrix | the column-stochastic matrix P built from the graph | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | load vector | the right-hand side b | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | loading | one entry of an EOF, i.e. one grid point's weight in that pattern | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
+| local vs global coordinates | reading a product right to left (each step in the parent's frame) or left to right (each step in the newly moved frame) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | loop (mesh) currents | coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1 | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
+| matrix(a, b, c, d, e, f) | the SVG/CSS notation for the 3 × 3 matrix with columns (a, b, 0), (c, d, 0), (e, f, 1) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | mechanism | a nontrivial null space of K — the structure can move with no restoring force | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| minimally constrained vs overconstrained adjustment | removing exactly the null space vs also forcing the network to fit fixed points | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | minimum distance | the smallest weight of a nonzero codeword | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
+| misclosure | the amount by which observations around a loop fail to add up to zero | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | mode shape | an eigenvector of K phi = lambda M phi | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | monomial (power) form | coordinates in the basis 1, x, x², …, x^d | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | multicollinearity | columns of X that are nearly linearly dependent, so β is poorly determined | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
@@ -124,6 +144,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Nyquist bin | bin N/2, the fastest wave a block of N samples can represent | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | observability | rank of the stacked matrix [H; HF; HF^2; ...] | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | observable | a Hermitian operator; its eigenvalues are the measurable values | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| observation equation | one row of the system, an observation written in terms of the unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | observation model H | the linear map from state space to measurement space | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | on-curve and off-curve points (font editors) | the end control points, which the curve passes through, and the inner control points, which it generally does not | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | origin and destination volumes | the entries of b, net traffic entering the network at each node | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
@@ -132,6 +153,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | parity-check matrix H | a basis of the code's orthogonal complement; codewords are its null space | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | Parseval's theorem | the change of basis preserves length (energy), up to the factor N | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | perfect (information-theoretic) secrecy | every candidate secret is consistent with the same number of polynomials through any k − 1 shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| pose (frame, transform) | a rotation and a translation together, a 4 × 4 matrix in SE(3) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | power iteration | repeated multiplication by the matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | principal component time series | the corresponding right singular vector, scaled | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | process noise / measurement noise | the covariance matrices Q and R | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
@@ -141,6 +163,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | RAID-6 | a second, independent equation over GF(2^8), so two erasures can be solved | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | raster image (bitmap) | a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | rasterization | sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height) | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| re-orthonormalization | projecting a drifted matrix back onto the orthogonal matrices | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | read-modify-write (small write) | updating parity by p_new = p_old + d_old + d_new, which uses linearity | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | rebuild (resilvering) | solving the equation for the failed disk's block in every stripe | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | reciprocity | symmetry of L, so the potential at b due to a source at a equals the potential at a due to the same source at b | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
@@ -150,6 +173,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | regression coefficients β | coordinates of the fitted vector in the basis given by the columns of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | regularization strength | the Tikhonov parameter lambda trading data fit against smoothness | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | reprojection error | the nonlinear least-squares objective minimized in refinement | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| residual (correction) v | the change to each observation that makes the set consistent | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | residuals | the component of y in the orthogonal complement of the column space | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | restraint / boundary condition | deleting the corresponding rows and columns, or adding constraint rows | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | rotated EOF (varimax) | a deliberately non-orthogonal re-basis of the leading subspace | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
@@ -186,8 +210,14 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | tensor product | the Kronecker product; why n qubits need dimension 2^n | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | threshold k | the dimension of the polynomial space, deg f + 1 | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | traffic counts (detector or loop counts) | measured coordinates of x, used to pin down the free variables | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
+| transform attribute / CSS transform property | a list of elementary transforms whose matrices are multiplied in the order written | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| transform-origin | the point about which rotation and scaling happen, a conjugation T(c) M T(−c) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| translate, rotate, scale, skew | the elementary matrices of the stack | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | twiddle factor ω^(kn) | an entry of the DFT matrix | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | unitary gate | a norm-preserving complex linear map — the complex analogue of an orthogonal matrix | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| user space vs viewport space | two coordinate systems related by the CTM | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | vector graphics | shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| weight | the inverse of an observation's variance; longer levelling lines get smaller weights | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | write hole | a crash between writing data and parity, which leaves a stripe that violates its equation | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | XOR | addition in GF(2), applied bit by bit | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
+| yaw, pitch, roll (Euler angles) | coordinates on the set of rotations, R = R_z(ψ) R_y(θ) R_x(φ) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |

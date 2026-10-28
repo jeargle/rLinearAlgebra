@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 9 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 12 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,7 +200,7 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 19 written entries, 11 are Tier 1,
+**Current distribution.** Of the 22 written entries, 14 are Tier 1,
 3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
@@ -1554,6 +1554,570 @@ least squares, which updates β̂ as data arrive, leads to the Kalman filter.
 
 ---
 
+## 24. Geodetic network adjustment: least squares where it was invented, and the datum it cannot see
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Surveyors build maps and height systems by measuring between points: how much higher one marker is than
+another, how far apart two hilltops are, which direction one lies from the other. They always take more
+measurements than strictly needed, because every measurement has small errors and the extras reveal
+them. Walk a loop measuring height differences and add them up, and you should return to zero, but you
+never quite do.
+
+Making all the measurements agree, by spreading those discrepancies as fairly as possible, is called
+adjusting the network. It is where the method of least squares was invented, around 1800, by [Legendre](https://en.wikipedia.org/wiki/Adrien-Marie_Legendre)
+and [Gauss](https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss), and national mapping agencies still do exactly this, with millions of measurements.
+
+There is a subtlety at the heart of it. Every measurement compares two points, so the measurements
+together say nothing about where the whole network sits. Raise every height by a metre and every
+measured difference stays the same. Some outside choice, called the [datum](https://en.wikipedia.org/wiki/Geodetic_datum), has to anchor the network,
+such as declaring one marker to be at a known height above sea level. In linear algebra terms, the
+equations have a null space, and the datum is how it is removed.
+
+</details>
+
+**Field:** [Geodesy](https://en.wikipedia.org/wiki/Geodesy), land surveying, mapping, GNSS reference frames
+
+**Tier:** 1 — an adjustment is a least-squares fit whose design matrix is rank-deficient by construction, and choosing a datum is choosing how to remove the null space. Precision and reliability analysis through the covariance of the estimates, and its eigenvalues, are Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: two spaces, as in any least-squares problem: the unknown station coordinates in R^u (u = number of stations for heights, 2 or 3 times that for horizontal or 3D positions) and the observations in R^m. Measurements are differences, so the design matrix has a null space, the datum defect; only coordinate differences are determined.
+
+**Underlying equations.** Observation equations: each measured height difference, distance or direction is a function of station coordinates, plus a measurement error; for [levelling](https://en.wikipedia.org/wiki/Levelling) they are linear, h_j − h_i = measured difference.
+
+**The problem.** Given redundant measurements between stations of a survey network, estimate the station coordinates
+that best fit all the measurements, quantify the discrepancies, and fix the network's position (its
+datum) so that the coordinates are unique, while recognising which results depend on that choice and
+which do not.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| u | number of unknowns | station heights (levelling) or coordinates | integer | — |
+| m | number of observations | measured height differences, distances, directions | integer | — |
+| h | station heights | the unknowns of a levelling network | u × 1 | metres |
+| ℓ | observations | the measured height differences | m × 1 | metres |
+| A | design matrix | row k has −1 for the station a measurement starts from and +1 for the station it ends at | m × u | dimensionless |
+| v | residuals (corrections) | v = A h − ℓ, what each observation must change by to fit the adjusted heights | m × 1 | metres |
+| W | weight matrix | diagonal, with the inverse variance of each observation | m × m | 1/metres² |
+| d | datum defect | dimension of the null space of A | integer | — |
+
+**Formulation.** **Where the equations come from.** The model is a set of observation equations: each measurement is a
+known function of the station coordinates plus a small random error.
+
+**One observation.** A levelling run from [benchmark](https://en.wikipedia.org/wiki/Benchmark_%28surveying%29) i to benchmark j measures the height difference
+between them. The familiar surveying relation is
+
+```
+h_j − h_i = ℓ_k + v_k
+```
+
+the true height difference equals the measured value plus the correction it needs. Only two unknowns
+appear, with coefficients −1 and +1.
+
+**All observations at once.** Stacking one such row per measurement gives
+
+```
+A h = ℓ + v
+```
+
+with one row of A per observation and one column per station. With more observations than needed, the
+measured ℓ is not in the column space of A, so no heights satisfy every equation exactly. The
+adjustment chooses h to minimize the weighted sum of squared corrections, vᵀ W v, which leads to the
+normal equations
+
+```
+Aᵀ W A h = Aᵀ W ℓ
+```
+
+the same equations as in the regression entry, with the weights recording that some measurements are
+more reliable than others.
+
+**The datum defect.** Every row of A has one +1 and one −1, so A 1 = 0: adding the same constant to
+every height leaves every residual unchanged. The null space of A is spanned by the all-ones vector,
+the datum defect is d = 1, and Aᵀ W A is singular. The normal equations have infinitely many solutions,
+all differing by a constant. A datum is the extra information that picks one: hold a benchmark at a
+known height (a minimal constraint), or choose the solution of minimum length (a free network).
+
+**Worked case: a levelling loop.** Three benchmarks P, Q, R. Benchmark P is held at h_P = 100.000 m, and
+three equally weighted runs give
+
+```
+h_Q − h_P = 2.0 m,     h_R − h_Q = 1.0 m,     h_R − h_P = 3.1 m
+```
+
+Around the loop the first two should add up to the third, but 2.0 + 1.0 = 3.0, a misclosure of 0.1 m.
+With h_P fixed, two unknowns remain and three equations, and the least-squares solution is
+
+```
+h_Q = 102.033 m,     h_R = 103.067 m,     v = (+0.033, +0.033, −0.033) m
+```
+
+The misclosure is shared equally among the three equally reliable runs. Holding R at 103.000 m instead
+gives h_P = 99.933 m and h_Q = 101.967 m: different heights, but exactly the same height differences and
+the same corrections. The free-network (minimum-norm) solution near (100, 102, 103) gives
+(99.967, 102.000, 103.033), again with the same differences.
+
+**Matrix structure.** `A` is sparse: a levelling observation has two nonzeros, a horizontal distance or direction four to six.
+For levelling it is the incidence matrix of the network graph, the same matrix as in the resistor and
+traffic entries, and Aᵀ W A is a weighted graph Laplacian. Its null space, the datum defect, has
+dimension 1 for heights, 3 for a 2D network of distances (two shifts and a rotation), 4 for a 2D network
+of angles only (add scale), and up to 7 in 3D (three shifts, three rotations and a scale).
+
+**What is computed.** [Weighted least squares](https://en.wikipedia.org/wiki/Weighted_least_squares) with datum constraints. Large adjustments form Aᵀ W A, which is sparse, and solve
+it with sparse Cholesky after removing the datum, or use QR on A. National datums were built this way;
+the North American height datum [NAVD 88](https://en.wikipedia.org/wiki/North_American_Vertical_Datum_of_1988) is a continent-wide levelling adjustment held at a single tide
+gauge benchmark in Quebec. Modern GNSS reference frames such as the [International Terrestrial Reference](https://en.wikipedia.org/wiki/International_Terrestrial_Reference_System_and_Frame)
+Frame are adjustments of millions of satellite observations with the same rank-deficient structure.
+
+**Why linear algebra is the right tool.** The surveyor's notions are subspace notions. Redundancy means more rows than the rank, misclosure means
+the observations are not in the column space, and the adjustment is an orthogonal projection onto it
+(weighted by W). The datum defect is the null space, its size depends on what was measured (heights,
+distances, angles), and choosing a datum is choosing a complement to it. Quantities that do not depend
+on the datum, such as height differences and distances, are the estimable ones: those whose value is
+the same for every solution of the normal equations.
+
+**Pitfall worth teaching.** Coordinates from different datums cannot be compared, even though each set is correct. In the worked
+case, fixing P or fixing R gives heights that differ by 0.067 m at every benchmark, with identical
+differences. Deformation and subsidence monitoring compares a network's coordinates between surveys
+years apart, and if the two adjustments used different datum points, or a datum point that itself moved,
+the comparison shows apparent motion everywhere that is entirely an artefact of the datum. The test is
+the one linear algebra suggests: compare only datum-independent quantities, or transform both solutions
+to the same datum first. A second consequence is that a solver handed the unconstrained normal equations
+either fails, because Aᵀ W A is singular, or returns one particular solution chosen silently by its
+pivoting, so the datum has to be chosen explicitly.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| benchmark (station, control point) | a surveyed point; its coordinates are unknowns |
+| observation equation | one row of the system, an observation written in terms of the unknowns |
+| levelling (spirit levelling) | measuring height differences between benchmarks |
+| misclosure | the amount by which observations around a loop fail to add up to zero |
+| adjustment | least-squares estimation of the coordinates from redundant, inconsistent observations |
+| residual (correction) v | the change to each observation that makes the set consistent |
+| datum | the choice that fixes the null space, such as a benchmark held at a known height |
+| datum defect | the dimension of the null space of the design matrix |
+| minimally constrained vs overconstrained adjustment | removing exactly the null space vs also forcing the network to fit fixed points |
+| free network | a minimum-norm solution, with no point held fixed |
+| estimable quantity | a function of the coordinates that does not depend on the datum, such as a height difference |
+| weight | the inverse of an observation's variance; longer levelling lines get smaller weights |
+
+**Extensions.** Horizontal and 3D networks have nonlinear observation equations (distances and angles), solved by
+linearizing about approximate coordinates and adjusting repeatedly, each step a rank-deficient linear
+least-squares problem like this one. The covariance matrix (Aᵀ W A)⁻¹, computed in a chosen datum,
+describes precision, and its eigenvectors give error ellipses (Tier 2). The regression entry is the same
+projection in statistical vocabulary; the Massey and Colley ranking entry has exactly this
+incidence-matrix structure and the same one-dimensional null space, because game results, like height
+differences, only compare pairs; and GNSS positioning is the trilateration on-ramp of the Kalman
+filtering entry.
+
+---
+
+## 36. 2D transforms in SVG, CSS and Canvas: why translation needs a third coordinate
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Every web page, drawing program and vector illustration moves shapes around: it shifts them, turns them,
+stretches them and slants them. Web designers write these moves as short instructions, such as
+"translate this by 50 pixels, then rotate it by 30 degrees", and the browser applies them to every point
+of the shape.
+
+Two facts surprise people. The first is that order matters: turning a shape and then sliding it puts
+it somewhere different from sliding it and then turning it. The second is that the code which
+represents these moves uses tables of nine numbers, three by three, even though the screen is only two
+dimensional.
+
+Both have the same explanation. Turning and stretching are the kind of operation a matrix performs, and
+doing one after another is multiplying matrices, which depends on the order. Sliding is different: it
+moves the origin, and a matrix acting on two coordinates can never do that. The fix is to give every
+point a third coordinate that is always 1. With it, a slide becomes a matrix too, and every combination
+of moves, however long, collapses into a single three-by-three matrix.
+
+</details>
+
+**Field:** Computer graphics, web front-end development, vector illustration, user interfaces
+
+**Tier:** 1 — every transform is a 3 × 3 matrix acting on homogeneous coordinates, and a transform stack is a matrix product. Splitting a general transform back into rotation, scale and [shear](https://en.wikipedia.org/wiki/Shear_mapping) uses the SVD or the [polar decomposition](https://en.wikipedia.org/wiki/Polar_decomposition), which are Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: points of the plane R^2, represented in homogeneous coordinates as vectors (x, y, 1) in R^3. The points themselves form the plane z = 1 inside R^3, which is not a subspace (it misses the origin); the [affine](https://en.wikipedia.org/wiki/Affine_transformation) maps of the plane are the 3 × 3 matrices with bottom row (0, 0, 1), which map that plane to itself.
+
+**Underlying equations.** Matrix products acting on homogeneous coordinates: p′ = M p.
+
+**The problem.** Represent the moves of 2D graphics (translation, rotation, scaling, shear, and any sequence of them) so
+that a whole sequence can be combined into one transform, applied quickly to every point of a drawing,
+inverted (to find which point of a shape lies under the mouse pointer), and written in the notations
+that [SVG](https://en.wikipedia.org/wiki/SVG), [CSS](https://en.wikipedia.org/wiki/CSS) and the HTML [Canvas](https://en.wikipedia.org/wiki/Canvas_element) use.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| (x, y) | point | a point of the drawing | 2 numbers | pixels or user units |
+| p | homogeneous point | (x, y, 1) | 3 × 1 | pixels in the first two entries |
+| L | linear part | rotation, scaling and shear together | 2 × 2 | dimensionless |
+| t | translation | the shift (e, f) | 2 × 1 | pixels |
+| M | affine transform | the 3 × 3 matrix with L in its top-left 2 × 2 block, t in its last column, and bottom row (0, 0, 1) | 3 × 3 | mixed: L dimensionless, t in pixels |
+| T(e, f) | translation matrix | moves every point by (e, f) | 3 × 3 | — |
+| R(θ) | rotation matrix | turns every point by θ about the origin | 3 × 3 | — |
+| S(s_x, s_y) | scaling matrix | stretches by s_x horizontally and s_y vertically | 3 × 3 | — |
+| θ | angle | rotation angle; positive turns the x-axis toward the y-axis | scalar | degrees or radians |
+| c | centre | a point about which to rotate or scale | 2 × 1 | pixels |
+
+Screen coordinates usually point y downwards, so a positive θ in SVG and CSS turns shapes clockwise on
+the screen, even though the matrix is the same as the textbook rotation.
+
+**Formulation.** **Where the equations come from.** The model is a choice of coordinates: points carry an extra
+coordinate fixed at 1 so that every move of the plane becomes a matrix product.
+
+**Linear moves.** Rotation, scaling and shear fix the origin and act on (x, y) through a 2 × 2 matrix.
+The familiar rotation formula,
+
+```
+x′ = x cos θ − y sin θ
+y′ = x sin θ + y cos θ
+```
+
+is the matrix-vector product
+
+```
+[ x′ ]   [ cos θ  −sin θ ] [ x ]
+[ y′ ] = [ sin θ   cos θ ] [ y ]
+```
+
+and this 2 × 2 matrix is the linear part L of a rotation.
+
+**Translation is not linear.** The shift x′ = x + e, y′ = y + f moves the origin to (e, f), and every
+linear map sends the origin to itself, so no 2 × 2 matrix can do it. A general move of the plane is an
+affine map, a linear part followed by a shift: (x′, y′) = L (x, y) + t.
+
+**Homogeneous coordinates.** Represent (x, y) by p = (x, y, 1). Then the affine map is one matrix
+product in ℝ³:
+
+```
+[ x′ ]   [ a  c  e ] [ x ]                  [ a  c ]              [ e ]
+[ y′ ] = [ b  d  f ] [ y ]       with   L = [ b  d ]   and   t = [ f ]
+[ 1  ]   [ 0  0  1 ] [ 1 ]
+```
+
+The 1 in the last coordinate picks up the translation column, and the bottom row keeps it equal to 1.
+This 3 × 3 matrix is exactly what SVG and CSS write as matrix(a, b, c, d, e, f): the six numbers are
+the first two rows, read column by column.
+
+**A transform stack is a product.** SVG's transform="translate(2, 0) rotate(90)", CSS's
+transform: translate(2px, 0) rotate(90deg), and the Canvas calls ctx.translate(2, 0); ctx.rotate(…)
+all mean the matrix
+
+```
+M = T(2, 0) R(90°)
+```
+
+applied to each point as M p = T(2, 0) (R(90°) p). The rightmost transform acts on the point first.
+
+**Worked case: one point, two orders.** The two elementary matrices are
+
+```
+            [ 1  0  2 ]                [ 0  −1  0 ]
+T(2, 0)  =  [ 0  1  0 ]     R(90°)  =  [ 1   0  0 ]
+            [ 0  0  1 ]                [ 0   0  1 ]
+```
+
+and their products in the two orders are
+
+```
+                    [ 0  −1  2 ]                        [ 0  −1  0 ]
+T(2, 0) R(90°)  =   [ 1   0  0 ]     R(90°) T(2, 0)  =  [ 1   0  2 ]
+                    [ 0   0  1 ]                        [ 0   0  1 ]
+```
+
+Applied to the point (1, 0), written as (1, 0, 1):
+
+```
+[ 0  −1  2 ] [ 1 ]   [ 2 ]          [ 0  −1  0 ] [ 1 ]   [ 0 ]
+[ 1   0  0 ] [ 0 ] = [ 1 ]          [ 1   0  2 ] [ 0 ] = [ 3 ]
+[ 0   0  1 ] [ 1 ]   [ 1 ]          [ 0   0  1 ] [ 1 ]   [ 1 ]
+
+translate(2, 0) rotate(90):         rotate(90) translate(2, 0):
+rotate to (0, 1), shift to (2, 1)   shift to (3, 0), rotate to (0, 3)
+```
+
+Matrix multiplication does not commute, and the two programs draw in different places.
+
+**Rotating about a point.** rotate(θ, c_x, c_y) in SVG, or a CSS transform-origin, turns a shape about
+the point c rather than about the origin. It is three moves: shift c to the origin, rotate, shift back,
+
+```
+T(c) R(θ) T(−c)
+```
+
+For θ = 90° about c = (1, 1):
+
+```
+[ 1  0  1 ] [ 0  −1  0 ] [ 1  0  −1 ]   [ 0  −1  2 ]
+[ 0  1  1 ] [ 1   0  0 ] [ 0  1  −1 ] = [ 1   0  0 ]
+[ 0  0  1 ] [ 0   0  1 ] [ 0  0   1 ]   [ 0   0  1 ]
+   T(c)        R(90°)       T(−c)
+```
+
+and the result sends (2, 1) to (1, 2):
+
+```
+[ 0  −1  2 ] [ 2 ]   [ 1 ]
+[ 1   0  0 ] [ 1 ] = [ 2 ]
+[ 0   0  1 ] [ 1 ]   [ 1 ]
+```
+
+a quarter turn about (1, 1). That matrix happens to equal T(2, 0) R(90°) from the worked case: a rotation
+about one point is the same move as a rotation about the origin followed by some translation.
+
+**Undoing a transform.** The inverse of a product reverses the order: (T R)⁻¹ = R⁻¹ T⁻¹, so to undo
+"rotate, then translate" you untranslate first and then unrotate. For an affine matrix the inverse is
+
+```
+[ L   t ]⁻¹     [ L⁻¹   −L⁻¹ t ]
+[ 0   1 ]    =  [  0       1   ]
+```
+
+written in blocks (the 0 is the row (0, 0)), which exists whenever L is invertible.
+
+**Matrix structure.** Dense 3 × 3 with bottom row (0, 0, 1), so six numbers determine it. Products and inverses of such
+matrices have the same bottom row: affine maps are closed under composition and inversion. Rotations
+have an orthogonal L, uniform scalings a multiple of the identity, and shears a triangular L.
+
+**What is computed.** A renderer multiplies the transforms along the path from the page down to each shape into one current
+transformation matrix, then applies it to every point (6 multiplications and 4 additions per point).
+For mouse events and hit testing it applies the inverse matrix to the pointer position, to find where
+in the shape's own coordinates the click landed. Browsers expose these matrices directly, for example
+through DOMMatrix and getScreenCTM().
+
+**Why linear algebra is the right tool.** Representing moves as matrices turns composition into multiplication, so any sequence of transforms,
+however long or nested, is one matrix computed once. Laws that designers learn by trial and error are
+theorems: order matters because multiplication does not commute; undoing a sequence reverses its order;
+rotating about a point is a conjugation T(c) R T(−c). Affine maps send straight lines to straight lines
+and parallel lines to parallel lines, but not circles to circles or right angles to right angles, which
+is why a scaled circle becomes an ellipse.
+
+**Pitfall worth teaching.** The same list of transforms can be read in two opposite orders, and both readings are correct. Read
+right to left, translate(2, 0) rotate(90) rotates the point in the original axes and then shifts it.
+Read left to right, it first moves the coordinate system by (2, 0) and then rotates the moved axes, and
+the shape is drawn in those new axes. Both describe the matrix product T R, and both put (1, 0) at
+(2, 1). Mixing the two readings within one stack is how most "the rotation happened about the wrong
+point" bugs start. A second trap is the convention for writing vectors. SVG, CSS and Canvas use column
+vectors, M p, but some graphics libraries use row vectors, p M, with every matrix transposed and every
+product reversed. Copying a matrix or a multiplication order between the two conventions without
+transposing gives a transform that is close enough to look plausible and wrong enough to fail.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| transform attribute / CSS transform property | a list of elementary transforms whose matrices are multiplied in the order written |
+| matrix(a, b, c, d, e, f) | the SVG/CSS notation for the 3 × 3 matrix with columns (a, b, 0), (c, d, 0), (e, f, 1) |
+| current transformation matrix (CTM) | the product of every transform in effect for an element |
+| user space vs viewport space | two coordinate systems related by the CTM |
+| transform-origin | the point about which rotation and scaling happen, a conjugation T(c) M T(−c) |
+| translate, rotate, scale, skew | the elementary matrices of the stack |
+| local vs global coordinates | reading a product right to left (each step in the parent's frame) or left to right (each step in the newly moved frame) |
+| identity transform | the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0) |
+
+**Extensions.** 3D graphics uses the same idea with 4 × 4 matrices, and adds the perspective projection that affine
+maps cannot express (the 3D viewing entry). Rigid motions, rotation plus translation with no stretching,
+are the 3D rotations and rigid-body pose entry. Splitting a general matrix(a, b, c, d, e, f) back into
+"rotate, scale, rotate", which animation libraries do to interpolate between two transforms, is the SVD
+or the polar decomposition (Tier 2). [Bézier curves](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) transform correctly when their control points are
+transformed by an affine map, which is why fonts and SVG paths can be scaled losslessly (the Bézier
+entry).
+
+---
+
+## 38. 3D rotations and pose: orthogonal matrices for robots, drones and spacecraft
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A robot arm, a drone, a satellite and a character in an animated film all have to keep track of which
+way they are facing. The usual way to describe an orientation is to say where an object's own
+front, left and up directions point, measured in the coordinates of the room, the Earth or the stars.
+
+Those three directions are always perpendicular to each other and always of unit length, because
+turning an object cannot bend or stretch it. Written as the columns of a three-by-three table of
+numbers, they form a [rotation matrix](https://en.wikipedia.org/wiki/Rotation_matrix). Turning an object twice is multiplying two such matrices, and,
+as anyone who has rotated a book about two different axes knows, the order of the turns matters.
+
+The popular alternative, three angles called [yaw](https://en.wikipedia.org/wiki/Aircraft_principal_axes), pitch and roll, is easier to read but has a famous
+flaw. At one particular pitch, two of the three angles start turning the object about the same axis,
+and one direction of motion simply disappears from the description. Spacecraft guidance systems had to
+be designed around that flaw. The matrix description has no such blind spot, but it has its own trap,
+which this entry ends with.
+
+</details>
+
+**Field:** Robotics, aerospace guidance and attitude control, computer vision, animation
+
+**Tier:** 1 — rotations are 3 × 3 [orthogonal matrices](https://en.wikipedia.org/wiki/Orthogonal_matrix) with [determinant](https://en.wikipedia.org/wiki/Determinant) +1, poses are 4 × 4 homogeneous matrices, and composing them is multiplication. [Quaternions](https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation) and the rotation group as a [Lie group](https://en.wikipedia.org/wiki/Lie_group) are the Tier 3 extensions.
+
+**Scalars and vectors.** Scalar field: R. Vectors: vectors in R^3 (directions, positions, angular axes). A rotation is a 3 × 3 matrix in the set [SO(3)](https://en.wikipedia.org/wiki/3D_rotation_group) of orthogonal matrices with determinant +1. SO(3) is a group under multiplication but not a subspace of the 9-dimensional space of 3 × 3 matrices: the sum or average of two rotations is generally not a rotation. Poses (rotation plus position) are 4 × 4 matrices in SE(3), acting on homogeneous coordinates (x, y, z, 1).
+
+**Underlying equations.** Matrix products: v′ = R v for a rotation, and p′ = T p for a pose in homogeneous coordinates.
+
+**The problem.** Represent the orientation of a rigid body in three dimensions, combine successive rotations, convert
+vectors between the body's own axes and a fixed reference frame, track position and orientation
+together (pose) along a chain of joints, and avoid the failure modes of angle-based descriptions.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| R | rotation matrix | its columns are the body's x, y and z axes, written in reference-frame coordinates | 3 × 3 | dimensionless |
+| v | vector | a direction or displacement | 3 × 1 | metres, or dimensionless for directions |
+| R_x(φ), R_y(θ), R_z(ψ) | elementary rotations | turns about the x, y or z axis by the given angle | 3 × 3 | dimensionless |
+| φ, θ, ψ | roll, pitch, yaw | Euler angles, here in the z-y-x convention | scalars | radians or degrees |
+| t | position | where the body's origin sits in the reference frame | 3 × 1 | metres |
+| T | pose | the 4 × 4 matrix [R t; 0 0 0 1] | 4 × 4 | mixed: R dimensionless, t in metres |
+| p | homogeneous point | (x, y, z, 1) | 4 × 1 | metres in the first three entries |
+| I | identity matrix | — | 3 × 3 | — |
+
+**Formulation.** **Where the equations come from.** The model is the geometry of rigid motion: a rotation preserves
+lengths and angles and does not turn left-handed into right-handed.
+
+**What makes a matrix a rotation.** Preserving lengths and angles means preserving dot products, so
+(R u) · (R v) = u · v for all u and v. That is equivalent to
+
+```
+Rᵀ R = I
+```
+
+that is, the columns of R are orthonormal. Then det(R)² = 1, so det R = ±1. Rotations have det R = +1;
+matrices with det R = −1 are reflections, which swap left and right. The condition Rᵀ R = I also says
+that the inverse is the transpose, R⁻¹ = Rᵀ, so undoing a rotation costs nothing.
+
+**The elementary rotations.** Turning about one coordinate axis leaves that axis alone and applies the
+familiar 2D rotation to the other two coordinates. About the x-axis by φ, the y–z plane turns:
+
+```
+R_x(φ) = [ 1     0        0    ]
+         [ 0   cos φ   −sin φ  ]
+         [ 0   sin φ    cos φ  ]
+```
+
+About the y-axis by θ, the z–x plane turns:
+
+```
+R_y(θ) = [  cos θ   0   sin θ ]
+         [    0     1     0   ]
+         [ −sin θ   0   cos θ ]
+```
+
+About the z-axis by ψ, the x–y plane turns:
+
+```
+R_z(ψ) = [ cos ψ  −sin ψ   0 ]
+         [ sin ψ   cos ψ   0 ]
+         [   0       0     1 ]
+```
+
+The minus sign in R_y sits below the diagonal rather than above it. That is not a different
+convention: a positive turn about y carries z toward x (the cyclic order x → y → z → x), and in the
+usual x, y, z ordering of rows and columns that puts −sin θ in the bottom-left corner.
+
+**Composition, and its order.** Applying R_1 and then R_2 is the product R_2 R_1, and it depends on the
+order. Take the vector e_1 = (1, 0, 0) and two quarter turns:
+
+```
+R_x(90°) R_z(90°) e_1 = (0, 0, 1)     first about z, then about x
+R_z(90°) R_x(90°) e_1 = (0, 1, 0)     first about x, then about z
+```
+
+**[Euler angles](https://en.wikipedia.org/wiki/Euler_angles).** Aerospace and robotics often describe an attitude by yaw ψ, pitch θ and roll φ, with
+
+```
+R = R_z(ψ) R_y(θ) R_x(φ)
+```
+
+Three numbers are enough, because a rotation matrix has nine entries but six independent constraints
+(three unit lengths and three right angles), leaving three degrees of freedom.
+
+**Worked case: [gimbal lock](https://en.wikipedia.org/wiki/Gimbal_lock).** At pitch θ = 90°, the product collapses. Computing it gives
+
+```
+R_z(ψ) R_y(90°) R_x(φ) = [   0    sin(φ − ψ)   cos(φ − ψ) ]
+                         [   0    cos(φ − ψ)  −sin(φ − ψ) ]
+                         [  −1        0             0     ]
+```
+
+which depends on yaw and roll only through their difference φ − ψ. Increasing both by the same amount
+changes nothing: two of the three angles now turn the body about the same axis, and one direction of
+rotation cannot be expressed by small changes of the angles at all. The orientation is fine; the
+coordinates describing it have failed. A spacecraft guidance platform built from three physical gimbals
+has the same failure mechanically, which is why the Apollo crews had to keep their spacecraft away from
+that orientation.
+
+**Pose.** Position and orientation together act on homogeneous coordinates, exactly as in the 2D
+affine-transforms entry:
+
+```
+T = [ R   t ]        T p = (R (x, y, z) + t, 1)        T⁻¹ = [ Rᵀ   −Rᵀ t ]
+    [ 0   1 ]                                                [ 0      1   ]
+```
+
+A robot arm's [forward kinematics](https://en.wikipedia.org/wiki/Forward_kinematics) is the product T_1 T_2 ⋯ T_k of the transforms of its joints, read
+from the base out to the gripper.
+
+**Matrix structure.** Rotations are dense 3 × 3 orthogonal matrices with determinant +1; poses are 4 × 4 with bottom row
+(0, 0, 0, 1). Both sets are closed under multiplication and inversion, which makes them groups, SO(3)
+and SE(3). Neither is closed under addition or scaling, so neither is a vector space, and that fact is
+the pitfall below.
+
+**What is computed.** Products of small matrices: composing joint transforms, converting sensor readings from a body frame to
+a world frame (v_world = R v_body) and back (v_body = Rᵀ v_world). Flight software and robot
+controllers do this thousands of times per second. Long chains of products accumulate rounding error,
+so software periodically re-orthonormalizes R, for example with [Gram–Schmidt](https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process) on its columns, and many
+systems store orientations as quaternions instead.
+
+**Why linear algebra is the right tool.** A rotation is a change between two orthonormal bases, the body's axes and the reference axes, and
+everything follows from that. Its matrix has the new axes as columns; its inverse is its transpose
+because the bases are orthonormal; composing rotations multiplies matrices, so order matters; and a
+pose is a rotation plus a translation, which homogeneous coordinates turn into one matrix. Gimbal lock
+is understood as a failure of a coordinate system on the set of rotations, not of the rotations, which
+is why the cure is a better description rather than a better angle.
+
+**Pitfall worth teaching.** Rotations are not a subspace, so the operations that work on vectors do not work on rotations.
+Averaging two rotation matrices entry by entry does not give a rotation halfway between them. The
+average of the identity and R_z(180°) is diag(0, 0, 1), which squashes every vector onto the z-axis and
+is not invertible. The average of the identity and R_z(60°) has determinant 0.75 and shrinks vectors in
+the xy-plane to about 87% of their length, although the rotation halfway between them, R_z(30°), shrinks
+nothing. The same failure appears when animating by interpolating matrix entries, when smoothing noisy
+attitude estimates with an ordinary filter, and when integrating small rotation updates by addition:
+the result drifts away from orthogonality and objects visibly shrink or shear. Interpolating the angle
+works for rotations about one fixed axis; in general it needs quaternions or the rotation group's own
+geometry (the Tier 3 extensions).
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| attitude / orientation | a rotation matrix R relating a body frame to a reference frame |
+| direction cosine matrix (DCM) | the rotation matrix; its entries are cosines of angles between axes |
+| body frame vs world frame | two orthonormal bases; R changes coordinates from one to the other |
+| yaw, pitch, roll (Euler angles) | coordinates on the set of rotations, R = R_z(ψ) R_y(θ) R_x(φ) |
+| gimbal lock | Euler angles at which two of the three angles turn about the same axis |
+| pose (frame, transform) | a rotation and a translation together, a 4 × 4 matrix in SE(3) |
+| forward kinematics | the product of the joint transforms along a robot arm |
+| homogeneous transformation | the 4 × 4 matrix [R t; 0 1] |
+| re-orthonormalization | projecting a drifted matrix back onto the orthogonal matrices |
+| handedness | the sign of the determinant; +1 for rotations, −1 for reflections |
+
+**Extensions.** Unit quaternions represent rotations with four numbers and no gimbal lock, and interpolating them
+([slerp](https://en.wikipedia.org/wiki/Spherical_linear_interpolation)) gives the "halfway rotation" that averaging matrices does not. The rotation group SO(3) is a Lie
+group, and small rotations correspond to [skew-symmetric](https://en.wikipedia.org/wiki/Skew-symmetric_matrix) matrices, the setting of modern attitude
+estimation and robot control (Tier 3). Rotation averaging in multiple-view geometry estimates many
+camera orientations at once (the multiple-view geometry entry). The 2D affine-transforms entry is the
+planar case of the pose matrix, and the 3D viewing entry adds the perspective projection that takes
+poses to the screen. [Inertial navigation](https://en.wikipedia.org/wiki/Inertial_navigation_system) uses R to rotate accelerometer readings into the world frame
+before integrating them (the Kalman filtering entry).
+
+---
+
 ## 41. Polynomial interpolation: one polynomial, many bases, very different arithmetic
 
 <details>
@@ -1639,11 +2203,18 @@ nodes, so the matrix is lower triangular, and the coefficients (the [divided dif
 forward substitution. Adding a new node adds a row and a column without changing the earlier
 coefficients.
 
-**Worked case: a parabola through (0, 1), (1, 3), (2, 2).**
+**Worked case: a parabola through (0, 1), (1, 3), (2, 2).** In the monomial basis, the three
+conditions p(0) = 1, p(1) = 3, p(2) = 2 are the Vandermonde system
 
 ```
-monomial:  V a = y  with  V = [1 0 0; 1 1 1; 1 2 4],  so  a = (1, 3.5, −1.5)
-           p(x) = 1 + 3.5x − 1.5x²
+[ 1  0  0 ] [ a_0 ]   [ 1 ]
+[ 1  1  1 ] [ a_1 ] = [ 3 ]          so   a = (1, 3.5, −1.5)   and   p(x) = 1 + 3.5x − 1.5x²
+[ 1  2  4 ] [ a_2 ]   [ 2 ]
+```
+
+The other two bases give the same polynomial with no dense solve:
+
+```
 Newton:    c_0 = 1,  c_1 = (3 − 1)/(1 − 0) = 2,  c_2 = ((2 − 3)/(2 − 1) − 2)/(2 − 0) = −1.5
            p(x) = 1 + 2x − 1.5 x(x − 1)
 Lagrange:  p(x) = 1·ℓ_0(x) + 3·ℓ_1(x) + 2·ℓ_2(x)
@@ -1697,7 +2268,7 @@ the interval, whichever basis is used. That one is cured by moving the nodes, no
 **Extensions.** Least-squares fitting with more points than coefficients is the basis-fitting entry, and the same
 Vandermonde matrix appears there as a design matrix. Shamir secret sharing interpolates over GF(p),
 where there is no rounding and the conditioning problem disappears. Finite-difference stencils solve a
-small Vandermonde system for derivative weights. [Bézier curves](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) use the [Bernstein](https://en.wikipedia.org/wiki/Bernstein_polynomial) basis of the same
+small Vandermonde system for derivative weights. Bézier curves use the [Bernstein](https://en.wikipedia.org/wiki/Bernstein_polynomial) basis of the same
 polynomial space. [Splines](https://en.wikipedia.org/wiki/Spline_interpolation) interpolate with piecewise polynomials and avoid the Runge phenomenon.
 [Gaussian quadrature](https://en.wikipedia.org/wiki/Gaussian_quadrature) chooses its nodes as the roots of orthogonal polynomials, and the [Lebesgue constant](https://en.wikipedia.org/wiki/Lebesgue_constant)
 measures how much a choice of nodes can amplify data errors.
@@ -1845,7 +2416,7 @@ quadratic" is whether a vector lies in a subspace, settled by one linear functio
 is chosen for geometric reasons (nonnegative functions that sum to 1), which make its coordinates behave
 like weighted averages of points. That property is what makes them meaningful to a designer.
 
-**Pitfall worth teaching.** The control points transform correctly under [affine](https://en.wikipedia.org/wiki/Affine_transformation) maps, and only under them. Because the basis
+**Pitfall worth teaching.** The control points transform correctly under affine maps, and only under them. Because the basis
 polynomials sum to 1, B(t) is a weighted average of the control points with weights that add up to 1,
 so scaling, rotating, shearing or moving the control points does the same to every point of the curve.
 That is why a font can be scaled by transforming a few points. A perspective ([projective) transformation](https://en.wikipedia.org/wiki/Homography)
@@ -1976,7 +2547,7 @@ Fᴴ F = N I
 
 So the inverse is just the [conjugate transpose](https://en.wikipedia.org/wiki/Conjugate_transpose), scaled: x = (1/N) Fᴴ X, which is the inverse DFT
 formula x_n = (1/N) Σ X_k e^(2πi kn/N). Scaled to U = F/√N, the matrix is unitary, Uᴴ U = I: the
-complex version of an [orthogonal matrix](https://en.wikipedia.org/wiki/Orthogonal_matrix), a rotation of ℂ^N.
+complex version of an orthogonal matrix, a rotation of ℂ^N.
 
 **[Parseval](https://en.wikipedia.org/wiki/Parseval's_theorem)'s identity.** A unitary change of basis preserves length, so Σ |x_n|² = (1/N) Σ |X_k|²:
 the energy of the signal can be added up over time or over frequency.
@@ -2731,6 +3302,9 @@ Neumann series as the Leontief entry.
 | 49 | Storage systems | One linear equation over GF(2); erasures vs errors | XOR reconstruction |
 | 51 | Transportation | Underdetermined system; null space; nonnegativity | Gaussian elimination |
 | 52 | Chemical engineering | Square system with recycle coupling; redundant rows | Simultaneous solve; recycle iteration |
+| 24 | Geodesy / surveying | Rank-deficient least squares; datum as null space | Constrained normal equations |
+| 36 | Computer graphics | Homogeneous coordinates; composition of affine maps | Dense 3 × 3 products |
+| 38 | Robotics / aerospace | Orthogonal matrices; SO(3) as a group, not a subspace | Small dense products; re-orthonormalization |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -2748,12 +3322,8 @@ This group exists because the seed set is thin at Tier 1 and silent on vector sp
 not real numbers. Every entry here is small-dimension and needs nothing past a first course, with
 the one exception marked below.
 
-*Graphics and small-dimension geometry (index 36–40)*
-- **2D affine transforms in vector graphics** — the SVG/CSS/Canvas transform stack; composition order as a
-  concrete demonstration that matrix multiplication does not commute
+*Graphics and small-dimension geometry (index 37, 39–40)*
 - **3D viewing and perspective projection** — the model-view-projection chain; why the fourth coordinate exists
-- **3D rotations and rigid-body pose** — orthogonal matrices with determinant +1; gimbal lock as a
-  basis-composition failure, which motivates quaternions without needing them
 - **Barycentric coordinates and triangle rasterization** — a 3×3 solve per pixel; coordinates relative to a basis
 - **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
@@ -2801,7 +3371,6 @@ the one exception marked below.
 - **Attention in transformers** — QKᵀ as a learned bilinear form; low-rank adapters (LoRA) as explicit rank constraints on weight updates
 
 ### Would add: geosciences and geometry
-- **Geodetic network adjustment** — the historical origin of least squares; rank deficiency from datum choice, resolved by constraints
 - **Seismic tomography** — same inverse-problem structure as entry 3 with far worse ray coverage
 - **Distance geometry (NMR structure determination)** — Cayley–Menger determinants, classical multidimensional scaling, low-rank Gram matrix recovery
 - **X-ray crystallography** — the phase problem; Patterson maps; structure factors as Fourier coefficients
@@ -2827,10 +3396,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 11 of the 19 written entries are now Tier 1.
+   backlog, which is under way: 14 of the 22 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 179 terms across the 19 written entries, and the backlog entries most likely to generate
+   currently covers 209 terms across the 22 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

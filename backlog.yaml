@@ -197,24 +197,6 @@ backlog:
   matrix_structure: dense
   typical_size: 1e3-1e4 per head
   worked_example_size: ''
-- id: 24
-  slug: geodetic-network-adjustment
-  status: backlog
-  short_title: Geodetic network adjustment
-  nav_field: Earth & Climate Science
-  field: Earth Science
-  subfield: Geodesy/surveying
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^3n station coordinates
-  core_la_object: Rank-deficient least squares
-  la_concepts: datum defect; constrained least squares; historical origin of LS
-  primary_method: Constrained normal equations
-  matrix_structure: sparse, rank-deficient by datum
-  typical_size: 1e3-1e6
-  worked_example_size: ''
 - id: 25
   slug: seismic-tomography
   status: backlog
@@ -415,24 +397,6 @@ backlog:
   matrix_structure: sparse row-stochastic
   typical_size: 1e2-1e6
   worked_example_size: ''
-- id: 36
-  slug: 2d-affine-transforms-in-vector-graphics
-  status: backlog
-  short_title: 2D affine transforms in vector graphics
-  nav_field: Computer Graphics & Vision
-  field: Computer Science
-  subfield: Computer graphics
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^2 points, embedded in homogeneous R^3
-  core_la_object: Homogeneous coordinates and matrix composition
-  la_concepts: homogeneous coordinates; composition; noncommutativity; inverse transforms
-  primary_method: Dense 3x3 products
-  matrix_structure: dense 3x3
-  typical_size: 3x3
-  worked_example_size: SVG/CSS transform stack applied to a polygon
 - id: 37
   slug: 3d-viewing-and-perspective-projection-pipeline
   status: backlog
@@ -451,24 +415,6 @@ backlog:
   matrix_structure: dense 4x4
   typical_size: 4x4
   worked_example_size: wireframe cube through the full MVP chain
-- id: 38
-  slug: 3d-rotations-and-rigid-body-pose
-  status: backlog
-  short_title: 3D rotations and rigid-body pose
-  nav_field: Control & Robotics
-  field: Engineering
-  subfield: Robotics/graphics
-  tier: 1
-  tier_ceiling: 3
-  prereq_beyond_la: Lie groups and quaternions if pushed further
-  scalar_field: R
-  vector_space: R^3; rotations form SO(3), a group, not a subspace
-  core_la_object: Orthogonal matrices with determinant +1
-  la_concepts: orthogonality; determinant; composition; change of basis
-  primary_method: Dense small products
-  matrix_structure: orthogonal 3x3; SE(3) 4x4
-  typical_size: 3x3-4x4
-  worked_example_size: robot wrist pose composition and a gimbal-lock demonstration
 - id: 39
   slug: barycentric-coordinates-and-triangle-rasterization
   status: backlog

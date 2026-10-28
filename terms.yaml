@@ -82,8 +82,9 @@ terms:
   entries:
   - 2
   - 9
-  lowest_tier: 2
-  uses: 18
+  - 24
+  lowest_tier: 1
+  uses: 13
   match:
   - covariance
 - term: eigenvalues and eigenvectors
@@ -101,10 +102,11 @@ terms:
   - 10
   - 12
   - 20
+  - 24
   - 42
   - 47
   lowest_tier: 1
-  uses: 29
+  uses: 31
   match:
   - eigenvalues?
   - eigenvectors?
@@ -175,9 +177,11 @@ terms:
   note: ''
   entries:
   - 8
+  - 36
+  - 38
   - 42
   lowest_tier: 1
-  uses: 3
+  uses: 11
   match:
   - homogeneous coordinates
   - homogeneous (world|image) point
@@ -208,12 +212,13 @@ terms:
   - 7
   - 8
   - 20
+  - 24
   - 41
   - 42
   - 51
   - 52
   lowest_tier: 1
-  uses: 17
+  uses: 23
   match:
   - least[- ]squares
 - term: low-rank approximation (Eckart–Young)
@@ -287,10 +292,11 @@ terms:
   - 7
   - 12
   - 20
+  - 24
   - 48
   - 51
   lowest_tier: 1
-  uses: 26
+  uses: 33
   match:
   - null ?space
   - nullity
@@ -304,9 +310,10 @@ terms:
   entries:
   - 8
   - 10
+  - 38
   - 47
   lowest_tier: 1
-  uses: 2
+  uses: 5
   match:
   - orthogonal matri
   - orthogonal with determinant
@@ -320,8 +327,9 @@ terms:
   entries:
   - 2
   - 20
+  - 24
   lowest_tier: 1
-  uses: 10
+  uses: 13
   match:
   - orthogonal[- ]projection
   - \bprojection\b
@@ -381,10 +389,11 @@ terms:
   - 10
   - 12
   - 20
+  - 24
   - 51
   - 52
   lowest_tier: 1
-  uses: 8
+  uses: 12
   match:
   - rank-deficient
   - \brank(?=\([A-Za-z])
@@ -431,8 +440,9 @@ terms:
   - 8
   - 9
   - 20
+  - 36
   lowest_tier: 1
-  uses: 18
+  uses: 20
   match:
   - singular value decomposition
   - \bSVD\b
@@ -447,8 +457,9 @@ terms:
   note: ''
   entries:
   - 8
-  lowest_tier: 2
-  uses: 2
+  - 38
+  lowest_tier: 1
+  uses: 1
   match:
   - skew-symmetric
   - cross-product matrix
@@ -469,11 +480,12 @@ terms:
   - 10
   - 12
   - 20
+  - 24
   - 47
   - 51
   - 52
   lowest_tier: 1
-  uses: 22
+  uses: 25
   match:
   - \bsparse\b
   - sparsity
@@ -676,8 +688,9 @@ terms:
   - 2
   - 12
   - 20
+  - 24
   lowest_tier: 1
-  uses: 7
+  uses: 8
   match:
   - Cholesky (?:decomposition|factori[sz]ation|factor)
   - Cholesky
@@ -1429,8 +1442,10 @@ terms:
   entries:
   - 2
   - 20
+  - 24
+  - 38
   lowest_tier: 1
-  uses: 7
+  uses: 10
   match:
   - Kalman filter
   - Kalman
@@ -1947,8 +1962,9 @@ terms:
   note: Rigid transformation covers SE(3) but not rotation averaging.
   entries:
   - 8
-  lowest_tier: 2
-  uses: 3
+  - 38
+  lowest_tier: 1
+  uses: 6
   match:
   - SE\(3\)
   - rotation averaging
@@ -1962,8 +1978,9 @@ terms:
   note: ''
   entries:
   - 2
-  lowest_tier: 3
-  uses: 7
+  - 24
+  lowest_tier: 1
+  uses: 8
   match:
   - \bGNSS\b
   - \bGPS\b
@@ -2113,8 +2130,9 @@ terms:
   note: ''
   entries:
   - 2
-  lowest_tier: 3
-  uses: 2
+  - 24
+  lowest_tier: 1
+  uses: 3
   match:
   - trilateration
 - term: truss
@@ -2179,9 +2197,10 @@ terms:
   note: ''
   entries:
   - 12
+  - 24
   - 51
   lowest_tier: 1
-  uses: 6
+  uses: 8
   match:
   - incidence matri
 - term: Laplacian matrix
@@ -2193,8 +2212,9 @@ terms:
   note: ''
   entries:
   - 12
+  - 24
   lowest_tier: 1
-  uses: 3
+  uses: 4
   match:
   - Laplacian
 - term: Kirchhoff's circuit laws
@@ -2492,10 +2512,11 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 36
   - 41
   - 42
   lowest_tier: 1
-  uses: 4
+  uses: 5
   match:
   - Bézier curves?
 - term: Bernstein polynomial
@@ -2546,9 +2567,11 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 36
+  - 38
   - 42
   lowest_tier: 1
-  uses: 3
+  uses: 13
   match:
   - affine
 - term: change of basis
@@ -2680,8 +2703,9 @@ terms:
   note: ''
   entries:
   - 20
+  - 24
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - design matri
 - term: hat (projection) matrix
@@ -2719,8 +2743,9 @@ terms:
   note: ''
   entries:
   - 20
+  - 24
   lowest_tier: 1
-  uses: 2
+  uses: 3
   match:
   - \bQR\b
 - term: Householder reflection
@@ -3295,3 +3320,342 @@ terms:
   uses: 1
   match:
   - fixed-point iteration
+- term: geodesy
+  aliases: []
+  kind: domain concept
+  wikipedia: Geodesy
+  url: https://en.wikipedia.org/wiki/Geodesy
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Gg]eodesy'
+- term: levelling
+  aliases: []
+  kind: domain concept
+  wikipedia: Levelling
+  url: https://en.wikipedia.org/wiki/Levelling
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 6
+  match:
+  - levelling
+- term: benchmark (surveying)
+  aliases: []
+  kind: domain concept
+  wikipedia: Benchmark (surveying)
+  url: https://en.wikipedia.org/wiki/Benchmark_%28surveying%29
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 7
+  match:
+  - \bbenchmarks?\b
+- term: geodetic datum
+  aliases: []
+  kind: domain concept
+  wikipedia: Geodetic datum
+  url: https://en.wikipedia.org/wiki/Geodetic_datum
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 22
+  match:
+  - \bdatum\b
+- term: Legendre
+  aliases: []
+  kind: domain concept
+  wikipedia: Adrien-Marie Legendre
+  url: https://en.wikipedia.org/wiki/Adrien-Marie_Legendre
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Legendre
+- term: Gauss
+  aliases: []
+  kind: domain concept
+  wikipedia: Carl Friedrich Gauss
+  url: https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bGauss\b
+- term: NAVD 88
+  aliases: []
+  kind: domain concept
+  wikipedia: North American Vertical Datum of 1988
+  url: https://en.wikipedia.org/wiki/North_American_Vertical_Datum_of_1988
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 1
+  match:
+  - NAVD 88
+- term: International Terrestrial Reference Frame
+  aliases: []
+  kind: domain concept
+  wikipedia: International Terrestrial Reference System and Frame
+  url: https://en.wikipedia.org/wiki/International_Terrestrial_Reference_System_and_Frame
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 1
+  match:
+  - International Terrestrial Reference
+- term: weighted least squares
+  aliases: []
+  kind: numerical method
+  wikipedia: Weighted least squares
+  url: https://en.wikipedia.org/wiki/Weighted_least_squares
+  recommend: link
+  note: ''
+  entries:
+  - 24
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Ww]eighted least squares'
+- term: SVG
+  aliases: []
+  kind: domain concept
+  wikipedia: SVG
+  url: https://en.wikipedia.org/wiki/SVG
+  recommend: link
+  note: ''
+  entries:
+  - 36
+  lowest_tier: 1
+  uses: 7
+  match:
+  - \bSVG\b
+- term: CSS
+  aliases: []
+  kind: domain concept
+  wikipedia: CSS
+  url: https://en.wikipedia.org/wiki/CSS
+  recommend: link
+  note: ''
+  entries:
+  - 36
+  lowest_tier: 1
+  uses: 6
+  match:
+  - \bCSS\b
+- term: HTML canvas
+  aliases: []
+  kind: domain concept
+  wikipedia: Canvas element
+  url: https://en.wikipedia.org/wiki/Canvas_element
+  recommend: link
+  note: ''
+  entries:
+  - 36
+  lowest_tier: 1
+  uses: 3
+  match:
+  - \bCanvas\b
+- term: shear mapping
+  aliases: []
+  kind: linear algebra
+  wikipedia: Shear mapping
+  url: https://en.wikipedia.org/wiki/Shear_mapping
+  recommend: link
+  note: ''
+  entries:
+  - 36
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \bshear
+- term: polar decomposition
+  aliases: []
+  kind: linear algebra
+  wikipedia: Polar decomposition
+  url: https://en.wikipedia.org/wiki/Polar_decomposition
+  recommend: link
+  note: ''
+  entries:
+  - 36
+  lowest_tier: 1
+  uses: 2
+  match:
+  - polar decomposition
+- term: rotation matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Rotation matrix
+  url: https://en.wikipedia.org/wiki/Rotation_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 36
+  - 38
+  lowest_tier: 1
+  uses: 3
+  match:
+  - rotation matri
+- term: Euler angles
+  aliases: []
+  kind: domain concept
+  wikipedia: Euler angles
+  url: https://en.wikipedia.org/wiki/Euler_angles
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Euler angles
+- term: aircraft principal axes
+  aliases: []
+  kind: domain concept
+  wikipedia: Aircraft principal axes
+  url: https://en.wikipedia.org/wiki/Aircraft_principal_axes
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 3
+  match:
+  - \byaw\b
+- term: gimbal lock
+  aliases: []
+  kind: domain concept
+  wikipedia: Gimbal lock
+  url: https://en.wikipedia.org/wiki/Gimbal_lock
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 3
+  match:
+  - '[Gg]imbal lock'
+- term: quaternions and spatial rotation
+  aliases: []
+  kind: domain concept
+  wikipedia: Quaternions and spatial rotation
+  url: https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \b[Qq]uaternions?\b
+- term: slerp
+  aliases: []
+  kind: numerical method
+  wikipedia: Spherical linear interpolation
+  url: https://en.wikipedia.org/wiki/Spherical_linear_interpolation
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bslerp\b
+- term: Lie group
+  aliases: []
+  kind: linear algebra
+  wikipedia: Lie group
+  url: https://en.wikipedia.org/wiki/Lie_group
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Lie group
+- term: 3D rotation group SO(3)
+  aliases: []
+  kind: linear algebra
+  wikipedia: 3D rotation group
+  url: https://en.wikipedia.org/wiki/3D_rotation_group
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 4
+  match:
+  - SO\(3\)
+- term: forward kinematics
+  aliases: []
+  kind: domain concept
+  wikipedia: Forward kinematics
+  url: https://en.wikipedia.org/wiki/Forward_kinematics
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 1
+  match:
+  - forward kinematics
+- term: Gram–Schmidt process
+  aliases: []
+  kind: numerical method
+  wikipedia: Gram–Schmidt process
+  url: https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Gram–Schmidt
+- term: inertial navigation
+  aliases: []
+  kind: domain concept
+  wikipedia: Inertial navigation system
+  url: https://en.wikipedia.org/wiki/Inertial_navigation_system
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 1
+  match:
+  - '[Ii]nertial navigation'
+- term: determinant
+  aliases: []
+  kind: linear algebra
+  wikipedia: Determinant
+  url: https://en.wikipedia.org/wiki/Determinant
+  recommend: link
+  note: ''
+  entries:
+  - 38
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \bdeterminant\b

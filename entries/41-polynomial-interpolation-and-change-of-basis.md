@@ -119,11 +119,18 @@ nodes, so the matrix is lower triangular, and the coefficients (the divided diff
 forward substitution. Adding a new node adds a row and a column without changing the earlier
 coefficients.
 
-**Worked case: a parabola through (0, 1), (1, 3), (2, 2).**
+**Worked case: a parabola through (0, 1), (1, 3), (2, 2).** In the monomial basis, the three
+conditions p(0) = 1, p(1) = 3, p(2) = 2 are the Vandermonde system
 
 ```
-monomial:  V a = y  with  V = [1 0 0; 1 1 1; 1 2 4],  so  a = (1, 3.5, −1.5)
-           p(x) = 1 + 3.5x − 1.5x²
+[ 1  0  0 ] [ a_0 ]   [ 1 ]
+[ 1  1  1 ] [ a_1 ] = [ 3 ]          so   a = (1, 3.5, −1.5)   and   p(x) = 1 + 3.5x − 1.5x²
+[ 1  2  4 ] [ a_2 ]   [ 2 ]
+```
+
+The other two bases give the same polynomial with no dense solve:
+
+```
 Newton:    c_0 = 1,  c_1 = (3 − 1)/(1 − 0) = 2,  c_2 = ((2 − 3)/(2 − 1) − 2)/(2 − 0) = −1.5
            p(x) = 1 + 2x − 1.5 x(x − 1)
 Lagrange:  p(x) = 1·ℓ_0(x) + 3·ℓ_1(x) + 2·ℓ_2(x)

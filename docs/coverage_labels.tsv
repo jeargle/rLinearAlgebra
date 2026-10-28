@@ -17,3 +17,6 @@
 | 49 | Storage systems | One linear equation over GF(2); erasures vs errors | XOR reconstruction |
 | 51 | Transportation | Underdetermined system; null space; nonnegativity | Gaussian elimination |
 | 52 | Chemical engineering | Square system with recycle coupling; redundant rows | Simultaneous solve; recycle iteration |
+| 24 | Geodesy / surveying | Rank-deficient least squares; datum as null space | Constrained normal equations |
+| 36 | Computer graphics | Homogeneous coordinates; composition of affine maps | Dense 3 × 3 products |
+| 38 | Robotics / aerospace | Orthogonal matrices; SO(3) as a group, not a subspace | Small dense products; re-orthonormalization |

@@ -21,7 +21,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Computer Graphics & Vision
 
 * [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) — Tier 2
-* 2D affine transforms in vector graphics — Tier 1 *(planned)*
+* [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) — Tier 1
 * 3D viewing and perspective projection pipeline — Tier 1 *(planned)*
 * Barycentric coordinates and triangle rasterization — Tier 1 *(planned)*
 * Color spaces as change of basis — Tier 1 *(planned)*
@@ -36,7 +36,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Control & Robotics
 
 * [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) — Tier 3
-* 3D rotations and rigid-body pose — Tier 1 *(planned)*
+* [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) — Tier 1
 
 ## Cryptography & Security
 
@@ -46,7 +46,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Earth & Climate Science
 
 * [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) — Tier 2
-* Geodetic network adjustment — Tier 1 *(planned)*
+* [Geodetic network adjustment](applications/geodetic-network-adjustment) — Tier 1
 * Seismic tomography — Tier 3 *(planned)*
 
 ## Economics, Finance & Operations Research

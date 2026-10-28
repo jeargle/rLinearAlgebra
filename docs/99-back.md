@@ -19,12 +19,8 @@ This group exists because the seed set is thin at Tier 1 and silent on vector sp
 not real numbers. Every entry here is small-dimension and needs nothing past a first course, with
 the one exception marked below.
 
-*Graphics and small-dimension geometry (index 36–40)*
-- **2D affine transforms in vector graphics** — the SVG/CSS/Canvas transform stack; composition order as a
-  concrete demonstration that matrix multiplication does not commute
+*Graphics and small-dimension geometry (index 37, 39–40)*
 - **3D viewing and perspective projection** — the model-view-projection chain; why the fourth coordinate exists
-- **3D rotations and rigid-body pose** — orthogonal matrices with determinant +1; gimbal lock as a
-  basis-composition failure, which motivates quaternions without needing them
 - **Barycentric coordinates and triangle rasterization** — a 3×3 solve per pixel; coordinates relative to a basis
 - **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
@@ -72,7 +68,6 @@ the one exception marked below.
 - **Attention in transformers** — QKᵀ as a learned bilinear form; low-rank adapters (LoRA) as explicit rank constraints on weight updates
 
 ### Would add: geosciences and geometry
-- **Geodetic network adjustment** — the historical origin of least squares; rank deficiency from datum choice, resolved by constraints
 - **Seismic tomography** — same inverse-problem structure as entry 3 with far worse ray coverage
 - **Distance geometry (NMR structure determination)** — Cayley–Menger determinants, classical multidimensional scaling, low-rank Gram matrix recovery
 - **X-ray crystallography** — the phase problem; Patterson maps; structure factors as Fourier coefficients

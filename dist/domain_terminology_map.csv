@@ -24,15 +24,19 @@ Runge phenomenon,41,large oscillations of high-degree interpolants at equally sp
 R²,20,the squared length of the centered fitted vector over that of the centered data vector,Least squares regression and the hat matrix,Statistics,Applied statistics
 SCF iteration,10,fixed-point iteration on an eigenproblem whose matrix depends on its own solution,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 XOR,49,"addition in GF(2), applied bit by bit",RAID-5 parity and XOR recovery,Computer Science,Storage systems
+adjustment,24,"least-squares estimation of the coordinates from redundant, inconsistent observations",Geodetic network adjustment,Earth Science,Geodesy/surveying
 affine invariance,42,"transforming the control points transforms the curve, because the basis sums to 1",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 anomaly field,9,the mean-centered data matrix,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 assembly,1,summing small element matrices into the global matrix at shared DOF indices,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 attenuation coefficient,3,"the unknown x, one value per voxel",Computed tomography reconstruction,Medicine,Medical imaging
+attitude / orientation,38,a rotation matrix R relating a body frame to a reference frame,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 backprojection,3,applying A transpose to the data,Computed tomography reconstruction,Medicine,Medical imaging
 balancing an equation,4,finding an integer null vector of the element-by-species matrix,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 bandwidth / skyline,1,the sparsity pattern induced by node numbering,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 barycentric formula,41,a stable way to evaluate the Lagrange form,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 basis set (quantum chemistry),10,the chosen basis in which H is expressed,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+"benchmark (station, control point)",24,a surveyed point; its coordinates are unknowns,Geodetic network adjustment,Earth Science,Geodesy/surveying
+body frame vs world frame,38,two orthonormal bases; R changes coordinates from one to the other,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 boundary (cordon) counts,51,"known traffic entering and leaving at the district's edge, summarized in b",Traffic flow conservation at intersections,Engineering,Transportation
 bridge balance,12,a choice of resistances that puts one edge current at zero,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 bundle adjustment,8,sparse nonlinear least squares over all cameras and points at once,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
@@ -48,8 +52,11 @@ control polygon,42,the broken line through the control points; the curve lies in
 corrupted share,48,an error in a Reed-Solomon codeword,Shamir secret sharing,Computer Science,Cryptography
 covariance matrix P,2,the uncertainty ellipsoid; symmetric positive semidefinite,Kalman filtering for navigation,Engineering,Aerospace/control
 cubic vs quadratic outlines (CFF/PostScript vs TrueType),42,curves in P_3 vs curves in P_2,Bezier curves and font rendering,Computer Science,Typography/vector graphics
+current transformation matrix (CTM),36,the product of every transform in effect for an element,2D affine transforms in vector graphics,Computer Science,Computer graphics
 damping factor (alpha),6,the weight on P versus the uniform teleportation term,PageRank and network centrality,Computer Science,Network science
 dangling node,6,"a zero column, which breaks stochasticity",PageRank and network centrality,Computer Science,Network science
+datum,24,"the choice that fixes the null space, such as a benchmark held at a known height",Geodetic network adjustment,Earth Science,Geodesy/surveying
+datum defect,24,the dimension of the null space of the design matrix,Geodetic network adjustment,Earth Science,Geodesy/surveying
 de Casteljau algorithm,42,evaluation by repeated linear interpolation,Bezier curves and font rendering,Computer Science,Typography/vector graphics
 dealer,48,whoever chooses the polynomial and hands out the shares,Shamir secret sharing,Computer Science,Cryptography
 degenerate configuration,8,"point placement that makes A rank-deficient, so the solution is not unique",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
@@ -62,6 +69,7 @@ degrees of freedom of the network,4,the nullity of S,Stoichiometric matrices of 
 density matrix,10,a positive semidefinite matrix with trace 1,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 design matrix (model matrix) X,20,"the n × k matrix whose columns are the predictors, including a column of 1s for the intercept",Least squares regression and the hat matrix,Statistics,Applied statistics
 direct vs indirect requirements,5,"the successive terms A, A^2, A^3 of the Neumann series",Leontief input-output economics,Economics,Macroeconomics/EEIO
+direction cosine matrix (DCM),38,the rotation matrix; its entries are cosines of angles between axes,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 dummy variable trap,20,"an exactly dependent set of indicator columns, which makes X rank-deficient",Least squares regression and the hat matrix,Statistics,Applied statistics
 easing curve (CSS cubic-bezier),42,"a cubic in the same basis, used for timing instead of shape",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 effective (Thevenin) resistance,12,"(e_a - e_b)^T L^+ (e_a - e_b), a quadratic form in the pseudoinverse",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
@@ -73,6 +81,7 @@ epipolar constraint,8,the bilinear equation relating corresponding points in two
 erasure vs error,7,known vs unknown error position — a column selection vs a search,Linear error-correcting codes,Engineering,Communications/information theory
 erasure vs error,49,a lost block at a known position (solvable) vs a wrong block at an unknown position (only detectable),RAID-5 parity and XOR recovery,Computer Science,Storage systems
 essential / fundamental matrix,8,the rank-2 bilinear form satisfying x'^T E x = 0,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+estimable quantity,24,"a function of the coordinates that does not depend on the datum, such as a height difference",Geodetic network adjustment,Earth Science,Geodesy/surveying
 expectation value,10,the quadratic form psi^* A psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 explained variance,9,sigma_i^2 as a fraction of the total,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 extrinsic parameters [R|t],8,the rigid transform from world to camera frame,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
@@ -82,26 +91,37 @@ final demand,5,the right-hand side d,Leontief input-output economics,Economics,M
 fitted values ŷ,20,the orthogonal projection of y onto the column space of X,Least squares regression and the hat matrix,Statistics,Applied statistics
 flow (volume),51,"cars per hour on a segment, an entry of x",Traffic flow conservation at intersections,Engineering,Transportation
 flux,4,"v, the vector of reaction rates",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+forward kinematics,38,the product of the joint transforms along a robot arm,3D rotations and rigid-body pose,Engineering,Robotics/graphics
+free network,24,"a minimum-norm solution, with no point held fixed",Geodetic network adjustment,Earth Science,Geodesy/surveying
 frequency bin k,47,the coefficient of the k-th complex wave in the Fourier basis,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 generator matrix G,7,"a basis of the code, written as rows",Linear error-correcting codes,Engineering,Communications/information theory
+gimbal lock,38,Euler angles at which two of the three angles turn about the same axis,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 gross / total output,5,the unknown x,Leontief input-output economics,Economics,Macroeconomics/EEIO
 ground (reference node),12,"the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
+handedness,38,"the sign of the determinant; +1 for rotations, −1 for reflections",3D rotations and rigid-body pose,Engineering,Robotics/graphics
 hat matrix H,20,"the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y",Least squares regression and the hat matrix,Statistics,Applied statistics
 homogeneous coordinates,8,an added coordinate that turns perspective division into a linear map plus a normalization,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+homogeneous transformation,38,the 4 × 4 matrix [R t; 0 1],3D rotations and rigid-body pose,Engineering,Robotics/graphics
+identity transform,36,"the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0)",2D affine transforms in vector graphics,Computer Science,Computer graphics
 innovation / residual,2,"z - Hx, the part of the measurement the prediction did not explain",Kalman filtering for navigation,Engineering,Aerospace/control
 interpolant,41,the unique element of P_d with the prescribed values at the nodes,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 intrinsic matrix K,8,"the camera's internal calibration, an upper-triangular 3x3",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 inverse DFT,47,"the change of basis back, using the conjugate transpose",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 ket / state vector,10,a unit vector in a complex inner-product space,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+levelling (spirit levelling),24,measuring height differences between benchmarks,Geodetic network adjustment,Earth Science,Geodesy/surveying
 leverage h_ii,20,the i-th diagonal entry of H; how strongly observation i pulls its own fitted value,Least squares regression and the hat matrix,Statistics,Applied statistics
 link (road segment),51,one coordinate of the flow vector,Traffic flow conservation at intersections,Engineering,Transportation
 link closure,51,"forcing a coordinate of x to zero, which may leave no admissible solution",Traffic flow conservation at intersections,Engineering,Transportation
 link matrix,6,the column-stochastic matrix P built from the graph,PageRank and network centrality,Computer Science,Network science
 load vector,1,the right-hand side b,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 loading,9,"one entry of an EOF, i.e. one grid point's weight in that pattern",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+local vs global coordinates,36,reading a product right to left (each step in the parent's frame) or left to right (each step in the newly moved frame),2D affine transforms in vector graphics,Computer Science,Computer graphics
 loop (mesh) currents,12,"coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
+"matrix(a, b, c, d, e, f)",36,"the SVG/CSS notation for the 3 × 3 matrix with columns (a, b, 0), (c, d, 0), (e, f, 1)",2D affine transforms in vector graphics,Computer Science,Computer graphics
 mechanism,1,a nontrivial null space of K — the structure can move with no restoring force,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+minimally constrained vs overconstrained adjustment,24,removing exactly the null space vs also forcing the network to fit fixed points,Geodetic network adjustment,Earth Science,Geodesy/surveying
 minimum distance,7,the smallest weight of a nonzero codeword,Linear error-correcting codes,Engineering,Communications/information theory
+misclosure,24,the amount by which observations around a loop fail to add up to zero,Geodetic network adjustment,Earth Science,Geodesy/surveying
 mode shape,1,an eigenvector of K phi = lambda M phi,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 monomial (power) form,41,"coordinates in the basis 1, x, x², …, x^d",Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 multicollinearity,20,"columns of X that are nearly linearly dependent, so β is poorly determined",Least squares regression and the hat matrix,Statistics,Applied statistics
@@ -117,6 +137,7 @@ nodes (interpolation points),41,the d + 1 distinct x-values where the polynomial
 normal equations,20,"Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X",Least squares regression and the hat matrix,Statistics,Applied statistics
 observability,2,rank of the stacked matrix [H; HF; HF^2; ...],Kalman filtering for navigation,Engineering,Aerospace/control
 observable,10,a Hermitian operator; its eigenvalues are the measurable values,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+observation equation,24,"one row of the system, an observation written in terms of the unknowns",Geodetic network adjustment,Earth Science,Geodesy/surveying
 observation model H,2,the linear map from state space to measurement space,Kalman filtering for navigation,Engineering,Aerospace/control
 on-curve and off-curve points (font editors),42,"the end control points, which the curve passes through, and the inner control points, which it generally does not",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 origin and destination volumes,51,"the entries of b, net traffic entering the network at each node",Traffic flow conservation at intersections,Engineering,Transportation
@@ -124,6 +145,7 @@ overall (total) balance,52,"the sum of the component balances, a linearly depend
 parity block,49,the block chosen so that every stripe satisfies d_1 + ⋯ + d_(n−1) + p = 0,RAID-5 parity and XOR recovery,Computer Science,Storage systems
 parity-check matrix H,7,a basis of the code's orthogonal complement; codewords are its null space,Linear error-correcting codes,Engineering,Communications/information theory
 perfect (information-theoretic) secrecy,48,every candidate secret is consistent with the same number of polynomials through any k − 1 shares,Shamir secret sharing,Computer Science,Cryptography
+"pose (frame, transform)",38,"a rotation and a translation together, a 4 × 4 matrix in SE(3)",3D rotations and rigid-body pose,Engineering,Robotics/graphics
 power iteration,6,repeated multiplication by the matrix,PageRank and network centrality,Computer Science,Network science
 principal component time series,9,"the corresponding right singular vector, scaled",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 process noise / measurement noise,2,the covariance matrices Q and R,Kalman filtering for navigation,Engineering,Aerospace/control
@@ -132,6 +154,7 @@ projection / ray sum,3,one row of A applied to x — a line integral through the
 purge stream,52,a small bleed that keeps an inert component from accumulating in the loop,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 raster image (bitmap),42,"a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 rasterization,42,"sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height)",Bezier curves and font rendering,Computer Science,Typography/vector graphics
+re-orthonormalization,38,projecting a drifted matrix back onto the orthogonal matrices,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 read-modify-write (small write),49,"updating parity by p_new = p_old + d_old + d_new, which uses linearity",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 rebuild (resilvering),49,solving the equation for the failed disk's block in every stripe,RAID-5 parity and XOR recovery,Computer Science,Storage systems
 reciprocity,12,"symmetry of L, so the potential at b due to a source at a equals the potential at a due to the same source at b",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
@@ -141,6 +164,7 @@ reference direction,51,the arrow chosen for a segment; a negative flow means net
 regression coefficients β,20,coordinates of the fitted vector in the basis given by the columns of X,Least squares regression and the hat matrix,Statistics,Applied statistics
 regularization strength,3,the Tikhonov parameter lambda trading data fit against smoothness,Computed tomography reconstruction,Medicine,Medical imaging
 reprojection error,8,the nonlinear least-squares objective minimized in refinement,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+residual (correction) v,24,the change to each observation that makes the set consistent,Geodetic network adjustment,Earth Science,Geodesy/surveying
 residuals,20,the component of y in the orthogonal complement of the column space,Least squares regression and the hat matrix,Statistics,Applied statistics
 restraint / boundary condition,1,"deleting the corresponding rows and columns, or adding constraint rows",Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 rotated EOF (varimax),9,a deliberately non-orthogonal re-basis of the leading subspace,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
@@ -174,7 +198,13 @@ teleportation,6,the rank-one correction that makes the chain irreducible,PageRan
 tensor product,10,the Kronecker product; why n qubits need dimension 2^n,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 threshold k,48,"the dimension of the polynomial space, deg f + 1",Shamir secret sharing,Computer Science,Cryptography
 traffic counts (detector or loop counts),51,"measured coordinates of x, used to pin down the free variables",Traffic flow conservation at intersections,Engineering,Transportation
+transform attribute / CSS transform property,36,a list of elementary transforms whose matrices are multiplied in the order written,2D affine transforms in vector graphics,Computer Science,Computer graphics
+transform-origin,36,"the point about which rotation and scaling happen, a conjugation T(c) M T(−c)",2D affine transforms in vector graphics,Computer Science,Computer graphics
+"translate, rotate, scale, skew",36,the elementary matrices of the stack,2D affine transforms in vector graphics,Computer Science,Computer graphics
 twiddle factor ω^(kn),47,an entry of the DFT matrix,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 unitary gate,10,a norm-preserving complex linear map — the complex analogue of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+user space vs viewport space,36,two coordinate systems related by the CTM,2D affine transforms in vector graphics,Computer Science,Computer graphics
 vector graphics,42,"shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs",Bezier curves and font rendering,Computer Science,Typography/vector graphics
+weight,24,the inverse of an observation's variance; longer levelling lines get smaller weights,Geodetic network adjustment,Earth Science,Geodesy/surveying
 write hole,49,"a crash between writing data and parity, which leaves a stripe that violates its equation",RAID-5 parity and XOR recovery,Computer Science,Storage systems
+"yaw, pitch, roll (Euler angles)",38,"coordinates on the set of rotations, R = R_z(ψ) R_y(θ) R_x(φ)",3D rotations and rigid-body pose,Engineering,Robotics/graphics
