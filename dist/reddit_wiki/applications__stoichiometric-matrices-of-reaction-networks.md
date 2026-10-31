@@ -22,6 +22,8 @@ You get real conclusions from the cheap information.
 **Vectors:** fluxes in R^r (r reactions); concentrations in R^m (m species); S maps flux space to species space - two different spaces that are easy to conflate  
 **Underlying equations:** Nonlinear ODE system dc/dt = S v(c); every linear-algebra conclusion uses only the constant matrix S
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/04-stoichiometric-matrices-of-reaction-networks.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 Given a network of chemical reactions, determine which combinations of reaction rates are compatible with steady state, which quantities are conserved no matter what the kinetics are, and how many reactions are genuinely independent.

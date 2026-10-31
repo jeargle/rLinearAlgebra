@@ -117,7 +117,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | link (road segment) | one coordinate of the flow vector | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | link closure | forcing a coordinate of x to zero, which may leave no admissible solution | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | link matrix | the column-stochastic matrix P built from the graph | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
-| load vector | the right-hand side b | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| load vector | the right-hand side f | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | loading | one entry of an EOF, i.e. one grid point's weight in that pattern | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | local vs global coordinates | reading a product right to left (each step in the parent's frame) or left to right (each step in the newly moved frame) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | loop (mesh) currents | coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1 | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |

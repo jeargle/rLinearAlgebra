@@ -113,7 +113,7 @@ leverage h_ii,20,the i-th diagonal entry of H; how strongly observation i pulls 
 link (road segment),51,one coordinate of the flow vector,Traffic flow conservation at intersections,Engineering,Transportation
 link closure,51,"forcing a coordinate of x to zero, which may leave no admissible solution",Traffic flow conservation at intersections,Engineering,Transportation
 link matrix,6,the column-stochastic matrix P built from the graph,PageRank and network centrality,Computer Science,Network science
-load vector,1,the right-hand side b,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+load vector,1,the right-hand side f,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 loading,9,"one entry of an EOF, i.e. one grid point's weight in that pattern",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 local vs global coordinates,36,reading a product right to left (each step in the parent's frame) or left to right (each step in the newly moved frame),2D affine transforms in vector graphics,Computer Science,Computer graphics
 loop (mesh) currents,12,"coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1",Resistor networks and Kirchhoff's laws,Physics,Circuit theory

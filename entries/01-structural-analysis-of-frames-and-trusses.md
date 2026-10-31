@@ -23,11 +23,11 @@ la_concepts: linear solve; symmetric positive definite; generalized eigenproblem
 primary_method: Sparse Cholesky; Lanczos
 matrix_structure: symmetric, positive definite, sparse, banded
 typical_size: 1e6-1e8 DOF
-worked_example_size: 12-bar planar truss
+worked_example_size: 3-bar toy truss; 45-bar 12-panel Pratt bridge truss
 terminology:
   stiffness matrix: the coefficient matrix K; symmetric positive definite once restraints are applied
   degree of freedom (DOF): one scalar unknown — one component of the displacement vector
-  load vector: the right-hand side b
+  load vector: the right-hand side f
   restraint / boundary condition: deleting the corresponding rows and columns, or adding constraint rows
   assembly: summing small element matrices into the global matrix at shared DOF indices
   mode shape: an eigenvector of K phi = lambda M phi

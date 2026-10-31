@@ -21,6 +21,7 @@ publish = [
 notebooks = [
     "marimo>=0.25",
     "numpy>=2.0",
+    "scipy>=1.11",   # notebook 03: sparse CT projection matrix
     "matplotlib>=3.8",
 ]
 # Regenerating the data embedded in notebooks (maintainers only):

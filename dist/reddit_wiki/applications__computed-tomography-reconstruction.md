@@ -22,6 +22,8 @@ one point to the next, and that assumption is doing real work in the picture a r
 **Vectors:** image in R^N (N voxels); measurements in R^M (M rays); A maps R^N to R^M with M != N  
 **Underlying equations:** First-order linear ODE along each ray (Beer–Lambert law), dI/ds = −μ I; the logarithm of its solution is linear in μ
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/03-computed-tomography-reconstruction.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 An X-ray source and detector rotate around a patient. Each measurement is the total attenuation along one line through the body. Recover the 3D attenuation field.

@@ -23,6 +23,8 @@ marching feet and wind.
 **Vectors:** R^n, n = number of unrestrained degrees of freedom (2 or 3 per node); displacements and forces live in the same space  
 **Underlying equations:** Linear second-order ODE system M ü + K u = f, from the [PDE](https://en.wikipedia.org/wiki/Partial_differential_equation) of [linear elasticity](https://en.wikipedia.org/wiki/Linear_elasticity); statics sets ü = 0
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/01-structural-analysis-of-frames-and-trusses.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 Given a structure — [truss](https://en.wikipedia.org/wiki/Truss), bridge deck, turbine blade, engine block — discretized into elements, find the displacement at every node under a given load, and separately find the frequencies at which the structure resonates.
@@ -105,7 +107,7 @@ How this field's vocabulary reads as linear algebra.
 |---|---|
 | stiffness matrix | the coefficient matrix K; symmetric positive definite once restraints are applied |
 | degree of freedom (DOF) | one scalar unknown — one component of the displacement vector |
-| load vector | the right-hand side b |
+| load vector | the right-hand side f |
 | restraint / boundary condition | deleting the corresponding rows and columns, or adding constraint rows |
 | assembly | summing small element matrices into the global matrix at shared DOF indices |
 | mode shape | an eigenvector of K phi = lambda M phi |

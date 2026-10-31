@@ -300,7 +300,7 @@ with the constants a_i, b_i fixed by the initial displacement and velocity. A lo
 |---|---|
 | stiffness matrix | the coefficient matrix K; symmetric positive definite once restraints are applied |
 | degree of freedom (DOF) | one scalar unknown — one component of the displacement vector |
-| load vector | the right-hand side b |
+| load vector | the right-hand side f |
 | restraint / boundary condition | deleting the corresponding rows and columns, or adding constraint rows |
 | assembly | summing small element matrices into the global matrix at shared DOF indices |
 | mode shape | an eigenvector of K phi = lambda M phi |

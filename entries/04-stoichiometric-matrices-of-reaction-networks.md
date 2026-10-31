@@ -23,7 +23,7 @@ la_concepts: right null space; left null space; rank; conservation laws
 primary_method: Nullspace basis; rational/integer arithmetic
 matrix_structure: sparse integer, rank-deficient
 typical_size: 2e3 x 3e3 (genome scale)
-worked_example_size: glycolysis core model
+worked_example_size: 5-species toy network; E. coli core model (72 metabolites x 95 reactions)
 terminology:
   stoichiometric matrix S: species by reactions, signed integer coefficients
   flux: v, the vector of reaction rates

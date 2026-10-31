@@ -23,7 +23,7 @@ la_concepts: ill-posedness; SVD spectrum; Tikhonov regularization; row-action me
 primary_method: Kaczmarz/ART; CG on normal equations
 matrix_structure: very sparse, severely ill-conditioned
 typical_size: 1e6-1e9 unknowns
-worked_example_size: 32x32 Shepp-Logan phantom
+worked_example_size: 4-pixel 5-ray toy; 32x32 Shepp-Logan phantom with 24 angles
 terminology:
   projection / ray sum: one row of A applied to x — a line integral through the object
   sinogram: the measurement vector b, arranged by angle and detector position
