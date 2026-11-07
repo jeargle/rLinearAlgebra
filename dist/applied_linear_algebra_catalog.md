@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 12 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 15 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,7 +200,7 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 22 written entries, 14 are Tier 1,
+**Current distribution.** Of the 25 written entries, 17 are Tier 1,
 3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
@@ -2455,6 +2455,672 @@ matrices that act on control points.
 
 ---
 
+## 43. Finite-difference stencils: derivative formulas from a small linear system
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A computer that knows a function only through its values at evenly spaced points cannot differentiate
+it the way calculus does. It estimates the derivative from the values it has. The estimate everyone
+meets first is the slope between two neighbouring points: the change in height divided by the step.
+
+Every such estimate combines a few neighbouring values with fixed weights. The pattern of weights,
+laid over the grid of points like a [stencil](https://en.wikipedia.org/wiki/Stencil_%28numerical_analysis%29) over paper, is called a [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) stencil.
+Stencils are the basic tool for turning the laws of physics into arithmetic, in weather and climate
+models, in simulations of heat flow and fluid flow, and in the edge detectors of image processing.
+
+Tables of stencils contain formulas such as (1, −2, 1) for a second derivative, or the less obvious
+(−1, 16, −30, 16, −1)/12. They need not be memorized, because each one is the solution of a small
+linear system. Ask the formula to give the right answer for the functions 1, x, x², … in turn, and the
+weights are forced. The same few lines of linear algebra produce a formula for any derivative, from
+any set of points.
+
+</details>
+
+**Field:** Numerical analysis, scientific computing, computational physics and engineering
+
+**Tier:** 1 — the weights of a derivative formula solve one small square system, a transposed Vandermonde matrix whose rows say the formula is exact on 1, x, x², …. Using the stencils to discretize a differential equation is Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^n, the n weights of a stencil. A stencil is a [linear functional](https://en.wikipedia.org/wiki/Linear_form) (samples in, one number out), and the conditions ask it to agree with the k-th derivative on a basis of P_(n−1), the polynomials of degree below n.
+
+**Underlying equations.** [Taylor](https://en.wikipedia.org/wiki/Taylor_series)-series matching conditions: the weights c_j must satisfy Σ_j c_j s_j^m = k! for m = k and 0 for the other m below n, so that the formula is exact for every polynomial of degree below n.
+
+**The problem.** The function f is known on a **grid**: the points x + s h, where h is the **grid spacing** and s is a
+whole number of steps. A **stencil** for the k-th derivative at x is a set of **offsets** s_1, …, s_n,
+which name the grid points used, together with **weights** w_1, …, w_n. Its estimate is
+
+```
+f^(k)(x)  ≈  w_1 f(x + s_1 h) + w_2 f(x + s_2 h) + … + w_n f(x + s_n h)
+```
+
+For example, the three-point central stencil uses offsets −1, 0, 1: the point x itself and its two
+neighbours. A stencil has **[order of accuracy](https://en.wikipedia.org/wiki/Order_of_accuracy)** p when its error shrinks like h^p as the grid is
+refined.
+
+Given the derivative order k and the offsets, find the weights that make the estimate as accurate as
+possible, find its order of accuracy, and choose a grid spacing h that gives a useful answer on a
+computer.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| f | function | the function being differentiated | known only at grid points | units of f |
+| x | evaluation point | where the derivative is wanted | number | units of x |
+| h | grid spacing | distance between neighbouring grid points | number | units of x |
+| k | derivative order | 1 for a first derivative, 2 for a second | integer | — |
+| n | stencil size | number of grid points used | integer | — |
+| s_j | offsets | position of sample j, in grid steps from x | n numbers | dimensionless |
+| w_j | weights | multiplier of the sample f(x + s_j h) | n × 1 | per (units of x)^k |
+| c_j | scaled weights | w_j = c_j / h^k, independent of h | n × 1 | dimensionless |
+| m | power | index of the condition: exactness on x^m | 0, 1, …, n − 1 | — |
+| M | moment matrix | M_mj = s_j^m | n × n | dimensionless |
+| r | right-hand side | k! in position m = k, 0 elsewhere | n × 1 | dimensionless |
+| p | order of accuracy | the error is proportional to h^p | integer | — |
+
+**Formulation.** **Where the equations come from.** The equations are Taylor's theorem applied to each sample. Near x,
+
+```
+f(x + s h)  =  f(x)  +  s h f'(x)  +  (s h)²/2! f''(x)  +  (s h)³/3! f'''(x)  +  …
+```
+
+so every sample is a known combination of the derivatives of f at x. The estimate is a combination
+of samples, so it is also a combination of derivatives, and the coefficients of that combination are
+linear in the weights.
+
+**The familiar formula.** The definition of the derivative suggests f'(x) ≈ (f(x + h) − f(x)) / h, the
+forward difference, with offsets 0 and 1 and weights −1/h and 1/h. Taylor's theorem shows its error:
+
+```
+(f(x + h) − f(x)) / h  =  f'(x)  +  (h/2) f''(x)  +  …
+```
+
+The error is proportional to h, so the forward difference is first-order accurate. It is the simplest
+case of the system below.
+
+**One condition at a time.** Write each weight as w_j = c_j / h^k, so that the scaled weights c_j do
+not depend on h. Substituting the Taylor series into the estimate and collecting the terms that
+contain f^(m)(x) gives
+
+```
+Σ_j c_j f(x + s_j h) / h^k  =  Σ_m  ( Σ_j c_j s_j^m )  h^(m−k)  f^(m)(x) / m!
+```
+
+The bracket for each m is a single number fixed by the weights. For the right side to equal f^(k)(x),
+the bracket must be k! when m = k, which leaves exactly f^(k)(x). For m below k it must be 0, because
+those terms carry negative powers of h and would blow up as the grid is refined. For m above k it
+should be 0 as far as possible, because each surviving term adds an error proportional to h^(m−k).
+
+Each condition has a plain meaning. Apply the stencil to the polynomial g(t) = (t − x)^m: the samples
+are (s_j h)^m, so the estimate is h^(m−k) times the bracket, while the true k-th derivative of g at x
+is k! when m = k and 0 otherwise. Condition m says that **the stencil is exact on the m-th power**. The
+condition for m = 0, Σ c_j = 0, says that the estimate of a derivative of a constant is zero.
+
+**Stacking the conditions.** With n weights there is room for n conditions, m = 0, 1, …, n − 1:
+
+```
+M c = r,      M_mj = s_j^m,      r_m = k!  if m = k,  0 otherwise
+```
+
+M is the transpose of the Vandermonde matrix of the polynomial-interpolation entry, with the offsets
+as nodes. It is invertible whenever the offsets are distinct, so the weights exist and are unique.
+There is a cleaner way to see what the solution achieves. The k-th derivative at x and the stencil
+are both linear functionals: each takes a function and returns one number, and each respects sums
+and multiples. Two linear functionals that agree on a basis agree on the whole space. The conditions
+make them agree on the basis 1, (t − x), …, (t − x)^(n−1), so the stencil is exact for every polynomial
+of degree below n. Equivalently, the stencil computes the k-th derivative of the polynomial that
+interpolates the n samples.
+
+**Worked case: three points, second derivative.** Take offsets −1, 0, 1 and k = 2, so n = 3 and
+2! = 2. The three conditions, written as scalar equations, are
+
+```
+m = 0:    c_(−1) + c_0 + c_1  =  0
+m = 1:   −c_(−1)       + c_1  =  0
+m = 2:    c_(−1)       + c_1  =  2
+```
+
+and as a matrix product they are
+
+```
+[  1   1   1 ] [ c_(−1) ]   [ 0 ]
+[ −1   0   1 ] [ c_0    ] = [ 0 ]
+[  1   0   1 ] [ c_1    ]   [ 2 ]
+```
+
+The last two rows give c_(−1) = c_1 = 1, and the first row then gives c_0 = −2. The stencil is
+
+```
+f''(x)  ≈  ( f(x − h) − 2 f(x) + f(x + h) ) / h²
+```
+
+The conditions that were not imposed show the accuracy. For m = 3 the bracket is −1 + 1 = 0, a free
+bonus of the symmetric offsets. For m = 4 it is 1 + 1 = 2, so the leading error is
+(2/4!) h² f''''(x) = (h²/12) f''''(x), and the stencil is second-order accurate.
+
+**Worked case: five points.** With offsets −2, −1, 0, 1, 2 and k = 2 the system is
+
+```
+[  1   1   1   1   1 ] [ c_(−2) ]   [ 0 ]
+[ −2  −1   0   1   2 ] [ c_(−1) ]   [ 0 ]
+[  4   1   0   1   4 ] [ c_0    ] = [ 2 ]
+[ −8  −1   0   1   8 ] [ c_1    ]   [ 0 ]
+[ 16   1   0   1  16 ] [ c_2    ]   [ 0 ]
+```
+
+Reversing the offsets turns any solution into another solution, and the solution is unique, so it is
+symmetric: c_(−2) = c_2 = a and c_(−1) = c_1 = b. The rows for m = 1 and m = 3 then hold automatically.
+The rows for m = 2 and m = 4 become 8a + 2b = 2 and 32a + 2b = 0, so a = −1/12 and b = 4/3, and the
+first row gives c_0 = −2a − 2b = −5/2. Over a common denominator the weights are
+(−1, 16, −30, 16, −1)/12, the formula from the table. The bracket for m = 5 vanishes by symmetry and the
+one for m = 6 is −8, so the leading error is (−8/6!) h⁴ f⁽⁶⁾(x) = −(h⁴/90) f⁽⁶⁾(x): fourth order.
+
+**Matrix structure.** M is a small dense n × n matrix. Its determinant is Π_(i<j) (s_j − s_i), which is 288 for the
+five-point stencil, and its condition number, about 42 there, grows with n. For the stencil sizes used
+in practice this is harmless.
+
+The weights depend on where the offsets sit relative to x, not only on their spacing. Offsets 0, 1, 2
+give the same weights (1, −2, 1), but now the estimate is of f'' at the left end point. The bracket for
+m = 3 is 6 rather than 0, and the formula is only first-order accurate.
+
+Applying one stencil at every grid point gives a matrix with the weights running down its diagonals,
+a banded [Toeplitz](https://en.wikipedia.org/wiki/Toeplitz_matrix) matrix. For the three-point second derivative on four interior grid points, with the
+function taken to be zero at the two ends, it is
+
+```
+          [ −2   1   0   0 ]
+D = 1/h²  [  1  −2   1   0 ]
+          [  0   1  −2   1 ]
+          [  0   0   1  −2 ]
+```
+
+This sparse matrix is what a simulation code builds when it discretizes a differential equation.
+
+**What is computed.** Stencils on uniform grids are derived once and tabulated. For arbitrary offsets, such as non-uniform
+grids or one-sided stencils at a boundary, Fornberg's algorithm (1988) computes the weights for every
+derivative order up to k at once by a recursion, without forming M. Libraries expose both: Python's
+findiff package returns the coefficients for a requested derivative and accuracy, Julia's
+FiniteDifferences.jl builds stencils such as central_fdm(5, 2), and NumPy's gradient function applies
+the second-order central difference for first derivatives at interior points.
+
+**Why linear algebra is the right tool.** Every entry in a table of stencils is the solution of a linear system, and the method of undetermined
+coefficients replaces the table by one recipe that works for any derivative and any offsets. The
+existence and uniqueness of the weights are the invertibility of a Vandermonde matrix. The order of
+accuracy is a count of how many conditions hold, which is the dimension of the space of polynomials on
+which the stencil is exact. And the reason exactness on a few powers of x is enough is that the
+derivative and the stencil are linear functionals, so agreement on a basis is agreement on the span.
+
+**Pitfall worth teaching.** A smaller grid spacing is not always more accurate. Estimate f'' for f(x) = e^x at x = 0, where the
+true value is 1, with the three-point stencil. In double precision the error is about 8.3 × 10⁻⁴ at
+h = 0.1, 8.3 × 10⁻⁶ at h = 0.01 and 8.3 × 10⁻⁸ at h = 0.001, falling by 100 at each step exactly as
+h²/12 predicts. At h = 10⁻⁴ it is about 6 × 10⁻⁹, and then it rises: about 8 × 10⁻⁸ at h = 10⁻⁵,
+1.3 × 10⁻⁴ at h = 10⁻⁶ and 8 × 10⁻⁴ at h = 10⁻⁷.
+
+The cause is built into the linear algebra. The m = 0 condition makes the weights sum to zero, so the
+stencil subtracts nearly equal numbers. Each sample carries a relative [rounding error](https://en.wikipedia.org/wiki/Round-off_error) of about
+ε ≈ 2.2 × 10⁻¹⁶, the numerator therefore carries an error of a few ε, and dividing by h² magnifies it
+to about 4ε/h². The total error is roughly h²/12 + 4ε/h², which is smallest near h = (48ε)^(1/4), about
+3 × 10⁻⁴, and even there only about half of the sixteen available digits are correct. A higher-order
+stencil does better at a larger h: the five-point formula reaches an error of about 10⁻¹⁰ at h = 0.01.
+Noise in measured data is far larger than ε, which pushes the best h up further and is why
+derivatives of measured data are usually estimated by fitting before differencing.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| grid and grid spacing h | equally spaced points x + s h at which the function is known |
+| offset s_j | the position of a sample, counted in grid steps from the point x where the derivative is wanted |
+| stencil | a list of offsets and weights; the estimate is the weighted sum of the samples |
+| method of undetermined coefficients | writing the weights as unknowns and solving the conditions they must satisfy |
+| order of accuracy | the power p in an error proportional to h^p |
+| truncation error | the error from cutting off the Taylor series, present even in exact arithmetic |
+| central, forward and one-sided differences | stencils whose offsets are symmetric about x, start at x, or lie on one side of it |
+| rounding (cancellation) error | the loss of digits when nearly equal sample values are subtracted |
+| Fornberg's algorithm | a recursion that produces the weights for any offsets and derivative orders without forming the matrix |
+
+**Extensions.** Applying D to the unknown values of a function turns a differential equation, such as the heat or
+Poisson equation, into a large sparse linear system (Tier 3), and the eigenvalues of D, known in
+closed form, govern the stability of time-stepping schemes (Tier 2). [Richardson extrapolation](https://en.wikipedia.org/wiki/Richardson_extrapolation) combines
+estimates at two grid spacings to cancel the leading error term, the same idea applied to the error
+instead of the samples. Replacing differentiation by integration in the conditions gives quadrature
+weights, such as [Simpson's rule](https://en.wikipedia.org/wiki/Simpson's_rule), from the same transposed Vandermonde system. The polynomial
+interpolation entry solves the untransposed system, and Shamir secret sharing solves one over a finite
+field. [Savitzky–Golay](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter) filters estimate derivatives of noisy data from a local least-squares fit,
+which is the basis-fitting entry applied in a sliding window. The complex-step derivative,
+Im f(x + ih)/h, avoids the subtraction altogether for first derivatives of analytic functions.
+
+---
+
+## 44. Fourier series: the best approximation by sines and cosines is an orthogonal projection
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A violin and a flute playing the same note sound different, yet both sounds repeat at the same rate.
+The difference is in the mixture: each sound is a sum of sine waves, a fundamental that repeats once
+per cycle plus [harmonics](https://en.wikipedia.org/wiki/Harmonic) that repeat two, three or more times, and the instruments mix them in
+different proportions. Joseph Fourier claimed in his work on heat flow, in the early 1800s, that
+almost any repeating function, even one with sudden jumps, can be built this way.
+
+How much of each sine wave goes into the mixture? The textbook answer is an integral of the function
+times that sine wave. It looks like calculus, but it is linear algebra. Functions can be added and
+scaled like vectors. The integral of the product of two functions behaves like a dot product. Under
+that dot product, different sine waves are perpendicular to each other. The coefficient formula is
+then the same as the formula for the component of a vector along a perpendicular axis.
+
+Seeing the series this way explains why it works and in what sense a truncated series is the best
+approximation. It also explains why the approximation keeps overshooting next to a jump, however many
+terms are used.
+
+</details>
+
+**Field:** Applied analysis, signal processing, acoustics, physics and engineering
+
+**Tier:** 1 — a truncated [Fourier series](https://en.wikipedia.org/wiki/Fourier_series) is the orthogonal projection of a function onto the span of finitely many sines and cosines, in an [inner product](https://en.wikipedia.org/wiki/Inner_product_space) defined by an integral. Explaining why sines and cosines are the natural basis, as eigenfunctions of the second derivative, is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: piecewise continuous real functions on [−π, π], with inner product ⟨f, g⟩ = ∫ f(x) g(x) dx over [−π, π]. The space is infinite-dimensional; each approximation lives in the subspace T_N spanned by 1, cos x, sin x, …, cos Nx, sin Nx, of dimension 2N + 1.
+
+**Underlying equations.** Best approximation in an integral (least-squares) sense: choose the coefficients of S_N to minimize ∫ (f(x) − S_N(x))² dx over [−π, π].
+
+**The problem.** A function f is given on the interval from −π to π and repeats with **period** 2π. The **fundamental**
+is sin x or cos x, which repeat once per period. The n-th **harmonic** is sin nx or cos nx, which repeat
+n times. A truncated Fourier series, or **partial sum**, of order N is a combination
+
+```
+S_N(x)  =  a_0  +  a_1 cos x  +  b_1 sin x  +  …  +  a_N cos Nx  +  b_N sin Nx
+```
+
+Given f and N, find the coefficients that make S_N as close as possible to f, say how close it is,
+and say in what sense. The running example is the [square wave](https://en.wikipedia.org/wiki/Square_wave_%28waveform%29) that equals −1 on (−π, 0) and +1 on
+(0, π), approximated by its first 8 harmonics: cos x, …, cos 8x and sin x, …, sin 8x, with the constant.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| x | position | point in one period, from −π to π | number | radians |
+| f | function | the signal being approximated | function on [−π, π] | units of f |
+| n | harmonic number | how many times the harmonic repeats per period | 1, 2, …, N | — |
+| N | order | highest harmonic kept | integer | — |
+| a_0 | mean | the constant term | number | units of f |
+| a_n, b_n | Fourier coefficients | amounts of cos nx and sin nx | numbers | units of f |
+| S_N | partial sum | the approximation of order N | function | units of f |
+| ⟨f, g⟩ | inner product | ∫ f(x) g(x) dx over [−π, π] | number | units of f times units of g, times radians |
+| ‖f‖ | norm | √⟨f, f⟩; its square is the energy | number | units of f times √radians |
+| T_N | approximation space | span of 1, cos x, sin x, …, cos Nx, sin Nx | subspace of dimension 2N + 1 | — |
+| φ_1, …, φ_K | basis functions | any basis of the approximation space | K functions | dimensionless |
+| c | coefficients | S = c_1 φ_1 + … + c_K φ_K in a general basis | K × 1 | units of f |
+| G | Gram matrix | G_ij = ⟨φ_i, φ_j⟩ | K × K | radians |
+| d | projections | d_i = ⟨φ_i, f⟩ | K × 1 | units of f times radians |
+
+**Formulation.** **Where the equations come from.** The goal is a best approximation: among all functions in T_N, find
+the S_N that minimizes ‖f − S_N‖² = ∫ (f(x) − S_N(x))² dx over [−π, π]. This is least squares, with the
+sum over data points replaced by an integral over the interval.
+
+**The familiar formula.** Textbooks give the coefficients as
+
+```
+a_0 = (1/2π) ∫ f(x) dx,      a_n = (1/π) ∫ f(x) cos nx dx,      b_n = (1/π) ∫ f(x) sin nx dx
+```
+
+with every integral over [−π, π]. Some books write the constant as a_0/2 with a_0 = (1/π) ∫ f(x) dx; the
+partial sum is the same. The rest of this section derives these formulas as a projection.
+
+**Functions as vectors.** Functions on [−π, π] can be added and multiplied by numbers, and the results
+are again functions, so they form a vector space. The inner product
+
+```
+⟨f, g⟩  =  ∫ f(x) g(x) dx    over [−π, π]
+```
+
+has the properties of the dot product: it is symmetric, linear in each argument, and ⟨f, f⟩ is
+positive unless f is zero. (Two functions that differ at only finitely many points, such as two
+choices for the value of a square wave at its jump, have the same integrals and count as the same
+vector.) The analogy is close. Sample f and g at many equally spaced points x_i with spacing Δx, and
+Σ f(x_i) g(x_i) Δx is a dot product of two long vectors that tends to the integral as Δx shrinks.
+
+**The harmonics are orthogonal.** For whole numbers m and n,
+
+```
+⟨sin mx, sin nx⟩ = ⟨cos mx, cos nx⟩ = 0   when m ≠ n,      ⟨sin mx, cos nx⟩ = 0   always
+⟨sin nx, sin nx⟩ = ⟨cos nx, cos nx⟩ = π   for n ≥ 1,        ⟨1, 1⟩ = 2π
+```
+
+The reason is the product-to-sum identity, for example
+sin mx sin nx = ½ ( cos (m − n)x − cos (m + n)x ), together with the fact that cos jx integrates to zero
+over a full period for every whole number j other than 0.
+
+**One coefficient at a time.** In ℝ^n, the component of a vector y along a single vector v is
+(v · y / v · v) v. The same formula with the inner product gives the amount of sin nx in f:
+
+```
+b_n  =  ⟨f, sin nx⟩ / ⟨sin nx, sin nx⟩  =  (1/π) ∫ f(x) sin nx dx
+```
+
+This is the textbook formula, and the 1/π is the squared length of sin nx. For the square wave and
+n = 1, the numerator splits at 0:
+
+```
+⟨f, sin x⟩  =  ∫_0^π sin x dx  −  ∫_(−π)^0 sin x dx  =  2 + 2  =  4,       b_1 = 4/π ≈ 1.273
+```
+
+So the single sine wave closest to the square wave has amplitude 1.273, taller than the wave itself.
+It overshoots in the middle of each half-period to make up for being small near the ends.
+
+**All the coefficients together.** For a general basis φ_1, …, φ_K of the approximation space,
+minimizing ‖f − Σ c_i φ_i‖² gives the normal equations of the regression entry, with the columns of the
+design matrix replaced by functions:
+
+```
+G c = d,      G_ij = ⟨φ_i, φ_j⟩,      d_i = ⟨φ_i, f⟩
+```
+
+For the basis 1, cos x, sin x, …, cos Nx, sin Nx, orthogonality makes G diagonal:
+
+```
+G = diag( 2π, π, π, …, π )
+```
+
+Each equation then involves a single coefficient, which gives exactly the formulas above. A
+consequence is that adding a harmonic never changes the coefficients already computed.
+
+**Worked case: a square wave and 8 harmonics.** The square wave is odd (f(−x) = −f(x)), and so is
+f(x) cos nx, so every a_n is 0, including the mean. For the sines,
+⟨f, sin nx⟩ = 2 ∫_0^π sin nx dx = 2(1 − cos nπ)/n, which is 4/n for odd n and 0 for even n. Therefore
+b_n = 4/(nπ) for odd n, and the projection onto the first 8 harmonics is
+
+```
+S_8(x)  =  (4/π) ( sin x  +  sin 3x / 3  +  sin 5x / 5  +  sin 7x / 7 )
+```
+
+with coefficients 1.273, 0.424, 0.255 and 0.182. Of the 17 basis functions, only four are used.
+
+**How close.** The error f − S_N is orthogonal to the whole space T_N, so Pythagoras' theorem holds:
+
+```
+‖f‖²  =  ‖S_N‖²  +  ‖f − S_N‖²,       ‖S_N‖²  =  2π a_0²  +  π Σ_n (a_n² + b_n²)
+```
+
+For the square wave ‖f‖² = 2π. The fundamental alone captures 8/π², about 81.1% of this energy. The
+first 8 harmonics capture 95.0%, 16 harmonics 97.5% and 64 harmonics 99.4%. As N grows the error
+energy goes to zero, and the energy of f is the sum of the energies of its components. That is
+[Parseval](https://en.wikipedia.org/wiki/Parseval's_theorem)'s identity, which for the square wave says that 1 + 1/9 + 1/25 + 1/49 + … = π²/8.
+
+**Matrix structure.** In the sine-and-cosine basis the [Gram matrix](https://en.wikipedia.org/wiki/Gram_matrix) is diagonal, and after dividing each basis function by its
+length (√(2π) for the constant, √π for the others) it is the identity. Nothing needs to be solved.
+
+A basis that is not orthogonal gives a dense Gram matrix, and it can be very badly conditioned. Project
+onto the polynomials 1, x, x² on [0, 1] instead, and the Gram matrix has entries 1/(i + j + 1) for
+i, j = 0, 1, 2:
+
+```
+[ 1    1/2  1/3 ]
+[ 1/2  1/3  1/4 ]
+[ 1/3  1/4  1/5 ]
+```
+
+This is the [Hilbert matrix](https://en.wikipedia.org/wiki/Hilbert_matrix). Its condition number is about 1.6 × 10⁴ with 4 basis functions,
+1.5 × 10¹⁰ with 8 and 1.6 × 10¹³ with 10. Making the polynomials orthogonal by the Gram–Schmidt process
+produces the [Legendre polynomials](https://en.wikipedia.org/wiki/Legendre_polynomials) (shifted to [0, 1]) and restores a diagonal Gram matrix.
+
+**What is computed.** In practice f is known through samples, not as a formula. The integrals are approximated by sums at
+equally spaced points, which is the [trapezoidal rule](https://en.wikipedia.org/wiki/Trapezoidal_rule), and those sums are exactly the discrete Fourier
+transform of the small-DFT entry, computed by the FFT in a number of operations that grows only
+slightly faster than the number of samples. For smooth periodic functions the trapezoidal rule is
+extraordinarily accurate. Sampling too coarsely makes high harmonics indistinguishable from low ones
+([aliasing](https://en.wikipedia.org/wiki/Aliasing)). Audio coding, image compression and spectral methods for differential equations all rely
+on these computed coefficients, often in a cosine-only variant.
+
+**Why linear algebra is the right tool.** Every property of Fourier series used in practice follows from orthogonal projection, and none of them
+needs anything specific to sines except their orthogonality. The coefficient formula is a component
+along an axis. The best-approximation property is the shortest distance from a point to a subspace.
+That earlier coefficients do not change when terms are added is a diagonal Gram matrix. The energy
+accounting is Pythagoras' theorem. The space of functions is infinite-dimensional, but every
+calculation happens in a finite-dimensional subspace T_N, where all the facts from ℝ^n hold unchanged.
+
+**Pitfall worth teaching.** Best in the integral sense is not best at every point. Near the jump of the square wave, the partial
+sums overshoot the value 1. S_8 peaks at about 1.184, at x = π/8. S_64 peaks at about 1.179, at x = π/64.
+As N grows, the peak moves toward the jump but does not get lower: its limit is about 1.179, an
+overshoot of about 9% of the jump from −1 to 1. This is the [Gibbs phenomenon](https://en.wikipedia.org/wiki/Gibbs_phenomenon).
+
+There is no contradiction with convergence. The projection minimizes the integral of the squared
+error, and the region where the overshoot happens gets narrower as N grows, so the error energy still
+goes to zero while the largest error does not. Smoothly tapering the high coefficients reduces the
+overshoot, at the cost of blurring the jump. The same thing happens at the ends of the interval for a
+function that is not periodic, such as e^x on [−π, π]: its periodic extension jumps from e^π back to
+e^(−π), and the partial sums ring there.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| period and fundamental | the length after which the signal repeats (2π here), and the sine or cosine that repeats exactly once in it |
+| harmonic | sin nx or cos nx, oscillating n times per period |
+| Fourier coefficients a_n, b_n | the amounts of cos nx and sin nx in the function |
+| partial sum S_N | the series cut off after the N-th harmonic |
+| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product |
+| orthogonal functions | functions whose inner product is zero |
+| norm and energy | ‖f‖² = ⟨f, f⟩, the integral of the square of f |
+| Gram matrix | the matrix of inner products of the basis functions |
+| Parseval's identity | the energy of f is the sum of the energies of its components |
+| Gibbs phenomenon | the overshoot of partial sums next to a jump, which does not shrink as N grows |
+
+**Extensions.** The complex form uses the basis e^(inx) and the complex inner product, with the conjugate on the first
+argument, exactly as in the small-DFT entry. Sines and cosines are eigenfunctions of the second
+derivative, which is why they decouple linear problems with constant coefficients (Tier 2), and other
+eigenvalue problems give other orthogonal families, such as Legendre polynomials and Bessel functions.
+That the partial sums converge in norm for every function of finite energy is the completeness of the
+basis, studied in [Hilbert space](https://en.wikipedia.org/wiki/Hilbert_space) theory. The JPEG entry uses a discrete cosine basis on 8-point blocks.
+Fitting with basis functions that are not orthogonal is the basis-fitting entry, where the Gram matrix
+becomes XᵀX. [Wavelets](https://en.wikipedia.org/wiki/Wavelet) are orthogonal bases whose functions are localized in time as well as frequency.
+Empirical orthogonal functions in climate data are orthogonal bases chosen from the data instead of
+fixed in advance.
+
+---
+
+## 45. Least-squares fitting in a chosen basis: the span is the model, the basis is the arithmetic
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Fitting a straight line to data is the regression entry. Many data sets are not straight: a population
+grows, temperatures rise and fall with the seasons, a spectrum has peaks. The standard approach picks
+a family of building-block functions, such as powers of t, sines and cosines, or smoothly joined pieces
+of cubics, and looks for the combination of them that comes closest to the data.
+
+The surprising part is that a curved fit uses exactly the same linear algebra as a straight line.
+The unknowns are the amounts of each building block, and those enter the fitted curve linearly, even
+though the blocks themselves are curved. The word linear in linear least squares refers to the
+coefficients, not to the shape of the curve.
+
+The real decision is which building blocks to use. That choice decides which curves the fit can
+produce at all, how accurately a computer can find the coefficients, and how the fitted curve behaves
+away from the data, where the data have no say.
+
+</details>
+
+**Field:** Statistics, data analysis, curve fitting in every experimental science, signal processing
+
+**Tier:** 1 — each choice of basis functions gives a design matrix, and fitting is the orthogonal projection of the data onto its column space. Diagnosing a poorly determined fit with the singular value decomposition, or measuring how a basis amplifies noise, is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: three spaces: the k-dimensional function space spanned by the chosen basis functions (the possible models), the coefficients in R^k (the coordinates of a model in that basis), and the data in R^n. Evaluating the basis functions at the n data points maps R^k into R^n, and the image is the column space of the design matrix.
+
+**Underlying equations.** A statistical model, y_i = c_1 φ_1(t_i) + … + c_k φ_k(t_i) + noise, fitted by minimizing the sum of squared residuals.
+
+**The problem.** The data are n points (t_1, y_1), …, (t_n, y_n). The **basis functions** φ_1, …, φ_k are fixed functions
+of t, chosen in advance, with k smaller than n. A candidate curve is a combination
+
+```
+p(t)  =  c_1 φ_1(t)  +  c_2 φ_2(t)  +  …  +  c_k φ_k(t)
+```
+
+The known quantities are the data t_i and y_i and the basis functions; the unknowns are the
+coefficients c_1, …, c_k. The **design matrix** X has one row per data point and one column per basis
+function, with X_ij = φ_j(t_i). For example, with the basis 1, t, t² for a parabola, the row for a
+data point at t = 2 is (1, 2, 4).
+
+Choose a basis, find the coefficients that minimize the sum of squared residuals
+Σ_i (y_i − p(t_i))², and judge whether the fitted curve can be trusted, inside and outside the range
+of the data.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| t_i | data positions | where the measurements were taken, often times | n numbers | units of t |
+| y_i | data values | the measurements | n × 1 vector y | units of y |
+| n | number of data points | rows of X | integer | — |
+| k | number of basis functions | columns of X | integer, k < n | — |
+| φ_j | basis functions | fixed functions chosen in advance | k functions | dimensionless |
+| c | coefficients | p = c_1 φ_1 + … + c_k φ_k | k × 1 | units of y |
+| p | fitted curve | the combination with the best coefficients | function of t | units of y |
+| X | design matrix | X_ij = φ_j(t_i) | n × k | dimensionless |
+| ŷ | fitted values | p(t_i) at the data points, ŷ = X ĉ | n × 1 | units of y |
+| e | residuals | e = y − ŷ | n × 1 | units of y |
+| B | change-of-basis matrix | expresses one basis in terms of another | k × k, invertible | dimensionless |
+| u | rescaled position | u = 2t − 3 in the worked case | number | dimensionless |
+
+**Formulation.** **Where the equations come from.** The model is a statistical assumption: each measurement is the
+value of some curve in the model space plus random noise,
+
+```
+y_i  =  c_1 φ_1(t_i)  +  …  +  c_k φ_k(t_i)  +  noise
+```
+
+and the coefficients are chosen to minimize the sum of squared residuals.
+
+**The familiar case.** The line of best fit is the basis 1, t, with coefficients the intercept and
+the slope. Its formulas, worked out in the regression entry, are the two-column case of everything
+below.
+
+**One row at a time.** The fitted value at the i-th data point is
+
+```
+p(t_i)  =  c_1 φ_1(t_i)  +  …  +  c_k φ_k(t_i)  =  ( φ_1(t_i), …, φ_k(t_i) ) · c
+```
+
+the dot product of row i of X with the coefficient vector. Stacking the n rows gives X c, and the fit
+asks for X c ≈ y. Column j of X is the basis function φ_j sampled at the data points, so the column
+space of X is the set of all curves in the model space, as seen at the data points. The fit is the
+orthogonal projection of y onto that column space, and it satisfies the normal equations
+
+```
+Xᵀ X ĉ  =  Xᵀ y
+```
+
+Entry (j, l) of XᵀX is Σ_i φ_j(t_i) φ_l(t_i), a sampled version of the inner product of functions in
+the Fourier series entry.
+
+**Same span, different basis.** If a second basis is related to the first by an invertible matrix B,
+its design matrix is X B. That matrix has the same column space as X, so the projection is the same:
+the same fitted values ŷ, the same residuals e, the same curve p. Only the coordinates change, and
+they are related by B. Changing the basis changes the arithmetic: how well conditioned XᵀX is, and
+whether it is diagonal. Changing the span changes the model, and with it the fit.
+
+**Worked case: a parabola through four points, in two bases.** The data are (0, 1), (1, 2), (2, 2),
+(3, 5). In the basis 1, t, t² the design matrix and the normal equations are
+
+```
+    [ 1  0  0 ]
+X = [ 1  1  1 ]          [  4   6  14 ] [ c_1 ]   [ 10 ]
+    [ 1  2  4 ]          [  6  14  36 ] [ c_2 ] = [ 21 ]
+    [ 1  3  9 ]          [ 14  36  98 ] [ c_3 ]   [ 55 ]
+```
+
+Solving the dense 3 × 3 system gives ĉ = (1.2, −0.3, 0.5), so p(t) = 1.2 − 0.3t + 0.5t².
+
+Now centre and scale the positions with u = 2t − 3, which takes the values −3, −1, 1, 3, and use the
+basis 1, u, u² − 5. The three columns are (1, 1, 1, 1), (−3, −1, 1, 3) and (4, −4, −4, 4), and every pair
+of them has dot product zero. The normal equations become diagonal:
+
+```
+[ 4   0   0 ] [ c_1 ]   [ 10 ]
+[ 0  20   0 ] [ c_2 ] = [ 12 ]          so   ĉ = (2.5, 0.6, 0.125)
+[ 0   0  64 ] [ c_3 ]   [  8 ]
+```
+
+Each coefficient is one division. Substituting u = 2t − 3 gives
+2.5 + 0.6(2t − 3) + 0.125(4t² − 12t + 4) = 1.2 − 0.3t + 0.5t², the same parabola. In either basis the
+fitted values are (1.2, 1.4, 2.6, 4.8) and the residuals are (−0.2, 0.6, −0.6, 0.2), which are
+orthogonal to all three columns. The functions 1, u and u² − 5 are [orthogonal polynomials](https://en.wikipedia.org/wiki/Orthogonal_polynomials) for these four
+points, the discrete counterpart of the orthogonal sines and cosines of the Fourier series entry.
+
+**Different spans.** Take 50 equally spaced points on [0, 1] and three bases of 5 functions each: the
+polynomials 1, t, …, t⁴; cubic B-splines with one knot at t = 0.5; and the Fourier basis 1, cos 2πt,
+sin 2πt, cos 4πt, sin 4πt. Fit two noise-free signals: a seasonal cycle over one year,
+s(t) = 10 − 8 cos 2πt + 2 sin 4πt, and exponential growth, g(t) = e^t. The [root-mean-square](https://en.wikipedia.org/wiki/Root_mean_square) residuals are
+
+| Signal | Polynomial | Spline | Fourier |
+|---|---|---|---|
+| seasonal cycle s | 1.2 | 1.2 | 3 × 10⁻¹⁵ |
+| growth g | 1.8 × 10⁻⁵ | 4.9 × 10⁻⁵ | 0.27 |
+
+The seasonal signal lies in the Fourier span, so the Fourier fit reproduces it to rounding error,
+while the other two bases cannot follow its second harmonic. Growth is the opposite. Every Fourier
+basis function takes the same value at t = 0 and t = 1, but e^0 ≠ e^1, and the Fourier fit has its
+largest error, 0.89, at the ends: the Gibbs phenomenon of the Fourier series entry, at the seam.
+
+**Matrix structure.** X is tall and thin. It is dense for polynomial and Fourier bases and banded for B-splines, where each
+basis function is nonzero over at most four knot intervals, so each row of X has at most four
+nonzeros. The condition number of X on the 50 points is about 643 for the polynomials, 5.2 for the
+B-splines and 1.4 for the Fourier basis. For the same polynomials evaluated at raw calendar years
+2000 to 2049 it is about 10²², far beyond double precision, although the model space is identical.
+When the basis is orthogonal on the data points, XᵀX is diagonal, as in the worked case.
+
+**What is computed.** General-purpose software fits with a QR factorization of X, or the SVD when X may be rank-deficient,
+rather than forming XᵀX. The libraries also change the basis for the user. R's poly() builds
+orthogonal polynomials for the given data points, the second basis of the worked case. NumPy's
+Polynomial.fit maps the data range onto [−1, 1] before fitting. SciPy's make_lsq_spline fits a B-spline
+basis by least squares.
+
+**Why linear algebra is the right tool.** Because the coefficients enter linearly, a fit with curved basis functions is an orthogonal projection,
+and everything the regression entry says about projections carries over. The residuals are
+orthogonal to every basis function, adding a basis function can never increase the residual sum of
+squares, and a basis function that is a combination of the others adds nothing. Most usefully, the
+distinction between a basis and its span separates two decisions that are easy to confuse. The span
+decides what the model can represent and therefore what the fit is. The basis decides only how well
+the computer can find the coefficients.
+
+**Pitfall worth teaching.** A small residual inside the data says nothing about the curve outside it, and using a fitted curve
+beyond the range of the data is called [extrapolation](https://en.wikipedia.org/wiki/Extrapolation). Extend the two fits above half a period beyond the
+data, to t = 1.5. For the seasonal cycle, the true value is 18 and the Fourier fit gives 18, but the
+degree-4 polynomial fit, which has a residual of only 1.2 inside the data, gives about 176. For growth,
+the true value is e^1.5 ≈ 4.48 and the polynomial fit gives 4.47, but the Fourier fit gives 1.66,
+because it repeats with period 1 and so returns to its values near t = 0.5.
+
+Outside the data, the fitted curve is decided entirely by the basis. Polynomials run off towards
+infinity, Fourier sums repeat, and splines continue their last cubic piece. Choosing a basis is
+choosing an assumption about how the signal behaves where nothing was measured. A related trap is
+that adding basis functions always lowers the residual, because it enlarges the span, so a smaller
+residual is not evidence of a better model. The usual check is to hold some data back and compare
+the fits on the points they did not see.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| basis functions | fixed functions of t, chosen before seeing the coefficients, whose combinations are the candidate curves |
+| design matrix | the matrix whose column j is basis function j evaluated at every data point |
+| model space | the span of the basis functions, every curve the fit could produce |
+| linear least squares | least squares in which the coefficients enter linearly, whatever the shape of the basis functions |
+| orthogonal polynomials (for a set of points) | polynomials whose sampled values are orthogonal, so that the design matrix has orthogonal columns |
+| B-splines and knots | piecewise-cubic basis functions joined smoothly at chosen points called knots, each nonzero over only a few intervals |
+| Fourier basis | a constant together with sines and cosines of whole-number multiples of a fundamental frequency |
+| extrapolation | using a fitted curve outside the range of the data |
+| overfitting | fitting the noise in the data by using too many basis functions |
+
+**Extensions.** [Smoothing splines](https://en.wikipedia.org/wiki/Smoothing_spline) and ridge regression add a penalty on the coefficients, which keeps a large basis
+from [overfitting](https://en.wikipedia.org/wiki/Overfitting). Weighted least squares changes the inner product on the data. With as many basis
+functions as data points the fit becomes interpolation, and with the monomial basis the design matrix
+becomes the Vandermonde matrix of the polynomial interpolation entry. The Fourier series entry is the
+continuous version, with the sum over data points replaced by an integral. Savitzky–Golay filters fit a
+low-degree polynomial in a sliding window, which gives smoothed derivatives in the spirit of the
+finite-difference entry. Records with both a trend and a cycle are fitted in mixed bases: a common
+model for the [Mauna Loa carbon-dioxide record](https://en.wikipedia.org/wiki/Keeling_Curve) combines a polynomial trend with a few annual harmonics.
+When the unknowns sit inside the basis functions, such as an unknown frequency or decay rate, the
+problem becomes [nonlinear least squares](https://en.wikipedia.org/wiki/Non-linear_least_squares). The Massey and Colley ranking entry and the geodetic network
+adjustment entry use the same projection in other fields' vocabularies.
+
+---
+
 ## 47. The discrete Fourier transform: a change to a basis of complex waves
 
 <details>
@@ -2549,7 +3215,7 @@ So the inverse is just the [conjugate transpose](https://en.wikipedia.org/wiki/C
 formula x_n = (1/N) Σ X_k e^(2πi kn/N). Scaled to U = F/√N, the matrix is unitary, Uᴴ U = I: the
 complex version of an orthogonal matrix, a rotation of ℂ^N.
 
-**[Parseval](https://en.wikipedia.org/wiki/Parseval's_theorem)'s identity.** A unitary change of basis preserves length, so Σ |x_n|² = (1/N) Σ |X_k|²:
+**Parseval's identity.** A unitary change of basis preserves length, so Σ |x_n|² = (1/N) Σ |X_k|²:
 the energy of the signal can be added up over time or over frequency.
 
 **Worked case: N = 4.** Here ω = e^(−2πi/4) = −i, so every entry of F is 1, −i, −1 or i:
@@ -3305,6 +3971,9 @@ Neumann series as the Leontief entry.
 | 24 | Geodesy / surveying | Rank-deficient least squares; datum as null space | Constrained normal equations |
 | 36 | Computer graphics | Homogeneous coordinates; composition of affine maps | Dense 3 × 3 products |
 | 38 | Robotics / aerospace | Orthogonal matrices; SO(3) as a group, not a subspace | Small dense products; re-orthonormalization |
+| 43 | Numerical analysis | Transposed Vandermonde system; exactness on a polynomial subspace | Small dense solve; Fornberg recursion |
+| 44 | Applied analysis | Inner-product space of functions; orthogonal projection | Diagonal Gram matrix; FFT of samples |
+| 45 | Applied modeling | Column space of a design matrix; basis versus span | Householder QR; orthogonal polynomials |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -3326,12 +3995,6 @@ the one exception marked below.
 - **3D viewing and perspective projection** — the model-view-projection chain; why the fourth coordinate exists
 - **Barycentric coordinates and triangle rasterization** — a 3×3 solve per pixel; coordinates relative to a basis
 - **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
-
-*Polynomial and function spaces (index 41–45)*
-- **Finite-difference stencils by undetermined coefficients** — derivative weights as the solution of a small
-  linear system; differentiation as a linear operator
-- **Fourier series as orthogonal projection** — an inner-product space of functions; best approximation
-- **Least-squares fitting in a chosen function basis** — the design matrix as a basis choice made explicit
 
 *Complex scalars (index 46–47)*
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
@@ -3396,10 +4059,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 14 of the 22 written entries are now Tier 1.
+   backlog, which is under way: 17 of the 25 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 209 terms across the 22 written entries, and the backlog entries most likely to generate
+   currently covers 237 terms across the 25 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

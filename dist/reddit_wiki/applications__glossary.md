@@ -20,10 +20,12 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | assembly | summing small element matrices into the global matrix at shared DOF indices | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | attenuation coefficient | the unknown x, one value per voxel | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | attitude / orientation | a rotation matrix R relating a body frame to a reference frame | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| B-splines and knots | piecewise-cubic basis functions joined smoothly at chosen points called knots, each nonzero over only a few intervals | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | backprojection | applying A transpose to the data | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | balancing an equation | finding an integer null vector of the element-by-species matrix | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | bandwidth / skyline | the sparsity pattern induced by node numbering | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | barycentric formula | a stable way to evaluate the Lagrange form | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
+| basis functions | fixed functions of t, chosen before seeing the coefficients, whose combinations are the candidate curves | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | basis set (quantum chemistry) | the chosen basis in which H is expressed | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | benchmark (station, control point) | a surveyed point; its coordinates are unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | Bernstein polynomials | a basis of P_3 consisting of nonnegative functions that sum to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
@@ -31,6 +33,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | boundary (cordon) counts | known traffic entering and leaving at the district's edge, summarized in b | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | bridge balance | a choice of resistances that puts one edge current at zero | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | bundle adjustment | sparse nonlinear least squares over all cameras and points at once | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
+| central, forward and one-sided differences | stencils whose offsets are symmetric about x, start at x, or lie on one side of it | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | centrality | a score defined as an eigenvector, or a function, of the graph matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | Chebyshev polynomials and nodes | a basis and a set of nodes for which the interpolation problem is well conditioned | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | circulation | traffic going round a closed loop, a vector in the null space of A | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
@@ -60,6 +63,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | degrees of freedom | unknowns minus independent equations; it must be zero for a unique answer | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | degrees of freedom of the network | the nullity of S | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | density matrix | a positive semidefinite matrix with trace 1 | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| design matrix | the matrix whose column j is basis function j evaluated at every data point | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | design matrix (model matrix) X | the n × k matrix whose columns are the predictors, including a column of 1s for the intercept | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | direct vs indirect requirements | the successive terms A, A^2, A^3 of the Neumann series | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | direction cosine matrix (DCM) | the rotation matrix; its entries are cosines of angles between axes | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
@@ -79,6 +83,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | estimable quantity | a function of the coordinates that does not depend on the datum, such as a height difference | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | expectation value | the quadratic form psi^* A psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | explained variance | sigma_i^2 as a fraction of the total | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
+| extrapolation | using a fitted curve outside the range of the data | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | extrinsic parameters [R\|t] | the rigid transform from world to camera frame | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | FFT | a factorization of the DFT matrix into sparse factors, not a different transform | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | filter divergence | P losing positive definiteness in finite precision, or an unobservable direction growing without bound | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
@@ -87,19 +92,27 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | fitted values ŷ | the orthogonal projection of y onto the column space of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | flow (volume) | cars per hour on a segment, an entry of x | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | flux | v, the vector of reaction rates | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| Fornberg's algorithm | a recursion that produces the weights for any offsets and derivative orders without forming the matrix | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | forward kinematics | the product of the joint transforms along a robot arm | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| Fourier basis | a constant together with sines and cosines of whole-number multiples of a fundamental frequency | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
+| Fourier coefficients a_n, b_n | the amounts of cos nx and sin nx in the function | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | free network | a minimum-norm solution, with no point held fixed | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | frequency bin k | the coefficient of the k-th complex wave in the Fourier basis | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | generator matrix G | a basis of the code, written as rows | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
+| Gibbs phenomenon | the overshoot of partial sums next to a jump, which does not shrink as N grows | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | gimbal lock | Euler angles at which two of the three angles turn about the same axis | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| Gram matrix | the matrix of inner products of the basis functions | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
+| grid and grid spacing h | equally spaced points x + s h at which the function is known | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | gross / total output | the unknown x | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | ground (reference node) | the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Hamiltonian | the Hermitian matrix H in H psi = E psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | handedness | the sign of the determinant; +1 for rotations, −1 for reflections | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| harmonic | sin nx or cos nx, oscillating n times per period | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | hat matrix H | the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | homogeneous coordinates | an added coordinate that turns perspective division into a linear map plus a normalization | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | homogeneous transformation | the 4 × 4 matrix [R t; 0 1] | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | identity transform | the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | innovation / residual | z - Hx, the part of the measurement the prediction did not explain | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | interpolant | the unique element of P_d with the prescribed values at the nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | intrinsic matrix K | the camera's internal calibration, an upper-triangular 3x3 | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
@@ -114,6 +127,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Leontief inverse | (I - A)^-1 | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | levelling (spirit levelling) | measuring height differences between benchmarks | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | leverage h_ii | the i-th diagonal entry of H; how strongly observation i pulls its own fitted value | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
+| linear least squares | least squares in which the coefficients enter linearly, whatever the shape of the basis functions | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | link (road segment) | one coordinate of the flow vector | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | link closure | forcing a coordinate of x to zero, which may leave no admissible solution | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | link matrix | the column-stochastic matrix P built from the graph | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
@@ -123,10 +137,12 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | loop (mesh) currents | coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1 | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | matrix(a, b, c, d, e, f) | the SVG/CSS notation for the 3 × 3 matrix with columns (a, b, 0), (c, d, 0), (e, f, 1) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | mechanism | a nontrivial null space of K — the structure can move with no restoring force | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| method of undetermined coefficients | writing the weights as unknowns and solving the conditions they must satisfy | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | minimally constrained vs overconstrained adjustment | removing exactly the null space vs also forcing the network to fit fixed points | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | minimum distance | the smallest weight of a nonzero codeword | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | misclosure | the amount by which observations around a loop fail to add up to zero | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | mode shape | an eigenvector of K phi = lambda M phi | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| model space | the span of the basis functions, every curve the fit could produce | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | monomial (power) form | coordinates in the basis 1, x, x², …, x^d | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | multicollinearity | columns of X that are nearly linearly dependent, so β is poorly determined | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | multiplier | a single entry of the Leontief inverse | [Leontief input-output economics](applications/leontief-input-output-economics) |
@@ -139,6 +155,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | node (intersection) | one row of the conservation system | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | node voltage (potential) | one entry of the vector φ in R^n | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | nodes (interpolation points) | the d + 1 distinct x-values where the polynomial must match the data | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
+| norm and energy | ‖f‖² = ⟨f, f⟩, the integral of the square of f | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | normal equations | Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | North's rule of thumb | a test for whether two singular values are too close to separate the modes | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | Nyquist bin | bin N/2, the fastest wave a block of N samples can represent | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
@@ -146,13 +163,21 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | observable | a Hermitian operator; its eigenvalues are the measurable values | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | observation equation | one row of the system, an observation written in terms of the unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | observation model H | the linear map from state space to measurement space | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
+| offset s_j | the position of a sample, counted in grid steps from the point x where the derivative is wanted | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | on-curve and off-curve points (font editors) | the end control points, which the curve passes through, and the inner control points, which it generally does not | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| order of accuracy | the power p in an error proportional to h^p | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | origin and destination volumes | the entries of b, net traffic entering the network at each node | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
+| orthogonal functions | functions whose inner product is zero | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
+| orthogonal polynomials (for a set of points) | polynomials whose sampled values are orthogonal, so that the design matrix has orthogonal columns | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | overall (total) balance | the sum of the component balances, a linearly dependent row | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
+| overfitting | fitting the noise in the data by using too many basis functions | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | parity block | the block chosen so that every stripe satisfies d_1 + ⋯ + d_(n−1) + p = 0 | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | parity-check matrix H | a basis of the code's orthogonal complement; codewords are its null space | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
+| Parseval's identity | the energy of f is the sum of the energies of its components | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | Parseval's theorem | the change of basis preserves length (energy), up to the factor N | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
+| partial sum S_N | the series cut off after the N-th harmonic | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | perfect (information-theoretic) secrecy | every candidate secret is consistent with the same number of polynomials through any k − 1 shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| period and fundamental | the length after which the signal repeats (2π here), and the sine or cosine that repeats exactly once in it | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | pose (frame, transform) | a rotation and a translation together, a 4 × 4 matrix in SE(3) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | power iteration | repeated multiplication by the matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | principal component time series | the corresponding right singular vector, scaled | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
@@ -177,6 +202,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | residuals | the component of y in the orthogonal complement of the column space | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | restraint / boundary condition | deleting the corresponding rows and columns, or adding constraint rows | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | rotated EOF (varimax) | a deliberately non-orthogonal re-basis of the leading subspace | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
+| rounding (cancellation) error | the loss of digits when nearly equal sample values are subtracted | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | Runge phenomenon | large oscillations of high-degree interpolants at equally spaced nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | R² | the squared length of the centered fitted vector over that of the centered data vector | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | samples | the coordinates of the signal in the standard basis (one per time step) | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
@@ -193,6 +219,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | state vector | the unknown x being estimated | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | stationary distribution | the dominant eigenvector, normalized | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | steady state | Sv = 0 — v lies in the right null space | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| stencil | a list of offsets and weights; the estimate is the weighted sum of the samples | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | stiffness matrix | the coefficient matrix K; symmetric positive definite once restraints are applied | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | stoichiometric matrix S | species by reactions, signed integer coefficients | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | streak artifact | the visible signature of undersampling — energy in the near-null space | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
@@ -213,6 +240,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | transform attribute / CSS transform property | a list of elementary transforms whose matrices are multiplied in the order written | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | transform-origin | the point about which rotation and scaling happen, a conjugation T(c) M T(−c) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | translate, rotate, scale, skew | the elementary matrices of the stack | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| truncation error | the error from cutting off the Taylor series, present even in exact arithmetic | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | twiddle factor ω^(kn) | an entry of the DFT matrix | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | unitary gate | a norm-preserving complex linear map — the complex analogue of an orthogonal matrix | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | user space vs viewport space | two coordinate systems related by the CTM | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |

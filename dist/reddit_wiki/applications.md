@@ -81,8 +81,8 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 * Poisson and Navier-Stokes discretization — Tier 3 *(planned)*
 * [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) — Tier 1
-* Finite-difference stencils by undetermined coefficients — Tier 1 *(planned)*
-* Fourier series as orthogonal projection — Tier 1 *(planned)*
+* [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) — Tier 1
+* [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) — Tier 1
 
 ## Medicine & Imaging
 
@@ -103,4 +103,4 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 * [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) — Tier 1
 * Sports and citation ranking (Massey/Colley) — Tier 1 *(planned)*
-* Least-squares fitting in a chosen function basis — Tier 1 *(planned)*
+* [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) — Tier 1

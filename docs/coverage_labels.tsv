@@ -20,3 +20,6 @@
 | 24 | Geodesy / surveying | Rank-deficient least squares; datum as null space | Constrained normal equations |
 | 36 | Computer graphics | Homogeneous coordinates; composition of affine maps | Dense 3 × 3 products |
 | 38 | Robotics / aerospace | Orthogonal matrices; SO(3) as a group, not a subspace | Small dense products; re-orthonormalization |
+| 43 | Numerical analysis | Transposed Vandermonde system; exactness on a polynomial subspace | Small dense solve; Fornberg recursion |
+| 44 | Applied analysis | Inner-product space of functions; orthogonal projection | Diagonal Gram matrix; FFT of samples |
+| 45 | Applied modeling | Column space of a design matrix; basis versus span | Householder QR; orthogonal polynomials |

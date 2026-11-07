@@ -1,12 +1,18 @@
 domain_term,entry_id,linear_algebra_meaning,entry_title,field,subfield
 "(k, n) scheme",48,a polynomial in a k-dimensional space evaluated at n distinct points,Shamir secret sharing,Computer Science,Cryptography
 ART / SIRT,3,Kaczmarz row-action and related simultaneous iterations,Computed tomography reconstruction,Medicine,Medical imaging
+B-splines and knots,45,"piecewise-cubic basis functions joined smoothly at chosen points called knots, each nonzero over only a few intervals",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 Bernstein polynomials,42,a basis of P_3 consisting of nonnegative functions that sum to 1,Bezier curves and font rendering,Computer Science,Typography/vector graphics
 Chebyshev polynomials and nodes,41,a basis and a set of nodes for which the interpolation problem is well conditioned,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 DC component,47,"bin 0, the coefficient of the constant vector, N times the mean",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 DLT (direct linear transform),8,stacking constraints into A and taking the smallest right singular vector,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 EOF,9,a left singular vector — one spatial pattern,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 FFT,47,"a factorization of the DFT matrix into sparse factors, not a different transform",The small DFT as a complex unitary matrix,Mathematics,Signal processing
+Fornberg's algorithm,43,a recursion that produces the weights for any offsets and derivative orders without forming the matrix,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
+Fourier basis,45,a constant together with sines and cosines of whole-number multiples of a fundamental frequency,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
+"Fourier coefficients a_n, b_n",44,the amounts of cos nx and sin nx in the function,Fourier series as orthogonal projection,Mathematics,Applied analysis
+Gibbs phenomenon,44,"the overshoot of partial sums next to a jump, which does not shrink as N grows",Fourier series as orthogonal projection,Mathematics,Applied analysis
+Gram matrix,44,the matrix of inner products of the basis functions,Fourier series as orthogonal projection,Mathematics,Applied analysis
 Hamiltonian,10,the Hermitian matrix H in H psi = E psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 Kalman gain,2,the projection weight matrix that blends prediction and measurement,Kalman filtering for navigation,Engineering,Aerospace/control
 Kirchhoff's current law (KCL),12,"A^T I = s, a statement about the left null space of A",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
@@ -18,6 +24,7 @@ Leontief inverse,5,(I - A)^-1,Leontief input-output economics,Economics,Macroeco
 Newton form and divided differences,41,"coordinates in the basis 1, (x − x_0), (x − x_0)(x − x_1), …, computed by a triangular solve",Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 North's rule of thumb,9,a test for whether two singular values are too close to separate the modes,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 Nyquist bin,47,"bin N/2, the fastest wave a block of N samples can represent",The small DFT as a complex unitary matrix,Mathematics,Signal processing
+Parseval's identity,44,the energy of f is the sum of the energies of its components,Fourier series as orthogonal projection,Mathematics,Applied analysis
 Parseval's theorem,47,"the change of basis preserves length (energy), up to the factor N",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 RAID-6,49,"a second, independent equation over GF(2^8), so two erasures can be solved",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 Runge phenomenon,41,large oscillations of high-degree interpolants at equally spaced nodes,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
@@ -34,12 +41,14 @@ backprojection,3,applying A transpose to the data,Computed tomography reconstruc
 balancing an equation,4,finding an integer null vector of the element-by-species matrix,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 bandwidth / skyline,1,the sparsity pattern induced by node numbering,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 barycentric formula,41,a stable way to evaluate the Lagrange form,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
+basis functions,45,"fixed functions of t, chosen before seeing the coefficients, whose combinations are the candidate curves",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 basis set (quantum chemistry),10,the chosen basis in which H is expressed,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 "benchmark (station, control point)",24,a surveyed point; its coordinates are unknowns,Geodetic network adjustment,Earth Science,Geodesy/surveying
 body frame vs world frame,38,two orthonormal bases; R changes coordinates from one to the other,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 boundary (cordon) counts,51,"known traffic entering and leaving at the district's edge, summarized in b",Traffic flow conservation at intersections,Engineering,Transportation
 bridge balance,12,a choice of resistances that puts one edge current at zero,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 bundle adjustment,8,sparse nonlinear least squares over all cameras and points at once,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+"central, forward and one-sided differences",43,"stencils whose offsets are symmetric about x, start at x, or lie on one side of it",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 centrality,6,"a score defined as an eigenvector, or a function, of the graph matrix",PageRank and network centrality,Computer Science,Network science
 circulation,51,"traffic going round a closed loop, a vector in the null space of A",Traffic flow conservation at intersections,Engineering,Transportation
 code rate,7,"k/n, the subspace dimension over the ambient dimension",Linear error-correcting codes,Engineering,Communications/information theory
@@ -67,6 +76,7 @@ degrees of freedom,20,dimensions; k for the model (the trace of H) and n − k f
 degrees of freedom,52,unknowns minus independent equations; it must be zero for a unique answer,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 degrees of freedom of the network,4,the nullity of S,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 density matrix,10,a positive semidefinite matrix with trace 1,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+design matrix,45,the matrix whose column j is basis function j evaluated at every data point,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 design matrix (model matrix) X,20,"the n × k matrix whose columns are the predictors, including a column of 1s for the intercept",Least squares regression and the hat matrix,Statistics,Applied statistics
 direct vs indirect requirements,5,"the successive terms A, A^2, A^3 of the Neumann series",Leontief input-output economics,Economics,Macroeconomics/EEIO
 direction cosine matrix (DCM),38,the rotation matrix; its entries are cosines of angles between axes,3D rotations and rigid-body pose,Engineering,Robotics/graphics
@@ -84,6 +94,7 @@ essential / fundamental matrix,8,the rank-2 bilinear form satisfying x'^T E x = 
 estimable quantity,24,"a function of the coordinates that does not depend on the datum, such as a height difference",Geodetic network adjustment,Earth Science,Geodesy/surveying
 expectation value,10,the quadratic form psi^* A psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 explained variance,9,sigma_i^2 as a fraction of the total,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+extrapolation,45,using a fitted curve outside the range of the data,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 extrinsic parameters [R|t],8,the rigid transform from world to camera frame,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 filter divergence,2,"P losing positive definiteness in finite precision, or an unobservable direction growing without bound",Kalman filtering for navigation,Engineering,Aerospace/control
 filtered backprojection (FBP),3,an analytic spectral inverse of the forward operator,Computed tomography reconstruction,Medicine,Medical imaging
@@ -96,13 +107,16 @@ free network,24,"a minimum-norm solution, with no point held fixed",Geodetic net
 frequency bin k,47,the coefficient of the k-th complex wave in the Fourier basis,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 generator matrix G,7,"a basis of the code, written as rows",Linear error-correcting codes,Engineering,Communications/information theory
 gimbal lock,38,Euler angles at which two of the three angles turn about the same axis,3D rotations and rigid-body pose,Engineering,Robotics/graphics
+grid and grid spacing h,43,equally spaced points x + s h at which the function is known,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 gross / total output,5,the unknown x,Leontief input-output economics,Economics,Macroeconomics/EEIO
 ground (reference node),12,"the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 handedness,38,"the sign of the determinant; +1 for rotations, −1 for reflections",3D rotations and rigid-body pose,Engineering,Robotics/graphics
+harmonic,44,"sin nx or cos nx, oscillating n times per period",Fourier series as orthogonal projection,Mathematics,Applied analysis
 hat matrix H,20,"the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y",Least squares regression and the hat matrix,Statistics,Applied statistics
 homogeneous coordinates,8,an added coordinate that turns perspective division into a linear map plus a normalization,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 homogeneous transformation,38,the 4 × 4 matrix [R t; 0 1],3D rotations and rigid-body pose,Engineering,Robotics/graphics
 identity transform,36,"the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0)",2D affine transforms in vector graphics,Computer Science,Computer graphics
+inner product of functions,44,"⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product",Fourier series as orthogonal projection,Mathematics,Applied analysis
 innovation / residual,2,"z - Hx, the part of the measurement the prediction did not explain",Kalman filtering for navigation,Engineering,Aerospace/control
 interpolant,41,the unique element of P_d with the prescribed values at the nodes,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 intrinsic matrix K,8,"the camera's internal calibration, an upper-triangular 3x3",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
@@ -110,6 +124,7 @@ inverse DFT,47,"the change of basis back, using the conjugate transpose",The sma
 ket / state vector,10,a unit vector in a complex inner-product space,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 levelling (spirit levelling),24,measuring height differences between benchmarks,Geodetic network adjustment,Earth Science,Geodesy/surveying
 leverage h_ii,20,the i-th diagonal entry of H; how strongly observation i pulls its own fitted value,Least squares regression and the hat matrix,Statistics,Applied statistics
+linear least squares,45,"least squares in which the coefficients enter linearly, whatever the shape of the basis functions",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 link (road segment),51,one coordinate of the flow vector,Traffic flow conservation at intersections,Engineering,Transportation
 link closure,51,"forcing a coordinate of x to zero, which may leave no admissible solution",Traffic flow conservation at intersections,Engineering,Transportation
 link matrix,6,the column-stochastic matrix P built from the graph,PageRank and network centrality,Computer Science,Network science
@@ -119,10 +134,12 @@ local vs global coordinates,36,reading a product right to left (each step in the
 loop (mesh) currents,12,"coordinates in a basis of the cycle space, the null space of A^T, dimension m - n + 1",Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 "matrix(a, b, c, d, e, f)",36,"the SVG/CSS notation for the 3 × 3 matrix with columns (a, b, 0), (c, d, 0), (e, f, 1)",2D affine transforms in vector graphics,Computer Science,Computer graphics
 mechanism,1,a nontrivial null space of K — the structure can move with no restoring force,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+method of undetermined coefficients,43,writing the weights as unknowns and solving the conditions they must satisfy,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 minimally constrained vs overconstrained adjustment,24,removing exactly the null space vs also forcing the network to fit fixed points,Geodetic network adjustment,Earth Science,Geodesy/surveying
 minimum distance,7,the smallest weight of a nonzero codeword,Linear error-correcting codes,Engineering,Communications/information theory
 misclosure,24,the amount by which observations around a loop fail to add up to zero,Geodetic network adjustment,Earth Science,Geodesy/surveying
 mode shape,1,an eigenvector of K phi = lambda M phi,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
+model space,45,"the span of the basis functions, every curve the fit could produce",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 monomial (power) form,41,"coordinates in the basis 1, x, x², …, x^d",Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 multicollinearity,20,"columns of X that are nearly linearly dependent, so β is poorly determined",Least squares regression and the hat matrix,Statistics,Applied statistics
 multiplier,5,a single entry of the Leontief inverse,Leontief input-output economics,Economics,Macroeconomics/EEIO
@@ -134,17 +151,25 @@ nodal conductance (admittance) matrix,12,the weighted graph Laplacian L = A^T C 
 node (intersection),51,one row of the conservation system,Traffic flow conservation at intersections,Engineering,Transportation
 node voltage (potential),12,one entry of the vector φ in R^n,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 nodes (interpolation points),41,the d + 1 distinct x-values where the polynomial must match the data,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
+norm and energy,44,"‖f‖² = ⟨f, f⟩, the integral of the square of f",Fourier series as orthogonal projection,Mathematics,Applied analysis
 normal equations,20,"Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X",Least squares regression and the hat matrix,Statistics,Applied statistics
 observability,2,rank of the stacked matrix [H; HF; HF^2; ...],Kalman filtering for navigation,Engineering,Aerospace/control
 observable,10,a Hermitian operator; its eigenvalues are the measurable values,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 observation equation,24,"one row of the system, an observation written in terms of the unknowns",Geodetic network adjustment,Earth Science,Geodesy/surveying
 observation model H,2,the linear map from state space to measurement space,Kalman filtering for navigation,Engineering,Aerospace/control
+offset s_j,43,"the position of a sample, counted in grid steps from the point x where the derivative is wanted",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 on-curve and off-curve points (font editors),42,"the end control points, which the curve passes through, and the inner control points, which it generally does not",Bezier curves and font rendering,Computer Science,Typography/vector graphics
+order of accuracy,43,the power p in an error proportional to h^p,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 origin and destination volumes,51,"the entries of b, net traffic entering the network at each node",Traffic flow conservation at intersections,Engineering,Transportation
+orthogonal functions,44,functions whose inner product is zero,Fourier series as orthogonal projection,Mathematics,Applied analysis
+orthogonal polynomials (for a set of points),45,"polynomials whose sampled values are orthogonal, so that the design matrix has orthogonal columns",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 overall (total) balance,52,"the sum of the component balances, a linearly dependent row",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
+overfitting,45,fitting the noise in the data by using too many basis functions,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 parity block,49,the block chosen so that every stripe satisfies d_1 + ⋯ + d_(n−1) + p = 0,RAID-5 parity and XOR recovery,Computer Science,Storage systems
 parity-check matrix H,7,a basis of the code's orthogonal complement; codewords are its null space,Linear error-correcting codes,Engineering,Communications/information theory
+partial sum S_N,44,the series cut off after the N-th harmonic,Fourier series as orthogonal projection,Mathematics,Applied analysis
 perfect (information-theoretic) secrecy,48,every candidate secret is consistent with the same number of polynomials through any k − 1 shares,Shamir secret sharing,Computer Science,Cryptography
+period and fundamental,44,"the length after which the signal repeats (2π here), and the sine or cosine that repeats exactly once in it",Fourier series as orthogonal projection,Mathematics,Applied analysis
 "pose (frame, transform)",38,"a rotation and a translation together, a 4 × 4 matrix in SE(3)",3D rotations and rigid-body pose,Engineering,Robotics/graphics
 power iteration,6,repeated multiplication by the matrix,PageRank and network centrality,Computer Science,Network science
 principal component time series,9,"the corresponding right singular vector, scaled",Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
@@ -168,6 +193,7 @@ residual (correction) v,24,the change to each observation that makes the set con
 residuals,20,the component of y in the orthogonal complement of the column space,Least squares regression and the hat matrix,Statistics,Applied statistics
 restraint / boundary condition,1,"deleting the corresponding rows and columns, or adding constraint rows",Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 rotated EOF (varimax),9,a deliberately non-orthogonal re-basis of the leading subspace,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
+rounding (cancellation) error,43,the loss of digits when nearly equal sample values are subtracted,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 samples,47,the coordinates of the signal in the standard basis (one per time step),The small DFT as a complex unitary matrix,Mathematics,Signal processing
 sequential modular vs equation-oriented simulation,52,fixed-point iteration around loops vs solving the whole linear system at once,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 share,48,"a point (x_i, f(x_i)), one coordinate of the evaluation map's output",Shamir secret sharing,Computer Science,Cryptography
@@ -181,6 +207,7 @@ square-root filter,2,propagating a Cholesky factor of P instead of P,Kalman filt
 state vector,2,the unknown x being estimated,Kalman filtering for navigation,Engineering,Aerospace/control
 stationary distribution,6,"the dominant eigenvector, normalized",PageRank and network centrality,Computer Science,Network science
 steady state,4,Sv = 0 — v lies in the right null space,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+stencil,43,a list of offsets and weights; the estimate is the weighted sum of the samples,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 stiffness matrix,1,the coefficient matrix K; symmetric positive definite once restraints are applied,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 stoichiometric matrix S,4,"species by reactions, signed integer coefficients",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 streak artifact,3,the visible signature of undersampling — energy in the near-null space,Computed tomography reconstruction,Medicine,Medical imaging
@@ -201,6 +228,7 @@ traffic counts (detector or loop counts),51,"measured coordinates of x, used to 
 transform attribute / CSS transform property,36,a list of elementary transforms whose matrices are multiplied in the order written,2D affine transforms in vector graphics,Computer Science,Computer graphics
 transform-origin,36,"the point about which rotation and scaling happen, a conjugation T(c) M T(−c)",2D affine transforms in vector graphics,Computer Science,Computer graphics
 "translate, rotate, scale, skew",36,the elementary matrices of the stack,2D affine transforms in vector graphics,Computer Science,Computer graphics
+truncation error,43,"the error from cutting off the Taylor series, present even in exact arithmetic",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 twiddle factor ω^(kn),47,an entry of the DFT matrix,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 unitary gate,10,a norm-preserving complex linear map — the complex analogue of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 user space vs viewport space,36,two coordinate systems related by the CTM,2D affine transforms in vector graphics,Computer Science,Computer graphics

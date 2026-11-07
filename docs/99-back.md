@@ -24,12 +24,6 @@ the one exception marked below.
 - **Barycentric coordinates and triangle rasterization** — a 3×3 solve per pixel; coordinates relative to a basis
 - **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
-*Polynomial and function spaces (index 41–45)*
-- **Finite-difference stencils by undetermined coefficients** — derivative weights as the solution of a small
-  linear system; differentiation as a linear operator
-- **Fourier series as orthogonal projection** — an inner-product space of functions; best approximation
-- **Least-squares fitting in a chosen function basis** — the design matrix as a basis choice made explicit
-
 *Complex scalars (index 46–47)*
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
   equation into an algebraic one. *Tier 3, not Tier 1:* the phasor method is a technique for solving

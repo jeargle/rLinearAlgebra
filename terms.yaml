@@ -64,9 +64,12 @@ terms:
   - 8
   - 20
   - 41
+  - 43
+  - 44
+  - 45
   - 48
   lowest_tier: 1
-  uses: 16
+  uses: 20
   match:
   - condition number
   - ill-conditioned
@@ -104,9 +107,11 @@ terms:
   - 20
   - 24
   - 42
+  - 43
+  - 44
   - 47
   lowest_tier: 1
-  uses: 31
+  uses: 33
   match:
   - eigenvalues?
   - eigenvectors?
@@ -215,10 +220,13 @@ terms:
   - 24
   - 41
   - 42
+  - 43
+  - 44
+  - 45
   - 51
   - 52
   lowest_tier: 1
-  uses: 23
+  uses: 30
   match:
   - least[- ]squares
 - term: low-rank approximation (Eckart–Young)
@@ -328,8 +336,10 @@ terms:
   - 2
   - 20
   - 24
+  - 44
+  - 45
   lowest_tier: 1
-  uses: 13
+  uses: 28
   match:
   - orthogonal[- ]projection
   - \bprojection\b
@@ -390,10 +400,11 @@ terms:
   - 12
   - 20
   - 24
+  - 45
   - 51
   - 52
   lowest_tier: 1
-  uses: 12
+  uses: 13
   match:
   - rank-deficient
   - \brank(?=\([A-Za-z])
@@ -441,8 +452,9 @@ terms:
   - 9
   - 20
   - 36
+  - 45
   lowest_tier: 1
-  uses: 20
+  uses: 23
   match:
   - singular value decomposition
   - \bSVD\b
@@ -481,11 +493,12 @@ terms:
   - 12
   - 20
   - 24
+  - 43
   - 47
   - 51
   - 52
   lowest_tier: 1
-  uses: 25
+  uses: 27
   match:
   - \bsparse\b
   - sparsity
@@ -576,9 +589,11 @@ terms:
   entries:
   - 7
   - 41
+  - 43
+  - 45
   - 48
   lowest_tier: 1
-  uses: 13
+  uses: 19
   match:
   - Vandermonde
 - term: well-posed / ill-posed problem
@@ -1139,8 +1154,9 @@ terms:
   note: ''
   entries:
   - 9
-  lowest_tier: 2
-  uses: 13
+  - 44
+  lowest_tier: 1
+  uses: 9
   match:
   - empirical orthogonal
   - \bEOFs?\b
@@ -2597,8 +2613,9 @@ terms:
   note: ''
   entries:
   - 42
+  - 45
   lowest_tier: 1
-  uses: 1
+  uses: 5
   match:
   - B-splines?
 - term: NURBS
@@ -2704,8 +2721,10 @@ terms:
   entries:
   - 20
   - 24
+  - 44
+  - 45
   lowest_tier: 1
-  uses: 3
+  uses: 10
   match:
   - design matri
 - term: hat (projection) matrix
@@ -2744,8 +2763,9 @@ terms:
   entries:
   - 20
   - 24
+  - 45
   lowest_tier: 1
-  uses: 3
+  uses: 4
   match:
   - \bQR\b
 - term: Householder reflection
@@ -2809,8 +2829,9 @@ terms:
   note: ''
   entries:
   - 20
+  - 45
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - '[Rr]idge regression'
 - term: degrees of freedom
@@ -2835,8 +2856,10 @@ terms:
   note: ''
   entries:
   - 41
+  - 43
+  - 45
   lowest_tier: 1
-  uses: 4
+  uses: 7
   match:
   - \binterpolation\b
 - term: Newton polynomial
@@ -2990,9 +3013,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 44
   - 47
   lowest_tier: 1
-  uses: 2
+  uses: 3
   match:
   - Parseval
 - term: fast Fourier transform
@@ -3433,8 +3457,9 @@ terms:
   note: ''
   entries:
   - 24
+  - 45
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - '[Ww]eighted least squares'
 - term: SVG
@@ -3629,8 +3654,9 @@ terms:
   note: ''
   entries:
   - 38
+  - 44
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - Gram–Schmidt
 - term: inertial navigation
@@ -3655,7 +3681,388 @@ terms:
   note: ''
   entries:
   - 38
+  - 43
+  lowest_tier: 1
+  uses: 5
+  match:
+  - \bdeterminant\b
+- term: finite difference
+  aliases: []
+  kind: numerical method
+  wikipedia: Finite difference
+  url: https://en.wikipedia.org/wiki/Finite_difference
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 1
+  match:
+  - finite-difference
+  - finite difference
+- term: stencil
+  aliases: []
+  kind: numerical method
+  wikipedia: Stencil (numerical analysis)
+  url: https://en.wikipedia.org/wiki/Stencil_%28numerical_analysis%29
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 29
+  match:
+  - \bstencils?\b
+- term: Taylor series
+  aliases: []
+  kind: domain concept
+  wikipedia: Taylor series
+  url: https://en.wikipedia.org/wiki/Taylor_series
+  recommend: link
+  note: ''
+  entries:
+  - 43
   lowest_tier: 1
   uses: 4
   match:
-  - \bdeterminant\b
+  - Taylor
+- term: order of accuracy
+  aliases: []
+  kind: numerical method
+  wikipedia: Order of accuracy
+  url: https://en.wikipedia.org/wiki/Order_of_accuracy
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 2
+  match:
+  - order of accuracy
+- term: round-off error
+  aliases: []
+  kind: numerical method
+  wikipedia: Round-off error
+  url: https://en.wikipedia.org/wiki/Round-off_error
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 1
+  match:
+  - rounding error
+- term: linear functional
+  aliases: []
+  kind: linear algebra
+  wikipedia: Linear form
+  url: https://en.wikipedia.org/wiki/Linear_form
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 4
+  match:
+  - linear functional
+- term: Toeplitz matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Toeplitz matrix
+  url: https://en.wikipedia.org/wiki/Toeplitz_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Toeplitz
+- term: Richardson extrapolation
+  aliases: []
+  kind: numerical method
+  wikipedia: Richardson extrapolation
+  url: https://en.wikipedia.org/wiki/Richardson_extrapolation
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Richardson extrapolation
+- term: Simpson's rule
+  aliases: []
+  kind: numerical method
+  wikipedia: Simpson's rule
+  url: https://en.wikipedia.org/wiki/Simpson's_rule
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Simpson's rule
+- term: Savitzky–Golay filter
+  aliases: []
+  kind: numerical method
+  wikipedia: Savitzky–Golay filter
+  url: https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter
+  recommend: link
+  note: ''
+  entries:
+  - 43
+  - 45
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Savitzky–Golay
+- term: Fourier series
+  aliases: []
+  kind: domain concept
+  wikipedia: Fourier series
+  url: https://en.wikipedia.org/wiki/Fourier_series
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 3
+  match:
+  - Fourier series
+- term: inner product space
+  aliases: []
+  kind: linear algebra
+  wikipedia: Inner product space
+  url: https://en.wikipedia.org/wiki/Inner_product_space
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 5
+  match:
+  - \binner product
+- term: harmonic
+  aliases: []
+  kind: domain concept
+  wikipedia: Harmonic
+  url: https://en.wikipedia.org/wiki/Harmonic
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 11
+  match:
+  - \bharmonics?\b
+- term: square wave
+  aliases: []
+  kind: domain concept
+  wikipedia: Square wave (waveform)
+  url: https://en.wikipedia.org/wiki/Square_wave_%28waveform%29
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 9
+  match:
+  - square wave
+- term: Gram matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Gram matrix
+  url: https://en.wikipedia.org/wiki/Gram_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 6
+  match:
+  - Gram matrix
+- term: Hilbert matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Hilbert matrix
+  url: https://en.wikipedia.org/wiki/Hilbert_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Hilbert matrix
+- term: Legendre polynomials
+  aliases: []
+  kind: domain concept
+  wikipedia: Legendre polynomials
+  url: https://en.wikipedia.org/wiki/Legendre_polynomials
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Legendre polynomial
+- term: Gibbs phenomenon
+  aliases: []
+  kind: domain concept
+  wikipedia: Gibbs phenomenon
+  url: https://en.wikipedia.org/wiki/Gibbs_phenomenon
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  - 45
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Gibbs phenomenon
+- term: trapezoidal rule
+  aliases: []
+  kind: numerical method
+  wikipedia: Trapezoidal rule
+  url: https://en.wikipedia.org/wiki/Trapezoidal_rule
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 2
+  match:
+  - trapezoidal rule
+- term: aliasing
+  aliases: []
+  kind: domain concept
+  wikipedia: Aliasing
+  url: https://en.wikipedia.org/wiki/Aliasing
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \baliasing\b
+- term: Hilbert space
+  aliases: []
+  kind: linear algebra
+  wikipedia: Hilbert space
+  url: https://en.wikipedia.org/wiki/Hilbert_space
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Hilbert space
+- term: wavelet
+  aliases: []
+  kind: domain concept
+  wikipedia: Wavelet
+  url: https://en.wikipedia.org/wiki/Wavelet
+  recommend: link
+  note: ''
+  entries:
+  - 44
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bwavelets?\b
+- term: orthogonal polynomials
+  aliases: []
+  kind: linear algebra
+  wikipedia: Orthogonal polynomials
+  url: https://en.wikipedia.org/wiki/Orthogonal_polynomials
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 2
+  match:
+  - orthogonal polynomials
+- term: smoothing spline
+  aliases: []
+  kind: numerical method
+  wikipedia: Smoothing spline
+  url: https://en.wikipedia.org/wiki/Smoothing_spline
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 1
+  match:
+  - smoothing spline
+- term: extrapolation
+  aliases: []
+  kind: domain concept
+  wikipedia: Extrapolation
+  url: https://en.wikipedia.org/wiki/Extrapolation
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bextrapolation\b
+- term: overfitting
+  aliases: []
+  kind: domain concept
+  wikipedia: Overfitting
+  url: https://en.wikipedia.org/wiki/Overfitting
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 1
+  match:
+  - overfitting
+- term: root mean square
+  aliases: []
+  kind: domain concept
+  wikipedia: Root mean square
+  url: https://en.wikipedia.org/wiki/Root_mean_square
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 1
+  match:
+  - root-mean-square
+- term: nonlinear least squares
+  aliases: []
+  kind: numerical method
+  wikipedia: Non-linear least squares
+  url: https://en.wikipedia.org/wiki/Non-linear_least_squares
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 1
+  match:
+  - nonlinear least squares
+- term: Keeling Curve
+  aliases: []
+  kind: domain concept
+  wikipedia: Keeling Curve
+  url: https://en.wikipedia.org/wiki/Keeling_Curve
+  recommend: link
+  note: ''
+  entries:
+  - 45
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Mauna Loa carbon-dioxide record
