@@ -24,6 +24,8 @@ of two unrelated physical processes.
 **Vectors:** each time slice is a spatial field in R^s (s grid points); EOFs live in R^s and [principal-component](https://en.wikipedia.org/wiki/Principal_component_analysis) series in R^t (t time steps)  
 **Underlying equations:** A statistical decomposition of observed data; no physical model of the ocean or atmosphere is used
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/09-empirical-orthogonal-functions-in-climate-data.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 A century of monthly sea-surface temperatures on a global grid is a matrix with 10⁴–10⁵ spatial points and 10³ time steps. Extract the few spatial patterns that account for most of the variability — the objects a climatologist can actually reason about, like El Niño.

@@ -24,6 +24,8 @@ that actually occur in nature occupy a very thin slice of that enormous space.
 **Vectors:** unit vectors in C^d; for n [qubits](https://en.wikipedia.org/wiki/Qubit) d = 2^n and the space is the [tensor product](https://en.wikipedia.org/wiki/Tensor_product) (C^2)^(x)n. Global phase is unphysical, so states are really points of [CP^(d-1)](https://en.wikipedia.org/wiki/Complex_projective_space). Observables are [Hermitian](https://en.wikipedia.org/wiki/Hermitian_matrix) matrices, which form a REAL vector space of dimension d^2  
 **Underlying equations:** Linear Schrödinger equation iħ dψ/dt = H ψ; separation of variables gives the eigenproblem H φ = E φ
 
+**[Run this example](https://jeargle.github.io/rLinearAlgebra/notebooks/10-quantum-mechanics-and-quantum-computing.html)** — an interactive notebook that runs in your browser, with nothing to install.
+
 ### The problem
 
 Two versions. (a) Compute the energy levels and spectra of a molecule. (b) Simulate or design a quantum circuit.

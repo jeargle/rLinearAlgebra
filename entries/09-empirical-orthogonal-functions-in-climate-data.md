@@ -22,7 +22,7 @@ la_concepts: SVD; Eckart-Young optimality; variance partitioning; interpretabili
 primary_method: Truncated/randomized SVD
 matrix_structure: dense, low effective rank
 typical_size: 1e4-1e5 x 1e3
-worked_example_size: synthetic SST field with two planted modes
+worked_example_size: 4 grid points x 6 months; synthetic SST field with two planted modes (651 grid points x 480 months)
 terminology:
   EOF: a left singular vector — one spatial pattern
   principal component time series: the corresponding right singular vector, scaled

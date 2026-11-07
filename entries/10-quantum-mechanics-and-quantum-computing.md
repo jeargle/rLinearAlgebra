@@ -25,7 +25,7 @@ la_concepts: Hermitian operators; unitary evolution; tensor products; low-rank/t
 primary_method: Lanczos; Davidson; SCF iteration
 matrix_structure: Hermitian, sparse in a local basis, exponential dimension
 typical_size: 2^n
-worked_example_size: Huckel MO energies for benzene
+worked_example_size: Huckel MO energies for benzene; Huckel molecules and polyene chains plus a 4-9 qubit transverse-field Ising chain
 terminology:
   ket / state vector: a unit vector in a complex inner-product space
   observable: a Hermitian operator; its eigenvalues are the measurable values
