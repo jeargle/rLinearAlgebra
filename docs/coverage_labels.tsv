@@ -23,3 +23,9 @@
 | 43 | Numerical analysis | Transposed Vandermonde system; exactness on a polynomial subspace | Small dense solve; Fornberg recursion |
 | 44 | Applied analysis | Inner-product space of functions; orthogonal projection | Diagonal Gram matrix; FFT of samples |
 | 45 | Applied modeling | Column space of a design matrix; basis versus span | Householder QR; orthogonal polynomials |
+| 37 | Computer graphics | Homogeneous coordinates in R⁴; composition of frame changes; projective division | Dense 4 × 4 products |
+| 39 | Computer graphics | Coordinates relative to a triangle; convex combinations; determinant as area | 3 × 3 inverse per triangle; edge functions |
+| 40 | Colour science | Change of basis in R³; null space (metamers); diagonal map in another basis | Dense 3 × 3 solves and products |
+| 19 | Image and video compression | Orthogonal change of basis; energy compaction | 8 × 8 DCT; quantization |
+| 29 | Sports ranking | Rank-deficient least squares on a graph Laplacian; connected components | Constrained normal equations; Colley solve |
+| 50 | Networking and storage | Linear map over GF(2); null space as undetected errors | Shift register; table lookup |

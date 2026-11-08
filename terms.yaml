@@ -63,13 +63,14 @@ terms:
   - 3
   - 8
   - 20
+  - 40
   - 41
   - 43
   - 44
   - 45
   - 48
   lowest_tier: 1
-  uses: 20
+  uses: 21
   match:
   - condition number
   - ill-conditioned
@@ -85,9 +86,10 @@ terms:
   entries:
   - 2
   - 9
+  - 19
   - 24
   lowest_tier: 1
-  uses: 13
+  uses: 14
   match:
   - covariance
 - term: eigenvalues and eigenvectors
@@ -104,14 +106,16 @@ terms:
   - 9
   - 10
   - 12
+  - 19
   - 20
   - 24
+  - 29
   - 42
   - 43
   - 44
   - 47
   lowest_tier: 1
-  uses: 33
+  uses: 38
   match:
   - eigenvalues?
   - eigenvectors?
@@ -126,8 +130,9 @@ terms:
   entries:
   - 7
   - 48
+  - 50
   lowest_tier: 1
-  uses: 4
+  uses: 5
   match:
   - finite field
 - term: generalized eigenvalue problem
@@ -155,8 +160,9 @@ terms:
   entries:
   - 7
   - 49
+  - 50
   lowest_tier: 1
-  uses: 16
+  uses: 26
   match:
   - GF\(2\)
 - term: Hermitian matrix
@@ -183,10 +189,12 @@ terms:
   entries:
   - 8
   - 36
+  - 37
   - 38
+  - 39
   - 42
   lowest_tier: 1
-  uses: 11
+  uses: 15
   match:
   - homogeneous coordinates
   - homogeneous (world|image) point
@@ -218,6 +226,8 @@ terms:
   - 8
   - 20
   - 24
+  - 29
+  - 40
   - 41
   - 42
   - 43
@@ -226,7 +236,7 @@ terms:
   - 51
   - 52
   lowest_tier: 1
-  uses: 30
+  uses: 37
   match:
   - least[- ]squares
 - term: low-rank approximation (Eckart–Young)
@@ -301,10 +311,13 @@ terms:
   - 12
   - 20
   - 24
+  - 29
+  - 40
   - 48
+  - 50
   - 51
   lowest_tier: 1
-  uses: 33
+  uses: 41
   match:
   - null ?space
   - nullity
@@ -318,10 +331,11 @@ terms:
   entries:
   - 8
   - 10
+  - 19
   - 38
   - 47
   lowest_tier: 1
-  uses: 5
+  uses: 7
   match:
   - orthogonal matri
   - orthogonal with determinant
@@ -336,10 +350,11 @@ terms:
   - 2
   - 20
   - 24
+  - 29
   - 44
   - 45
   lowest_tier: 1
-  uses: 28
+  uses: 29
   match:
   - orthogonal[- ]projection
   - \bprojection\b
@@ -360,8 +375,9 @@ terms:
   - 10
   - 12
   - 20
+  - 29
   lowest_tier: 1
-  uses: 11
+  uses: 13
   match:
   - positive[- ]definite
   - positive semidefinite
@@ -400,11 +416,12 @@ terms:
   - 12
   - 20
   - 24
+  - 29
   - 45
   - 51
   - 52
   lowest_tier: 1
-  uses: 13
+  uses: 17
   match:
   - rank-deficient
   - \brank(?=\([A-Za-z])
@@ -452,9 +469,11 @@ terms:
   - 9
   - 20
   - 36
+  - 37
+  - 40
   - 45
   lowest_tier: 1
-  uses: 23
+  uses: 26
   match:
   - singular value decomposition
   - \bSVD\b
@@ -493,12 +512,13 @@ terms:
   - 12
   - 20
   - 24
+  - 29
   - 43
   - 47
   - 51
   - 52
   lowest_tier: 1
-  uses: 27
+  uses: 28
   match:
   - \bsparse\b
   - sparsity
@@ -546,9 +566,10 @@ terms:
   - 10
   - 12
   - 20
+  - 29
   - 47
   lowest_tier: 1
-  uses: 16
+  uses: 18
   match:
   - symmetric matri
   - \bsymmetric\b
@@ -704,8 +725,9 @@ terms:
   - 12
   - 20
   - 24
+  - 29
   lowest_tier: 1
-  uses: 8
+  uses: 10
   match:
   - Cholesky (?:decomposition|factori[sz]ation|factor)
   - Cholesky
@@ -1018,8 +1040,9 @@ terms:
   note: Links to the Intrinsic parameters section.
   entries:
   - 8
-  lowest_tier: 2
-  uses: 3
+  - 37
+  lowest_tier: 1
+  uses: 2
   match:
   - intrinsic
   - camera matrix
@@ -1154,9 +1177,10 @@ terms:
   note: ''
   entries:
   - 9
+  - 40
   - 44
   lowest_tier: 1
-  uses: 9
+  uses: 10
   match:
   - empirical orthogonal
   - \bEOFs?\b
@@ -1211,8 +1235,9 @@ terms:
   - 7
   - 48
   - 49
+  - 50
   lowest_tier: 1
-  uses: 3
+  uses: 5
   match:
   - error-correcting
   - error correction
@@ -1252,8 +1277,9 @@ terms:
   note: ''
   entries:
   - 1
-  lowest_tier: 3
-  uses: 1
+  - 39
+  lowest_tier: 1
+  uses: 4
   match:
   - finite element
 - term: flux balance analysis
@@ -1331,8 +1357,9 @@ terms:
   note: ''
   entries:
   - 7
+  - 50
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - Hamming\(7,\s?4\)
   - Hamming code
@@ -1687,8 +1714,9 @@ terms:
   note: ''
   entries:
   - 6
-  lowest_tier: 2
-  uses: 3
+  - 29
+  lowest_tier: 1
+  uses: 4
   match:
   - PageRank
 - term: parity-check matrix
@@ -1757,8 +1785,9 @@ terms:
   note: ''
   entries:
   - 8
-  lowest_tier: 2
-  uses: 2
+  - 37
+  lowest_tier: 1
+  uses: 7
   match:
   - 'pinhole camera(?: model)?'
   - pinhole
@@ -1798,7 +1827,9 @@ terms:
   note: ''
   entries:
   - 9
-  lowest_tier: 2
+  - 19
+  - 40
+  lowest_tier: 1
   uses: 5
   match:
   - principal[- ]component
@@ -1826,8 +1857,9 @@ terms:
   note: Familiar to most readers.
   entries:
   - 7
+  - 50
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - QR codes
 - term: quantum channel
@@ -1910,8 +1942,9 @@ terms:
   - 7
   - 48
   - 49
+  - 50
   lowest_tier: 1
-  uses: 10
+  uses: 13
   match:
   - RAID
 - term: recommender system
@@ -1952,8 +1985,9 @@ terms:
   - 7
   - 48
   - 49
+  - 50
   lowest_tier: 1
-  uses: 8
+  uses: 9
   match:
   - Reed[–-]Solomon
 - term: resonance
@@ -2229,8 +2263,9 @@ terms:
   entries:
   - 12
   - 24
+  - 29
   lowest_tier: 1
-  uses: 4
+  uses: 6
   match:
   - Laplacian
 - term: Kirchhoff's circuit laws
@@ -2385,8 +2420,9 @@ terms:
   note: ''
   entries:
   - 12
+  - 29
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - diagonally dominant
 - term: Lagrange interpolation
@@ -2529,10 +2565,11 @@ terms:
   note: ''
   entries:
   - 36
+  - 37
   - 41
   - 42
   lowest_tier: 1
-  uses: 5
+  uses: 6
   match:
   - Bézier curves?
 - term: Bernstein polynomial
@@ -2584,10 +2621,12 @@ terms:
   note: ''
   entries:
   - 36
+  - 37
   - 38
   - 42
+  - 50
   lowest_tier: 1
-  uses: 13
+  uses: 19
   match:
   - affine
 - term: change of basis
@@ -2598,10 +2637,13 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
+  - 37
+  - 40
   - 42
   - 47
   lowest_tier: 1
-  uses: 9
+  uses: 21
   match:
   - changes? of basis
 - term: B-spline
@@ -2705,9 +2747,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 39
   - 42
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - rasteri[sz]ed
   - rasteri[sz]ation
@@ -2721,10 +2764,11 @@ terms:
   entries:
   - 20
   - 24
+  - 29
   - 44
   - 45
   lowest_tier: 1
-  uses: 10
+  uses: 11
   match:
   - design matri
 - term: hat (projection) matrix
@@ -2749,8 +2793,9 @@ terms:
   note: ''
   entries:
   - 20
+  - 29
   lowest_tier: 1
-  uses: 4
+  uses: 5
   match:
   - \bleverage
 - term: QR decomposition
@@ -3066,9 +3111,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 47
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - discrete cosine transform
 - term: OFDM
@@ -3093,8 +3139,9 @@ terms:
   note: ''
   entries:
   - 49
+  - 50
   lowest_tier: 1
-  uses: 8
+  uses: 17
   match:
   - \bXOR\b
 - term: parity bit
@@ -3158,8 +3205,9 @@ terms:
   note: ''
   entries:
   - 49
+  - 50
   lowest_tier: 1
-  uses: 2
+  uses: 29
   match:
   - \bCRC\b
 - term: Gaussian elimination
@@ -3366,8 +3414,9 @@ terms:
   note: ''
   entries:
   - 24
+  - 29
   lowest_tier: 1
-  uses: 6
+  uses: 7
   match:
   - levelling
 - term: benchmark (surveying)
@@ -3392,8 +3441,9 @@ terms:
   note: ''
   entries:
   - 24
+  - 29
   lowest_tier: 1
-  uses: 22
+  uses: 24
   match:
   - \bdatum\b
 - term: Legendre
@@ -3457,9 +3507,10 @@ terms:
   note: ''
   entries:
   - 24
+  - 29
   - 45
   lowest_tier: 1
-  uses: 2
+  uses: 4
   match:
   - '[Ww]eighted least squares'
 - term: SVG
@@ -3484,8 +3535,9 @@ terms:
   note: ''
   entries:
   - 36
+  - 40
   lowest_tier: 1
-  uses: 6
+  uses: 7
   match:
   - \bCSS\b
 - term: HTML canvas
@@ -3680,10 +3732,13 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 29
+  - 37
   - 38
+  - 39
   - 43
   lowest_tier: 1
-  uses: 5
+  uses: 10
   match:
   - \bdeterminant\b
 - term: finite difference
@@ -3694,9 +3749,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 43
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - finite-difference
   - finite difference
@@ -3747,9 +3803,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 43
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - rounding error
 - term: linear functional
@@ -3760,9 +3817,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 40
   - 43
   lowest_tier: 1
-  uses: 4
+  uses: 5
   match:
   - linear functional
 - term: Toeplitz matrix
@@ -3826,9 +3884,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 44
   lowest_tier: 1
-  uses: 3
+  uses: 5
   match:
   - Fourier series
 - term: inner product space
@@ -3917,10 +3976,11 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 44
   - 45
   lowest_tier: 1
-  uses: 2
+  uses: 3
   match:
   - Gibbs phenomenon
 - term: trapezoidal rule
@@ -3970,9 +4030,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 44
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - \bwavelets?\b
 - term: orthogonal polynomials
@@ -4035,9 +4096,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 19
   - 45
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - root-mean-square
 - term: nonlinear least squares
@@ -4066,3 +4128,1059 @@ terms:
   uses: 1
   match:
   - Mauna Loa carbon-dioxide record
+- term: perspective projection
+  aliases: []
+  kind: domain concept
+  wikipedia: Perspective (graphical)
+  url: https://en.wikipedia.org/wiki/Perspective_%28graphical%29
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Perspective divides
+- term: viewing frustum
+  aliases: []
+  kind: domain concept
+  wikipedia: Viewing frustum
+  url: https://en.wikipedia.org/wiki/Viewing_frustum
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - view frustum
+- term: z-buffering
+  aliases: []
+  kind: numerical method
+  wikipedia: Z-buffering
+  url: https://en.wikipedia.org/wiki/Z-buffering
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 3
+  match:
+  - depth buffer
+- term: z-fighting
+  aliases: []
+  kind: domain concept
+  wikipedia: Z-fighting
+  url: https://en.wikipedia.org/wiki/Z-fighting
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - z-fighting
+- term: clipping
+  aliases: []
+  kind: numerical method
+  wikipedia: Clipping (computer graphics)
+  url: https://en.wikipedia.org/wiki/Clipping_%28computer_graphics%29
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bclips\b
+- term: orthographic projection
+  aliases: []
+  kind: domain concept
+  wikipedia: Orthographic projection
+  url: https://en.wikipedia.org/wiki/Orthographic_projection
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Orthographic projection
+- term: shadow mapping
+  aliases: []
+  kind: numerical method
+  wikipedia: Shadow mapping
+  url: https://en.wikipedia.org/wiki/Shadow_mapping
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Shadow mapping
+- term: field of view
+  aliases: []
+  kind: domain concept
+  wikipedia: Field of view
+  url: https://en.wikipedia.org/wiki/Field_of_view
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 3
+  match:
+  - field of view
+- term: OpenGL
+  aliases: []
+  kind: domain concept
+  wikipedia: OpenGL
+  url: https://en.wikipedia.org/wiki/OpenGL
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - OpenGL
+- term: surface normal
+  aliases: []
+  kind: linear algebra
+  wikipedia: Normal (geometry)
+  url: https://en.wikipedia.org/wiki/Normal_%28geometry%29
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Surface normals
+- term: shader
+  aliases: []
+  kind: domain concept
+  wikipedia: Shader
+  url: https://en.wikipedia.org/wiki/Shader
+  recommend: link
+  note: ''
+  entries:
+  - 37
+  - 39
+  lowest_tier: 1
+  uses: 2
+  match:
+  - vertex shader
+  - fragment shader
+- term: barycentric coordinates
+  aliases: []
+  kind: linear algebra
+  wikipedia: Barycentric coordinate system
+  url: https://en.wikipedia.org/wiki/Barycentric_coordinate_system
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 9
+  match:
+  - barycentric coordinates
+- term: affine combination
+  aliases: []
+  kind: linear algebra
+  wikipedia: Affine combination
+  url: https://en.wikipedia.org/wiki/Affine_combination
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 2
+  match:
+  - affine combination
+- term: convex combination
+  aliases: []
+  kind: linear algebra
+  wikipedia: Convex combination
+  url: https://en.wikipedia.org/wiki/Convex_combination
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - convex combinations
+- term: convex hull
+  aliases: []
+  kind: linear algebra
+  wikipedia: Convex hull
+  url: https://en.wikipedia.org/wiki/Convex_hull
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - convex hull
+- term: Gouraud shading
+  aliases: []
+  kind: numerical method
+  wikipedia: Gouraud shading
+  url: https://en.wikipedia.org/wiki/Gouraud_shading
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Gouraud shading
+- term: texture mapping
+  aliases: []
+  kind: numerical method
+  wikipedia: Texture mapping
+  url: https://en.wikipedia.org/wiki/Texture_mapping
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Texture mapping
+- term: linear interpolation
+  aliases: []
+  kind: numerical method
+  wikipedia: Linear interpolation
+  url: https://en.wikipedia.org/wiki/Linear_interpolation
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 2
+  match:
+  - linear interpolation
+- term: Cramer's rule
+  aliases: []
+  kind: linear algebra
+  wikipedia: Cramer's rule
+  url: https://en.wikipedia.org/wiki/Cramer's_rule
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Cramer's rule
+- term: Möller–Trumbore algorithm
+  aliases: []
+  kind: numerical method
+  wikipedia: Möller–Trumbore intersection algorithm
+  url: https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Möller–Trumbore
+- term: ray tracing
+  aliases: []
+  kind: numerical method
+  wikipedia: Ray tracing (graphics)
+  url: https://en.wikipedia.org/wiki/Ray_tracing_%28graphics%29
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - ray tracing
+- term: back-face culling
+  aliases: []
+  kind: numerical method
+  wikipedia: Back-face culling
+  url: https://en.wikipedia.org/wiki/Back-face_culling
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - facing away from the camera
+- term: fixed-point arithmetic
+  aliases: []
+  kind: numerical method
+  wikipedia: Fixed-point arithmetic
+  url: https://en.wikipedia.org/wiki/Fixed-point_arithmetic
+  recommend: link
+  note: ''
+  entries:
+  - 39
+  lowest_tier: 1
+  uses: 1
+  match:
+  - fixed-point arithmetic
+- term: cone cell
+  aliases: []
+  kind: domain concept
+  wikipedia: Cone cell
+  url: https://en.wikipedia.org/wiki/Cone_cell
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \bthe cones\b
+- term: spectral power distribution
+  aliases: []
+  kind: domain concept
+  wikipedia: Spectral power distribution
+  url: https://en.wikipedia.org/wiki/Spectral_power_distribution
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 5
+  match:
+  - \bspectrum\b
+- term: CIE 1931 color space
+  aliases: []
+  kind: domain concept
+  wikipedia: CIE 1931 color space
+  url: https://en.wikipedia.org/wiki/CIE_1931_color_space
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 3
+  match:
+  - tristimulus values
+- term: chromaticity
+  aliases: []
+  kind: domain concept
+  wikipedia: Chromaticity
+  url: https://en.wikipedia.org/wiki/Chromaticity
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 5
+  match:
+  - chromaticity
+- term: luminance
+  aliases: []
+  kind: domain concept
+  wikipedia: Luminance
+  url: https://en.wikipedia.org/wiki/Luminance
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 5
+  match:
+  - luminance
+- term: primary colours
+  aliases: []
+  kind: domain concept
+  wikipedia: Primary color
+  url: https://en.wikipedia.org/wiki/Primary_color
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 8
+  match:
+  - primaries
+- term: white point
+  aliases: []
+  kind: domain concept
+  wikipedia: White point
+  url: https://en.wikipedia.org/wiki/White_point
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 3
+  match:
+  - white point
+- term: Illuminant D65
+  aliases: []
+  kind: domain concept
+  wikipedia: Standard illuminant
+  url: https://en.wikipedia.org/wiki/Standard_illuminant#Illuminant_series_D
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 3
+  match:
+  - D65
+- term: sRGB
+  aliases: []
+  kind: domain concept
+  wikipedia: SRGB
+  url: https://en.wikipedia.org/wiki/SRGB
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 14
+  match:
+  - sRGB
+- term: Display P3
+  aliases: []
+  kind: domain concept
+  wikipedia: DCI-P3
+  url: https://en.wikipedia.org/wiki/DCI-P3
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 7
+  match:
+  - Display P3
+- term: gamut
+  aliases: []
+  kind: domain concept
+  wikipedia: Gamut
+  url: https://en.wikipedia.org/wiki/Gamut
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 5
+  match:
+  - \bgamut\b
+- term: metamerism
+  aliases: []
+  kind: domain concept
+  wikipedia: Metamerism (color)
+  url: https://en.wikipedia.org/wiki/Metamerism_%28color%29
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - metamers
+- term: Grassmann's laws
+  aliases: []
+  kind: domain concept
+  wikipedia: Grassmann's laws (color science)
+  url: https://en.wikipedia.org/wiki/Grassmann's_laws_%28color_science%29
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 3
+  match:
+  - Grassmann's laws
+- term: chromatic adaptation
+  aliases: []
+  kind: domain concept
+  wikipedia: Chromatic adaptation
+  url: https://en.wikipedia.org/wiki/Chromatic_adaptation
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - chromatic adaptation
+- term: convex cone
+  aliases: []
+  kind: linear algebra
+  wikipedia: Convex cone
+  url: https://en.wikipedia.org/wiki/Convex_cone
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 2
+  match:
+  - convex cone
+- term: gamma correction
+  aliases: []
+  kind: domain concept
+  wikipedia: Gamma correction
+  url: https://en.wikipedia.org/wiki/Gamma_correction
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - transfer function
+- term: ICC profile
+  aliases: []
+  kind: domain concept
+  wikipedia: ICC profile
+  url: https://en.wikipedia.org/wiki/ICC_profile
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - ICC profiles
+- term: CIELAB
+  aliases: []
+  kind: domain concept
+  wikipedia: CIELAB color space
+  url: https://en.wikipedia.org/wiki/CIELAB_color_space
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - CIELAB
+- term: YCbCr
+  aliases: []
+  kind: domain concept
+  wikipedia: YCbCr
+  url: https://en.wikipedia.org/wiki/YCbCr
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  - 40
+  lowest_tier: 1
+  uses: 4
+  match:
+  - YCbCr
+- term: Digital Negative
+  aliases: []
+  kind: domain concept
+  wikipedia: Digital Negative
+  url: https://en.wikipedia.org/wiki/Digital_Negative
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - DNG
+- term: color blindness
+  aliases: []
+  kind: domain concept
+  wikipedia: Color blindness
+  url: https://en.wikipedia.org/wiki/Color_blindness
+  recommend: link
+  note: ''
+  entries:
+  - 40
+  lowest_tier: 1
+  uses: 1
+  match:
+  - colour-blindness
+- term: JPEG
+  aliases: []
+  kind: domain concept
+  wikipedia: JPEG
+  url: https://en.wikipedia.org/wiki/JPEG
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 10
+  match:
+  - JPEG
+- term: lossy compression
+  aliases: []
+  kind: domain concept
+  wikipedia: Lossy compression
+  url: https://en.wikipedia.org/wiki/Lossy_compression
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \blossy\b
+- term: quantization (image processing)
+  aliases: []
+  kind: numerical method
+  wikipedia: Quantization (image processing)
+  url: https://en.wikipedia.org/wiki/Quantization_%28image_processing%29
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 4
+  match:
+  - \bquantization\b
+- term: motion compensation
+  aliases: []
+  kind: numerical method
+  wikipedia: Motion compensation
+  url: https://en.wikipedia.org/wiki/Motion_compensation
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - motion compensation
+- term: H.264
+  aliases: []
+  kind: domain concept
+  wikipedia: Advanced Video Coding
+  url: https://en.wikipedia.org/wiki/Advanced_Video_Coding
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 3
+  match:
+  - H\.264
+- term: HEVC
+  aliases: []
+  kind: domain concept
+  wikipedia: High Efficiency Video Coding
+  url: https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - HEVC
+- term: compression artifact
+  aliases: []
+  kind: domain concept
+  wikipedia: Compression artifact
+  url: https://en.wikipedia.org/wiki/Compression_artifact
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - blocking artifacts
+- term: deblocking filter
+  aliases: []
+  kind: numerical method
+  wikipedia: Deblocking filter
+  url: https://en.wikipedia.org/wiki/Deblocking_filter
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - deblocking filter
+- term: entropy coding
+  aliases: []
+  kind: numerical method
+  wikipedia: Entropy coding
+  url: https://en.wikipedia.org/wiki/Entropy_coding
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - entropy coded
+- term: JPEG 2000
+  aliases: []
+  kind: domain concept
+  wikipedia: JPEG 2000
+  url: https://en.wikipedia.org/wiki/JPEG_2000
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - JPEG 2000
+- term: MP3
+  aliases: []
+  kind: domain concept
+  wikipedia: MP3
+  url: https://en.wikipedia.org/wiki/MP3
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - MP3
+- term: modified discrete cosine transform
+  aliases: []
+  kind: numerical method
+  wikipedia: Modified discrete cosine transform
+  url: https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - modified DCT
+- term: Karhunen–Loève transform
+  aliases: []
+  kind: linear algebra
+  wikipedia: Kosambi–Karhunen–Loève theorem
+  url: https://en.wikipedia.org/wiki/Kosambi%E2%80%93Karhunen%E2%80%93Lo%C3%A8ve_theorem
+  recommend: link
+  note: ''
+  entries:
+  - 19
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Karhunen–Loève
+- term: Bowl Championship Series
+  aliases: []
+  kind: domain concept
+  wikipedia: Bowl Championship Series
+  url: https://en.wikipedia.org/wiki/Bowl_Championship_Series
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Bowl Championship Series
+- term: college football
+  aliases: []
+  kind: domain concept
+  wikipedia: College football
+  url: https://en.wikipedia.org/wiki/College_football
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 3
+  match:
+  - college football
+- term: Elo rating system
+  aliases: []
+  kind: domain concept
+  wikipedia: Elo rating system
+  url: https://en.wikipedia.org/wiki/Elo_rating_system
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Elo system
+- term: Bradley–Terry model
+  aliases: []
+  kind: domain concept
+  wikipedia: Bradley–Terry model
+  url: https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Bradley–Terry
+- term: strength of schedule
+  aliases: []
+  kind: domain concept
+  wikipedia: Strength of schedule
+  url: https://en.wikipedia.org/wiki/Strength_of_schedule
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 2
+  match:
+  - strength of schedule
+- term: home advantage
+  aliases: []
+  kind: domain concept
+  wikipedia: Home advantage
+  url: https://en.wikipedia.org/wiki/Home_advantage
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 1
+  match:
+  - home-field advantage
+- term: connected component
+  aliases: []
+  kind: linear algebra
+  wikipedia: Component (graph theory)
+  url: https://en.wikipedia.org/wiki/Component_%28graph_theory%29
+  recommend: link
+  note: ''
+  entries:
+  - 29
+  lowest_tier: 1
+  uses: 1
+  match:
+  - connected piece
+- term: polynomial long division
+  aliases: []
+  kind: numerical method
+  wikipedia: Polynomial long division
+  url: https://en.wikipedia.org/wiki/Polynomial_long_division
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 5
+  match:
+  - long division
+- term: linear-feedback shift register
+  aliases: []
+  kind: numerical method
+  wikipedia: Linear-feedback shift register
+  url: https://en.wikipedia.org/wiki/Linear-feedback_shift_register
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 4
+  match:
+  - shift register
+- term: companion matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Companion matrix
+  url: https://en.wikipedia.org/wiki/Companion_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 3
+  match:
+  - companion matrix
+- term: Ethernet
+  aliases: []
+  kind: domain concept
+  wikipedia: Ethernet
+  url: https://en.wikipedia.org/wiki/Ethernet
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 2
+  match:
+  - Ethernet
+- term: ZIP
+  aliases: []
+  kind: domain concept
+  wikipedia: ZIP (file format)
+  url: https://en.wikipedia.org/wiki/ZIP_%28file_format%29
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - ZIP archive
+- term: PNG
+  aliases: []
+  kind: domain concept
+  wikipedia: PNG
+  url: https://en.wikipedia.org/wiki/PNG
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 2
+  match:
+  - PNG
+- term: burst error
+  aliases: []
+  kind: domain concept
+  wikipedia: Burst error
+  url: https://en.wikipedia.org/wiki/Burst_error
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 2
+  match:
+  - \bburst\b
+- term: zlib
+  aliases: []
+  kind: domain concept
+  wikipedia: Zlib
+  url: https://en.wikipedia.org/wiki/Zlib
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - zlib
+- term: Wired Equivalent Privacy
+  aliases: []
+  kind: domain concept
+  wikipedia: Wired Equivalent Privacy
+  url: https://en.wikipedia.org/wiki/Wired_Equivalent_Privacy
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 2
+  match:
+  - WEP
+- term: message authentication code
+  aliases: []
+  kind: domain concept
+  wikipedia: Message authentication code
+  url: https://en.wikipedia.org/wiki/Message_authentication_code
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - message authentication code
+- term: HMAC
+  aliases: []
+  kind: domain concept
+  wikipedia: HMAC
+  url: https://en.wikipedia.org/wiki/HMAC
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - HMAC
+- term: BCH code
+  aliases: []
+  kind: domain concept
+  wikipedia: BCH code
+  url: https://en.wikipedia.org/wiki/BCH_code
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - BCH
+- term: Berlekamp–Massey algorithm
+  aliases: []
+  kind: numerical method
+  wikipedia: Berlekamp–Massey algorithm
+  url: https://en.wikipedia.org/wiki/Berlekamp%E2%80%93Massey_algorithm
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - Berlekamp–Massey
+- term: maximum length sequence
+  aliases: []
+  kind: domain concept
+  wikipedia: Maximum-length sequence
+  url: https://en.wikipedia.org/wiki/Maximum-length_sequence
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - maximal-length sequences
+- term: irreducible polynomial
+  aliases: []
+  kind: linear algebra
+  wikipedia: Irreducible polynomial
+  url: https://en.wikipedia.org/wiki/Irreducible_polynomial
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - \birreducible\b
+- term: System Management Bus
+  aliases: []
+  kind: domain concept
+  wikipedia: System Management Bus
+  url: https://en.wikipedia.org/wiki/System_Management_Bus
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 1
+  match:
+  - SMBus
+- term: ASCII
+  aliases: []
+  kind: domain concept
+  wikipedia: ASCII
+  url: https://en.wikipedia.org/wiki/ASCII
+  recommend: link
+  note: ''
+  entries:
+  - 50
+  lowest_tier: 1
+  uses: 2
+  match:
+  - ASCII

@@ -13,16 +13,11 @@
 
 Grouped by what they would add that the seed set does not have.
 
-### Would add: Tier 1 coverage — 2D/3D graphics and scalars beyond the reals
+### Would add: Tier 1 coverage — scalars beyond the reals
 
 This group exists because the seed set is thin at Tier 1 and silent on vector spaces whose scalars are
 not real numbers. Every entry here is small-dimension and needs nothing past a first course, with
 the one exception marked below.
-
-*Graphics and small-dimension geometry (index 37, 39–40)*
-- **3D viewing and perspective projection** — the model-view-projection chain; why the fourth coordinate exists
-- **Barycentric coordinates and triangle rasterization** — a 3×3 solve per pixel; coordinates relative to a basis
-- **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
 *Complex scalars (index 46–47)*
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
@@ -30,9 +25,6 @@ the one exception marked below.
   linear ODEs with sinusoidal forcing, so reading the entry requires the ODE. It stays in this group
   because it is the clearest example of complex scalars doing real work; the small DFT entry, now
   written, is the Tier 1 complex-scalar entry.
-
-*Finite fields (index 50)*
-- **CRC checksums** — polynomials over GF(2) modulo a generator
 
 ### Would add: graph Laplacians and spectral methods
 - **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
@@ -54,7 +46,6 @@ the one exception marked below.
 ### Would add: signal processing
 - **The FFT as a matrix factorization** — the DFT matrix factored into sparse blocks; why O(n log n) is a statement about structure
 - **Beamforming and MUSIC direction-finding** — signal and noise subspaces of a spatial covariance matrix; radar, sonar, and 5G MIMO
-- **JPEG and video compression** — the DCT as a fixed orthogonal basis chosen for decorrelation
 
 ### Would add: statistics and machine learning proper
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
@@ -68,7 +59,6 @@ the one exception marked below.
 
 ### Would add: discrete and algebraic applications
 - **Markov decision processes** — policy evaluation as a linear solve, value iteration as a fixed point
-- **Sports and citation ranking (Massey / Colley)** — a least-squares system built from pairwise comparisons
 - **Cryptanalysis: sparse GF(2) nullspace in the number field sieve** — block Lanczos/Wiedemann at 10⁸ scale
 - **Combinatorial design and coding bounds** — rank arguments proving combinatorial impossibility results
 

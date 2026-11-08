@@ -16,15 +16,15 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Communications & Information Theory
 
 * [Linear error-correcting codes](applications/linear-error-correcting-codes) — Tier 1
-* CRC checksums as polynomial arithmetic over GF(2) — Tier 1 *(planned)* (GF(2) is the number system {0, 1} with arithmetic modulo 2, so 1 + 1 = 0)
+* [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) — Tier 1
 
 ## Computer Graphics & Vision
 
 * [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) — Tier 2
 * [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) — Tier 1
-* 3D viewing and perspective projection pipeline — Tier 1 *(planned)*
-* Barycentric coordinates and triangle rasterization — Tier 1 *(planned)*
-* Color spaces as change of basis — Tier 1 *(planned)*
+* [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) — Tier 1
+* [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) — Tier 1
+* [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) — Tier 1
 * [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) — Tier 1
 
 ## Computer Science & Networks
@@ -40,7 +40,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Cryptography & Security
 
-* Sparse GF(2) nullspace in the number field sieve — Tier 3 *(planned)*
+* Sparse GF(2) nullspace in the number field sieve — Tier 3 *(planned)* (GF(2) is the number system {0, 1} with arithmetic modulo 2, so 1 + 1 = 0)
 * [Shamir secret sharing](applications/shamir-secret-sharing) — Tier 1
 
 ## Earth & Climate Science
@@ -96,11 +96,11 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 * The FFT as a matrix factorization — Tier 2 *(planned)*
 * Beamforming and MUSIC direction finding — Tier 2 *(planned)*
-* JPEG and video compression — Tier 1 *(planned)*
+* [JPEG and video compression](applications/jpeg-and-video-compression) — Tier 1
 * [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) — Tier 1
 
 ## Statistics
 
 * [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) — Tier 1
-* Sports and citation ranking (Massey/Colley) — Tier 1 *(planned)*
+* [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) — Tier 1
 * [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) — Tier 1

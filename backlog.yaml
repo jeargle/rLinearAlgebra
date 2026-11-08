@@ -125,24 +125,6 @@ backlog:
   matrix_structure: small dense Hermitian
   typical_size: 1e1-1e2 sensors
   worked_example_size: ''
-- id: 19
-  slug: jpeg-and-video-compression
-  status: backlog
-  short_title: JPEG and video compression
-  nav_field: Signal Processing
-  field: Computer Science
-  subfield: Multimedia
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^64, each 8x8 pixel block
-  core_la_object: Fixed orthogonal transform
-  la_concepts: orthogonal bases; energy compaction; quantization
-  primary_method: DCT
-  matrix_structure: dense orthogonal 8x8 blocks
-  typical_size: 8x8 blocks
-  worked_example_size: ''
 - id: 21
   slug: matrix-completion-and-recommender-systems
   status: backlog
@@ -269,24 +251,6 @@ backlog:
   matrix_structure: sparse stochastic
   typical_size: 1e3-1e9 states
   worked_example_size: ''
-- id: 29
-  slug: sports-and-citation-ranking-massey-colley
-  status: backlog
-  short_title: Sports and citation ranking (Massey/Colley)
-  nav_field: Statistics
-  field: Statistics
-  subfield: Ranking systems
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^T over teams
-  core_la_object: Least squares on pairwise comparisons
-  la_concepts: least squares; rank deficiency from disconnected graphs
-  primary_method: Normal equations
-  matrix_structure: sparse, graph-structured
-  typical_size: 1e2-1e4 teams
-  worked_example_size: ''
 - id: 30
   slug: sparse-gf-2-nullspace-in-the-number-field-sieve
   status: backlog
@@ -397,60 +361,6 @@ backlog:
   matrix_structure: sparse row-stochastic
   typical_size: 1e2-1e6
   worked_example_size: ''
-- id: 37
-  slug: 3d-viewing-and-perspective-projection-pipeline
-  status: backlog
-  short_title: 3D viewing and perspective projection pipeline
-  nav_field: Computer Graphics & Vision
-  field: Computer Science
-  subfield: Computer graphics
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^3 points, embedded in homogeneous R^4
-  core_la_object: Model-view-projection chain
-  la_concepts: change of basis; homogeneous coordinates; projective division
-  primary_method: Dense 4x4 products
-  matrix_structure: dense 4x4
-  typical_size: 4x4
-  worked_example_size: wireframe cube through the full MVP chain
-- id: 39
-  slug: barycentric-coordinates-and-triangle-rasterization
-  status: backlog
-  short_title: Barycentric coordinates and triangle rasterization
-  nav_field: Computer Graphics & Vision
-  field: Computer Science
-  subfield: Computer graphics
-  tier: 1
-  tier_ceiling: 1
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^3 barycentric coefficients for a triangle in R^2
-  core_la_object: Coordinates relative to a simplex basis
-  la_concepts: coordinates w.r.t. a basis; affine combinations; interpolation
-  primary_method: Small dense solve per pixel
-  matrix_structure: dense 3x3
-  typical_size: 3x3
-  worked_example_size: Gouraud-shaded triangle with depth interpolation
-- id: 40
-  slug: color-spaces-as-change-of-basis
-  status: backlog
-  short_title: Color spaces as change of basis
-  nav_field: Computer Graphics & Vision
-  field: Computer Science
-  subfield: Color science/imaging
-  tier: 1
-  tier_ceiling: 2
-  prereq_beyond_la: colorimetry conventions
-  scalar_field: R
-  vector_space: R^3 tristimulus values
-  core_la_object: 3x3 change of basis between primary sets
-  la_concepts: change of basis; conditioning; convex cones for gamut
-  primary_method: Dense 3x3 solve
-  matrix_structure: dense 3x3
-  typical_size: 3x3
-  worked_example_size: sRGB to XYZ to LMS with a white-point adaptation
 - id: 46
   slug: ac-circuit-analysis-with-complex-impedance
   status: backlog
@@ -470,21 +380,3 @@ backlog:
   matrix_structure: dense complex 3x3
   typical_size: 3x3
   worked_example_size: three-mesh RLC network at a single frequency
-- id: 50
-  slug: crc-checksums-as-polynomial-arithmetic-over-gf-2
-  status: backlog
-  short_title: CRC checksums as polynomial arithmetic over GF(2)
-  nav_field: Communications & Information Theory
-  field: Engineering
-  subfield: Communications
-  tier: 1
-  tier_ceiling: 3
-  prereq_beyond_la: quotient rings
-  scalar_field: GF(2)
-  vector_space: GF(2)[x]/(g(x)), polynomials modulo the generator - a quotient space of dimension deg(g)
-  core_la_object: Polynomials over GF(2) modulo a generator
-  la_concepts: polynomials over a finite field; linear maps; modular reduction
-  primary_method: Shift-register or matrix form
-  matrix_structure: sparse GF(2) companion matrix
-  typical_size: 8-32 bit
-  worked_example_size: CRC-8 of a short message, computed both ways

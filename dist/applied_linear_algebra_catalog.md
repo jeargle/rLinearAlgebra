@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 15 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 21 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,7 +200,7 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 25 written entries, 17 are Tier 1,
+**Current distribution.** Of the 31 written entries, 23 are Tier 1,
 3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
@@ -1391,6 +1391,202 @@ and conservation at nodes, appears in the traffic-flow and process mass-balance 
 
 ---
 
+## 19. JPEG compression: change to a cosine basis, then keep only a few coordinates
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A photograph from a phone has millions of pixels, each with three colour values, yet the [JPEG](https://en.wikipedia.org/wiki/JPEG) file is
+usually a tenth of the raw size or less, and the difference is hard to see. The saving comes from a
+simple observation: neighbouring pixels in a photograph are usually close in value. A patch of sky or
+skin changes slowly. Listing every pixel value separately wastes space on information that is nearly
+the same from one pixel to the next.
+
+JPEG cuts the image into 8 × 8 blocks and rewrites each block in a different basis. Instead of 64 pixel
+values, it records how much of each of 64 cosine patterns the block contains, from flat to rapidly
+striped. For a smooth block, almost everything is in the first few patterns, and the amounts of the
+rest are close to zero. Rounding those small amounts to exactly zero is where the compression happens.
+
+The rewriting is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) with an [orthogonal matrix](https://en.wikipedia.org/wiki/Orthogonal_matrix), so it loses nothing and is undone by the
+transpose. Only the rounding loses information, and the orthogonality keeps the loss under control.
+Video compression uses the same idea on the differences between one frame and the next.
+
+</details>
+
+**Field:** Image and video compression, digital photography, streaming video, multimedia standards
+
+**Tier:** 1 — the [discrete cosine transform](https://en.wikipedia.org/wiki/Discrete_cosine_transform) is an orthogonal change of basis for each block of pixels, and compression is rounding the new coordinates, most of them to zero. Why cosines are close to the best possible basis is an eigenvector statement, which is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^64 for an 8 × 8 block of pixel values (R^4 for one row of four pixels in the toy). The discrete cosine transform is an orthogonal change of basis in that space, and compression stores the coordinates in the new basis coarsely.
+
+**Underlying equations.** Change of basis: X = C x for a row of samples and F = C B Cᵀ for a block, where C is the orthogonal DCT matrix; [quantization](https://en.wikipedia.org/wiki/Quantization_%28image_processing%29) then rounds each coordinate to a multiple of a step size.
+
+**The problem.** A grey-level image is a grid of numbers from 0 (black) to 255 (white). JPEG splits it into **blocks**
+of 8 × 8 pixels and treats each block as a vector in ℝ⁶⁴. A colour image is first converted to a
+brightness channel and two colour-difference channels (**[YCbCr](https://en.wikipedia.org/wiki/YCbCr)**), and the colour channels are usually
+stored at half resolution in each direction, because the eye is less sensitive to fine colour detail
+than to fine brightness detail. Each channel is then coded block by block.
+
+The everyday contrast is between **lossless** and **[lossy](https://en.wikipedia.org/wiki/Lossy_compression)** compression. A ZIP file must give back
+every bit; a JPEG only has to look the same. JPEG may change pixel values, as long as the changes are
+small where the eye would notice.
+
+Find a basis in which typical blocks have only a few large coordinates, round the coordinates so that
+most become zero, and do it so that the error in the pixels stays small and predictable.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| N | transform size | 8 in JPEG, 4 in the toy | integer | — |
+| n | sample index | position of a pixel in a row, 0 to N − 1 | integer | — |
+| k | frequency index | which cosine pattern, 0 to N − 1 | integer | — |
+| x | row of pixels | x_0, …, x_(N−1) | N × 1 | grey levels |
+| w_k | cosine basis vector | the k-th sampled cosine, scaled to length 1 | N × 1 | dimensionless |
+| C | DCT matrix | row k is w_k | N × N, orthogonal | dimensionless |
+| X | coefficients | X = C x, the coordinates of x in the cosine basis | N × 1 | grey levels |
+| B | pixel block | the 8 × 8 block, after subtracting 128 | 8 × 8 | grey levels |
+| F | block coefficients | F = C B Cᵀ | 8 × 8 | grey levels |
+| Δ_k | quantization step | step size for coefficient k | number | grey levels |
+| q_k | quantized coefficient | round(X_k / Δ_k), the whole number stored in the file | integer | — |
+
+**Formulation.** **Where the equations come from.** There is no physical model. The method is a change of basis
+followed by rounding, chosen because photographs are smooth almost everywhere.
+
+**The familiar formula.** The JPEG standard defines the forward transform of a block f(i, j), with
+pixel row and column i, j and frequencies u, v all running from 0 to 7, as
+
+```
+F(u, v)  =  ¼ a(u) a(v)  Σ_i Σ_j  f(i, j) cos((2i + 1)uπ/16) cos((2j + 1)vπ/16)
+```
+
+where a(0) = 1/√2 and a(u) = 1 otherwise. (The standard writes x, y for the pixel position and C(u) for
+a(u); here x is a row of pixels and C is the matrix.) The rest of this section shows that this formula
+is a matrix product on each side of the block.
+
+**One coefficient first.** For a row of N pixels, the k-th basis vector samples a cosine with k half
+periods across the row:
+
+```
+w_k(n)  =  s_k cos( π (2n + 1) k / (2N) ),       s_0 = √(1/N),   s_k = √(2/N) for k ≥ 1
+```
+
+The scale factors make every w_k a unit vector, and the vectors are mutually orthogonal. The coordinate
+of x along w_k is the dot product X_k = w_k · x. For N = 4,
+
+```
+w_0 = ( 0.5,     0.5,     0.5,     0.5    )
+w_1 = ( 0.6533,  0.2706, −0.2706, −0.6533 )
+w_2 = ( 0.5,    −0.5,    −0.5,     0.5    )
+w_3 = ( 0.2706, −0.6533,  0.6533, −0.2706 )
+```
+
+Take the smooth row x = (100, 110, 120, 130). Then X_0 = w_0 · x = 230, twice the average, and
+
+```
+X_1  =  0.6533·100 + 0.2706·110 − 0.2706·120 − 0.6533·130  =  −22.30
+```
+
+which measures the slope: w_1 runs from high to low, so a rising row has a negative X_1.
+
+**Stacking the coefficients.** With the w_k as rows, X = C x:
+
+```
+[  0.5      0.5      0.5      0.5    ] [ 100 ]   [ 230    ]
+[  0.6533   0.2706  −0.2706  −0.6533 ] [ 110 ] = [ −22.30 ]
+[  0.5     −0.5     −0.5      0.5    ] [ 120 ]   [   0    ]
+[  0.2706  −0.6533   0.6533  −0.2706 ] [ 130 ]   [ −1.59  ]
+```
+
+C is orthogonal, so C⁻¹ = Cᵀ and x = Cᵀ X. It also preserves length: ‖X‖² = ‖x‖² = 53,400. Of that energy,
+X_0 carries 99.06% and X_1 carries 0.93%, leaving under 0.01% for the last two. That is **energy
+compaction**.
+
+**Quantization.** Divide each coefficient by a step Δ_k and round: q_k = round(X_k / Δ_k). With every
+step equal to 10, the toy row is stored as (23, −2, 0, 0) and decodes to
+Cᵀ (230, −20, 0, 0) = (101.9, 109.6, 120.4, 128.1). Two whole numbers replace four pixel values, and no
+pixel is off by more than 2. Because C is orthogonal, the [rounding error](https://en.wikipedia.org/wiki/Round-off_error) has the same length in pixels
+as in coefficients, so an encoder that controls one controls the other.
+
+**Two dimensions.** A block is transformed along its rows and then along its columns, which is one
+matrix product on each side:
+
+```
+F  =  C B Cᵀ,        B  =  Cᵀ F C
+```
+
+Entry F(k, l) is the coordinate of B along the **basis image** w_k w_lᵀ, the outer product of two
+cosine vectors. Multiplied out, this is the formula from the standard.
+
+**Worked case: one 8 × 8 block.** Take a block that brightens smoothly downwards and to the right, with
+a soft vertical edge in the middle (pixel values 100 + 5i + 3j + 40/(1 + e^(−1.5(j − 4.5))) in row i and
+column j, rounded), subtract 128, and transform. Three of the 64 coefficients carry 97.7% of the energy.
+Quantizing all 64 with a step of 16 leaves 6 of them nonzero. The decoded block has a [root-mean-square](https://en.wikipedia.org/wiki/Root_mean_square)
+error of 1.8 grey levels and no pixel off by more than 4.
+
+**Matrix structure.** C is a dense orthogonal matrix, and like the DFT it has fast factorizations, so an 8-point transform
+takes far fewer than 64 multiplications. Video codecs use integer approximations. The 4 × 4 core
+transform of [H.264](https://en.wikipedia.org/wiki/Advanced_Video_Coding) has rows (1, 1, 1, 1), (2, 1, −1, −2), (1, −1, −1, 1) and (1, −2, 2, −1). These have
+the sign patterns of the rows of the 4-point C above, with the ratio 2 between large and small entries
+in place of 0.6533/0.2706 ≈ 2.414. The rows are orthogonal but not of equal length, and the codec folds
+the different lengths into its quantization steps, so the transform runs in exact integer arithmetic.
+
+**What is computed.** A JPEG encoder converts RGB to YCbCr, subsamples the colour channels, cuts each channel into blocks,
+subtracts 128, applies the 8 × 8 DCT, and divides by a **quantization table** of 64 step sizes. The
+steps are larger for high frequencies, where the eye is less sensitive, and the quality setting scales
+the whole table. The quantized coefficients are listed in zigzag order from low to high frequency, so
+the zeros come in long runs, and are [entropy coded](https://en.wikipedia.org/wiki/Entropy_coding). The decoder runs the steps backwards. Video codecs
+such as H.264 and [HEVC](https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding) predict each block from earlier frames ([motion compensation](https://en.wikipedia.org/wiki/Motion_compensation)) and transform only
+the prediction error. The libjpeg-turbo library is the common implementation of JPEG.
+
+**Why linear algebra is the right tool.** Compression is a change of basis into one where typical data have few large coordinates. Orthogonality
+makes the change free to undo (the inverse is the transpose), keeps the energy unchanged, and makes the
+error from rounding the coordinates equal to the error in the pixels. The two-dimensional transform is
+a matrix product on both sides. The choice of cosines is itself a basis argument. The DFT of the
+small-DFT entry treats a block as one period of a repeating signal, so the jump from the last pixel
+back to the first acts like an edge. For the toy row, the DFT spreads the non-constant energy over three
+coefficients in the proportions 40%, 40% and 20%, while the DCT puts 99.5% of it in X_1. The cosine
+basis corresponds to reflecting the block in a mirror instead, which has no jump, so its coefficients
+fall off faster, for the same reason as in the Gibbs pitfall of the [Fourier series](https://en.wikipedia.org/wiki/Fourier_series) entry.
+
+**Pitfall worth teaching.** Every block is coded on its own, so errors do not match across block boundaries. Take two neighbouring
+4-pixel blocks from a smooth ramp, (100, 110, 120, 130) and (140, 150, 160, 170). Quantize them as JPEG
+tables do, finely for the constant coefficient (step 10) and coarsely for the rest (step 50). The
+coefficients X_1 = −22.30 and X_3 = −1.59 of both blocks round to zero, and the blocks decode as flat
+rows, (115, 115, 115, 115) and (155, 155, 155, 155). The ramp becomes a staircase, with a jump of 40 at the
+block boundary where the original stepped by 10.
+
+These **[blocking artifacts](https://en.wikipedia.org/wiki/Compression_artifact)** are the 8 × 8 grid visible in heavily compressed images, and the same
+rounding produces ringing next to sharp edges, as in the [Gibbs phenomenon](https://en.wikipedia.org/wiki/Gibbs_phenomenon). Video codecs run a
+[deblocking filter](https://en.wikipedia.org/wiki/Deblocking_filter) across block boundaries, and H.264 includes one inside the prediction loop. Newer
+image formats use transforms that overlap from block to block, or [wavelets](https://en.wikipedia.org/wiki/Wavelet), to avoid hard boundaries.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| block | an 8 × 8 tile of pixels, the unit JPEG transforms and codes separately |
+| discrete cosine transform (DCT) | the change of basis from pixel values to amounts of sampled cosine waves |
+| basis image | one of the 64 cosine patterns an 8 × 8 block is built from |
+| DC and AC coefficients | the coefficient of the constant pattern, and those of the oscillating ones |
+| energy compaction | concentrating most of a signal's energy in a few coordinates |
+| quantization | dividing each coefficient by a step size and rounding to a whole number |
+| quantization table | the 64 step sizes, larger for higher frequencies |
+| zigzag order and entropy coding | listing coefficients from low to high frequency so the zeros come in long runs, then coding the result compactly |
+| YCbCr and chroma subsampling | brightness and two colour-difference channels, with the colour stored at lower resolution |
+| blocking artifact | visible steps at block boundaries at high compression |
+| motion compensation | predicting a video block from the previous frame and coding only the difference |
+
+**Extensions.** For data with known correlations, the best possible basis for compaction comes from the eigenvectors of
+the covariance matrix (the [Karhunen–Loève](https://en.wikipedia.org/wiki/Kosambi%E2%80%93Karhunen%E2%80%93Lo%C3%A8ve_theorem) transform, or principal component analysis, Tier 2). The DCT
+was introduced in 1974 as a fixed approximation to it for highly correlated signals. The DCT basis
+vectors are also the eigenvectors of the second-difference matrix of the [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) entry with
+mirror-image boundary conditions (Tier 2). [JPEG 2000](https://en.wikipedia.org/wiki/JPEG_2000) replaces the DCT with wavelets. [MP3](https://en.wikipedia.org/wiki/MP3) and AAC audio
+use the [modified DCT](https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform) on overlapping blocks. The colour conversion to YCbCr is the colour-spaces entry,
+the continuous version of the cosine basis is the Fourier series entry, and choosing a basis to fit
+data is the basis-fitting entry.
+
+---
+
 ## 20. Least-squares regression: fitting a model is projecting onto a column space
 
 <details>
@@ -1715,6 +1911,222 @@ filtering entry.
 
 ---
 
+## 29. Massey and Colley ratings: ranking teams by least squares on the schedule
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+In leagues where every team plays every other team the same number of times, the standings table is a
+fair ranking. College sports are different. In American [college football](https://en.wikipedia.org/wiki/College_football), more than a hundred teams
+in the top division play about twelve games each, mostly within their own conference. A team that wins
+every game against weak opponents may be worse than one that lost once to a strong one. The standings
+cannot tell, and for years a national championship depended on how computer rankings settled the
+question.
+
+Kenneth Massey's idea, in his 1997 undergraduate honours thesis, was to give every team a single
+rating and ask that the difference of two teams' ratings predict the margin when they meet. With more
+games than teams, no ratings fit every result exactly, so the method chooses the ratings that fit best
+in the least-squares sense. Wesley Colley's method uses only wins and losses. Both were among the
+computer rankings used in college football's [Bowl Championship Series](https://en.wikipedia.org/wiki/Bowl_Championship_Series).
+
+The same calculation ranks anything that is compared in pairs: players in chess or tennis, products in
+taste tests, or journals by how often they cite each other. The linear algebra also shows exactly when
+a schedule is too thin to rank two teams against each other at all.
+
+</details>
+
+**Field:** Sports analytics, college football and basketball rankings, ranking from pairwise comparisons
+
+**Tier:** 1 — Massey's method is least squares with one equation per game, and its normal-equations matrix is built from the schedule, rank-deficient by one for every separate group of teams. Colley's method adds 2I to the same matrix and becomes invertible. Ranking by eigenvectors instead, as in PageRank, is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^T, one rating per team, and R^G, one observed margin per game. Ratings enter only through differences, so the constant vector is in the null space of the design matrix, with one more null direction for each group of teams that never plays the rest.
+
+**Underlying equations.** A statistical model for each game: rating of winner − rating of loser = margin of victory + noise (Massey); Colley replaces margins with wins and losses and adds a prior that every team starts at 1/2.
+
+**The problem.** There are T **teams** and G **games**. Each game has a winner, a loser and a **margin of victory**,
+the winner's points minus the loser's. The **schedule graph** has the teams as nodes and a line for
+each game. Its structure decides what can be learned: if two groups of teams never play each other,
+nothing in the results compares them.
+
+The known quantities are the schedule and the margins. The unknowns are T **ratings**, one per team,
+chosen so that the rating difference of the two teams in each game predicts its margin. Find the
+ratings that fit best, decide what fixes their overall level, and decide when the schedule makes them
+meaningless.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| T | number of teams | columns of A | integer | — |
+| G | number of games | rows of A | integer | — |
+| r | ratings | r_i for team i | T × 1 | points (Massey) or win fraction (Colley) |
+| y | margins | margin of victory in each game | G × 1 | points |
+| A | game matrix | +1 for the winner, −1 for the loser in each row | G × T | — |
+| M | Massey matrix | M = AᵀA | T × T | games |
+| p | point differentials | p = Aᵀ y, points scored minus allowed per team | T × 1 | points |
+| e | residuals | e = y − A r, how much each game beat the prediction | G × 1 | points |
+| n_i | games played | diagonal of M | number per team | games |
+| w_i, l_i | wins and losses | per team | numbers | games |
+| C | Colley matrix | C = 2I + M | T × T | games |
+| b | Colley right-hand side | b_i = 1 + (w_i − l_i)/2 | T × 1 | games |
+| 1 | ones vector | all entries 1 | T × 1 | — |
+
+**Formulation.** **Where the equations come from.** The model is a statistical one: in each game,
+
+```
+rating of winner  −  rating of loser  =  margin of victory  +  noise
+```
+
+**One game.** If team i beat team j by y points, the game contributes the equation r_i − r_j = y. As a
+row of the system, it has +1 in column i, −1 in column j and 0 elsewhere, the same pattern as one
+resistor in the resistor-network entry or one levelling run in the geodetic entry.
+
+**All the games.** Stacking the rows gives A r ≈ y, with more equations than unknowns. Least squares
+chooses r to minimize the sum of squared residuals, and the normal equations are
+
+```
+AᵀA r = Aᵀ y,       that is,       M r = p
+```
+
+Both sides have a meaning. M has the number of games each team played, n_i, on its diagonal, and minus
+the number of meetings between teams i and j off it. It is the Laplacian of the schedule graph, the
+matrix of the resistor-network entry with every conductance equal to 1. p_i is team i's **point
+differential**. Row i of M r = p reads n_i r_i − (sum of its opponents' ratings) = p_i: a team's rating
+is its average margin plus the average rating of the teams it played, so [strength of schedule](https://en.wikipedia.org/wiki/Strength_of_schedule) is built
+in.
+
+**The null space.** Every row of A has one +1 and one −1, so A 1 = 0: adding the same number to every
+rating changes no prediction. M is singular, and the ratings are determined only up to a common shift.
+This is the datum defect of the geodetic entry. Massey's fix is to replace the last equation of M r = p
+by the constraint that the ratings add up to zero.
+
+**Worked case: four teams, five games.** Teams P, Q, R and S played five games:
+
+| Game | Winner | Loser | Margin |
+|---|---|---|---|
+| 1 | P | Q | 2 |
+| 2 | Q | R | 3 |
+| 3 | R | S | 1 |
+| 4 | P | R | 6 |
+| 5 | S | Q | 1 |
+
+As scalar equations, with the ratings r_P, r_Q, r_R, r_S as the unknowns,
+
+```
+r_P − r_Q = 2
+r_Q − r_R = 3
+r_R − r_S = 1
+r_P − r_R = 6
+r_S − r_Q = 1
+```
+
+and as a matrix product,
+
+```
+[ 1  −1   0   0 ]            [ 2 ]
+[ 0   1  −1   0 ] [ r_P ]    [ 3 ]
+[ 0   0   1  −1 ] [ r_Q ] ≈  [ 1 ]
+[ 1   0  −1   0 ] [ r_R ]    [ 6 ]
+[ 0  −1   0   1 ] [ r_S ]    [ 1 ]
+```
+
+The five equations are inconsistent. Around the loop Q → R → S → Q they add up to 0 = 5. The normal
+equations, with the last row replaced by the sum constraint, are
+
+```
+[  2  −1  −1   0 ] [ r_P ]   [  8 ]
+[ −1   3  −1  −1 ] [ r_Q ] = [  0 ]
+[ −1  −1   3  −1 ] [ r_R ]   [ −8 ]
+[  1   1   1   1 ] [ r_S ]   [  0 ]
+```
+
+The first three rows are rows of M: P played two games, Q and R three each. The right side holds the
+point differentials, 2 + 6 = 8 for P and −3 + 1 − 6 = −8 for R. The solution is r = (3, 0, −2, −1), so the
+ranking is P, Q, S, R. The residuals e = y − A r are (−1, 1, 2, 1, 2). S beat Q by 1, yet Q is rated above
+S, because Q's other results, against P and R, were better than S's.
+
+**Colley's method.** Colley ignores margins and uses only wins and losses. His ratings solve
+
+```
+C r = b,       C = 2I + M,       b_i = 1 + (w_i − l_i)/2
+```
+
+which comes from starting every team at a rating of 1/2 and adjusting for results and opponents. Each
+diagonal entry of C exceeds the sum of the sizes of the other entries in its row, so C is invertible
+with no constraint needed, and the ratings always average exactly 1/2. For the worked case,
+b = (2, 0.5, 0.5, 1), and
+
+```
+[  4  −1  −1   0 ] [ r_P ]   [ 2   ]
+[ −1   5  −1  −1 ] [ r_Q ] = [ 0.5 ]          so   r = (17/24, 5/12, 5/12, 11/24)
+[ −1  −1   5  −1 ] [ r_R ]   [ 0.5 ]
+[  0  −1  −1   4 ] [ r_S ]   [ 1   ]
+```
+
+that is, about (0.708, 0.417, 0.417, 0.458). Colley ranks S above Q, the opposite of Massey. Without
+margins, Q's record is one win and two losses, S's is one of each, and S beat Q. With margins, Q's
+narrow loss to the strongest team and its 3-point win over R count in its favour.
+
+**Matrix structure.** A has two nonzeros per row. M is symmetric, positive semidefinite and as sparse as the schedule: one
+off-diagonal entry per pair of teams that met. Its null space has one dimension for each connected
+piece of the schedule graph. C = 2I + M is symmetric positive definite and strictly
+diagonally dominant, so Cholesky factorization or simple iteration solves it reliably. For a few hundred teams
+either is instant.
+
+**What is computed.** Ranking sites recompute the ratings after every round of games, solving a T × T system that is small
+for any sport. In practice the methods are adjusted: [home-field advantage](https://en.wikipedia.org/wiki/Home_advantage) becomes an extra unknown with
+its own column in A, margins are capped to discourage running up the score, and recent games may get
+larger weights through weighted least squares.
+
+**Why linear algebra is the right tool.** The method turns a schedule into a matrix, and every question about fairness becomes a question about
+that matrix. Strength of schedule is the off-diagonal part of M. The overall level of the ratings is
+the null space, and the sum constraint is the choice of datum. Whether two teams can be compared is
+whether they are in the same [connected piece](https://en.wikipedia.org/wiki/Component_%28graph_theory%29), which is the rank of M. The same least-squares
+projection appears in the regression and geodetic entries, so their tools, such as residuals and
+leverage, apply here too.
+
+**Pitfall worth teaching.** A schedule that falls into separate pieces cannot be ranked across the pieces, and the sum constraint
+does not fix it. Suppose that early in a season P has played only Q, and R only S: P beat Q by 2 and R
+beat S by 5. Then
+
+```
+    [  1  −1   0   0 ]
+M = [ −1   1   0   0 ]
+    [  0   0   1  −1 ]
+    [  0   0  −1   1 ]
+```
+
+has rank 2, and its null space contains both (1, 1, 0, 0) and (0, 0, 1, 1). Replacing one equation by
+the sum constraint removes only one of those directions, and the matrix stays singular: its [determinant](https://en.wikipedia.org/wiki/Determinant)
+is 0. The results say how P compares with Q and how R compares with S, but nothing about P against R.
+Any software that returns an answer has broken the tie arbitrarily. Colley's 2I makes the matrix
+invertible, but only by falling back on its prior: the comparison between the two groups is then the
+starting assumption that all teams are equal. Ratings across conferences rest on the few games played
+between conferences, and the linear algebra shows how few of those there can be before the ranking
+means nothing.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| rating | a number per team whose differences predict results |
+| margin of victory | the winner's points minus the loser's points in one game |
+| schedule graph | teams as nodes and games as edges |
+| Massey matrix | the T × T normal-equations matrix, games played on the diagonal and minus the number of meetings off it |
+| point differential | a team's total points scored minus points allowed |
+| Colley matrix | 2I plus the Massey matrix |
+| connected schedule | one in which every team is linked to every other by a chain of games |
+| strength of schedule | how good a team's opponents were; built into both methods |
+
+**Extensions.** Keener's method and PageRank rank teams by the dominant eigenvector of a matrix of results (Tier 2;
+see the PageRank entry). The [Bradley–Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) model and the [Elo system](https://en.wikipedia.org/wiki/Elo_rating_system) used in chess treat each game as a
+probability of winning instead of a margin, which leads to nonlinear or iterative fits. Langville and
+Meyer's book Who's #1? surveys these methods. Weighted least squares down-weights old or lopsided games,
+as in the regression entry. The geodetic network adjustment entry has the same rank-deficient
+structure with heights instead of ratings, and the resistor-network entry has the same Laplacian with
+voltages instead.
+
+---
+
 ## 36. 2D transforms in SVG, CSS and Canvas: why translation needs a third coordinate
 
 <details>
@@ -1931,6 +2343,250 @@ entry).
 
 ---
 
+## 37. 3D viewing: the model-view-projection chain, and the one division that makes perspective
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A 3D game draws millions of triangles many times a second. Every corner of every triangle goes
+through the same short chain of matrix products: place the object in the scene, look at the scene from
+the camera, and project it onto the flat screen. Graphics hardware is built to do exactly this, as
+fast as possible.
+
+The everyday fact that makes the last step interesting is perspective. Railway tracks meet at the
+horizon, and a person twice as far away looks half as tall. [Perspective divides](https://en.wikipedia.org/wiki/Perspective_%28graphical%29) by distance, and
+division is not linear, so it seems that it cannot be a matrix.
+
+The trick is the extra coordinate from the 2D affine-transform entry, now used in a new way. With four
+numbers standing for three, translation, rotation and the perspective set-up are all 4 × 4 matrices.
+Only one division is left, at the very end, by the fourth number. Everything before it is ordinary
+linear algebra.
+
+</details>
+
+**Field:** Computer graphics, game engines, scientific visualization, augmented and virtual reality
+
+**Tier:** 1 — every stage of the pipeline is a 4 × 4 matrix acting on homogeneous coordinates, and perspective is a single division by the fourth coordinate after the last product. Recovering a real camera's matrices from photographs uses the SVD, which is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: points of R^3 carried as homogeneous vectors in R^4: (x, y, z, 1) for a point, and after the projection matrix (x_c, y_c, z_c, w_c), which stands for the point (x_c/w_c, y_c/w_c, z_c/w_c). Every stage before the division is a linear map of R^4.
+
+**Underlying equations.** Pinhole projection: a point at distance d in front of the eye, at height y, appears at height y/d on an image plane at distance 1, written as a linear map in homogeneous coordinates followed by division by w.
+
+**The problem.** The scene is made of triangles, and a **vertex** is a corner of a triangle. Three coordinate frames
+matter. **Object coordinates** are the ones a model is built in, such as a cube centred on its own
+origin. **World coordinates** place all the objects in one scene. **Camera coordinates** describe the
+scene as the eye sees it, and by the convention used here ([OpenGL](https://en.wikipedia.org/wiki/OpenGL)'s) the camera sits at the origin,
+looks along the negative z-axis, and has y pointing up. A point in front of the camera therefore has
+negative z, and its **distance** in front of the camera is d = −z.
+
+Only points between two distances are drawn: the **near plane** at distance n and the **far plane** at
+distance f. The **[field of view](https://en.wikipedia.org/wiki/Field_of_view)** θ is the angle the camera sees from the bottom of the image to the
+top. Together they cut out a **[view frustum](https://en.wikipedia.org/wiki/Viewing_frustum)**, a pyramid with its tip cut off. The pipeline maps the
+frustum onto the cube −1 ≤ x, y, z ≤ 1 of **normalized device coordinates**, and then onto the pixels
+of a W × H image.
+
+Given a vertex in object coordinates, where the object sits in the world, and where the camera is and
+what it sees, compute the pixel where the vertex appears and its depth.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| X | vertex | (x, y, z, 1), a point in object coordinates | 4 × 1 | scene units in the first three entries |
+| R | rotation | the turning part of a pose | 3 × 3, orthogonal | dimensionless |
+| t | translation | where an object's origin sits in the world | 3 × 1 | scene units |
+| c | camera position | where the camera sits in the world | 3 × 1 | scene units |
+| M | model matrix | object coordinates to world coordinates | 4 × 4 | mixed |
+| V | view matrix | world coordinates to camera coordinates | 4 × 4 | mixed |
+| x_e | camera coordinates | (x_e, y_e, z_e, 1) = V M X | 4 × 1 | scene units |
+| d | distance | d = −z_e, how far in front of the camera | number | scene units |
+| n, f | near and far distances | the range of distances that is drawn | numbers, 0 < n < f | scene units |
+| θ | field of view | vertical viewing angle | angle | degrees |
+| g | focal scale | g = 1 / tan(θ/2) | number | dimensionless |
+| a | aspect ratio | image width divided by height | number | dimensionless |
+| P | projection matrix | camera coordinates to clip coordinates | 4 × 4 | mixed |
+| x_c | clip coordinates | (x_c, y_c, z_c, w_c) = P x_e | 4 × 1 | scene units |
+| (x_n, y_n, z_n) | normalized device coordinates | (x_c, y_c, z_c) / w_c | 3 numbers in [−1, 1] | dimensionless |
+| W, H | image size | width and height | integers | pixels |
+| α, β | depth coefficients | entries of the third row of P | numbers | dimensionless and scene units |
+
+**Formulation.** **Where the equations come from.** The model is a pinhole camera. A point at distance d in front of
+the eye and at height y lines up, by similar triangles, with height y/d on an image plane at distance 1.
+Far objects look smaller because their heights are divided by a larger d.
+
+**The familiar formula.** The perspective projection taught in drawing and geometry classes is
+
+```
+x′ = x / d,      y′ = y / d
+```
+
+for a point at (x, y) across and up from the line of sight, at distance d. The rest of the pipeline is
+built so that this division happens once, at the end.
+
+**Step 1: the model matrix.** An object is built in its own coordinates and placed in the world by a
+rotation R and a translation t. As in the 2D affine-transform and 3D rotation entries, homogeneous
+coordinates make this one matrix:
+
+```
+    [ R   t ]
+M = [       ]       with bottom row (0, 0, 0, 1)
+    [ 0   1 ]
+```
+
+**Step 2: the view matrix.** The camera also has a pose in the world: a rotation and a position c. The
+view matrix answers the opposite question, where each world point is relative to the camera, so it is
+the inverse of the camera's pose matrix. It is a change of basis: the same point, given coordinates in
+the camera's frame instead of the world's. For a camera at c = (0, 0, 3) that is not rotated, the view
+matrix simply moves everything 3 units along −z:
+
+```
+    [ 1  0  0   0 ]
+V = [ 0  1  0   0 ]
+    [ 0  0  1  −3 ]
+    [ 0  0  0   1 ]
+```
+
+**Step 3: the projection matrix puts the distance into w.** A homogeneous vector (x_c, y_c, z_c, w_c)
+stands for the point (x_c/w_c, y_c/w_c, z_c/w_c). So if a matrix copies the distance d = −z_e into the
+fourth coordinate, the division by w later performs the perspective division. That is the job of the
+bottom row (0, 0, −1, 0). The first two rows scale x and y by g = 1/tan(θ/2), with an extra 1/a for x,
+so that the edges of the field of view land on ±1.
+
+The third row must keep some measure of depth, because the hardware needs it to decide which surface
+is in front. Any row (0, 0, α, β) gives z_n = (α z_e + β)/d after the division. Choose α and β so that
+the near plane maps to −1 and the far plane to +1. Those are two scalar equations,
+
+```
+near plane, z_e = −n:    (−α n + β) / n  =  −1      so    −n α + β  =  −n
+far plane,  z_e = −f:    (−α f + β) / f  =  +1      so    −f α + β  =   f
+```
+
+which as a matrix product are
+
+```
+[ −n   1 ] [ α ]   [ −n ]
+[ −f   1 ] [ β ] = [  f ]
+```
+
+Subtracting the first equation from the second gives α = −(f + n)/(f − n), and then β = −2fn/(f − n).
+The projection matrix is
+
+```
+    [ g/a   0          0                0          ]
+P = [  0    g          0                0          ]
+    [  0    0   −(f + n)/(f − n)   −2fn/(f − n)    ]
+    [  0    0         −1                0          ]
+```
+
+**Step 4: division and viewport.** Divide by w_c to get normalized device coordinates, and scale to
+pixels with ((x_n + 1) W/2, (y_n + 1) H/2). On screens whose pixel rows count downwards, the y formula
+is flipped.
+
+**The whole chain.** A vertex becomes x_c = P V M X, read right to left: model, then view, then
+projection. The product P V M is computed once per object and applied to all its vertices.
+
+**Worked case: a cube.** Take the cube with corners (±1, ±1, ±1), placed in the world unchanged, so
+M = I. Use the camera above at (0, 0, 3), a 90° field of view (g = 1), a square image (a = 1), n = 1,
+f = 5, and a 400 × 400 viewport. Then α = −6/4 = −1.5 and β = −10/4 = −2.5, and
+
+```
+    [ 1  0    0     0  ]                 [ 1  0    0    0 ]
+P = [ 0  1    0     0  ]        P V  =   [ 0  1    0    0 ]
+    [ 0  0  −1.5  −2.5 ]                 [ 0  0  −1.5   2 ]
+    [ 0  0   −1     0  ]                 [ 0  0   −1    3 ]
+```
+
+Follow the front top-right corner X = (1, 1, 1, 1) through each step:
+
+```
+camera:  V X  =  (1, 1, −2, 1)              distance d = 2
+clip:    P (1, 1, −2, 1)  =  (1, 1, −1.5·(−2) − 2.5, 2)  =  (1, 1, 0.5, 2)
+NDC:     divide by w_c = 2:  (0.5, 0.5, 0.25)
+pixels:  ((0.5 + 1)·200, (0.5 + 1)·200)  =  (300, 300)
+```
+
+The back top-right corner (1, 1, −1) is at distance 4 and comes out at clip coordinates (1, 1, 3.5, 4),
+NDC (0.25, 0.25, 0.875) and pixel (250, 250). All eight corners:
+
+| Corner | Distance d | Clip coordinates | NDC | Pixel |
+|---|---|---|---|---|
+| front (±1, ±1, 1) | 2 | (±1, ±1, 0.5, 2) | (±0.5, ±0.5, 0.25) | 100 or 300 in each axis |
+| back (±1, ±1, −1) | 4 | (±1, ±1, 3.5, 4) | (±0.25, ±0.25, 0.875) | 150 or 250 in each axis |
+
+The front face spans 200 pixels and the back face 100: twice as far away, half as large. The depths
+0.25 and 0.875 keep the two faces in the right order for the [depth buffer](https://en.wikipedia.org/wiki/Z-buffering).
+
+**Matrix structure.** M and V are affine: bottom row (0, 0, 0, 1), with a rotation in the top-left 3 × 3 block. The inverse of
+a pose with rotation R and position c is therefore cheap, with rotation Rᵀ and translation −Rᵀ c, which
+is how the view matrix is computed from the camera's pose. P is the only matrix with a different bottom
+row. Its determinant is −(g²/a) · 2fn/(f − n), which is −2.5 in the worked case, so P is invertible and
+loses nothing. The flattening from 3D to 2D happens only when the pixel position is read from x_n and
+y_n while z_n goes to the depth buffer.
+
+**What is computed.** In a GPU program, the [vertex shader](https://en.wikipedia.org/wiki/Shader) computes P V M X for each vertex, usually as one matrix uploaded
+per object. The hardware then [clips](https://en.wikipedia.org/wiki/Clipping_%28computer_graphics%29) triangles against the frustum in clip coordinates, where the
+frustum is the set of linear inequalities −w_c ≤ x_c, y_c, z_c ≤ w_c, before any division. It then
+divides by w_c, applies the viewport, and fills the triangles. Libraries build the matrices: GLM's
+perspective and lookAt functions in C++, and the PerspectiveCamera class in three.js. Conventions
+differ between systems: Direct3D and Vulkan map depth to [0, 1] rather than [−1, 1], and some systems
+look along +z, so the same scene has different matrices in different APIs.
+
+**Why linear algebra is the right tool.** Every change of coordinate frame in the pipeline is a matrix, chaining frames is matrix multiplication,
+and the camera's view is a matrix inverse. Homogeneous coordinates turn translation into a matrix, as
+in the 2D entry, and they also turn the set-up of perspective into a matrix, which leaves only one
+scalar division per vertex. Because the whole chain is one matrix per object, it is computed once and
+applied to every vertex, and because clipping happens before the division, it is a set of linear
+inequalities rather than a nonlinear test.
+
+**Pitfall worth teaching.** Depth in normalized device coordinates is not proportional to distance. After the division,
+
+```
+z_n  =  (f + n)/(f − n)  −  (2fn/(f − n)) · (1/d)
+```
+
+which is affine in 1/d, not in d. In the worked case the point halfway between the near and far planes,
+at d = 3, gets z_n ≈ 0.667, not 0. With realistic settings the effect is drastic. For n = 0.1 and
+f = 1000, half of the whole depth range from −1 to 1 is used up by distances between 0.1 and 0.2, and
+everything farther than 1 unit shares the last 10%. A 24-bit depth buffer then separates depths about
+6 × 10⁻⁵ apart at distance 10, but only 0.006 apart at 100 and 0.15 apart at 500. Two surfaces closer
+together than that, such as a road marking painted on a road, flicker through each other as the camera
+moves. This is [z-fighting](https://en.wikipedia.org/wiki/Z-fighting).
+
+The precision depends mainly on the near distance. Moving n from 0.1 to 1 makes the resolution at
+distance 500 ten times finer, about 0.015. Modern engines also reverse the depth range and store it as
+floating point, which spreads the precision far more evenly.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| vertex | a corner of a triangle; the pipeline moves vertices, and the triangles follow |
+| object, world and camera coordinates | the frames attached to a model, to the scene, and to the eye |
+| model matrix | places an object in the world (object to world coordinates) |
+| view matrix | re-expresses the world relative to the camera (world to camera coordinates) |
+| projection matrix | maps the visible region to clip coordinates and puts the depth into w |
+| clip coordinates | the homogeneous 4-vector after the projection matrix, before division |
+| perspective division | dividing by w, the step that makes distant objects smaller |
+| normalized device coordinates (NDC) | the cube −1 ≤ x, y, z ≤ 1 that the visible region lands in |
+| viewport transform | the final scaling from NDC to pixels |
+| near and far planes | the closest and farthest distances that are drawn |
+| field of view | the angle the camera sees, top to bottom |
+| view frustum | the truncated pyramid between the near and far planes that the camera sees |
+| depth buffer (z-buffer) | the per-pixel record of the nearest depth drawn so far |
+| z-fighting | flickering between surfaces whose depths the depth buffer cannot tell apart |
+
+**Extensions.** [Orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection), used in CAD and technical drawing, has bottom row (0, 0, 0, 1) and no
+division, so parallel lines stay parallel. The multiple-view geometry entry runs the chain backwards,
+recovering the camera matrix K [R | t] from photographs with the SVD (Tier 2). Rational Bézier curves,
+mentioned in the Bézier entry, use the same homogeneous trick to stay exact under perspective. Colours
+and textures must be interpolated across a triangle using 1/w, the perspective-correct interpolation
+described in the barycentric-coordinates entry. [Surface normals](https://en.wikipedia.org/wiki/Normal_%28geometry%29) transform by the inverse transpose of
+the model matrix's 3 × 3 block, not by the block itself, so that they stay perpendicular to surfaces
+after non-uniform scaling. [Shadow mapping](https://en.wikipedia.org/wiki/Shadow_mapping) renders the scene a second time from the light, with the
+light's own view and projection matrices. The 3D rotations entry covers the rotations inside M and V,
+and the 2D affine-transform entry is the planar case of M.
+
+---
+
 ## 38. 3D rotations and pose: orthogonal matrices for robots, drones and spacecraft
 
 <details>
@@ -1955,7 +2611,7 @@ which this entry ends with.
 
 **Field:** Robotics, aerospace guidance and attitude control, computer vision, animation
 
-**Tier:** 1 — rotations are 3 × 3 [orthogonal matrices](https://en.wikipedia.org/wiki/Orthogonal_matrix) with [determinant](https://en.wikipedia.org/wiki/Determinant) +1, poses are 4 × 4 homogeneous matrices, and composing them is multiplication. [Quaternions](https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation) and the rotation group as a [Lie group](https://en.wikipedia.org/wiki/Lie_group) are the Tier 3 extensions.
+**Tier:** 1 — rotations are 3 × 3 orthogonal matrices with determinant +1, poses are 4 × 4 homogeneous matrices, and composing them is multiplication. [Quaternions](https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation) and the rotation group as a [Lie group](https://en.wikipedia.org/wiki/Lie_group) are the Tier 3 extensions.
 
 **Scalars and vectors.** Scalar field: R. Vectors: vectors in R^3 (directions, positions, angular axes). A rotation is a 3 × 3 matrix in the set [SO(3)](https://en.wikipedia.org/wiki/3D_rotation_group) of orthogonal matrices with determinant +1. SO(3) is a group under multiplication but not a subspace of the 9-dimensional space of 3 × 3 matrices: the sum or average of two rotations is generally not a rotation. Poses (rotation plus position) are 4 × 4 matrices in SE(3), acting on homogeneous coordinates (x, y, z, 1).
 
@@ -2115,6 +2771,454 @@ camera orientations at once (the multiple-view geometry entry). The 2D affine-tr
 planar case of the pose matrix, and the 3D viewing entry adds the perspective projection that takes
 poses to the screen. [Inertial navigation](https://en.wikipedia.org/wiki/Inertial_navigation_system) uses R to rotate accelerometer readings into the world frame
 before integrating them (the Kalman filtering entry).
+
+---
+
+## 39. Barycentric coordinates: one 3 × 3 system decides which pixels a triangle covers and what colour they get
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Everything a GPU draws is broken into triangles, and the screen is a grid of pixels. For every
+triangle, two questions have to be answered at every pixel nearby. Is this pixel inside the triangle?
+If so, what colour and depth should it get, given the values at the three corners?
+
+Both questions have one answer: describe the pixel as a weighted average of the triangle's three
+corners. The three weights are called [barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system), after the barycentre, the centre of
+mass that the corners would have if they carried those weights. If all three weights are positive the
+pixel is inside. And to blend colours, depths or anything else from the corners, use the same three
+weights.
+
+Finding the weights is a 3 × 3 linear system, and because the matrix belongs to the triangle rather
+than the pixel, it is inverted once per triangle and reused at every pixel. A GPU does this billions of
+times a second.
+
+</details>
+
+**Field:** Computer graphics, GPU hardware, game engines, mesh processing, computational geometry
+
+**Tier:** 1 — a pixel's barycentric coordinates are its coordinates relative to the triangle's corners, the solution of one 3 × 3 linear system. Their signs decide coverage, and the same weights blend colour and depth. The finite element method uses the same coordinates as basis functions for differential equations, which is Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: the plane R^2 of screen positions, with each point described by three barycentric coordinates (α, β, γ) relative to the triangle's corners, constrained by α + β + γ = 1. Appending a 1 to each position turns finding them into a 3 × 3 linear system in R^3.
+
+**Underlying equations.** [Affine combination](https://en.wikipedia.org/wiki/Affine_combination): a point X of the plane is X = α P + β Q + γ R with α + β + γ = 1, and each attribute of the triangle, such as colour or depth, is blended with the same weights.
+
+**The problem.** A triangle arrives with its corners P, Q and R already in screen coordinates, measured in pixels, as
+the output of the 3D viewing pipeline. Each corner also carries **attributes**: a colour, a depth, and
+often **texture coordinates**, the position in an image that is to be painted onto the triangle. The
+**pixel centre** is the point in the middle of a pixel, and the pixel is drawn when its centre lies
+inside the triangle. **[Rasterization](https://en.wikipedia.org/wiki/Rasterisation)** is the job of finding those pixels. It is where a vector
+description, three corners that could be drawn at any resolution, becomes a raster image, a fixed grid
+of samples, the contrast at the heart of the Bézier-curve entry.
+
+For each pixel centre X near the triangle, decide whether X is inside, and if so compute its colour and
+depth by blending the corner values. The known quantities are P, Q, R, the corner attributes and X.
+The unknowns are three weights per pixel.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| P, Q, R | corners | screen positions of the triangle's corners | 2 × 1 each | pixels |
+| X | pixel centre | (x, y), the point being tested | 2 × 1 | pixels |
+| α, β, γ | barycentric coordinates | weights on P, Q and R | 3 numbers, α + β + γ = 1 | dimensionless |
+| T | corner matrix | columns (P, 1), (Q, 1), (R, 1) | 3 × 3 | pixels in the first two rows |
+| c_P, c_Q, c_R | corner colours | red, green and blue intensities | 3 × 1 each | 0 to 1 |
+| z_P, z_Q, z_R | corner depths | the depths z_n from the viewing pipeline | numbers | dimensionless |
+| w_P, w_Q, w_R | corner w values | each corner's fourth clip coordinate, its distance from the camera | numbers | scene units |
+| u | texture coordinate | position along the texture image | number | 0 to 1 |
+| s, t | edge fractions | how far along an edge, in 3D (s) and on screen (t) | numbers in [0, 1] | dimensionless |
+
+**Formulation.** **Where the equations come from.** The model is the affine combination: a point of the plane written
+as a weighted sum of the three corners, with weights that add up to 1,
+
+```
+X = α P + β Q + γ R,       α + β + γ = 1
+```
+
+Because the weights add up to 1, the answer does not depend on where the origin is: moving all four
+points by the same amount leaves α, β and γ unchanged.
+
+**The familiar case.** On a line segment from P to Q, the point a fraction t of the way along is
+(1 − t) P + t Q, and a value that varies linearly along the segment is (1 − t) a_P + t a_Q, where a_P
+and a_Q are its values at the ends. That is [linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation), and its weights 1 − t and t are the
+barycentric coordinates of a segment. A triangle needs three weights.
+
+**One coordinate first.** The weight α measures how close X is to the corner P, compared with the
+opposite edge QR. It is 1 at P, 0 everywhere on the line through Q and R, and changes linearly in
+between. Its sign says which side of that line X is on: α is negative exactly when X is on the far side
+of QR from P. The same holds for β with the edge RP and for γ with the edge PQ. So X is inside the
+triangle exactly when all three weights are nonnegative, and the points with nonnegative weights adding
+up to 1, the **[convex combinations](https://en.wikipedia.org/wiki/Convex_combination)**, fill the triangle.
+
+**Stacking the conditions.** Written as scalar equations, the definition is two coordinate equations
+plus the condition on the sum:
+
+```
+α P_x  +  β Q_x  +  γ R_x  =  x
+α P_y  +  β Q_y  +  γ R_y  =  y
+α      +  β      +  γ      =  1
+```
+
+As a matrix product, T (α, β, γ) = (x, y, 1), where T has the corners as columns with a 1 appended to
+each, the homogeneous coordinates of the 2D affine-transform entry. The determinant of T is twice the
+signed area of the triangle, so T is invertible unless the triangle has collapsed onto a line.
+[Cramer's rule](https://en.wikipedia.org/wiki/Cramer's_rule) gives each weight as a ratio of determinants, which is a ratio of areas:
+α = area(XQR) / area(PQR), and similarly for β and γ.
+
+**Blending attributes.** Once the weights are known, every attribute is blended with them:
+
+```
+colour  =  α c_P + β c_Q + γ c_R,        depth  =  α z_P + β z_Q + γ z_R
+```
+
+Blending colours this way is called **[Gouraud shading](https://en.wikipedia.org/wiki/Gouraud_shading)**.
+
+**Worked case: one triangle, four pixels.** Take P = (1, 1), Q = (7, 3) and R = (3, 7). The system is
+
+```
+[ 1  7  3 ] [ α ]   [ x ]
+[ 1  3  7 ] [ β ] = [ y ]
+[ 1  1  1 ] [ γ ]   [ 1 ]
+```
+
+with det T = 32, so the triangle has area 16 square pixels. The inverse, computed once for the
+triangle, is
+
+```
+         [ −1/8    −1/8     5/4 ]
+T⁻¹  =   [  3/16   −1/16   −1/8 ]
+         [ −1/16    3/16   −1/8 ]
+```
+
+and every pixel is one product with it. For the pixel centre X = (3, 3):
+
+```
+[ −1/8    −1/8     5/4 ] [ 3 ]   [ 1/2 ]
+[  3/16   −1/16   −1/8 ] [ 3 ] = [ 1/4 ]
+[ −1/16    3/16   −1/8 ] [ 1 ]   [ 1/4 ]
+```
+
+All three weights are positive, so (3, 3) is inside. The other pixels give
+
+```
+X = (5, 3):   (α, β, γ) = (1/4, 5/8, 1/8)       inside
+X = (6, 5):   (α, β, γ) = (−1/8, 11/16, 7/16)   outside: beyond the edge QR
+X = (2, 4):   (α, β, γ) = (1/2, 0, 1/2)         exactly on the edge PR
+```
+
+Colour the corners pure red, green and blue: c_P = (1, 0, 0), c_Q = (0, 1, 0), c_R = (0, 0, 1). Then a
+pixel's colour is its weights themselves, so (3, 3) is (0.5, 0.25, 0.25), a muted red. With depths
+z_P = 0.2, z_Q = 0.6 and z_R = 0.4, the depth at (3, 3) is 0.5·0.2 + 0.25·0.6 + 0.25·0.4 = 0.35, and at
+(5, 3) it is 0.475.
+
+**Matrix structure.** T is a small dense matrix with a bottom row of 1s. The columns of T⁻¹ have a meaning of their own.
+Moving one pixel to the right adds the first column to (α, β, γ), and moving one pixel up adds the
+second. In the worked case these steps are (−1/8, 3/16, −1/16) and (−1/8, −1/16, 3/16). Each sums to
+zero, which keeps α + β + γ = 1, while the third column sums to 1. A rasterizer therefore never repeats
+the product: stepping from (3, 3) to (4, 3) is three additions, giving (3/8, 7/16, 3/16). Written as
+functions of the pixel position, the three weights are called **edge functions**.
+
+The sign of det T says which way round the corners go: positive for counterclockwise when y points up.
+Triangles [facing away from the camera](https://en.wikipedia.org/wiki/Back-face_culling) arrive clockwise, so the same determinant lets the hardware skip
+them.
+
+**What is computed.** GPUs evaluate the three edge functions for whole blocks of pixels in parallel, in [fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic)
+so that results are exact and repeatable. This approach goes back to Pineda's 1988 parallel
+rasterization algorithm. A pixel centre exactly on an edge shared by two triangles must be drawn once,
+not twice or never, and the **top-left rule** used by Direct3D and others breaks the tie by which kind
+of edge it is. The interpolated attributes then reach the program that colours each pixel (the
+fragment shader). In GLSL they are perspective-correct by default, and the noperspective qualifier
+switches to plain screen-space blending.
+
+**Why linear algebra is the right tool.** Barycentric coordinates are coordinates in the ordinary sense: the triangle's corners act as a frame,
+and finding a point's coordinates in a frame is solving a linear system. The inside test is the
+description of a [convex hull](https://en.wikipedia.org/wiki/Convex_hull) as the nonnegative combinations. Interpolation is linear because the
+coordinates are affine functions of position. Because the matrix belongs to the triangle, the expensive
+step happens once per triangle and each pixel costs a matrix product, or three additions when stepping
+across a row. The determinant does three more jobs: area, orientation, and detecting a collapsed
+triangle.
+
+**Pitfall worth teaching.** Weights measured on the screen are not the weights in the 3D scene. Perspective shrinks distant parts
+of a triangle, so equal steps across the screen are unequal steps across the surface. Blending texture
+coordinates with screen weights makes textures bend and swim as the camera moves, which was a familiar
+sight in games on the original PlayStation, whose hardware did exactly that.
+
+Take one edge, from a near corner at distance w_P = 1 to a far corner at w_Q = 3, with texture
+coordinate u = 0 at the near corner and u = 1 at the far one. A point a fraction s of the way along the
+edge in 3D appears at the screen fraction
+
+```
+t  =  s w_Q / ( (1 − s) w_P + s w_Q )
+```
+
+so s = 1/4 lands at t = 3/4 ÷ (3/4 + 3/4) = 1/2. The pixel in the middle of the edge on the screen is
+only a quarter of the way along it in 3D. Plain screen blending gives it u = 0.5, but the correct value
+is 0.25.
+
+The correction is to blend u/w and 1/w with the screen weights, which is exact because both are affine
+functions of screen position, and then divide one by the other:
+
+```
+u  =  ( 0.5 · 0/1  +  0.5 · 1/3 )  /  ( 0.5 · 1/1  +  0.5 · 1/3 )  =  (1/6) / (2/3)  =  1/4
+```
+
+Depth needs no correction. The viewing entry chose z_n to be affine in 1/d, which makes it vary
+linearly across the screen, so screen weights blend it exactly.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| pixel centre | the point in the middle of a pixel; a pixel is drawn when its centre is covered |
+| rasterization | deciding which pixel centres a shape covers, turning a vector description into pixels |
+| barycentric coordinates | the weights (α, β, γ) that write a point as a weighted average of the three corners |
+| affine combination | a weighted sum whose weights add up to 1 |
+| convex combination | an affine combination with no negative weights; these fill the triangle |
+| edge function | a barycentric coordinate written as a linear function of the pixel position |
+| attribute | a value stored at each corner (colour, depth, texture coordinate) and blended across the triangle |
+| Gouraud shading | colouring a triangle by blending its corner colours |
+| texture coordinates | the position in an image (a texture) that each corner is mapped to |
+| perspective-correct interpolation | blending attributes using the 3D weights rather than the screen weights |
+| top-left rule | the tie-break that assigns a pixel exactly on a shared edge to just one triangle |
+
+**Extensions.** The [Möller–Trumbore](https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm) ray–triangle intersection test, used in [ray tracing](https://en.wikipedia.org/wiki/Ray_tracing_%28graphics%29), solves a similar 3 × 3 system
+for two barycentric coordinates and the distance along the ray. [Texture mapping](https://en.wikipedia.org/wiki/Texture_mapping) assigns each corner a
+position in an image and blends those positions with the same weights. In the finite element method
+the barycentric coordinates of a triangle are the linear basis functions used to approximate solutions
+of differential equations (Tier 3). Bézier triangles, the surface version of the Bézier-curve entry,
+use barycentric coordinates as their variables. In 3D, a tetrahedron's four barycentric coordinates
+solve a 4 × 4 system of the same form, used to interpolate inside volumes. Linear interpolation on a
+triangle is the two-variable, degree-1 case of the polynomial interpolation entry. The 3D viewing
+entry produces the corner positions and the w values used above.
+
+---
+
+## 40. Colour spaces: three numbers per colour, and every conversion is a change of basis
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A screen makes every colour it shows from three small lights: a red, a green and a blue. That this
+works at all is a fact about the eye, not about light. Light carries a whole [spectrum](https://en.wikipedia.org/wiki/Spectral_power_distribution), a different
+amount of power at every wavelength. The eye has only three kinds of colour receptor, [the cones](https://en.wikipedia.org/wiki/Cone_cell), and
+each reports a single number. Two lights with completely different spectra that produce the same
+three numbers look identical.
+
+So a colour, as people see it, is three numbers, and colours behave like vectors in a
+three-dimensional space: mixing two lights adds their vectors, and dimming a light scales it. Every
+device picks its own three lights, so the same colour gets different coordinates on different devices.
+Converting between them is a change of basis, a 3 × 3 matrix.
+
+The same matrices are behind every colour-managed web page, photo editor and printer. They also
+explain the white-balance setting on a camera, and why a widely used shortcut for blending colours
+gives the wrong answer.
+
+</details>
+
+**Field:** Colour science, displays and photography, image processing, colour management for web and print
+
+**Tier:** 1 — the eye reduces a spectrum to three numbers by a linear map, so colours form a three-dimensional vector space, and moving between RGB, XYZ and cone coordinates is a 3 × 3 change of basis. Analysing spectra or camera responses with the SVD is Tier 2.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^3 of [tristimulus values](https://en.wikipedia.org/wiki/CIE_1931_color_space). Light is a spectrum, a function of wavelength in an infinite-dimensional space; colour matching maps it linearly onto R^3, and every RGB, XYZ or cone-response space is a choice of basis for that R^3.
+
+**Underlying equations.** Change of basis: (X, Y, Z) = M (R, G, B) for linear RGB values, where the columns of M are the XYZ values of the display's three [primaries](https://en.wikipedia.org/wiki/Primary_color) at full strength; [Grassmann's laws](https://en.wikipedia.org/wiki/Grassmann's_laws_%28color_science%29) of colour matching make the map linear.
+
+**The problem.** The everyday contrast is between the physics and the perception. Physically, a light is its
+**spectrum**: a function of wavelength across the visible range, so infinitely many numbers.
+Perceptually it is three numbers. The international standard set of three, defined by the CIE in 1931
+from colour-matching experiments, is the **tristimulus values** X, Y and Z, where Y is the
+**[luminance](https://en.wikipedia.org/wiki/Luminance)**, the perceived brightness. Dividing out the brightness gives the **[chromaticity](https://en.wikipedia.org/wiki/Chromaticity)**
+x = X/(X + Y + Z) and y = Y/(X + Y + Z), which says only what colour a light is.
+
+A display is described by its three **primaries**, given as chromaticities, and its **[white point](https://en.wikipedia.org/wiki/White_point)**,
+the colour it shows when all three are fully on. For the [sRGB](https://en.wikipedia.org/wiki/SRGB) standard used by the web, the red
+primary has chromaticity (0.64, 0.33), green (0.30, 0.60), blue (0.15, 0.06), and the white point is
+the daylight white [D65](https://en.wikipedia.org/wiki/Standard_illuminant#Illuminant_series_D) at (0.3127, 0.3290). The [Display P3](https://en.wikipedia.org/wiki/DCI-P3) standard of many recent phones and laptops
+keeps the same blue and white but uses a deeper red (0.680, 0.320) and green (0.265, 0.690).
+
+Given those numbers, find the matrix that turns a display's linear RGB values into XYZ, convert colours
+from one display to another, say which colours a display cannot show, and adjust colours for a change
+of white.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| v | tristimulus vector | (X, Y, Z) | 3 × 1 | relative, with Y = 1 for white |
+| (x, y) | chromaticity | the colour with brightness divided out | 2 numbers | dimensionless |
+| (R, G, B) | linear RGB | how strongly each primary is driven | 3 × 1, each from 0 to 1 | dimensionless |
+| p_R, p_G, p_B | primary directions | XYZ of each primary per unit luminance, (x/y, 1, (1 − x − y)/y) | 3 × 1 each | relative |
+| K | direction matrix | columns p_R, p_G, p_B | 3 × 3 | relative |
+| s | primary luminances | (s_R, s_G, s_B), the luminance of each primary at full strength | 3 × 1 | relative |
+| w | white point | XYZ of R = G = B = 1 | 3 × 1 | relative |
+| M | RGB-to-XYZ matrix | v = M (R, G, B) for sRGB | 3 × 3 | relative |
+| M_3 | RGB-to-XYZ matrix | the same for Display P3 | 3 × 3 | relative |
+| C | display-to-display matrix | sRGB coordinates to Display P3 coordinates | 3 × 3 | dimensionless |
+| B | Bradford matrix | XYZ to cone-like responses | 3 × 3 | dimensionless |
+| D | adaptation scaling | diagonal ratios of the two whites' cone-like responses | 3 × 3 diagonal | dimensionless |
+| A | adaptation matrix | XYZ under one white to XYZ under another | 3 × 3 | dimensionless |
+| ℓ, e | linear and encoded channel values | one of R, G, B as light intensity, and as stored in a file | numbers from 0 to 1 | dimensionless |
+
+The Bradford matrix is named B by convention. It is unrelated to the blue value B, which always appears
+inside (R, G, B).
+
+**Formulation.** **Where the equations come from.** Colour matching obeys Grassmann's laws: if two lights match two
+others, their sums match, and scaling both members of a match keeps the match. So the map from
+spectra to tristimulus values is linear. Each of X, Y and Z is the integral of the spectrum against a
+fixed weighting curve, a [linear functional](https://en.wikipedia.org/wiki/Linear_form) on spectra. The map goes from an infinite-dimensional space
+of spectra onto ℝ³, so it has an enormous null space. Two spectra whose difference lies in that null
+space are **[metamers](https://en.wikipedia.org/wiki/Metamerism_%28color%29)**: different light, the same colour.
+
+**The familiar formula.** Image-processing courses teach that the brightness of a linear sRGB colour is
+
+```
+Y  =  0.2126 R  +  0.7152 G  +  0.0722 B
+```
+
+with green counting ten times as much as blue. These weights are not chosen by hand. They are the
+middle row of the matrix built below.
+
+**One primary first.** The red primary has chromaticity (x, y) = (0.64, 0.33). Its XYZ direction with
+luminance 1 is
+
+```
+p_R  =  (x/y,  1,  (1 − x − y)/y)  =  (0.64/0.33,  1,  0.03/0.33)  =  (1.9394,  1,  0.0909)
+```
+
+At full strength red gives s_R p_R, where its luminance s_R is not yet known. Driving it at strength R
+gives R s_R p_R. In the same way the green and blue directions are p_G = (0.5, 1, 0.1667) and
+p_B = (2.5, 1, 13.1667).
+
+**Stacking the primaries.** Light from the three primaries adds, so
+
+```
+v  =  R s_R p_R  +  G s_G p_G  +  B s_B p_B  =  M (R, G, B),      M  =  K diag(s_R, s_G, s_B)
+```
+
+The columns of M are the primaries at full strength, which is the change-of-basis matrix from RGB
+coordinates to XYZ coordinates. The luminances s come from the white point. Full drive (1, 1, 1) must
+give white, w = (0.3127/0.3290, 1, 0.3583/0.3290) = (0.9505, 1, 1.0891), so K s = w:
+
+```
+[ 1.9394   0.5      2.5     ] [ s_R ]   [ 0.9505 ]
+[ 1        1        1       ] [ s_G ] = [ 1      ]
+[ 0.0909   0.1667  13.1667  ] [ s_B ]   [ 1.0891 ]
+```
+
+Its solution is s = (0.2126, 0.7152, 0.0722), the luminance weights of the familiar formula, and the
+sRGB matrix is
+
+```
+    [ 0.4124   0.3576   0.1805 ]
+M = [ 0.2126   0.7152   0.0722 ]
+    [ 0.0193   0.1192   0.9505 ]
+```
+
+the standard sRGB-to-XYZ matrix; the sRGB specification publishes its inverse, for converting XYZ
+to sRGB.
+
+**From one display to another.** Build M_3 the same way for Display P3. A colour with sRGB
+coordinates (R, G, B) has XYZ value M (R, G, B) and Display P3 coordinates M_3⁻¹ M (R, G, B), so the
+conversion is one matrix:
+
+```
+                    [ 0.8225   0.1775   0      ]
+C  =  M_3⁻¹ M  =    [ 0.0332   0.9668   0      ]
+                    [ 0.0171   0.0724   0.9105 ]
+```
+
+Its last column says that sRGB blue is exactly Display P3 blue at 91% strength, because the two
+standards use the same blue chromaticity.
+
+**[Gamut](https://en.wikipedia.org/wiki/Gamut).** The colours a display can make are the combinations with every coordinate between 0 and 1.
+Their directions form a **[convex cone](https://en.wikipedia.org/wiki/Convex_cone)**: the nonnegative combinations of the three primaries. Every
+entry of C is nonnegative, so every sRGB colour has nonnegative Display P3 coordinates, and the sRGB
+gamut lies inside the Display P3 gamut. The reverse fails. Pure Display P3 red, (1, 0, 0), has sRGB
+coordinates C⁻¹ (1, 0, 0) = (1.2249, −0.0421, −0.0196). The negative entries mean that sRGB would have
+to subtract green and blue light to make it, so no sRGB screen can show that red.
+
+**Adapting to a different white.** A white sheet of paper looks white under daylight and under a warm
+lamp, because the eye rescales each cone's response to the light it is adapted to. That is von Kries's
+hypothesis, and it is diagonal in a basis of cone responses. The Bradford transform, the standard
+choice in colour management, uses the cone-like basis given by the matrix
+
+```
+    [  0.8951   0.2664  −0.1614 ]
+B = [ −0.7502   1.7135   0.0367 ]
+    [  0.0389  −0.0685   1.0296 ]
+```
+
+To move from D65 to the print standard D50, whose white is about (0.9643, 1, 0.8251), compute both
+whites' responses B w, and let D be the diagonal matrix of their ratios, here diag(1.0584, 0.9807,
+0.7511). The adaptation is: change to the cone-like basis, scale, change back.
+
+```
+                     [  1.0479   0.0229  −0.0502 ]
+A  =  B⁻¹ D B  =     [  0.0296   0.9904  −0.0171 ]
+                     [ −0.0092   0.0151   0.7519 ]
+```
+
+A sends the D65 white exactly to the D50 white. It is a dense matrix in XYZ, but it is the same map as
+the diagonal D, written in a different basis.
+
+**Matrix structure.** All the matrices are 3 × 3 and dense. Because the conversions are linear, a whole chain, such as
+camera RGB to XYZ, adaptation, then XYZ to display RGB, multiplies out to a single 3 × 3 matrix
+applied to each pixel. The condition number of M is about 4.3. It grows when the primaries are close
+together in chromaticity, and then small errors in RGB become large errors in XYZ. The negative
+entries of inverse matrices are the algebraic sign of gamut limits.
+
+**What is computed.** Display [ICC profiles](https://en.wikipedia.org/wiki/ICC_profile) are often stored as exactly these parts: a 3 × 3 matrix and three tone curves,
+applied by colour-management engines such as Little CMS. CSS Color Level 4 lets web pages write
+color(display-p3 1 0 0) and specifies the conversion matrices in its sample code. Raw photo formats
+such as [DNG](https://en.wikipedia.org/wiki/Digital_Negative) store colour matrices that relate the camera's own RGB to XYZ. In Python, the
+colour-science package implements these spaces and [chromatic adaptation](https://en.wikipedia.org/wiki/Chromatic_adaptation) transforms, including
+Bradford.
+
+**Why linear algebra is the right tool.** Grassmann's laws make colour linear, and three kinds of cone make it three-dimensional. Any three
+independent primaries are then a basis, an RGB value is a coordinate vector, and converting between
+devices is a change of basis. Metamerism is a null space. A gamut is a convex cone cut off by the unit
+cube. White balance is a scaling that is diagonal in one basis and looks complicated in another. Each
+fact that colour science states in its own vocabulary is a standard fact about ℝ³.
+
+**Pitfall worth teaching.** The matrices act on linear light, but image files store encoded values. sRGB files store each channel
+after a [transfer function](https://en.wikipedia.org/wiki/Gamma_correction): e = 12.92 ℓ for ℓ up to 0.0031308, and e = 1.055 ℓ^(1/2.4) − 0.055 above
+it, where ℓ is the linear value and e the stored one. The encoding spends more of the available numbers on
+dark tones, where the eye is more sensitive. The colour matrices must be applied after decoding, and
+so must any averaging.
+
+Averaging encoded values is a common mistake. Blend a black pixel and a white pixel half and half, as
+resizing or blurring an image does. Averaging the stored values gives 0.5, which decodes to a linear
+intensity of only 0.214, so the result carries about 21% of white's light instead of 50%. The correct
+average is linear 0.5, which is stored as 0.735. Programs that blend stored values make fine
+light-and-dark detail darker when an image is shrunk, and colour gradients between saturated colours
+dip through muddy, darker tones.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| spectrum (spectral power distribution) | how much power a light carries at each wavelength |
+| cones | the three kinds of colour receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) |
+| tristimulus values | three numbers that determine a colour; CIE XYZ is the standard set |
+| luminance Y | the brightness coordinate of XYZ |
+| chromaticity (x, y) | x = X/(X + Y + Z) and y = Y/(X + Y + Z), the colour with its brightness divided out |
+| primaries | the three lights a display mixes; each RGB space has its own |
+| white point | the colour of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print |
+| linear and encoded RGB | light intensities, versus the values stored in files after the transfer function (often loosely called gamma) |
+| gamut | the set of colours a device can produce |
+| metamers | different spectra that look the same colour |
+| chromatic adaptation | the eye's adjustment to the colour of the illumination, and its modelling by a matrix |
+| Bradford transform | a standard chromatic adaptation matrix built on a cone-like basis |
+
+**Extensions.** Perceptual spaces such as [CIELAB](https://en.wikipedia.org/wiki/CIELAB_color_space) apply cube roots to XYZ, so that distances in them roughly match how
+different colours look. They are nonlinear, and the matrices above are only their first step. Camera
+colour matrices are fitted by least squares to photographs of colour charts, as in the regression and
+basis-fitting entries. The reflectance spectra of natural surfaces are well approximated by a few basis
+functions found by principal component analysis (Tier 2), the same idea as the empirical orthogonal
+functions entry. JPEG converts RGB to YCbCr, another 3 × 3 change of basis that separates brightness
+from colour, before its cosine transform (the JPEG entry). People with two types of cone see a
+two-dimensional colour space, and [colour-blindness](https://en.wikipedia.org/wiki/Color_blindness) simulators apply a rank-2 matrix that projects onto
+it. The barycentric-coordinates entry blends colours with the same kind of weights, and for the reason
+in the pitfall above, the blend is physically correct only in linear RGB.
 
 ---
 
@@ -2298,7 +3402,7 @@ of basis or other linear maps between spaces of polynomials.
 
 **Field:** Typography, [vector graphics](https://en.wikipedia.org/wiki/Vector_graphics), computer-aided design, animation
 
-**Tier:** 1 — a Bézier curve is a polynomial written in a particular basis, and every common operation on it is a [change of basis](https://en.wikipedia.org/wiki/Change_of_basis) or a linear map between polynomial spaces of degree at most 3. No eigenvalues are involved.
+**Tier:** 1 — a Bézier curve is a polynomial written in a particular basis, and every common operation on it is a change of basis or a linear map between polynomial spaces of degree at most 3. No eigenvalues are involved.
 
 **Scalars and vectors.** Scalar field: R. Vectors: P_3, the real polynomials of degree at most 3 in a parameter t, which has dimension 4. Each coordinate x(t) and y(t) of a cubic curve is one element of P_3, so a planar cubic segment is a pair of them, a vector in P_3 × P_3 of dimension 8. The control points are its coordinates in the Bernstein basis, not points the curve passes through. [TrueType](https://en.wikipedia.org/wiki/TrueType) fonts use quadratic segments, in P_2 (dimension 3).
 
@@ -2311,7 +3415,7 @@ each pixel just becomes a bigger square and edges turn jagged and blurry. Vector
 and PDF drawings, logos, CAD drawings) store the shapes themselves, as curves described by a few numbers
 each. The picture is computed from those numbers only when it is shown, so it can be drawn at any
 resolution, and a letter zoomed in a hundredfold is as sharp as it was at normal size. It is only turned into pixels
-([rasterized](https://en.wikipedia.org/wiki/Rasterisation)) at the last moment, for the particular screen or printer in use.
+(rasterized) at the last moment, for the particular screen or printer in use.
 
 Both kinds of image are vectors in the linear-algebra sense, but in different spaces. A raster image
 is a point in ℝ^(width × height), one coordinate per pixel, and its resolution is fixed by the
@@ -2465,7 +3569,7 @@ it the way calculus does. It estimates the derivative from the values it has. Th
 meets first is the slope between two neighbouring points: the change in height divided by the step.
 
 Every such estimate combines a few neighbouring values with fixed weights. The pattern of weights,
-laid over the grid of points like a [stencil](https://en.wikipedia.org/wiki/Stencil_%28numerical_analysis%29) over paper, is called a [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) stencil.
+laid over the grid of points like a [stencil](https://en.wikipedia.org/wiki/Stencil_%28numerical_analysis%29) over paper, is called a finite-difference stencil.
 Stencils are the basic tool for turning the laws of physics into arithmetic, in weather and climate
 models, in simulations of heat flow and fluid flow, and in the edge detectors of image processing.
 
@@ -2481,7 +3585,7 @@ any set of points.
 
 **Tier:** 1 — the weights of a derivative formula solve one small square system, a transposed Vandermonde matrix whose rows say the formula is exact on 1, x, x², …. Using the stencils to discretize a differential equation is Tier 3.
 
-**Scalars and vectors.** Scalar field: R. Vectors: R^n, the n weights of a stencil. A stencil is a [linear functional](https://en.wikipedia.org/wiki/Linear_form) (samples in, one number out), and the conditions ask it to agree with the k-th derivative on a basis of P_(n−1), the polynomials of degree below n.
+**Scalars and vectors.** Scalar field: R. Vectors: R^n, the n weights of a stencil. A stencil is a linear functional (samples in, one number out), and the conditions ask it to agree with the k-th derivative on a basis of P_(n−1), the polynomials of degree below n.
 
 **Underlying equations.** [Taylor](https://en.wikipedia.org/wiki/Taylor_series)-series matching conditions: the weights c_j must satisfy Σ_j c_j s_j^m = k! for m = k and 0 for the other m below n, so that the formula is exact for every polynomial of degree below n.
 
@@ -2656,7 +3760,7 @@ h²/12 predicts. At h = 10⁻⁴ it is about 6 × 10⁻⁹, and then it rises: a
 1.3 × 10⁻⁴ at h = 10⁻⁶ and 8 × 10⁻⁴ at h = 10⁻⁷.
 
 The cause is built into the linear algebra. The m = 0 condition makes the weights sum to zero, so the
-stencil subtracts nearly equal numbers. Each sample carries a relative [rounding error](https://en.wikipedia.org/wiki/Round-off_error) of about
+stencil subtracts nearly equal numbers. Each sample carries a relative rounding error of about
 ε ≈ 2.2 × 10⁻¹⁶, the numerator therefore carries an error of a few ε, and dividing by h² magnifies it
 to about 4ε/h². The total error is roughly h²/12 + 4ε/h², which is smallest near h = (48ε)^(1/4), about
 3 × 10⁻⁴, and even there only about half of the sixteen available digits are correct. A higher-order
@@ -2716,7 +3820,7 @@ terms are used.
 
 **Field:** Applied analysis, signal processing, acoustics, physics and engineering
 
-**Tier:** 1 — a truncated [Fourier series](https://en.wikipedia.org/wiki/Fourier_series) is the orthogonal projection of a function onto the span of finitely many sines and cosines, in an [inner product](https://en.wikipedia.org/wiki/Inner_product_space) defined by an integral. Explaining why sines and cosines are the natural basis, as eigenfunctions of the second derivative, is Tier 2.
+**Tier:** 1 — a truncated Fourier series is the orthogonal projection of a function onto the span of finitely many sines and cosines, in an [inner product](https://en.wikipedia.org/wiki/Inner_product_space) defined by an integral. Explaining why sines and cosines are the natural basis, as eigenfunctions of the second derivative, is Tier 2.
 
 **Scalars and vectors.** Scalar field: R. Vectors: piecewise continuous real functions on [−π, π], with inner product ⟨f, g⟩ = ∫ f(x) g(x) dx over [−π, π]. The space is infinite-dimensional; each approximation lives in the subspace T_N spanned by 1, cos x, sin x, …, cos Nx, sin Nx, of dimension 2N + 1.
 
@@ -2880,7 +3984,7 @@ calculation happens in a finite-dimensional subspace T_N, where all the facts fr
 **Pitfall worth teaching.** Best in the integral sense is not best at every point. Near the jump of the square wave, the partial
 sums overshoot the value 1. S_8 peaks at about 1.184, at x = π/8. S_64 peaks at about 1.179, at x = π/64.
 As N grows, the peak moves toward the jump but does not get lower: its limit is about 1.179, an
-overshoot of about 9% of the jump from −1 to 1. This is the [Gibbs phenomenon](https://en.wikipedia.org/wiki/Gibbs_phenomenon).
+overshoot of about 9% of the jump from −1 to 1. This is the Gibbs phenomenon.
 
 There is no contradiction with convergence. The projection minimizes the integral of the squared
 error, and the region where the overshoot happens gets narrower as N grows, so the error energy still
@@ -2911,7 +4015,7 @@ eigenvalue problems give other orthogonal families, such as Legendre polynomials
 That the partial sums converge in norm for every function of finite energy is the completeness of the
 basis, studied in [Hilbert space](https://en.wikipedia.org/wiki/Hilbert_space) theory. The JPEG entry uses a discrete cosine basis on 8-point blocks.
 Fitting with basis functions that are not orthogonal is the basis-fitting entry, where the Gram matrix
-becomes XᵀX. [Wavelets](https://en.wikipedia.org/wiki/Wavelet) are orthogonal bases whose functions are localized in time as well as frequency.
+becomes XᵀX. Wavelets are orthogonal bases whose functions are localized in time as well as frequency.
 Empirical orthogonal functions in climate data are orthogonal bases chosen from the data instead of
 fixed in advance.
 
@@ -3046,7 +4150,7 @@ points, the discrete counterpart of the orthogonal sines and cosines of the Four
 **Different spans.** Take 50 equally spaced points on [0, 1] and three bases of 5 functions each: the
 polynomials 1, t, …, t⁴; cubic B-splines with one knot at t = 0.5; and the Fourier basis 1, cos 2πt,
 sin 2πt, cos 4πt, sin 4πt. Fit two noise-free signals: a seasonal cycle over one year,
-s(t) = 10 − 8 cos 2πt + 2 sin 4πt, and exponential growth, g(t) = e^t. The [root-mean-square](https://en.wikipedia.org/wiki/Root_mean_square) residuals are
+s(t) = 10 − 8 cos 2πt + 2 sin 4πt, and exponential growth, g(t) = e^t. The root-mean-square residuals are
 
 | Signal | Polynomial | Spline | Fourier |
 |---|---|---|---|
@@ -3293,7 +4397,7 @@ are the same change of basis with differently scaled or conjugated basis vectors
 
 **Extensions.** The DFT matrix diagonalizes every circulant matrix, which is why convolution in time becomes
 multiplication in frequency; that is an eigenvector statement (Tier 2). The FFT as a matrix
-factorization is its own entry. The [discrete cosine transform](https://en.wikipedia.org/wiki/Discrete_cosine_transform) of JPEG compression is a real orthogonal
+factorization is its own entry. The discrete cosine transform of JPEG compression is a real orthogonal
 cousin (the JPEG entry), and Fourier series are the same idea for functions on an interval rather than
 finite blocks (the Fourier series entry). Orthogonal [frequency-division multiplexing](https://en.wikipedia.org/wiki/Orthogonal_frequency-division_multiplexing) (OFDM), used in
 Wi-Fi, 4G and 5G, transmits data directly as DFT coordinates. Quantum computing's quantum Fourier
@@ -3605,6 +4709,216 @@ more check blocks, and the error-correcting codes entry shows how several parity
 error as well as fill an erasure. Shamir secret sharing is the same equations-from-redundancy idea over
 GF(p), arranged so that too few shares reveal nothing. [CRC](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) checksums, which detect errors in
 transmitted data, are also linear over GF(2) (the CRC entry).
+
+---
+
+## 50. CRC checksums: the remainder of a polynomial division is a linear map on bits
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Every [Ethernet](https://en.wikipedia.org/wiki/Ethernet) frame, every [ZIP archive](https://en.wikipedia.org/wiki/ZIP_%28file_format%29) and every [PNG](https://en.wikipedia.org/wiki/PNG) image carries a few extra bytes computed from
+the rest: a cyclic redundancy check, or CRC. The receiver recomputes them from the data it got. If the
+two disagree, something was corrupted on the way, and the data is sent again or rejected.
+
+The CRC is defined as the remainder of a [long division](https://en.wikipedia.org/wiki/Polynomial_long_division), but of a special kind. The bits of the message
+are treated as the coefficients of a polynomial, and all arithmetic on the coefficients is done
+modulo 2, so 1 + 1 = 0 and there are no carries. Long division then needs nothing but XOR, which is
+why a CRC is cheap enough to compute in hardware on every packet.
+
+The step from message to remainder is a linear map, and linear algebra explains the rest: how the fast
+methods work, which errors slip through, and why a CRC protects against noise but not against an
+attacker.
+
+</details>
+
+**Field:** Networking, storage, file formats, digital communications
+
+**Tier:** 1 — a CRC is the remainder after dividing by a fixed polynomial over GF(2), the numbers 0 and 1 with arithmetic modulo 2, and taking that remainder is a linear map from message bits to check bits. Explaining which generators catch which errors, through the ring of polynomials modulo the generator, is Tier 3.
+
+**Scalars and vectors.** Scalar field: GF(2), the numbers 0 and 1 with arithmetic modulo 2 (addition is XOR, and subtraction is the same as addition). Vectors: GF(2)^m for an m-bit message, read as the coefficients of a polynomial of degree below m, and GF(2)^r for the r check bits, the polynomials of degree below r. The CRC is a linear map from GF(2)^m to GF(2)^r, and the error patterns it cannot detect form a null space.
+
+**Underlying equations.** Polynomial division over GF(2): M(x) x^r = Q(x) G(x) + R(x) with R of degree below r, and the check bits are the coefficients of R.
+
+**The problem.** A **message** is a string of m bits, and it is read as a polynomial: the bits 1101 stand for
+1·x³ + 1·x² + 0·x + 1 = x³ + x² + 1. The coefficients live in GF(2), the numbers 0 and 1 with
+arithmetic modulo 2: 1 + 1 = 0, so adding two polynomials is XOR of their bit strings, and subtracting is
+the same as adding. A **generator polynomial** G(x) of degree r is fixed in advance by the standard.
+The sender appends r **check bits** so that the whole transmitted string, the **codeword**, is a
+multiple of G(x). The receiver divides what arrives by G(x) and accepts only a zero remainder.
+
+The motivating contrast is between **detecting** errors and **correcting** them. The error-correcting
+codes entry repairs flipped bits; a CRC only notices them, and the fix is to send again. Detection is
+much cheaper, and on networks and disks where errors are rare it is what is needed.
+
+Compute the check bits for a message quickly, and say exactly which corruptions the receiver will
+miss.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| m | message length | number of message bits | integer | bits |
+| r | CRC width | degree of the generator, number of check bits | integer | bits |
+| u | message vector | the message bits as a vector | m × 1 over GF(2) | bits |
+| M(x) | message polynomial | the same bits as polynomial coefficients | degree below m | — |
+| G(x) | generator | the fixed divisor, of degree r | polynomial | — |
+| Q(x) | quotient | the result of the division, discarded | polynomial | — |
+| R(x) | remainder | of degree below r; its coefficients are the check bits | polynomial | — |
+| c | check bits | the coefficients of R(x) as a vector | r × 1 over GF(2) | bits |
+| H | CRC matrix | c = H u | r × m over GF(2) | — |
+| E(x) | error pattern | the bits flipped in transit, as a polynomial | polynomial | — |
+| s | register state | the r bits held in the shift register | r × 1 over GF(2) | bits |
+| K | companion matrix | the register's update, s → K s | r × r over GF(2) | — |
+| g | feedback vector | the coefficients of G(x) below x^r | r × 1 over GF(2) | — |
+
+**Formulation.** **Where the equations come from.** The defining equation is division with remainder, carried out on
+polynomials whose coefficients are added modulo 2.
+
+**The familiar formula.** The CRC is the remainder: shift the message up by r places and divide by the
+generator,
+
+```
+M(x) · x^r  =  Q(x) · G(x)  +  R(x),        R of degree below r
+```
+
+The sender transmits M(x) x^r + R(x). Because subtraction is addition, that equals Q(x) G(x), a multiple
+of the generator, and the receiver's division leaves remainder zero.
+
+**Long division with XOR.** Take G(x) = x³ + x + 1, the bits 1011, so r = 3, and the message 1101.
+Append three 0s and repeatedly XOR the generator under the leading 1:
+
+```
+  1101000     the message followed by three 0s
+⊕ 1011
+  0110000
+⊕  1011
+  0011100
+⊕   1011
+  0001010
+⊕    1011
+  0000001     remainder 001
+```
+
+The check bits are 001 and the codeword is 1101001.
+
+**One column first.** Division by G(x) is linear. If A(x) leaves remainder R_1(x) and B(x) leaves R_2(x),
+then A(x) + B(x) leaves R_1(x) + R_2(x), because the sum of the two quotients times G(x) accounts for the
+rest and R_1 + R_2 still has degree below r. So the CRC of a message is the sum of the CRCs of its
+individual 1-bits, and it is enough to know the remainder of each single power of x. For the generator
+above, x³ = G(x) + x + 1 leaves x + 1, the bits 011. Multiplying by x and reducing again,
+
+```
+x⁴  =  x · x³   leaves   x · (x + 1)          =  x² + x            bits 110
+x⁵  =  x · x⁴   leaves   x³ + x²  →  x² + x + 1                   bits 111
+x⁶  =  x · x⁵   leaves   x³ + x² + x  →  x² + 1                   bits 101
+```
+
+where each arrow replaces x³ by x + 1.
+
+**Stacking the columns.** The message bit that multiplies x³ in M(x) ends up multiplying x⁶ after the
+shift, and so on down. Putting each bit's remainder in its column gives the CRC matrix, with message
+bits in the order (coefficient of x³, x², x, 1) and check bits in the order (x², x, 1):
+
+```
+[ 1  1  1  0 ] [ 1 ]   [ 0 ]
+[ 0  1  1  1 ] [ 1 ] = [ 0 ]
+[ 1  1  0  1 ] [ 0 ]   [ 1 ]
+               [ 1 ]
+     H           u       c
+```
+
+Row by row, modulo 2: 1 + 1 + 0 + 0 = 0, 0 + 1 + 0 + 1 = 0, and 1 + 1 + 0 + 1 = 1. The matrix gives the same
+check bits, 001, as the long division. The 7-bit codewords of this generator form a Hamming(7,4) code, the
+code of the error-correcting codes entry with its bit positions rearranged into cyclic form.
+
+**The [shift register](https://en.wikipedia.org/wiki/Linear-feedback_shift_register).** Hardware processes one bit per clock tick with a register of r bits. Each tick
+shifts the register, and if the bit leaving the top differs from the incoming message bit, it XORs in
+the generator's lower coefficients. In matrix form, with the state s = (s_2, s_1, s_0) and
+g = (0, 1, 1) from x + 1,
+
+```
+s  ←  K s  +  (incoming bit) · g,          [ 0  1  0 ]
+                                       K = [ 1  0  1 ]
+                                           [ 1  0  0 ]
+```
+
+For the message 1101, starting from 000, the states are 011, 101, 001 and 001, and the final state is
+the remainder. K is the [companion matrix](https://en.wikipedia.org/wiki/Companion_matrix) of G(x): it multiplies the register's polynomial by x and
+reduces.
+
+**Worked case: CRC-8 of "Hi".** Take G(x) = x⁸ + x² + x + 1, the CRC-8 used by the [SMBus](https://en.wikipedia.org/wiki/System_Management_Bus) protocol, and the
+two [ASCII](https://en.wikipedia.org/wiki/ASCII) bytes "Hi", 0x48 and 0x69, which are the 16 bits 0100 1000 0110 1001. Long division and the
+shift register both give the remainder 0xEB, the bits 1110 1011. The matrix form gives it as a sum of
+six columns of H, one for each 1-bit of the message:
+
+| Message bit | Power after the shift | Its column (remainder) |
+|---|---|---|
+| 2nd | x²² | 0101 1011 |
+| 5th | x¹⁹ | 1010 1000 |
+| 10th | x¹⁴ | 1100 0111 |
+| 11th | x¹³ | 1110 0000 |
+| 13th | x¹¹ | 0011 1000 |
+| 16th | x⁸ | 0000 0111 |
+| sum (XOR) | | 1110 1011 = 0xEB |
+
+Linearity can be checked directly. The CRC of "Ok" is 0x8E, and the CRC of the bytewise XOR of "Hi" and
+"Ok" is 0x65, which is 0xEB ⊕ 0x8E.
+
+**Matrix structure.** H is a dense r × m matrix over GF(2). Its columns are not independent of each other: each is K times the
+one before, since moving a bit one place earlier multiplies it by x. Software uses linearity on whole
+bytes, with a lookup table of the CRCs of all 256 byte values, so that each byte costs a table lookup
+and a few XORs instead of eight register steps. Hardware needs only r flip-flops and a few XOR gates.
+
+**What is computed.** The CRC-32 of Ethernet, ZIP, gzip and PNG uses the generator 0x04C11DB7. It processes bits in reversed
+order, starts the register at all 1s and XORs the result with all 1s, so its check value for the ASCII
+string "123456789" is 0xCBF43926. Libraries such as [zlib](https://en.wikipedia.org/wiki/Zlib) provide it. Modern processors have
+instructions for CRCs: x86 has one for the CRC-32C variant, and carry-less multiplication instructions
+let software process many bytes at once. Storage systems, the iSCSI and SCTP protocols and the ext4 and
+Btrfs file systems use CRC-32C.
+
+**Why linear algebra is the right tool.** The remainder is a linear map from message bits to check bits, and every practical fact about CRCs is a
+fact about that map. The table method works because the CRC of a message is the sum of the CRCs of its
+parts. The shift register is a companion matrix applied once per bit. Error detection is a null-space
+question. If the channel adds an error pattern E(x), the receiver's remainder is the remainder of E(x)
+alone, so the error goes unnoticed exactly when E(x) is a multiple of G(x). Choosing a good generator
+means choosing one whose multiples are unlike likely errors. When G(x) has a constant term, no [burst](https://en.wikipedia.org/wiki/Burst_error) of
+r or fewer consecutive flipped bits is a multiple of it, so every such burst is detected.
+
+**Pitfall worth teaching.** A CRC protects against accidents, not against an attacker, and linearity is the reason. Anyone who
+changes a message by a known pattern of bit flips can compute the matching change in the CRC, because
+the CRC of the change is H times it, and fix the check bits without knowing anything secret. Standard
+CRCs with an initial value and a final XOR are affine rather than linear: for messages of equal length,
+CRC(a ⊕ b) = CRC(a) ⊕ CRC(b) ⊕ CRC(0). The attack works the same way.
+
+This is how the [WEP](https://en.wikipedia.org/wiki/Wired_Equivalent_Privacy) encryption of early Wi-Fi was broken. WEP encrypted each packet by XOR with a key
+stream and protected it with a CRC-32 inside the encryption. Both steps are linear in the message bits,
+so an attacker could flip chosen bits of an encrypted packet and the matching bits of its encrypted CRC,
+and the receiver would accept the altered packet. Integrity against an adversary needs a
+[message authentication code](https://en.wikipedia.org/wiki/Message_authentication_code) such as [HMAC](https://en.wikipedia.org/wiki/HMAC), or an encryption mode with built-in authentication.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| check bits (checksum) | the r bits appended to a message so the receiver can test it |
+| generator polynomial G(x) | the fixed divisor of degree r that both ends agree on |
+| codeword | a message with its check bits appended; always a multiple of G(x) |
+| CRC-r | a cyclic redundancy check with r check bits, such as CRC-8 or CRC-32 |
+| error detection vs error correction | noticing that bits changed, versus also knowing which ones |
+| burst error | errors confined to a run of consecutive bits |
+| shift register (LFSR) | the hardware that computes a CRC one bit per clock |
+| lookup table | precomputed CRCs of all 256 byte values, for software that works a byte at a time |
+| initial value and final XOR | constants added in standard CRCs, which make the map affine |
+| message authentication code (MAC) | a keyed check that, unlike a CRC, an attacker cannot recompute |
+
+**Extensions.** The polynomials modulo G(x) form a ring, and when G(x) is [irreducible](https://en.wikipedia.org/wiki/Irreducible_polynomial) they form a finite field with 2^r
+elements (Tier 3). For a primitive G(x), the companion matrix K has order 2^r − 1, and the register
+cycles through every nonzero state, producing the [maximal-length sequences](https://en.wikipedia.org/wiki/Maximum-length_sequence) used for scrambling and
+spread-spectrum radio. [BCH](https://en.wikipedia.org/wiki/BCH_code) and Reed–Solomon codes are cyclic codes like the Hamming code above, built
+over larger fields such as GF(2^8); they correct errors as well as detecting them, in QR codes, CDs and
+deep-space links. The RAID-5 entry uses a single parity equation over GF(2), and its RAID-6 extension
+uses GF(2^8). The [Berlekamp–Massey](https://en.wikipedia.org/wiki/Berlekamp%E2%80%93Massey_algorithm) algorithm finds the shortest shift register that generates a given
+sequence, which is solving a linear system for the register's feedback.
 
 ---
 
@@ -3974,6 +5288,12 @@ Neumann series as the Leontief entry.
 | 43 | Numerical analysis | Transposed Vandermonde system; exactness on a polynomial subspace | Small dense solve; Fornberg recursion |
 | 44 | Applied analysis | Inner-product space of functions; orthogonal projection | Diagonal Gram matrix; FFT of samples |
 | 45 | Applied modeling | Column space of a design matrix; basis versus span | Householder QR; orthogonal polynomials |
+| 37 | Computer graphics | Homogeneous coordinates in R⁴; composition of frame changes; projective division | Dense 4 × 4 products |
+| 39 | Computer graphics | Coordinates relative to a triangle; convex combinations; determinant as area | 3 × 3 inverse per triangle; edge functions |
+| 40 | Colour science | Change of basis in R³; null space (metamers); diagonal map in another basis | Dense 3 × 3 solves and products |
+| 19 | Image and video compression | Orthogonal change of basis; energy compaction | 8 × 8 DCT; quantization |
+| 29 | Sports ranking | Rank-deficient least squares on a graph Laplacian; connected components | Constrained normal equations; Colley solve |
+| 50 | Networking and storage | Linear map over GF(2); null space as undetected errors | Shift register; table lookup |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -3985,16 +5305,11 @@ Neumann series as the Leontief entry.
 
 Grouped by what they would add that the seed set does not have.
 
-### Would add: Tier 1 coverage — 2D/3D graphics and scalars beyond the reals
+### Would add: Tier 1 coverage — scalars beyond the reals
 
 This group exists because the seed set is thin at Tier 1 and silent on vector spaces whose scalars are
 not real numbers. Every entry here is small-dimension and needs nothing past a first course, with
 the one exception marked below.
-
-*Graphics and small-dimension geometry (index 37, 39–40)*
-- **3D viewing and perspective projection** — the model-view-projection chain; why the fourth coordinate exists
-- **Barycentric coordinates and triangle rasterization** — a 3×3 solve per pixel; coordinates relative to a basis
-- **Color spaces as change of basis** — sRGB ↔ XYZ ↔ LMS as 3×3 basis changes; gamut as a convex cone
 
 *Complex scalars (index 46–47)*
 - **AC circuit analysis with complex impedance** — a 3×3 complex linear system; phasors make a differential
@@ -4002,9 +5317,6 @@ the one exception marked below.
   linear ODEs with sinusoidal forcing, so reading the entry requires the ODE. It stays in this group
   because it is the clearest example of complex scalars doing real work; the small DFT entry, now
   written, is the Tier 1 complex-scalar entry.
-
-*Finite fields (index 50)*
-- **CRC checksums** — polynomials over GF(2) modulo a generator
 
 ### Would add: graph Laplacians and spectral methods
 - **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
@@ -4026,7 +5338,6 @@ the one exception marked below.
 ### Would add: signal processing
 - **The FFT as a matrix factorization** — the DFT matrix factored into sparse blocks; why O(n log n) is a statement about structure
 - **Beamforming and MUSIC direction-finding** — signal and noise subspaces of a spatial covariance matrix; radar, sonar, and 5G MIMO
-- **JPEG and video compression** — the DCT as a fixed orthogonal basis chosen for decorrelation
 
 ### Would add: statistics and machine learning proper
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
@@ -4040,7 +5351,6 @@ the one exception marked below.
 
 ### Would add: discrete and algebraic applications
 - **Markov decision processes** — policy evaluation as a linear solve, value iteration as a fixed point
-- **Sports and citation ranking (Massey / Colley)** — a least-squares system built from pairwise comparisons
 - **Cryptanalysis: sparse GF(2) nullspace in the number field sieve** — block Lanczos/Wiedemann at 10⁸ scale
 - **Combinatorial design and coding bounds** — rank arguments proving combinatorial impossibility results
 
@@ -4059,10 +5369,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 17 of the 25 written entries are now Tier 1.
+   backlog, which is under way: 23 of the 31 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 237 terms across the 25 written entries, and the backlog entries most likely to generate
+   currently covers 303 terms across the 31 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.
