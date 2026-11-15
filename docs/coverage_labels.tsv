@@ -29,3 +29,6 @@
 | 19 | Image and video compression | Orthogonal change of basis; energy compaction | 8 × 8 DCT; quantization |
 | 29 | Sports ranking | Rank-deficient least squares on a graph Laplacian; connected components | Constrained normal equations; Colley solve |
 | 50 | Networking and storage | Linear map over GF(2); null space as undetected errors | Shift register; table lookup |
+| 22 | Natural language processing | Truncated SVD; Eckart–Young low-rank approximation | Truncated or randomized SVD |
+| 23 | Large language models | Bilinear forms and the rank of a product; low-rank updates | Dense matrix products; LoRA adapters |
+| 33 | Population genetics | SVD of a centered genotype matrix | Randomized SVD |

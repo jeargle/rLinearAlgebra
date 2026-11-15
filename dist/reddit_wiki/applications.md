@@ -66,15 +66,15 @@ Real problems from each field, with the domain vocabulary translated into linear
 * Distance geometry for NMR structures — Tier 2 *(planned)*
 * Normal mode analysis and elastic network models — Tier 3 *(planned)*
 * Flux balance analysis at genome scale — Tier 3 *(planned)*
-* Population genetics PCA — Tier 2 *(planned)*
+* [Population genetics PCA](applications/population-genetics-pca) — Tier 2
 * Phylogenetic invariants — Tier 3 *(planned)*
 
 ## Machine Learning & Data
 
 * Spectral clustering and image segmentation — Tier 2 *(planned)*
 * Matrix completion and recommender systems — Tier 3 *(planned)*
-* Word embeddings and latent semantic analysis — Tier 2 *(planned)*
-* Attention and low-rank adapters in transformers — Tier 2 *(planned)*
+* [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) — Tier 2
+* [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) — Tier 2
 * Markov decision processes — Tier 2 *(planned)*
 
 ## Mathematics & Numerical Analysis

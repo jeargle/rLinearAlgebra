@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 21 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 24 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,8 +200,8 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 31 written entries, 23 are Tier 1,
-3 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
+**Current distribution.** Of the 34 written entries, 23 are Tier 1,
+6 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
 
@@ -1750,6 +1750,450 @@ least squares, which updates β̂ as data arrive, leads to the Kalman filter.
 
 ---
 
+## 22. Latent semantic analysis: word meanings from a truncated SVD of word counts
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A search engine that matches only exact words misses every page that says car when asked about an
+automobile. People know these words are related because they see them used next to the same other words.
+
+Latent semantic analysis turns that observation into arithmetic. Count how often every word appears
+in every document of a large collection and arrange the counts in a table. Much of its detail is accidental,
+such as which of two equivalent words an author chose; underneath are a few themes, each with typical
+words and documents.
+
+A standard tool from linear algebra finds the table with only a few themes that stays closest to the
+real one. In it, a word is described by how strongly it belongs to each theme, so two words used in
+similar company get similar descriptions even if they never share a document. Refined versions of the
+idea give the [word embeddings](https://en.wikipedia.org/wiki/Word_embedding) of modern language software.
+
+</details>
+
+**Field:** Natural language processing, information retrieval, search engines, text mining
+
+**Tier:** 2 — word and document vectors are read off a truncated SVD of a count matrix, and the Eckart–Young theorem says why truncation is the right step, so the entry needs the SVD. [Word2vec](https://en.wikipedia.org/wiki/Word2Vec) and [GloVe](https://en.wikipedia.org/wiki/GloVe), named in Extensions, fit closely related factorizations by [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent).
+
+**Scalars and vectors.** Scalar field: R. Vectors: two count spaces: a document is a vector in R^m (one coordinate per vocabulary word) and a word is a vector in R^n (one coordinate per document). After truncation, words and documents both get coordinates in the same small space R^k, the latent space.
+
+**Underlying equations.** A statistical model: a table of word counts approximated by a low-rank matrix, A ≈ U_k Σ_k V_kᵀ, chosen to minimize the sum of squared errors.
+
+**The problem.** A collection of text is split into documents: a web page, a paragraph or an abstract. Each document is
+a sequence of words, and the vocabulary is the list of distinct words in the whole collection, often
+tens or hundreds of thousands of them after rare words are dropped. Counting each word in each document,
+ignoring order, gives a [term-document matrix](https://en.wikipedia.org/wiki/Document-term_matrix): the document "the car needs a new engine" contributes
+a 1 to the rows for car and engine in its column.
+
+The motivating contrast is lexical against semantic matching. Lexical matching compares the words
+themselves, so two documents are similar only if they share words. Semantic matching should compare
+what the words mean. Given the count matrix, find a short vector for every word and every document so
+that words used in similar contexts get nearby vectors, including synonyms such as car and automobile
+that may never occur together.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| m | vocabulary size | number of distinct words | integer | — |
+| n | number of documents | documents in the collection | integer | — |
+| a_ij | count | number of times word i occurs in document j | scalar | occurrences |
+| A | term-document matrix | the counts a_ij; row i is word i's count vector, column j is document j's | m × n | occurrences |
+| U, Σ, V | SVD factors | A = U Σ Vᵀ; U and V have orthonormal columns u_j and v_j, Σ is diagonal | m × r, r × r, n × r | U, V dimensionless; Σ in occurrences |
+| σ_j | singular value | strength of latent dimension j, with σ_1 ≥ σ_2 ≥ … ≥ 0 | scalar | occurrences |
+| r | rank | number of nonzero singular values | integer | — |
+| k | embedding dimension | number of latent dimensions kept | integer, k < r | — |
+| U_k, Σ_k, V_k | truncated factors | the first k columns of U and V, the first k singular values | m × k, k × k, n × k | as U, Σ, V |
+| A_k | rank-k approximation | A_k = U_k Σ_k V_kᵀ | m × n | occurrences |
+| w_i | word vector | row i of U_k Σ_k | 1 × k | occurrences |
+| d_j | document vector | row j of V_k Σ_k | 1 × k | occurrences |
+| q | query | word counts of a new document or search query | m × 1 | occurrences |
+| q̂ | folded-in query | q̂ = Σ_k⁻¹ U_kᵀ q, the query's coordinates in the latent space | k × 1 | dimensionless |
+
+**Formulation.** **Where the equations come from.** The model is statistical: the observed counts are treated as a
+low-rank matrix plus noise, where the noise is the individual author's choice among related words.
+The low-rank part is the one closest to A in squared error.
+
+**The familiar formula.** Everyone in search and text mining compares two vectors x and y by
+[cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity), cos θ = x·y / (‖x‖ ‖y‖), where θ is the angle between them. It is 1 for vectors pointing the
+same way and 0 for perpendicular ones. Applied to the raw rows of A, it fails for synonyms: if car and
+automobile never share a document, their rows have no nonzero entry in common and their cosine is 0.
+
+**One latent dimension.** Let v_j be a unit vector in ℝ^n, a weighting of the documents. The
+coordinate of word i along it is the [inner product](https://en.wikipedia.org/wiki/Inner_product_space) of the word's count row with v_j, Σ_l a_il v_lj.
+For the right singular vectors this inner product is A v_j = σ_j u_j, so word i's coordinate on
+dimension j is σ_j u_ij. A word scores high on a dimension when it occurs in the documents that the
+dimension weights heavily, whether or not it ever meets the other words that do.
+
+**All dimensions at once.** Stacking every dimension gives the singular value decomposition, a sum of
+rank-one pieces:
+
+```
+A = U Σ Vᵀ = Σ_j σ_j u_j v_jᵀ
+```
+
+Keeping the first k pieces gives the truncation A_k = U_k Σ_k V_kᵀ. By the Eckart–Young theorem, no
+other matrix of rank k is closer to A, either in the sum of squared entry differences or in the
+spectral norm, and the squared error is σ_(k+1)² + … + σ_r². The word vectors and document vectors
+are the rows of
+
+```
+U_k Σ_k = A V_k        (word vectors w_i)
+V_k Σ_k = Aᵀ U_k       (document vectors d_j)
+```
+
+A new query is placed in the space by folding-in, q̂ = Σ_k⁻¹ U_kᵀ q, which treats q as one more column
+of A. The known quantity is A, counted from the text; the unknowns are U_k, Σ_k and V_k, and from them
+the vectors.
+
+**Worked case: 5 words, 4 documents.** The words are car, automobile, engine, fruit and apple, and the
+documents are
+
+- document 1: car, engine
+- document 2: automobile, engine
+- document 3: fruit, apple
+- document 4: fruit, apple
+
+so the nonzero counts are a_11 = 1, a_31 = 1, a_22 = 1, a_32 = 1, a_43 = 1, a_53 = 1, a_44 = 1 and
+a_54 = 1, and every other a_ij is 0. Row by row:
+
+```
+      d1  d2  d3  d4
+A = [ 1   0   0   0 ]    car
+    [ 0   1   0   0 ]    automobile
+    [ 1   1   0   0 ]    engine
+    [ 0   0   1   1 ]    fruit
+    [ 0   0   1   1 ]    apple
+```
+
+The raw cosine of car and automobile is 0. The squared singular values are the eigenvalues of AᵀA,
+whose entries are inner products of document columns:
+
+```
+AᵀA = [ 2  1  0  0 ]
+      [ 1  2  0  0 ]
+      [ 0  0  2  2 ]
+      [ 0  0  2  2 ]
+```
+
+The upper block has eigenvalues 3 and 1, the lower block 4 and 0, so σ_1 = 2, σ_2 = √3 ≈ 1.732,
+σ_3 = 1 and σ_4 = 0. The first two right singular vectors are v_1 = (0, 0, 1, 1)/√2, the fruit
+documents, and v_2 = (1, 1, 0, 0)/√2, the vehicle documents. Each word's coordinates are its row of A
+times these two vectors:
+
+```
+U_2 Σ_2 = A V_2 = [ 0      0.707 ]    car
+                  [ 0      0.707 ]    automobile
+                  [ 0      1.414 ]    engine
+                  [ 1.414  0     ]    fruit
+                  [ 1.414  0     ]    apple
+```
+
+Car and automobile now have cosine 1, and car against fruit still has cosine 0. The dimension that was
+dropped, σ_3 = 1 with u_3 = (1, −1, 0, 0, 0)/√2, is exactly the contrast "car, not automobile": the
+detail of which synonym an author chose. The truncation itself fills in the missing synonym:
+
+```
+A_2 = [ 0.5  0.5  0  0 ]
+      [ 0.5  0.5  0  0 ]
+      [ 1    1    0  0 ]
+      [ 0    0    1  1 ]
+      [ 0    0    1  1 ]
+```
+
+so car now has weight 0.5 in document 2, which never mentions it. The error is ‖A − A_2‖ = σ_3 = 1 in
+both norms, as Eckart–Young predicts. Folding in the one-word query automobile gives
+q̂ = (0, 1/(3√2)) ≈ (0, 0.236), which has cosine 1 with document 1's vector d_1 = (0, √3/√2) ≈ (0, 1.225),
+even though document 1 does not contain the word.
+
+**Matrix structure.** A is very sparse and nonnegative, with heavily skewed word frequencies. The useful structure is low
+rank: a few hundred dimensions usually capture what matters, while the full rank is close to min(m, n).
+
+**What is computed.** Only the leading k singular triples are computed, with k typically 100 to 300, by Lanczos-type methods
+(ARPACK's svds) or randomized SVD, which need only products of the sparse A and Aᵀ with vectors. Libraries include scikit-learn's TruncatedSVD and gensim's LsiModel.
+The counts are reweighted first, usually by [tf-idf](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) for term-document matrices or [PPMI](https://en.wikipedia.org/wiki/Pointwise_mutual_information) for
+word-context matrices.
+
+**Why linear algebra is the right tool.** Eckart–Young turns "keep the main themes, discard the noise" into an optimization with an exact
+solution. Merging synonyms follows from the rank limit, not from any rule: with only k dimensions,
+words with similar rows of A are not kept apart, because the directions separating them carry little
+of the squared error.
+
+**Pitfall worth teaching.** Nearby in the latent space means "used in the same contexts", not "means the same". In the worked
+case, engine has cosine 1 with car as well; it is merely longer. Related words (car, engine, road) cluster as
+readily as synonyms, and antonyms such as hot and cold often end up close. A second trap is skipping the weighting: with raw counts, the leading
+singular vectors describe the most frequent words, such as the and of, rather than any topic. The axes carry no fixed
+meaning either: singular vectors are defined only up to sign.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| term-document matrix A | the m × n count matrix, one row per word and one column per document |
+| word-context (co-occurrence) matrix | the same idea with nearby words as the columns instead of documents |
+| latent semantic analysis (LSA, LSI) | the truncated SVD A_k = U_k Σ_k V_kᵀ of the (weighted) count matrix |
+| topic or latent dimension | one singular triple (σ_j, u_j, v_j) |
+| word embedding w_i | row i of U_k Σ_k, the word's coordinates in the latent space |
+| document vector | row j of V_k Σ_k, the document's coordinates in the same space |
+| cosine similarity | the cosine of the angle between two vectors, x·y / (‖x‖ ‖y‖) |
+| folding-in | mapping a new document or query into the latent space, q̂ = Σ_k⁻¹ U_kᵀ q |
+| tf-idf weighting | rescaling the counts before the SVD so that common words count less |
+| PPMI | positive pointwise mutual information, a log-ratio reweighting of co-occurrence counts |
+| embedding dimension | k, the rank of the truncation |
+
+**Extensions.** The same truncated SVD is the empirical orthogonal functions entry in climate science and the
+population-genetics PCA entry in genomics, where the rows are genetic markers rather than words. PPMI
+replaces counts by log(P(word, context) / (P(word) P(context))), where P is a probability estimated from the counts and negative values are set to 0. Word2vec's
+skip-gram with negative sampling has been shown to factorize, implicitly, a PMI matrix shifted by the
+logarithm of the number of negative samples (Levy and Goldberg, 2014), and GloVe fits word vectors whose
+inner products approximate the logarithms of co-occurrence counts, so both are low-rank factorizations
+found by gradient descent instead of an SVD. The attention and low-rank adapters entry uses these
+embeddings as inputs and low-rank matrices of its own. Ranking documents by a dominant eigenvector of a
+link graph is the PageRank entry. Folding-in is a least-squares fit of q by the columns of U_k Σ_k,
+the projection of the least-squares regression entry and the basis-fitting entry. At 10⁵ × 10⁵, randomized SVD multiplies A by a
+few hundred random vectors, orthonormalizes the result, and takes an exact SVD of the small projected matrix.
+
+---
+
+## 23. Attention and low-rank adapters: learned bilinear forms and rank-limited updates in transformers
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A [large language model](https://en.wikipedia.org/wiki/Large_language_model) reads text as a sequence of tokens, each turned into a list of a few thousand
+numbers. To understand a word it has to look at the other words around it: in "the bank of the
+river", the meaning of "bank" depends on "river". The mechanism that does this is called [attention](https://en.wikipedia.org/wiki/Attention_%28machine_learning%29).
+Each word scores every other word for relevance, the scores are turned into proportions, and the word's
+new representation is the corresponding blend of the others.
+
+Almost all of this is matrix multiplication. The relevance score between two words is a fixed recipe
+applied to their two lists of numbers, and that recipe is a matrix. A surprising property is that the
+matrix is deliberately low-rank: it can only compare words along a limited number of directions.
+
+The same idea, used on purpose, makes it cheap to adapt a model to a new task. Instead of retraining
+millions of numbers in a weight matrix, one learns a change to it that is the product of two thin
+matrices. That change has low rank and costs a tiny fraction of the storage, and for many tasks it is
+enough.
+
+</details>
+
+**Field:** Machine learning, natural language processing, large language models
+
+**Tier:** 2 — attention scores are a [bilinear form](https://en.wikipedia.org/wiki/Bilinear_form) of rank at most d_k, and a low-rank adapter is a product of two thin matrices, so posing both needs only matrix products and rank. The best rank-r update comes from the SVD (Eckart–Young), which makes the entry Tier 2. How the weights are learned, by gradient-based optimization of a deep network, is Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^d token embeddings, one row vector per token. Queries and keys live in a smaller space R^(d_k) and values in R^(d_v). A weight matrix W of size d × m is a point in the space of d × m matrices, and a low-rank adapter restricts its change to the matrices of rank at most r, which is not a subspace.
+
+**Underlying equations.** A parameterized model whose weights are fixed by training: Y = [softmax](https://en.wikipedia.org/wiki/Softmax_function)(X W_Q W_Kᵀ Xᵀ / √d_k) X W_V, with the softmax applied row by row, and a [fine-tuned](https://en.wikipedia.org/wiki/Fine-tuning_%28deep_learning%29) weight W_0 + B A.
+
+**The problem.** A token is a unit of text, such as a word or part of a word, and its embedding is the list of real
+numbers, a vector, that represents it. A [transformer](https://en.wikipedia.org/wiki/Transformer_%28deep_learning%29) layer receives n tokens as the rows of a matrix and must produce n new
+vectors, each a context-dependent mixture of the others. The contrast with older models is between a
+fixed representation, where "bank" always has the same vector, and a contextual one, where its vector
+depends on the sentence. A weight matrix is a matrix of numbers fixed by training, and an attention
+head is one set of three of them (query, key and value weights). Given the weights, compute the
+attention scores, the mixing proportions, and the output.
+
+The second problem is fine-tuning: a pretrained weight matrix is known, and a change to it is wanted
+that adapts the model to a new task. An adapter is a small set of extra parameters that produces that
+change. The question is how many numbers the change needs, and what is lost by restricting its rank.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | sequence length | number of tokens | integer | — |
+| d | embedding dimension | length of each token vector | integer | — |
+| d_k, d_v | head dimensions | length of each query/key and each value | integers | — |
+| x_i | token embedding | the vector for token i | 1 × d (row) | dimensionless |
+| X | token matrix | row i is x_i | n × d | dimensionless |
+| W_Q, W_K, W_V | query, key, value weights | learned linear maps | d × d_k, d × d_k, d × d_v | dimensionless |
+| Q, K, V | queries, keys, values | Q = X W_Q, K = X W_K, V = X W_V; rows q_i, k_j, v_j | n × d_k, n × d_k, n × d_v | dimensionless |
+| M | score matrix of the bilinear form | M = W_Q W_Kᵀ | d × d | dimensionless |
+| S | attention scores | S = Q Kᵀ, entries s_ij | n × n | dimensionless |
+| P | attention weights | softmax of S / √d_k, row by row | n × n | dimensionless |
+| Y | head output | Y = P V | n × d_v | dimensionless |
+| W_0 | pretrained weight | a frozen weight matrix | d × m | dimensionless |
+| m | output width of W_0 | number of columns of W_0 | integer | — |
+| ΔW | fine-tuning update | the change added to W_0 | d × m | dimensionless |
+| r | adapter rank | inner dimension of the adapter | integer, r ≪ min(d, m) | — |
+| B, A | adapter factors | ΔW = B A | d × r and r × m | dimensionless |
+
+**Formulation.** **Where the equations come from.** The model is a parameterized function. Its weights are numbers
+found by training, which this entry takes as given.
+
+**The familiar formula.** Practitioners know attention as
+
+```
+Attention(Q, K, V) = softmax(Q Kᵀ / √d_k) V
+```
+
+with Q, K, V the queries, keys and values above. Everything except the softmax is matrix
+multiplication.
+
+**One score.** Token i asks a question, its query q_i = x_i W_Q, and token j offers a label, its key
+k_j = x_j W_K. The query is so called because it is what token i is looking for, and the key because
+it is what other tokens are matched against. The score is their dot product:
+
+```
+s_ij = q_i · k_j = x_i W_Q W_Kᵀ x_jᵀ = x_i M x_jᵀ
+```
+
+So the score is a bilinear form in the two token vectors, with matrix M = W_Q W_Kᵀ. M is d × d but is a
+product through a d_k-dimensional middle, so rank(M) ≤ d_k. When d_k < d, the form ignores every
+direction of x_j in the null space of M: a head can compare tokens along at most d_k directions.
+
+**All scores at once.** Stacking the queries and keys as rows,
+
+```
+S = Q Kᵀ = X M Xᵀ
+```
+
+**Softmax, the one nonlinear step.** The softmax turns a list of scores into weights that are positive
+and sum to 1: exponentiate each score, then divide by the total. It is called the softmax because it is
+a soft version of picking the maximum. The largest score gets the largest weight without taking all of
+it: scores (2, 1, 0) become weights (0.665, 0.245, 0.090), while scores (20, 10, 0), spread ten times
+wider, give almost exactly (1, 0, 0). Each row of S is divided by √d_k and passed through the softmax,
+separately row by row:
+
+```
+P_ij = e^(s_ij / √d_k) / Σ_l e^(s_il / √d_k)
+```
+
+Every entry of P is positive and each row sums to 1, so P is row-stochastic. The softmax is what makes
+attention nonlinear in X; every other step is linear.
+
+**The output.** Y = P V, so row i of Y is the weighted average Σ_j P_ij v_j of the value vectors.
+
+**Worked case: three tokens, one head.** Take n = 3, d = 3, d_k = d_v = 2, with tokens
+x_1 = (1, 0, 1), x_2 = (0, 1, 0), x_3 = (1, 1, 0):
+
+```
+X = [ 1  0  1 ]      W_Q = [ 1  0 ]      W_K = [ 1  0 ]      W_V = [ 0  1 ]
+    [ 0  1  0 ]            [ 0  1 ]            [ 0  1 ]            [ 1  0 ]
+    [ 1  1  0 ]            [ 1  0 ]            [ 0  0 ]            [ 1  1 ]
+```
+
+One component first: q_1 = x_1 W_Q = (1 + 1, 0) = (2, 0) and k_3 = x_3 W_K = (1, 1), so
+s_13 = 2·1 + 0·1 = 2. Doing every row gives
+
+```
+Q = [ 2  0 ]      K = [ 1  0 ]      V = [ 1  2 ]
+    [ 0  1 ]          [ 0  1 ]          [ 1  0 ]
+    [ 1  1 ]          [ 1  1 ]          [ 1  1 ]
+```
+
+and the scores, as Q × Kᵀ = S:
+
+```
+S = [ 2  0  2 ]
+    [ 0  1  1 ]
+    [ 1  1  2 ]
+```
+
+The matrix of the bilinear form is
+
+```
+M = W_Q W_Kᵀ = [ 1  0  0 ]
+               [ 0  1  0 ]
+               [ 1  0  0 ]
+```
+
+It has rank 2, and its third column is zero, so the third coordinate of the key token never affects a
+score; X M Xᵀ reproduces S. M is not symmetric, and neither is S: s_13 = 2 but s_31 = 1.
+
+For the softmax, divide by √2. Row 1 becomes (1.414, 0, 1.414), with exponentials (4.113, 1, 4.113)
+summing to 9.227, so row 1 of P is (0.446, 0.108, 0.446). The full matrices are
+
+```
+P = [ 0.446  0.108  0.446 ]          Y = P V = [ 1.000  1.337 ]
+    [ 0.198  0.401  0.401 ]                    [ 1.000  0.797 ]
+    [ 0.248  0.248  0.503 ]                    [ 1.000  1.000 ]
+```
+
+The first column of Y is all 1s because every value vector has first entry 1 and each row of P sums
+to 1, a quick check that P averages.
+
+**Low-rank adapters.** The method is called LoRA, for low-rank adaptation. The pretrained W_0 is
+frozen, and the update is constrained to the product
+
+```
+W = W_0 + ΔW,     ΔW = B A,     B is d × r, A is r × m
+```
+
+which forces rank(ΔW) ≤ r. During fine-tuning W_0 is known and B and A are the unknowns, found by
+training; here they are taken as given, and the question is what the restriction costs and saves. Storing ΔW in full takes d m numbers; storing B and A takes r (d + m). With
+d = m = 3 and r = 1, B = (1, 2, 0)ᵀ and A = (1, 0, −1) give the rank-1 update
+
+```
+ΔW = B A = [ 1  0  −1 ]
+           [ 2  0  −2 ]
+           [ 0  0   0 ]
+```
+
+from 6 numbers instead of 9. At realistic size, d = m = 4096 and r = 8, a full update has
+16,777,216 numbers and the adapter 65,536, which is 0.39% of them, or 256 times fewer.
+
+**Relation to the SVD.** By the Eckart–Young theorem, the closest rank-r matrix to any update ΔW, in
+the Frobenius and spectral norms, is its SVD truncated to the r largest singular values. A rank-r
+adapter can therefore represent exactly the updates that keep r singular values, and LoRA rests on
+the observation that useful fine-tuning updates have most of their size in a few of them.
+
+**Matrix structure.** X, the weights, Q, K and V are dense. M = W_Q W_Kᵀ and ΔW = B A are dense but rank-limited, and they
+are never formed during attention: the products are taken in factored form. S and P are n × n, so
+their cost grows with the square of the sequence length. P is row-stochastic.
+
+**What is computed.** General matrix-matrix products (GEMM) on GPUs: X W_Q, X W_K, X W_V, Q Kᵀ and P V, with the softmax in
+between. Fused kernels such as FlashAttention compute P V in tiles without ever storing the whole n × n
+matrix P. With an adapter, x W_0 + (x B) A costs two thin products; after fine-tuning the adapter can be
+merged into W_0 + B A once, so inference costs nothing extra.
+
+**Why linear algebra is the right tool.** Rank explains both halves. A head with d_k = 64 or 128 scores tokens through a form of rank at most
+d_k, which is why models use many heads, each free to compare tokens along different directions.
+Fine-tuning by low-rank update is the statement that the useful change lives in a small set of
+directions, and the SVD says how much is lost by assuming so. Associativity explains costs: grouping
+X (W_Q W_Kᵀ) Xᵀ or (X W_Q)(X W_K)ᵀ gives the same S at different prices.
+
+**Pitfall worth teaching.** An attention score is not a similarity. A similarity would be symmetric, like a dot product x_i · x_j,
+but M = W_Q W_Kᵀ is generally not symmetric, so how much token i attends to token j differs from how
+much j attends to i: in the worked case s_13 = 2 and s_31 = 1. M is also not positive definite, and of
+rank at most d_k, so a token need not score itself highly and two different tokens can be
+indistinguishable to a head. Reading attention weights as "which words are alike" misreads a learned
+bilinear form as an inner product.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| token | one row x_i of X, the vector representing one word or word-piece |
+| embedding dimension d | the length of each token vector |
+| query, key, value | the rows of Q = X W_Q, K = X W_K and V = X W_V, three linear images of each token |
+| attention score s_ij | the bilinear form x_i W_Q W_Kᵀ x_jᵀ, equal to the dot product q_i · k_j |
+| head dimension d_k | the inner dimension of W_Q W_Kᵀ, so the rank cap of the score form |
+| scaled dot-product attention | softmax(Q Kᵀ / √d_k) V, a row-stochastic matrix times V |
+| attention weights P | the row-stochastic matrix; row i holds the mixing proportions for token i |
+| softmax | the row-by-row map e^(z_j) / Σ_l e^(z_l), the one nonlinear step |
+| attention head | one triple (W_Q, W_K, W_V); several heads run in parallel and are concatenated |
+| fine-tuning | changing pretrained weights W_0 to W_0 + ΔW for a new task |
+| LoRA rank r | the inner dimension of ΔW = B A, an upper bound on rank(ΔW) |
+| adapter merging | forming W_0 + B A once, so inference costs nothing extra |
+
+**Extensions.** Multi-head attention runs h heads in parallel, each with d_k = d / h, concatenates their outputs and
+applies one more d × d matrix. The low-rank bottleneck of a single head, and the related softmax
+bottleneck of the output layer (a log-probability matrix of limited rank), are rank arguments. Linear
+attention replaces the softmax with a feature map φ, so the product φ(Q) φ(K)ᵀ V can be grouped as
+φ(Q) (φ(K)ᵀ V), and associativity drops the cost from n² to n. Rotary position embeddings rotate each
+pair of query and key coordinates by an angle proportional to position, so a score depends on the
+offset between positions through a product of 2 × 2 rotations (the 3D rotations entry treats the
+[rotation matrices](https://en.wikipedia.org/wiki/Rotation_matrix) themselves). Learning the weights by gradient descent on a loss function is deep
+learning and optimization, which is why the ceiling is Tier 3.
+
+The SVD and Eckart–Young appear in the empirical orthogonal functions entry, where the low-rank
+approximation is of climate data rather than of a weight update. Word embeddings and latent semantic
+analysis (the word embeddings entry) are where token vectors come from, and population-genetics PCA
+(the population genetics entry) is the same truncated SVD in another vocabulary. The row-stochastic P
+is the same kind of matrix as the PageRank entry's transition matrix. The Eckart–Young best rank-r
+approximation minimizes a sum of squares, the matrix analogue of the projections in the regression
+entry and the basis-fitting entry.
+
+---
+
 ## 24. Geodetic network adjustment: least squares where it was invented, and the datum it cannot see
 
 <details>
@@ -2124,6 +2568,237 @@ Meyer's book Who's #1? surveys these methods. Weighted least squares down-weight
 as in the regression entry. The geodetic network adjustment entry has the same rank-deficient
 structure with heights instead of ratings, and the resistor-network entry has the same Laplacian with
 voltages instead.
+
+---
+
+## 33. Principal components of a genotype matrix: what PCA plots of human genetic variation show
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Every person carries two copies of the genome, one from each parent, and at a few million positions
+the DNA letter differs from person to person. Genotyping chips read hundreds of thousands of those
+positions at once, so a study of ten thousand people produces a table with ten thousand rows and
+hundreds of thousands of columns.
+
+Population geneticists want a picture of who is related to whom from that table. The standard
+first step squeezes it down to two numbers per person and plots one dot per person. People whose
+ancestors lived in the same place for many generations share many small differences in letter
+frequency, so their dots land near each other. In the best-known example, Europeans plotted this way
+form a picture that looks like a map of Europe.
+
+The method is principal component analysis, which finds the directions along which people differ
+most. It needs no labels: nobody tells it which person came from where. That is its strength, and
+it is also why its pictures are easy to over-read. The axes are whatever directions explain the most
+variation in this particular sample, and they need not correspond to populations, migrations or
+history.
+
+</details>
+
+**Field:** Population genetics, human genetics, genomics, evolutionary and conservation biology
+
+**Tier:** 2 — the principal components are the leading singular vectors of a centered [genotype](https://en.wikipedia.org/wiki/Genotype) matrix, equivalently eigenvectors of a genetic relationship matrix. Reading them in terms of ancestry and genealogy rests on population-genetic models that the entry states but does not derive.
+
+**Scalars and vectors.** Scalar field: R. Vectors: two spaces: each individual is a vector in R^M (one coordinate per [SNP](https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism)), and each SNP is a vector in R^N (one coordinate per individual). SNP loadings live in R^M and individuals' PC scores in R^N. Raw genotypes are integer counts 0, 1, 2, but after centering they are real numbers.
+
+**Underlying equations.** A statistical decomposition of observed genotypes, X = U Σ Vᵀ, where X is the genotype matrix with each SNP's mean subtracted.
+
+**The problem.** Some vocabulary first. A **SNP** (single-nucleotide polymorphism) is a position in the genome where the
+DNA letter varies between people: for example, at one position some chromosomes carry an A and others a
+G. The two versions are the SNP's two **[alleles](https://en.wikipedia.org/wiki/Allele)**. An **individual** is one sampled person (or animal,
+or plant) with two copies of each chromosome. The individual's **genotype** at a SNP is the number of
+copies of one chosen allele that it carries: 0, 1 or 2. At the A/G SNP, counting G, a person with two As
+has genotype 0, an A/G person has 1, and a G/G person has 2. A **population** is a group of individuals
+who share ancestry because their ancestors mated mostly with each other. Allele frequencies drift apart
+between populations, so the same SNP can be 90% G in one population and 40% G in another.
+
+The motivating contrast is between labels and data. Researchers record labels such as birthplace or
+self-reported ancestry. Principal component analysis (PCA) instead asks which directions in the
+genotypes themselves carry the most variation, and only afterwards are the labels used to color the
+dots.
+
+Given the genotypes of N individuals at M SNPs, find each individual's coordinates along the few
+directions of greatest genetic variation.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| N | sample size | number of individuals | integer | — |
+| M | number of SNPs | number of genotyped positions | integer | — |
+| g_ij | genotype | copies of the counted allele carried by individual i at SNP j | scalar in {0, 1, 2} | allele copies |
+| G | genotype matrix | row i is individual i, column j is SNP j | N × M | allele copies |
+| p_j | allele frequency | fraction of all 2N copies at SNP j that are the counted allele | scalar | dimensionless |
+| X | centered genotype matrix | x_ij = g_ij − 2 p_j, optionally divided by √(p_j (1 − p_j)) | N × M | allele copies (dimensionless if scaled) |
+| x_i | individual's row | row i of X | 1 × M | as X |
+| U | left singular vectors | columns u_k of unit length, one coordinate per individual | N × ρ | dimensionless |
+| Σ | singular values | diagonal σ_1 ≥ σ_2 ≥ … > 0 | ρ × ρ | as X |
+| V | right singular vectors | columns v_k of unit length: the PC axes, one loading per SNP | M × ρ | dimensionless |
+| t_k | PC scores | t_k = X v_k = σ_k u_k, every individual's coordinate on axis k | N × 1 | as X |
+| K | genetic relationship matrix | K = X Xᵀ / M, the average product of two individuals' centered genotypes | N × N | (as X)² |
+| ρ | rank | number of nonzero singular values, at most min(N − 1, M) | integer | — |
+| q | PCs retained | how many axes are plotted or kept | integer | — |
+
+**Formulation.** **Where the equations come from.** The model is a statistical decomposition of observed genotypes. No
+model of ancestry is assumed; the population-genetic reading of the result comes afterwards.
+
+**The familiar formulas.** Geneticists start from the allele frequency and the relationship matrix:
+
+```
+p_j = (g_1j + g_2j + … + g_Nj) / (2N)
+K = X Xᵀ / M
+```
+
+Entry K_il is large and positive when individuals i and l tend to carry the same rare alleles. PCA in
+genetics is usually described as taking the top eigenvectors of K. Centering matters: the mean genotype
+at SNP j is 2 p_j, and subtracting it makes x_ij measure how far individual i departs from the sample
+at that SNP. Dividing by √(p_j (1 − p_j)) gives rare and common SNPs comparable weight (EIGENSOFT's
+choice). Under [Hardy–Weinberg](https://en.wikipedia.org/wiki/Hardy%E2%80%93Weinberg_principle) proportions the variance of g_ij is 2 p_j (1 − p_j), so this scaling
+differs from standardizing only by a constant factor √2, which does not change the axes.
+
+**One axis, one individual.** Pick a unit vector v in ℝ^M, one weight per SNP. Individual i's
+coordinate along v is an inner product:
+
+```
+t_i = x_i · v = x_i1 v_1 + x_i2 v_2 + … + x_iM v_M
+```
+
+Doing this for every individual gives the vector t = X v. PCA chooses v to make the spread of the
+coordinates, ‖X v‖², as large as possible. The maximizer is v_1, the top right singular vector of X,
+and the maximum is σ_1².
+
+**All axes at once.** The SVD
+
+```
+X = U Σ Vᵀ = σ_1 u_1 v_1ᵀ + σ_2 u_2 v_2ᵀ + …
+```
+
+gives every axis. v_k is the PC axis in SNP space, its entries are the SNP loadings, and t_k = X v_k
+= σ_k u_k holds every individual's score on PC k. Since K = U (Σ² / M) Uᵀ, the left singular vectors u_k
+are the eigenvectors of the relationship matrix, with eigenvalues σ_k² / M. The fraction σ_k² / Σ_l σ_l²
+is the proportion of variance explained by PC k.
+
+What is known is G, and therefore X. What is solved for is V (the axes), Σ and the scores t_k.
+Population labels are not inputs.
+
+**Worked case: two populations, five SNPs.** Individuals 1–3 come from one population and 4–6 from
+another. Population 1 carries two copies of the counted allele at SNPs 1 and 5 and none at SNP 2, while
+everyone in population 2 carries one copy at SNPs 2 and 5. SNPs 3 and 4 have allele frequency 0.5 in
+both populations, and individuals 1 and 2 differ there.
+
+```
+G = [ 2  0  2  0  2 ]
+    [ 2  0  0  2  2 ]
+    [ 2  0  1  1  2 ]
+    [ 0  1  1  1  1 ]
+    [ 0  1  1  1  1 ]
+    [ 0  1  1  1  1 ]
+```
+
+The column means 2 p_j are (1, 0.5, 1, 1, 1.5), so p = (0.5, 0.25, 0.5, 0.5, 0.75). Subtracting them
+from every row:
+
+```
+X = [  1   −0.5   1   −1    0.5 ]
+    [  1   −0.5  −1    1    0.5 ]
+    [  1   −0.5   0    0    0.5 ]
+    [ −1    0.5   0    0   −0.5 ]
+    [ −1    0.5   0    0   −0.5 ]
+    [ −1    0.5   0    0   −0.5 ]
+```
+
+X has rank 2, and its SVD can be read off by inspection:
+
+```
+u_1 = (1, 1, 1, −1, −1, −1) / √6     v_1 = (2, −1, 0, 0, 1) / √6     σ_1 = 3
+u_2 = (1, −1, 0, 0, 0, 0) / √2       v_2 = (0, 0, 1, −1, 0) / √2     σ_2 = 2
+```
+
+To check, 3 u_1 v_1ᵀ has row ±(1, −0.5, 0, 0, 0.5), plus for individuals 1–3 and minus for 4–6,
+which is the population part of X. Then 2 u_2 v_2ᵀ adds (1, −1) and (−1, 1) in columns 3 and 4 of rows
+1 and 2. One score by hand: individual 1 on PC1 is
+
+```
+x_1 · v_1 = (1 · 2 + (−0.5)(−1) + 1 · 0 + (−1) · 0 + 0.5 · 1) / √6 = 3 / √6 ≈ 1.22
+```
+
+and all of them together are
+
+```
+t_1 = X v_1 = (1.22, 1.22, 1.22, −1.22, −1.22, −1.22)
+t_2 = X v_2 = (1.41, −1.41, 0, 0, 0, 0)
+```
+
+PC1 separates the two populations perfectly and explains 9/13 ≈ 69% of the variance. PC2 explains 4/13
+≈ 31%, but it describes only individuals 1 and 2 and says nothing about populations. The eigenvalues of
+K are 9/5 = 1.8 and 4/5 = 0.8. With the √(p_j (1 − p_j)) scaling, u_1, u_2 and v_2 are unchanged,
+but SNPs 2 and 5 (p = 0.25 and 0.75) gain weight relative to SNP 1 (p = 0.5), so v_1 tilts to (√3, −1, 0, 0, 1) / √5. Then
+σ_1 = √40 ≈ 6.32 and σ_2 = 4, and PC1's share rises to 40/56 ≈ 71%. The signs of u_k and v_k are
+arbitrary: software may return −u_1 and −v_1, flipping the plot.
+
+**Matrix structure.** G is a dense integer matrix stored in 2 bits per entry, short and very wide (10⁴ individuals by 10⁶
+SNPs is typical). Centering would destroy any sparsity, so large-scale codes multiply by G and correct
+for the means on the fly instead of forming X. K is N × N, symmetric and positive semidefinite. Its
+rank is at most N − 1, because centering makes every column of X orthogonal to the vector of 1s.
+
+**What is computed.** Only the top 10–20 singular triples are needed. For N up to a few thousand, tools form K and take its
+leading eigenvectors (EIGENSOFT's smartpca). At biobank scale they use randomized SVD or Lanczos
+iterations that touch G only through products G v and Gᵀ u (PLINK 2's approximate PCA, FlashPCA). New
+individuals are often placed on axes fitted to a reference panel by computing x v_k.
+
+**Why linear algebra is the right tool.** Shared ancestry is shared covariance. Individuals from one population depart from the overall allele
+frequencies in the same direction at thousands of SNPs at once. In the worked case that is the rank-one
+piece σ_1 u_1 v_1ᵀ. The SVD finds such directions without being told which individuals belong together.
+Its optimality is the Eckart–Young statement: no other q axes reconstruct X better in the
+least-squares sense.
+
+**Pitfall worth teaching.** PCs are directions of maximal variance in one sample, not populations, migration routes or admixture
+events. The worked case already shows a PC driven by two individuals. In real data, relatives, a batch
+of samples genotyped in one laboratory, or a long stretch of SNPs in [linkage disequilibrium](https://en.wikipedia.org/wiki/Linkage_disequilibrium)
+(neighboring SNPs inherited together, so their columns are nearly collinear) can each produce a PC of
+its own. Pruning SNPs in LD before the SVD is standard for that reason.
+
+Sample composition moves the axes. A population sampled 1,000 times pulls PC1 towards its internal
+variation, while one sampled 10 times barely registers. Ascertainment bias has the same effect from the
+SNP side: genotyping chips favor SNPs that were common in the populations used to design them, which
+distorts distances for everyone else.
+
+The geography is real but partial. Novembre and colleagues found that PC1 and PC2 of about 1,400
+Europeans reproduce the map of Europe, because genetic similarity decays smoothly with distance. That
+smooth decay also sets a trap: Novembre and Stephens showed that continuous spatial structure produces
+sinusoidal PCs, gradients and saddles that resemble the traces of ancient migrations even when no
+migration occurred. McVean showed that, under standard population-genetic models, an individual's
+expected position on the PC plot is determined by its average genealogical relatedness to the rest of
+the sample. Different histories can give the same plot.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| SNP (single-nucleotide polymorphism) | one column of G; a coordinate of R^M |
+| genotype g_ij | one entry of G, a count 0, 1 or 2 of the counted allele |
+| allele frequency p_j | half the mean of column j of G |
+| mean-centering | subtracting each column's mean, 2 p_j, to give X |
+| principal component (PC) axis v_k | a right singular vector of X, a direction in SNP space |
+| SNP loadings | the entries of v_k, one weight per SNP |
+| PC scores t_k | X v_k = σ_k u_k, each individual's coordinate along axis k |
+| PC plot | the individuals plotted at their coordinates (t_1, t_2) |
+| genetic relationship matrix (GRM) K | X Xᵀ / M, the N × N Gram matrix of the individuals' centered genotype rows |
+| proportion of variance explained | σ_k² / Σ σ_l² |
+| LD pruning | deleting SNPs that are nearly collinear with nearby SNPs before the SVD |
+| projecting new samples | computing x v_k for a new row x on axes fitted without it |
+
+**Extensions.** The same SVD with a climate vocabulary is the EOF entry, which carries the same warning that optimal
+axes need not be physical modes. The word-embedding entry applies a truncated SVD to a term–document
+matrix, and the attention and LoRA entry exploits low rank in weight updates.
+[Genome-wide association studies](https://en.wikipedia.org/wiki/Genome-wide_association_study) include the top PCs as covariates in a regression to correct for
+[population structure](https://en.wikipedia.org/wiki/Population_structure_%28genetics%29) (the regression entry), and placing new samples on existing axes is a least-squares
+fit in an orthonormal basis (the basis-fitting entry). The sinusoids of Novembre and Stephens are
+eigenvectors of a covariance that depends only on distance, the same sines that diagonalize the
+second-difference matrix of the finite-difference entry. Randomized SVD at 10⁴ × 10⁶ sharpens its
+subspace with a few steps of the power iteration from the PageRank entry. Admixture models such as
+STRUCTURE and ADMIXTURE replace the SVD with a [nonnegative factorization](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization), G / 2 ≈ Q F, where row i of Q
+holds individual i's ancestry proportions (nonnegative, summing to 1) and F holds each ancestral
+population's allele frequencies (between 0 and 1).
 
 ---
 
@@ -2598,7 +3273,7 @@ front, left and up directions point, measured in the coordinates of the room, th
 
 Those three directions are always perpendicular to each other and always of unit length, because
 turning an object cannot bend or stretch it. Written as the columns of a three-by-three table of
-numbers, they form a [rotation matrix](https://en.wikipedia.org/wiki/Rotation_matrix). Turning an object twice is multiplying two such matrices, and,
+numbers, they form a rotation matrix. Turning an object twice is multiplying two such matrices, and,
 as anyone who has rotated a book about two different axes knows, the order of the turns matters.
 
 The popular alternative, three angles called [yaw](https://en.wikipedia.org/wiki/Aircraft_principal_axes), pitch and roll, is easier to read but has a famous
@@ -3820,7 +4495,7 @@ terms are used.
 
 **Field:** Applied analysis, signal processing, acoustics, physics and engineering
 
-**Tier:** 1 — a truncated Fourier series is the orthogonal projection of a function onto the span of finitely many sines and cosines, in an [inner product](https://en.wikipedia.org/wiki/Inner_product_space) defined by an integral. Explaining why sines and cosines are the natural basis, as eigenfunctions of the second derivative, is Tier 2.
+**Tier:** 1 — a truncated Fourier series is the orthogonal projection of a function onto the span of finitely many sines and cosines, in an inner product defined by an integral. Explaining why sines and cosines are the natural basis, as eigenfunctions of the second derivative, is Tier 2.
 
 **Scalars and vectors.** Scalar field: R. Vectors: piecewise continuous real functions on [−π, π], with inner product ⟨f, g⟩ = ∫ f(x) g(x) dx over [−π, π]. The space is infinite-dimensional; each approximation lives in the subspace T_N spanned by 1, cos x, sin x, …, cos Nx, sin Nx, of dimension 2N + 1.
 
@@ -5294,6 +5969,9 @@ Neumann series as the Leontief entry.
 | 19 | Image and video compression | Orthogonal change of basis; energy compaction | 8 × 8 DCT; quantization |
 | 29 | Sports ranking | Rank-deficient least squares on a graph Laplacian; connected components | Constrained normal equations; Colley solve |
 | 50 | Networking and storage | Linear map over GF(2); null space as undetected errors | Shift register; table lookup |
+| 22 | Natural language processing | Truncated SVD; Eckart–Young low-rank approximation | Truncated or randomized SVD |
+| 23 | Large language models | Bilinear forms and the rank of a product; low-rank updates | Dense matrix products; LoRA adapters |
+| 33 | Population genetics | SVD of a centered genotype matrix | Randomized SVD |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -5341,8 +6019,6 @@ the one exception marked below.
 
 ### Would add: statistics and machine learning proper
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
-- **Word embeddings and latent semantic analysis** — factorization of a co-occurrence matrix
-- **Attention in transformers** — QKᵀ as a learned bilinear form; low-rank adapters (LoRA) as explicit rank constraints on weight updates
 
 ### Would add: geosciences and geometry
 - **Seismic tomography** — same inverse-problem structure as entry 3 with far worse ray coverage
@@ -5357,7 +6033,6 @@ the one exception marked below.
 ### Would add: molecular and biological (matched to your background)
 - **Normal mode analysis and elastic network models** — the Hessian of a coarse-grained potential; low-frequency modes predicting functional motions
 - **Flux balance analysis at genome scale** — the LP built on entry 4's null space
-- **Population genetics PCA** — the same SVD as entry 9, with the same interpretability caveat and a well-documented history of overreading the modes
 - **Phylogenetic invariants** — polynomial relations among expected site-pattern frequencies; linear algebra that shades into algebraic geometry
 
 ---
@@ -5369,10 +6044,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 23 of the 31 written entries are now Tier 1.
+   backlog, which is under way: 23 of the 34 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 303 terms across the 31 written entries, and the backlog entries most likely to generate
+   currently covers 338 terms across the 34 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

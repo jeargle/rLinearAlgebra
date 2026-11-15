@@ -49,8 +49,6 @@ the one exception marked below.
 
 ### Would add: statistics and machine learning proper
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
-- **Word embeddings and latent semantic analysis** — factorization of a co-occurrence matrix
-- **Attention in transformers** — QKᵀ as a learned bilinear form; low-rank adapters (LoRA) as explicit rank constraints on weight updates
 
 ### Would add: geosciences and geometry
 - **Seismic tomography** — same inverse-problem structure as entry 3 with far worse ray coverage
@@ -65,7 +63,6 @@ the one exception marked below.
 ### Would add: molecular and biological (matched to your background)
 - **Normal mode analysis and elastic network models** — the Hessian of a coarse-grained potential; low-frequency modes predicting functional motions
 - **Flux balance analysis at genome scale** — the LP built on entry 4's null space
-- **Population genetics PCA** — the same SVD as entry 9, with the same interpretability caveat and a well-documented history of overreading the modes
 - **Phylogenetic invariants** — polynomial relations among expected site-pattern frequencies; linear algebra that shades into algebraic geometry
 
 ---

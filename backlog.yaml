@@ -143,42 +143,6 @@ backlog:
   matrix_structure: very sparse observations of a low-rank matrix
   typical_size: 1e6 x 1e5
   worked_example_size: ''
-- id: 22
-  slug: word-embeddings-and-latent-semantic-analysis
-  status: backlog
-  short_title: Word embeddings and latent semantic analysis
-  nav_field: Machine Learning & Data
-  field: Computer Science
-  subfield: NLP
-  tier: 2
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^V over vocabulary
-  core_la_object: Factorization of a co-occurrence matrix
-  la_concepts: SVD; implicit matrix factorization
-  primary_method: Truncated SVD; SGD factorization
-  matrix_structure: sparse counts, low-rank structure
-  typical_size: 1e5 x 1e5
-  worked_example_size: ''
-- id: 23
-  slug: attention-and-low-rank-adapters-in-transformers
-  status: backlog
-  short_title: Attention and low-rank adapters in transformers
-  nav_field: Machine Learning & Data
-  field: Computer Science
-  subfield: Deep learning
-  tier: 2
-  tier_ceiling: 3
-  prereq_beyond_la: deep learning; optimization
-  scalar_field: R
-  vector_space: R^d token embeddings
-  core_la_object: Learned bilinear forms and rank-constrained updates
-  la_concepts: bilinear forms; low-rank parameterization
-  primary_method: Dense GEMM
-  matrix_structure: dense
-  typical_size: 1e3-1e4 per head
-  worked_example_size: ''
 - id: 25
   slug: seismic-tomography
   status: backlog
@@ -305,24 +269,6 @@ backlog:
   primary_method: Simplex/interior point
   matrix_structure: sparse integer stoichiometry
   typical_size: 2e3 x 3e3
-  worked_example_size: ''
-- id: 33
-  slug: population-genetics-pca
-  status: backlog
-  short_title: Population genetics PCA
-  nav_field: Life Sciences
-  field: Biology
-  subfield: Genomics
-  tier: 2
-  tier_ceiling: 2
-  prereq_beyond_la: ''
-  scalar_field: R
-  vector_space: R^M over genetic markers
-  core_la_object: Low-rank structure in a genotype matrix
-  la_concepts: SVD; interpretability limits; ascertainment bias
-  primary_method: Randomized SVD
-  matrix_structure: dense or sparse 0/1/2 genotype matrix
-  typical_size: 1e4 x 1e6
   worked_example_size: ''
 - id: 34
   slug: phylogenetic-invariants
