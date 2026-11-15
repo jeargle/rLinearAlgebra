@@ -41,7 +41,7 @@ A vehicle carries an [inertial measurement unit](https://en.wikipedia.org/wiki/I
 | z_k | measurement vector | what the sensor reports at step k; for GNSS, a measured position | m × 1 (m = 1 here) | m |
 | H | observation matrix | which combination of the state the sensor sees; [1, 0] when it measures position only | m × n | measurement units per state unit |
 | η_k | measurement noise | sensor error at step k | m × 1 | m |
-| R | measurement-noise covariance | spread of the sensor error; a few metres squared for a consumer GNSS fix | m × m | m² |
+| R | measurement-noise covariance | spread of the sensor error; a few meters squared for a consumer GNSS fix | m × m | m² |
 | x̂⁻, x̂⁺ | state estimate | the filter's best estimate before and after using z_k | n × 1 | same as x |
 | P⁻, P⁺ | estimate covariance | uncertainty of the estimate before and after using z_k; diagonal entries are variances (squared standard deviations), off-diagonal entries say how errors in different components move together | n × n | products of state units |
 | ỹ | innovation | measured minus predicted measurement | m × 1 | m |
@@ -50,7 +50,7 @@ A vehicle carries an [inertial measurement unit](https://en.wikipedia.org/wiki/I
 
 ### Formulation
 
-**Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modelled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
+**Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modeled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
 
 Integrating the ODE exactly over one step gives the discrete model. For this A the [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential) is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
 

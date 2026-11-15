@@ -2,13 +2,13 @@
 id: 40
 slug: color-spaces-as-change-of-basis
 status: written
-title: 'Colour spaces: three numbers per colour, and every conversion is a change of basis'
+title: 'Color spaces: three numbers per color, and every conversion is a change of basis'
 short_title: Color spaces as change of basis
-field_label: Colour science, displays and photography, image processing, colour management for web and
+field_label: Color science, displays and photography, image processing, color management for web and
   print
-tier_note: 'the eye reduces a spectrum to three numbers by a linear map, so colours form a
+tier_note: 'the eye reduces a spectrum to three numbers by a linear map, so colors form a
   three-dimensional vector space, and moving between RGB, XYZ and cone coordinates is a 3 × 3 change of
-  basis. Analysing spectra or camera responses with the SVD is Tier 2.'
+  basis. Analyzing spectra or camera responses with the SVD is Tier 2.'
 nav_field: Computer Graphics & Vision
 field: Computer Science
 subfield: Color science/imaging
@@ -17,10 +17,10 @@ tier_ceiling: 2
 prereq_beyond_la: 'colorimetry conventions: chromaticity coordinates and white points'
 scalar_field: R
 vector_space: 'R^3 of tristimulus values. Light is a spectrum, a function of wavelength in an
-  infinite-dimensional space; colour matching maps it linearly onto R^3, and every RGB, XYZ or
+  infinite-dimensional space; color matching maps it linearly onto R^3, and every RGB, XYZ or
   cone-response space is a choice of basis for that R^3'
 underlying_equations: 'Change of basis: (X, Y, Z) = M (R, G, B) for linear RGB values, where the columns of
-  M are the XYZ values of the display''s three primaries at full strength; Grassmann''s laws of colour
+  M are the XYZ values of the display''s three primaries at full strength; Grassmann''s laws of color
   matching make the map linear'
 core_la_object: 3 × 3 change of basis between primary sets
 la_concepts: change of basis; linear maps and null spaces (metamers); solving a 3 × 3 system; matrix
@@ -32,38 +32,38 @@ worked_example_size: the sRGB-to-XYZ matrix built from its primaries; sRGB to Di
   adaptation with the Bradford matrix
 terminology:
   spectrum (spectral power distribution): how much power a light carries at each wavelength
-  cones: the three kinds of colour receptor in the eye, most sensitive to long, medium and short
+  cones: the three kinds of color receptor in the eye, most sensitive to long, medium and short
     wavelengths (L, M, S)
-  tristimulus values: three numbers that determine a colour; CIE XYZ is the standard set
+  tristimulus values: three numbers that determine a color; CIE XYZ is the standard set
   luminance Y: the brightness coordinate of XYZ
-  chromaticity (x, y): x = X/(X + Y + Z) and y = Y/(X + Y + Z), the colour with its brightness divided
+  chromaticity (x, y): x = X/(X + Y + Z) and y = Y/(X + Y + Z), the color with its brightness divided
     out
   primaries: the three lights a display mixes; each RGB space has its own
-  white point: the colour of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print
+  white point: the color of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print
   linear and encoded RGB: light intensities, versus the values stored in files after the transfer
     function (often loosely called gamma)
-  gamut: the set of colours a device can produce
-  metamers: different spectra that look the same colour
-  chromatic adaptation: the eye's adjustment to the colour of the illumination, and its modelling by
+  gamut: the set of colors a device can produce
+  metamers: different spectra that look the same color
+  chromatic adaptation: the eye's adjustment to the color of the illumination, and its modeling by
     a matrix
   Bradford transform: a standard chromatic adaptation matrix built on a cone-like basis
 ---
 
 ## Start here
 
-A screen makes every colour it shows from three small lights: a red, a green and a blue. That this
+A screen makes every color it shows from three small lights: a red, a green and a blue. That this
 works at all is a fact about the eye, not about light. Light carries a whole spectrum, a different
-amount of power at every wavelength. The eye has only three kinds of colour receptor, the cones, and
+amount of power at every wavelength. The eye has only three kinds of color receptor, the cones, and
 each reports a single number. Two lights with completely different spectra that produce the same
 three numbers look identical.
 
-So a colour, as people see it, is three numbers, and colours behave like vectors in a
+So a color, as people see it, is three numbers, and colors behave like vectors in a
 three-dimensional space: mixing two lights adds their vectors, and dimming a light scales it. Every
-device picks its own three lights, so the same colour gets different coordinates on different devices.
+device picks its own three lights, so the same color gets different coordinates on different devices.
 Converting between them is a change of basis, a 3 × 3 matrix.
 
-The same matrices are behind every colour-managed web page, photo editor and printer. They also
-explain the white-balance setting on a camera, and why a widely used shortcut for blending colours
+The same matrices are behind every color-managed web page, photo editor and printer. They also
+explain the white-balance setting on a camera, and why a widely used shortcut for blending colors
 gives the wrong answer.
 
 ## The problem
@@ -71,18 +71,18 @@ gives the wrong answer.
 The everyday contrast is between the physics and the perception. Physically, a light is its
 **spectrum**: a function of wavelength across the visible range, so infinitely many numbers.
 Perceptually it is three numbers. The international standard set of three, defined by the CIE in 1931
-from colour-matching experiments, is the **tristimulus values** X, Y and Z, where Y is the
+from color-matching experiments, is the **tristimulus values** X, Y and Z, where Y is the
 **luminance**, the perceived brightness. Dividing out the brightness gives the **chromaticity**
-x = X/(X + Y + Z) and y = Y/(X + Y + Z), which says only what colour a light is.
+x = X/(X + Y + Z) and y = Y/(X + Y + Z), which says only what color a light is.
 
 A display is described by its three **primaries**, given as chromaticities, and its **white point**,
-the colour it shows when all three are fully on. For the sRGB standard used by the web, the red
+the color it shows when all three are fully on. For the sRGB standard used by the web, the red
 primary has chromaticity (0.64, 0.33), green (0.30, 0.60), blue (0.15, 0.06), and the white point is
 the daylight white D65 at (0.3127, 0.3290). The Display P3 standard of many recent phones and laptops
 keeps the same blue and white but uses a deeper red (0.680, 0.320) and green (0.265, 0.690).
 
-Given those numbers, find the matrix that turns a display's linear RGB values into XYZ, convert colours
-from one display to another, say which colours a display cannot show, and adjust colours for a change
+Given those numbers, find the matrix that turns a display's linear RGB values into XYZ, convert colors
+from one display to another, say which colors a display cannot show, and adjust colors for a change
 of white.
 
 ## Variables
@@ -90,7 +90,7 @@ of white.
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | v | tristimulus vector | (X, Y, Z) | 3 × 1 | relative, with Y = 1 for white |
-| (x, y) | chromaticity | the colour with brightness divided out | 2 numbers | dimensionless |
+| (x, y) | chromaticity | the color with brightness divided out | 2 numbers | dimensionless |
 | (R, G, B) | linear RGB | how strongly each primary is driven | 3 × 1, each from 0 to 1 | dimensionless |
 | p_R, p_G, p_B | primary directions | XYZ of each primary per unit luminance, (x/y, 1, (1 − x − y)/y) | 3 × 1 each | relative |
 | K | direction matrix | columns p_R, p_G, p_B | 3 × 3 | relative |
@@ -109,14 +109,14 @@ inside (R, G, B).
 
 ## Formulation
 
-**Where the equations come from.** Colour matching obeys Grassmann's laws: if two lights match two
+**Where the equations come from.** Color matching obeys Grassmann's laws: if two lights match two
 others, their sums match, and scaling both members of a match keeps the match. So the map from
 spectra to tristimulus values is linear. Each of X, Y and Z is the integral of the spectrum against a
 fixed weighting curve, a linear functional on spectra. The map goes from an infinite-dimensional space
 of spectra onto ℝ³, so it has an enormous null space. Two spectra whose difference lies in that null
-space are **metamers**: different light, the same colour.
+space are **metamers**: different light, the same color.
 
-**The familiar formula.** Image-processing courses teach that the brightness of a linear sRGB colour is
+**The familiar formula.** Image-processing courses teach that the brightness of a linear sRGB color is
 
 ```
 Y  =  0.2126 R  +  0.7152 G  +  0.0722 B
@@ -164,7 +164,7 @@ M = [ 0.2126   0.7152   0.0722 ]
 the standard sRGB-to-XYZ matrix; the sRGB specification publishes its inverse, for converting XYZ
 to sRGB.
 
-**From one display to another.** Build M_3 the same way for Display P3. A colour with sRGB
+**From one display to another.** Build M_3 the same way for Display P3. A color with sRGB
 coordinates (R, G, B) has XYZ value M (R, G, B) and Display P3 coordinates M_3⁻¹ M (R, G, B), so the
 conversion is one matrix:
 
@@ -177,9 +177,9 @@ C  =  M_3⁻¹ M  =    [ 0.0332   0.9668   0      ]
 Its last column says that sRGB blue is exactly Display P3 blue at 91% strength, because the two
 standards use the same blue chromaticity.
 
-**Gamut.** The colours a display can make are the combinations with every coordinate between 0 and 1.
+**Gamut.** The colors a display can make are the combinations with every coordinate between 0 and 1.
 Their directions form a **convex cone**: the nonnegative combinations of the three primaries. Every
-entry of C is nonnegative, so every sRGB colour has nonnegative Display P3 coordinates, and the sRGB
+entry of C is nonnegative, so every sRGB color has nonnegative Display P3 coordinates, and the sRGB
 gamut lies inside the Display P3 gamut. The reverse fails. Pure Display P3 red, (1, 0, 0), has sRGB
 coordinates C⁻¹ (1, 0, 0) = (1.2249, −0.0421, −0.0196). The negative entries mean that sRGB would have
 to subtract green and blue light to make it, so no sRGB screen can show that red.
@@ -187,7 +187,7 @@ to subtract green and blue light to make it, so no sRGB screen can show that red
 **Adapting to a different white.** A white sheet of paper looks white under daylight and under a warm
 lamp, because the eye rescales each cone's response to the light it is adapted to. That is von Kries's
 hypothesis, and it is diagonal in a basis of cone responses. The Bradford transform, the standard
-choice in colour management, uses the cone-like basis given by the matrix
+choice in color management, uses the cone-like basis given by the matrix
 
 ```
     [  0.8951   0.2664  −0.1614 ]
@@ -219,44 +219,44 @@ entries of inverse matrices are the algebraic sign of gamut limits.
 ## What is computed
 
 Display ICC profiles are often stored as exactly these parts: a 3 × 3 matrix and three tone curves,
-applied by colour-management engines such as Little CMS. CSS Color Level 4 lets web pages write
+applied by color-management engines such as Little CMS. CSS Color Level 4 lets web pages write
 color(display-p3 1 0 0) and specifies the conversion matrices in its sample code. Raw photo formats
-such as DNG store colour matrices that relate the camera's own RGB to XYZ. In Python, the
+such as DNG store color matrices that relate the camera's own RGB to XYZ. In Python, the
 colour-science package implements these spaces and chromatic adaptation transforms, including
 Bradford.
 
 ## Why linear algebra is the right tool
 
-Grassmann's laws make colour linear, and three kinds of cone make it three-dimensional. Any three
+Grassmann's laws make color linear, and three kinds of cone make it three-dimensional. Any three
 independent primaries are then a basis, an RGB value is a coordinate vector, and converting between
 devices is a change of basis. Metamerism is a null space. A gamut is a convex cone cut off by the unit
 cube. White balance is a scaling that is diagonal in one basis and looks complicated in another. Each
-fact that colour science states in its own vocabulary is a standard fact about ℝ³.
+fact that color science states in its own vocabulary is a standard fact about ℝ³.
 
 ## Pitfall worth teaching
 
 The matrices act on linear light, but image files store encoded values. sRGB files store each channel
 after a transfer function: e = 12.92 ℓ for ℓ up to 0.0031308, and e = 1.055 ℓ^(1/2.4) − 0.055 above
 it, where ℓ is the linear value and e the stored one. The encoding spends more of the available numbers on
-dark tones, where the eye is more sensitive. The colour matrices must be applied after decoding, and
+dark tones, where the eye is more sensitive. The color matrices must be applied after decoding, and
 so must any averaging.
 
 Averaging encoded values is a common mistake. Blend a black pixel and a white pixel half and half, as
 resizing or blurring an image does. Averaging the stored values gives 0.5, which decodes to a linear
 intensity of only 0.214, so the result carries about 21% of white's light instead of 50%. The correct
 average is linear 0.5, which is stored as 0.735. Programs that blend stored values make fine
-light-and-dark detail darker when an image is shrunk, and colour gradients between saturated colours
+light-and-dark detail darker when an image is shrunk, and color gradients between saturated colors
 dip through muddy, darker tones.
 
 ## Extensions
 
 Perceptual spaces such as CIELAB apply cube roots to XYZ, so that distances in them roughly match how
-different colours look. They are nonlinear, and the matrices above are only their first step. Camera
-colour matrices are fitted by least squares to photographs of colour charts, as in the regression and
+different colors look. They are nonlinear, and the matrices above are only their first step. Camera
+color matrices are fitted by least squares to photographs of color charts, as in the regression and
 basis-fitting entries. The reflectance spectra of natural surfaces are well approximated by a few basis
 functions found by principal component analysis (Tier 2), the same idea as the empirical orthogonal
 functions entry. JPEG converts RGB to YCbCr, another 3 × 3 change of basis that separates brightness
-from colour, before its cosine transform (the JPEG entry). People with two types of cone see a
-two-dimensional colour space, and colour-blindness simulators apply a rank-2 matrix that projects onto
-it. The barycentric-coordinates entry blends colours with the same kind of weights, and for the reason
+from color, before its cosine transform (the JPEG entry). People with two types of cone see a
+two-dimensional color space, and color-blindness simulators apply a rank-2 matrix that projects onto
+it. The barycentric-coordinates entry blends colors with the same kind of weights, and for the reason
 in the pitfall above, the blend is physically correct only in linear RGB.

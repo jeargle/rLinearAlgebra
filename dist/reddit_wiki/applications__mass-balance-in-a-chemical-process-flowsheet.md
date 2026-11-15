@@ -123,7 +123,7 @@ is why plants add a purge stream.
 
 ### Extensions
 
-Once conversions depend on temperature, or separations on [vapour–liquid equilibrium](https://en.wikipedia.org/wiki/Vapor%E2%80%93liquid_equilibrium), the balances
+Once conversions depend on temperature, or separations on [vapor–liquid equilibrium](https://en.wikipedia.org/wiki/Vapor%E2%80%93liquid_equilibrium), the balances
 become nonlinear and are solved by [Newton's method](https://en.wikipedia.org/wiki/Newton's_method), a sequence of linear systems with this structure.
 Data reconciliation is a constrained least-squares problem (compare the regression entry). The same
 conservation-at-nodes structure, without reactions, is the traffic-flow entry. With reactions written

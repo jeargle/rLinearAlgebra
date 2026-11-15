@@ -39,7 +39,7 @@ terminology:
 ## Start here
 
 A bridge under load bends a little. Every joint shifts, and how far it shifts depends on how hard the
-neighbouring members pull back. Each member behaves like a stiff spring: stretch it twice as far and it
+neighboring members pull back. Each member behaves like a stiff spring: stretch it twice as far and it
 pulls back twice as hard. That proportionality is the whole reason this problem is linear.
 
 So write one equation per joint saying "the forces here balance". Each equation involves the movement of
@@ -73,7 +73,7 @@ Given a structure — truss, bridge deck, turbine blade, engine block — discre
 | ω | natural angular frequency | how fast a mode oscillates; the frequency in hertz is ω / 2π | scalar | rad/s |
 | λ | eigenvalue | λ = ω² | scalar | s⁻² |
 
-In a truss every DOF is a translation, so every entry of u is in metres. Frames and beams add rotational DOFs, and then u mixes metres with radians and f mixes newtons with newton-metres. The equations are unchanged, but entries of K then carry different units, which is one reason raw entry sizes of K should not be compared directly.
+In a truss every DOF is a translation, so every entry of u is in meters. Frames and beams add rotational DOFs, and then u mixes meters with radians and f mixes newtons with newton-meters. The equations are unchanged, but entries of K then carry different units, which is one reason raw entry sizes of K should not be compared directly.
 
 ## Formulation
 

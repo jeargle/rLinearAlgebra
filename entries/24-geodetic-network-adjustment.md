@@ -60,7 +60,7 @@ adjusting the network. It is where the method of least squares was invented, aro
 and Gauss, and national mapping agencies still do exactly this, with millions of measurements.
 
 There is a subtlety at the heart of it. Every measurement compares two points, so the measurements
-together say nothing about where the whole network sits. Raise every height by a metre and every
+together say nothing about where the whole network sits. Raise every height by a meter and every
 measured difference stays the same. Some outside choice, called the datum, has to anchor the network,
 such as declaring one marker to be at a known height above sea level. In linear algebra terms, the
 equations have a null space, and the datum is how it is removed.
@@ -69,7 +69,7 @@ equations have a null space, and the datum is how it is removed.
 
 Given redundant measurements between stations of a survey network, estimate the station coordinates
 that best fit all the measurements, quantify the discrepancies, and fix the network's position (its
-datum) so that the coordinates are unique, while recognising which results depend on that choice and
+datum) so that the coordinates are unique, while recognizing which results depend on that choice and
 which do not.
 
 ## Variables
@@ -78,11 +78,11 @@ which do not.
 |---|---|---|---|---|
 | u | number of unknowns | station heights (levelling) or coordinates | integer | — |
 | m | number of observations | measured height differences, distances, directions | integer | — |
-| h | station heights | the unknowns of a levelling network | u × 1 | metres |
-| ℓ | observations | the measured height differences | m × 1 | metres |
+| h | station heights | the unknowns of a levelling network | u × 1 | meters |
+| ℓ | observations | the measured height differences | m × 1 | meters |
 | A | design matrix | row k has −1 for the station a measurement starts from and +1 for the station it ends at | m × u | dimensionless |
-| v | residuals (corrections) | v = A h − ℓ, what each observation must change by to fit the adjusted heights | m × 1 | metres |
-| W | weight matrix | diagonal, with the inverse variance of each observation | m × m | 1/metres² |
+| v | residuals (corrections) | v = A h − ℓ, what each observation must change by to fit the adjusted heights | m × 1 | meters |
+| W | weight matrix | diagonal, with the inverse variance of each observation | m × m | 1/meters² |
 | d | datum defect | dimension of the null space of A | integer | — |
 
 ## Formulation
@@ -174,7 +174,7 @@ Coordinates from different datums cannot be compared, even though each set is co
 case, fixing P or fixing R gives heights that differ by 0.067 m at every benchmark, with identical
 differences. Deformation and subsidence monitoring compares a network's coordinates between surveys
 years apart, and if the two adjustments used different datum points, or a datum point that itself moved,
-the comparison shows apparent motion everywhere that is entirely an artefact of the datum. The test is
+the comparison shows apparent motion everywhere that is entirely an artifact of the datum. The test is
 the one linear algebra suggests: compare only datum-independent quantities, or transform both solutions
 to the same datum first. A second consequence is that a solver handed the unconstrained normal equations
 either fails, because Aᵀ W A is singular, or returns one particular solution chosen silently by its

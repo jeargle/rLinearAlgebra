@@ -2,9 +2,9 @@
 
 ### Start here
 
-A photograph from a phone has millions of pixels, each with three colour values, yet the [JPEG](https://en.wikipedia.org/wiki/JPEG) file is
+A photograph from a phone has millions of pixels, each with three color values, yet the [JPEG](https://en.wikipedia.org/wiki/JPEG) file is
 usually a tenth of the raw size or less, and the difference is hard to see. The saving comes from a
-simple observation: neighbouring pixels in a photograph are usually close in value. A patch of sky or
+simple observation: neighboring pixels in a photograph are usually close in value. A patch of sky or
 skin changes slowly. Listing every pixel value separately wastes space on information that is nearly
 the same from one pixel to the next.
 
@@ -25,10 +25,10 @@ Video compression uses the same idea on the differences between one frame and th
 
 ### The problem
 
-A grey-level image is a grid of numbers from 0 (black) to 255 (white). JPEG splits it into **blocks**
-of 8 × 8 pixels and treats each block as a vector in ℝ⁶⁴. A colour image is first converted to a
-brightness channel and two colour-difference channels (**[YCbCr](https://en.wikipedia.org/wiki/YCbCr)**), and the colour channels are usually
-stored at half resolution in each direction, because the eye is less sensitive to fine colour detail
+A gray-level image is a grid of numbers from 0 (black) to 255 (white). JPEG splits it into **blocks**
+of 8 × 8 pixels and treats each block as a vector in ℝ⁶⁴. A color image is first converted to a
+brightness channel and two color-difference channels (**[YCbCr](https://en.wikipedia.org/wiki/YCbCr)**), and the color channels are usually
+stored at half resolution in each direction, because the eye is less sensitive to fine color detail
 than to fine brightness detail. Each channel is then coded block by block.
 
 The everyday contrast is between **lossless** and **[lossy](https://en.wikipedia.org/wiki/Lossy_compression)** compression. A ZIP file must give back
@@ -45,13 +45,13 @@ most become zero, and do it so that the error in the pixels stays small and pred
 | N | transform size | 8 in JPEG, 4 in the toy | integer | — |
 | n | sample index | position of a pixel in a row, 0 to N − 1 | integer | — |
 | k | frequency index | which cosine pattern, 0 to N − 1 | integer | — |
-| x | row of pixels | x_0, …, x_(N−1) | N × 1 | grey levels |
+| x | row of pixels | x_0, …, x_(N−1) | N × 1 | gray levels |
 | w_k | cosine basis vector | the k-th sampled cosine, scaled to length 1 | N × 1 | dimensionless |
 | C | DCT matrix | row k is w_k | N × N, orthogonal | dimensionless |
-| X | coefficients | X = C x, the coordinates of x in the cosine basis | N × 1 | grey levels |
-| B | pixel block | the 8 × 8 block, after subtracting 128 | 8 × 8 | grey levels |
-| F | block coefficients | F = C B Cᵀ | 8 × 8 | grey levels |
-| Δ_k | quantization step | step size for coefficient k | number | grey levels |
+| X | coefficients | X = C x, the coordinates of x in the cosine basis | N × 1 | gray levels |
+| B | pixel block | the 8 × 8 block, after subtracting 128 | 8 × 8 | gray levels |
+| F | block coefficients | F = C B Cᵀ | 8 × 8 | gray levels |
+| Δ_k | quantization step | step size for coefficient k | number | gray levels |
 | q_k | quantized coefficient | round(X_k / Δ_k), the whole number stored in the file | integer | — |
 
 ### Formulation
@@ -128,7 +128,7 @@ cosine vectors. Multiplied out, this is the formula from the standard.
 a soft vertical edge in the middle (pixel values 100 + 5i + 3j + 40/(1 + e^(−1.5(j − 4.5))) in row i and
 column j, rounded), subtract 128, and transform. Three of the 64 coefficients carry 97.7% of the energy.
 Quantizing all 64 with a step of 16 leaves 6 of them nonzero. The decoded block has a [root-mean-square](https://en.wikipedia.org/wiki/Root_mean_square)
-error of 1.8 grey levels and no pixel off by more than 4.
+error of 1.8 gray levels and no pixel off by more than 4.
 
 ### Matrix structure
 
@@ -141,7 +141,7 @@ the different lengths into its quantization steps, so the transform runs in exac
 
 ### What is computed
 
-A JPEG encoder converts RGB to YCbCr, subsamples the colour channels, cuts each channel into blocks,
+A JPEG encoder converts RGB to YCbCr, subsamples the color channels, cuts each channel into blocks,
 subtracts 128, applies the 8 × 8 DCT, and divides by a **quantization table** of 64 step sizes. The
 steps are larger for high frequencies, where the eye is less sensitive, and the quality setting scales
 the whole table. The quantized coefficients are listed in zigzag order from low to high frequency, so
@@ -163,7 +163,7 @@ fall off faster, for the same reason as in the Gibbs pitfall of the [Fourier ser
 
 ### Pitfall worth teaching
 
-Every block is coded on its own, so errors do not match across block boundaries. Take two neighbouring
+Every block is coded on its own, so errors do not match across block boundaries. Take two neighboring
 4-pixel blocks from a smooth ramp, (100, 110, 120, 130) and (140, 150, 160, 170). Quantize them as JPEG
 tables do, finely for the constant coefficient (step 10) and coarsely for the rest (step 50). The
 coefficients X_1 = −22.30 and X_3 = −1.59 of both blocks round to zero, and the blocks decode as flat
@@ -182,7 +182,7 @@ the [covariance](https://en.wikipedia.org/wiki/Covariance_matrix) matrix (the [K
 was introduced in 1974 as a fixed approximation to it for highly correlated signals. The DCT basis
 vectors are also the eigenvectors of the second-difference matrix of the [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) entry with
 mirror-image boundary conditions (Tier 2). [JPEG 2000](https://en.wikipedia.org/wiki/JPEG_2000) replaces the DCT with wavelets. [MP3](https://en.wikipedia.org/wiki/MP3) and AAC audio
-use the [modified DCT](https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform) on overlapping blocks. The colour conversion to YCbCr is the colour-spaces entry,
+use the [modified DCT](https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform) on overlapping blocks. The color conversion to YCbCr is the color-spaces entry,
 the continuous version of the cosine basis is the Fourier series entry, and choosing a basis to fit
 data is the basis-fitting entry.
 
@@ -200,7 +200,7 @@ How this field's vocabulary reads as linear algebra.
 | quantization | dividing each coefficient by a step size and rounding to a whole number |
 | quantization table | the 64 step sizes, larger for higher frequencies |
 | zigzag order and entropy coding | listing coefficients from low to high frequency so the zeros come in long runs, then coding the result compactly |
-| YCbCr and chroma subsampling | brightness and two colour-difference channels, with the colour stored at lower resolution |
+| YCbCr and chroma subsampling | brightness and two color-difference channels, with the color stored at lower resolution |
 | blocking artifact | visible steps at block boundaries at high compression |
 | motion compensation | predicting a video block from the previous frame and coding only the difference |
 

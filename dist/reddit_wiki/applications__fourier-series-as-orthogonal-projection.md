@@ -227,7 +227,7 @@ How this field's vocabulary reads as linear algebra.
 | harmonic | sin nx or cos nx, oscillating n times per period |
 | Fourier coefficients a_n, b_n | the amounts of cos nx and sin nx in the function |
 | partial sum S_N | the series cut off after the N-th harmonic |
-| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product |
+| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analog of the dot product |
 | orthogonal functions | functions whose inner product is zero |
 | norm and energy | ‖f‖² = ⟨f, f⟩, the integral of the square of f |
 | Gram matrix | the matrix of inner products of the basis functions |

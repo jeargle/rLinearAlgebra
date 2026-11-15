@@ -149,7 +149,7 @@ X = [ 1  1  1 ]          [  4   6  14 ] [ c_1 ]   [ 10 ]
 
 Solving the dense 3 × 3 system gives ĉ = (1.2, −0.3, 0.5), so p(t) = 1.2 − 0.3t + 0.5t².
 
-Now centre and scale the positions with u = 2t − 3, which takes the values −3, −1, 1, 3, and use the
+Now center and scale the positions with u = 2t − 3, which takes the values −3, −1, 1, 3, and use the
 basis 1, u, u² − 5. The three columns are (1, 1, 1, 1), (−3, −1, 1, 3) and (4, −4, −4, 4), and every pair
 of them has dot product zero. The normal equations become diagonal:
 
@@ -216,7 +216,7 @@ degree-4 polynomial fit, which has a residual of only 1.2 inside the data, gives
 the true value is e^1.5 ≈ 4.48 and the polynomial fit gives 4.47, but the Fourier fit gives 1.66,
 because it repeats with period 1 and so returns to its values near t = 0.5.
 
-Outside the data, the fitted curve is decided entirely by the basis. Polynomials run off towards
+Outside the data, the fitted curve is decided entirely by the basis. Polynomials run off toward
 infinity, Fourier sums repeat, and splines continue their last cubic piece. Choosing a basis is
 choosing an assumption about how the signal behaves where nothing was measured. A related trap is
 that adding basis functions always lowers the residual, because it enlarges the span, so a smaller

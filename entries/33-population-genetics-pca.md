@@ -226,7 +226,7 @@ of samples genotyped in one laboratory, or a long stretch of SNPs in linkage dis
 (neighboring SNPs inherited together, so their columns are nearly collinear) can each produce a PC of
 its own. Pruning SNPs in LD before the SVD is standard for that reason.
 
-Sample composition moves the axes. A population sampled 1,000 times pulls PC1 towards its internal
+Sample composition moves the axes. A population sampled 1,000 times pulls PC1 toward its internal
 variation, while one sampled 10 times barely registers. Ascertainment bias has the same effect from the
 SNP side: genotyping chips favor SNPs that were common in the populations used to design them, which
 distorts distances for everyone else.

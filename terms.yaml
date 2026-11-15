@@ -3417,7 +3417,7 @@ terms:
   lowest_tier: 1
   uses: 1
   match:
-  - vapour–liquid equilibrium
+  - vapor–liquid equilibrium
 - term: fixed-point iteration
   aliases: []
   kind: numerical method
@@ -4538,7 +4538,7 @@ terms:
   uses: 5
   match:
   - luminance
-- term: primary colours
+- term: primary colors
   aliases: []
   kind: domain concept
   wikipedia: Primary color
@@ -4746,7 +4746,7 @@ terms:
   lowest_tier: 1
   uses: 1
   match:
-  - colour-blindness
+  - color-blindness
 - term: JPEG
   aliases: []
   kind: domain concept

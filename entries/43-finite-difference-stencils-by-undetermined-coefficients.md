@@ -49,9 +49,9 @@ terminology:
 
 A computer that knows a function only through its values at evenly spaced points cannot differentiate
 it the way calculus does. It estimates the derivative from the values it has. The estimate everyone
-meets first is the slope between two neighbouring points: the change in height divided by the step.
+meets first is the slope between two neighboring points: the change in height divided by the step.
 
-Every such estimate combines a few neighbouring values with fixed weights. The pattern of weights,
+Every such estimate combines a few neighboring values with fixed weights. The pattern of weights,
 laid over the grid of points like a stencil over paper, is called a finite-difference stencil.
 Stencils are the basic tool for turning the laws of physics into arithmetic, in weather and climate
 models, in simulations of heat flow and fluid flow, and in the edge detectors of image processing.
@@ -73,7 +73,7 @@ f^(k)(x)  ≈  w_1 f(x + s_1 h) + w_2 f(x + s_2 h) + … + w_n f(x + s_n h)
 ```
 
 For example, the three-point central stencil uses offsets −1, 0, 1: the point x itself and its two
-neighbours. A stencil has **order of accuracy** p when its error shrinks like h^p as the grid is
+neighbors. A stencil has **order of accuracy** p when its error shrinks like h^p as the grid is
 refined.
 
 Given the derivative order k and the offsets, find the weights that make the estimate as accurate as
@@ -86,7 +86,7 @@ computer.
 |---|---|---|---|---|
 | f | function | the function being differentiated | known only at grid points | units of f |
 | x | evaluation point | where the derivative is wanted | number | units of x |
-| h | grid spacing | distance between neighbouring grid points | number | units of x |
+| h | grid spacing | distance between neighboring grid points | number | units of x |
 | k | derivative order | 1 for a first derivative, 2 for a second | integer | — |
 | n | stencil size | number of grid points used | integer | — |
 | s_j | offsets | position of sample j, in grid steps from x | n numbers | dimensionless |

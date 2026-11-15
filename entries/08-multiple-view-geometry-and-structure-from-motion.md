@@ -45,7 +45,7 @@ is the foundation of drone mapping, phone panoramas, and robot navigation.
 
 Start with what is recoverable: matching points. Find a window corner visible in both photos. You do not
 know where it is in 3D, and you do not know how the camera moved — but the two are linked. If you
-hypothesise a camera motion, then a point in the first image is restricted to a single line in the
+hypothesize a camera motion, then a point in the first image is restricted to a single line in the
 second. Each matched pair therefore constrains the possible motions, and with enough pairs only one
 motion survives.
 
@@ -92,7 +92,7 @@ Primes mark the second view: x̂′ is the same scene point seen by the second c
 λ x̃ = K [R | t] X̃
 ```
 
-Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in metres). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. Homogeneous coordinates isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × metres on the right, λ in metres on the left, leaving pixels.
+Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in meters). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. Homogeneous coordinates isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × meters on the right, λ in meters on the left, leaving pixels.
 
 **Two views.** Place the first camera at the world origin (R = I, t = 0) and the second at an unknown R, t. A scene point appears at x̂ in the first image and x̂′ in the second, both in normalized coordinates. The two viewing rays and the baseline t between the cameras lie in one plane, and that coplanarity is the epipolar constraint:
 

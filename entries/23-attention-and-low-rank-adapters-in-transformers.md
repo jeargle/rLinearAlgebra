@@ -265,5 +265,5 @@ approximation is of climate data rather than of a weight update. Word embeddings
 analysis (the word embeddings entry) are where token vectors come from, and population-genetics PCA
 (the population genetics entry) is the same truncated SVD in another vocabulary. The row-stochastic P
 is the same kind of matrix as the PageRank entry's transition matrix. The Eckart–Young best rank-r
-approximation minimizes a sum of squares, the matrix analogue of the projections in the regression
+approximation minimizes a sum of squares, the matrix analog of the projections in the regression
 entry and the basis-fitting entry.

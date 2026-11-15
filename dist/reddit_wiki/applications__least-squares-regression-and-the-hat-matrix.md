@@ -101,7 +101,7 @@ H = [  0.7   0.4   0.1  −0.2 ]
 ```
 
 Its diagonal, the leverages (0.7, 0.3, 0.3, 0.7), adds up to k = 2. The two end points have more than
-twice the leverage of the middle two, because a line pivots about its centre.
+twice the leverage of the middle two, because a line pivots about its center.
 
 ### Matrix structure
 

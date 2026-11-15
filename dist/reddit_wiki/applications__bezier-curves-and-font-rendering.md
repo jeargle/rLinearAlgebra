@@ -7,7 +7,7 @@ thousands of pixels in a letter "S"; the font file stores a few points, and the 
 smooth curve from them at whatever size the letter is printed, from a phone screen to a billboard.
 
 For each curved piece the font stores four points. The curve starts at the first and ends at the fourth.
-The two middle points are not on the curve at all: they act like magnets that pull it towards themselves,
+The two middle points are not on the curve at all: they act like magnets that pull it toward themselves,
 setting the direction in which it leaves the start and arrives at the end. Moving one of them reshapes
 the curve smoothly, which is why the "handles" in a drawing program behave the way they do.
 
@@ -59,7 +59,7 @@ approximately otherwise.
 ### Formulation
 
 **Where the equations come from.** A segment is a polynomial curve,
-and the modelling choice is only which basis to write it in.
+and the modeling choice is only which basis to write it in.
 
 **The Bernstein basis.** For cubics the basis polynomials are
 
@@ -113,7 +113,7 @@ quadratic segment Q_0 = (0, 0), Q_1 = (3, 3), Q_2 = (6, 0), which the degree-ele
 to exactly these four points. Its midpoint is B(1/2) = (P_0 + 3P_1 + 3P_2 + P_3)/8 = (3, 1.5), and it
 never comes near the middle control points, whose height is 2.
 
-**Evaluation and subdivision by [de Casteljau](https://en.wikipedia.org/wiki/De_Casteljau's_algorithm).** Interpolate linearly between neighbouring control points
+**Evaluation and subdivision by [de Casteljau](https://en.wikipedia.org/wiki/De_Casteljau's_algorithm).** Interpolate linearly between neighboring control points
 at the fraction t, and repeat on the new points until one is left; that point is B(t). At t = 1/2 the
 example gives (1, 1), (3, 2), (5, 1), then (2, 1.5), (4, 1.5), then (3, 1.5). The points produced along
 the way are, read down the left and right edges, the control points of the two halves:

@@ -58,7 +58,7 @@ once and for all, just as each resistor in the resistor-network entry is given a
 current. The arrow does not mean the street is one-way. The unknown x_j is the net flow along the arrow:
 traffic going the arrow's way minus traffic going the other way. So x_j can be negative, meaning more
 traffic travels against the arrow than with it. Only for a one-way street with its arrow pointing the
-legal way (or when each direction of a two-way street is modelled as its own segment) does x_j ≥ 0
+legal way (or when each direction of a two-way street is modeled as its own segment) does x_j ≥ 0
 become a physical constraint.
 
 **One intersection.** At intersection i, everything arriving equals everything leaving:

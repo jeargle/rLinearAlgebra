@@ -43,7 +43,7 @@ instead. Over a very long time, what fraction of their clicks land on each page?
 
 That fraction is the ranking. Pages with many incoming links get visited often; pages linked from
 frequently-visited pages get visited often too, which is exactly the circular definition, now made
-precise as a statement about long-run behaviour.
+precise as a statement about long-run behavior.
 
 The computation is remarkably simple: guess a distribution, push it through one round of clicking, and
 repeat. It converges quickly, and the boredom-jump is not a detail — without it the process can get

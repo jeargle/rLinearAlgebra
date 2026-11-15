@@ -16,7 +16,7 @@ Fornberg's algorithm,43,a recursion that produces the weights for any offsets an
 Fourier basis,45,a constant together with sines and cosines of whole-number multiples of a fundamental frequency,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 "Fourier coefficients a_n, b_n",44,the amounts of cos nx and sin nx in the function,Fourier series as orthogonal projection,Mathematics,Applied analysis
 Gibbs phenomenon,44,"the overshoot of partial sums next to a jump, which does not shrink as N grows",Fourier series as orthogonal projection,Mathematics,Applied analysis
-Gouraud shading,39,colouring a triangle by blending its corner colours,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
+Gouraud shading,39,coloring a triangle by blending its corner colors,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
 Gram matrix,44,the matrix of inner products of the basis functions,Fourier series as orthogonal projection,Mathematics,Applied analysis
 Hamiltonian,10,the Hermitian matrix H in H psi = E psi,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 Kalman gain,2,the projection weight matrix that blends prediction and measurement,Kalman filtering for navigation,Engineering,Aerospace/control
@@ -44,7 +44,7 @@ SCF iteration,10,fixed-point iteration on an eigenproblem whose matrix depends o
 SNP (single-nucleotide polymorphism),33,one column of G; a coordinate of R^M,Population genetics PCA,Biology,Genomics
 SNP loadings,33,"the entries of v_k, one weight per SNP",Population genetics PCA,Biology,Genomics
 XOR,49,"addition in GF(2), applied bit by bit",RAID-5 parity and XOR recovery,Computer Science,Storage systems
-YCbCr and chroma subsampling,19,"brightness and two colour-difference channels, with the colour stored at lower resolution",JPEG and video compression,Computer Science,Multimedia
+YCbCr and chroma subsampling,19,"brightness and two color-difference channels, with the color stored at lower resolution",JPEG and video compression,Computer Science,Multimedia
 adapter merging,23,"forming W_0 + B A once, so inference costs nothing extra",Attention and low-rank adapters in transformers,Computer Science,Deep learning
 adjustment,24,"least-squares estimation of the coordinates from redundant, inconsistent observations",Geodetic network adjustment,Earth Science,Geodesy/surveying
 affine combination,39,a weighted sum whose weights add up to 1,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
@@ -57,7 +57,7 @@ attention score s_ij,23,"the bilinear form x_i W_Q W_Kᵀ x_jᵀ, equal to the d
 attention weights P,23,the row-stochastic matrix; row i holds the mixing proportions for token i,Attention and low-rank adapters in transformers,Computer Science,Deep learning
 attenuation coefficient,3,"the unknown x, one value per voxel",Computed tomography reconstruction,Medicine,Medical imaging
 attitude / orientation,38,a rotation matrix R relating a body frame to a reference frame,3D rotations and rigid-body pose,Engineering,Robotics/graphics
-attribute,39,"a value stored at each corner (colour, depth, texture coordinate) and blended across the triangle",Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
+attribute,39,"a value stored at each corner (color, depth, texture coordinate) and blended across the triangle",Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
 backprojection,3,applying A transpose to the data,Computed tomography reconstruction,Medicine,Medical imaging
 balancing an equation,4,finding an integer null vector of the element-by-species matrix,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 bandwidth / skyline,1,the sparsity pattern induced by node numbering,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
@@ -77,15 +77,15 @@ burst error,50,errors confined to a run of consecutive bits,CRC checksums as pol
 "central, forward and one-sided differences",43,"stencils whose offsets are symmetric about x, start at x, or lie on one side of it",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 centrality,6,"a score defined as an eigenvector, or a function, of the graph matrix",PageRank and network centrality,Computer Science,Network science
 check bits (checksum),50,the r bits appended to a message so the receiver can test it,CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
-chromatic adaptation,40,"the eye's adjustment to the colour of the illumination, and its modelling by a matrix",Color spaces as change of basis,Computer Science,Color science/imaging
-"chromaticity (x, y)",40,"x = X/(X + Y + Z) and y = Y/(X + Y + Z), the colour with its brightness divided out",Color spaces as change of basis,Computer Science,Color science/imaging
+chromatic adaptation,40,"the eye's adjustment to the color of the illumination, and its modeling by a matrix",Color spaces as change of basis,Computer Science,Color science/imaging
+"chromaticity (x, y)",40,"x = X/(X + Y + Z) and y = Y/(X + Y + Z), the color with its brightness divided out",Color spaces as change of basis,Computer Science,Color science/imaging
 circulation,51,"traffic going round a closed loop, a vector in the null space of A",Traffic flow conservation at intersections,Engineering,Transportation
 clip coordinates,37,"the homogeneous 4-vector after the projection matrix, before division",3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 code rate,7,"k/n, the subspace dimension over the ambient dimension",Linear error-correcting codes,Engineering,Communications/information theory
 codeword,7,an element of the k-dimensional subspace of GF(2)^n,Linear error-correcting codes,Engineering,Communications/information theory
 codeword,50,a message with its check bits appended; always a multiple of G(x),CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
 component balance,52,"one row of the system, for one component around one unit",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
-cones,40,"the three kinds of colour receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S)",Color spaces as change of basis,Computer Science,Color science/imaging
+cones,40,"the three kinds of color receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S)",Color spaces as change of basis,Computer Science,Color science/imaging
 connected schedule,29,one in which every team is linked to every other by a chain of games,Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
 conservation of flow (continuity),51,"A x = b, one equation per intersection",Traffic flow conservation at intersections,Engineering,Transportation
 conserved moiety,4,a left null vector y; y^T c is constant for all time,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
@@ -151,7 +151,7 @@ folding-in,22,"mapping a new document or query into the latent space, q̂ = Σ_k
 forward kinematics,38,the product of the joint transforms along a robot arm,3D rotations and rigid-body pose,Engineering,Robotics/graphics
 free network,24,"a minimum-norm solution, with no point held fixed",Geodetic network adjustment,Earth Science,Geodesy/surveying
 frequency bin k,47,the coefficient of the k-th complex wave in the Fourier basis,The small DFT as a complex unitary matrix,Mathematics,Signal processing
-gamut,40,the set of colours a device can produce,Color spaces as change of basis,Computer Science,Color science/imaging
+gamut,40,the set of colors a device can produce,Color spaces as change of basis,Computer Science,Color science/imaging
 generator matrix G,7,"a basis of the code, written as rows",Linear error-correcting codes,Engineering,Communications/information theory
 generator polynomial G(x),50,the fixed divisor of degree r that both ends agree on,CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
 genetic relationship matrix (GRM) K,33,"X Xᵀ / M, the N × N Gram matrix of the individuals' centered genotype rows",Population genetics PCA,Biology,Genomics
@@ -168,7 +168,7 @@ homogeneous coordinates,8,an added coordinate that turns perspective division in
 homogeneous transformation,38,the 4 × 4 matrix [R t; 0 1],3D rotations and rigid-body pose,Engineering,Robotics/graphics
 identity transform,36,"the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0)",2D affine transforms in vector graphics,Computer Science,Computer graphics
 initial value and final XOR,50,"constants added in standard CRCs, which make the map affine",CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
-inner product of functions,44,"⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product",Fourier series as orthogonal projection,Mathematics,Applied analysis
+inner product of functions,44,"⟨f, g⟩ = ∫ f g dx, the continuous analog of the dot product",Fourier series as orthogonal projection,Mathematics,Applied analysis
 innovation / residual,2,"z - Hx, the part of the measurement the prediction did not explain",Kalman filtering for navigation,Engineering,Aerospace/control
 interpolant,41,the unique element of P_d with the prescribed values at the nodes,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 intrinsic matrix K,8,"the camera's internal calibration, an upper-triangular 3x3",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
@@ -193,7 +193,7 @@ margin of victory,29,the winner's points minus the loser's points in one game,Sp
 mean-centering,33,"subtracting each column's mean, 2 p_j, to give X",Population genetics PCA,Biology,Genomics
 mechanism,1,a nontrivial null space of K — the structure can move with no restoring force,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 message authentication code (MAC),50,"a keyed check that, unlike a CRC, an attacker cannot recompute",CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
-metamers,40,different spectra that look the same colour,Color spaces as change of basis,Computer Science,Color science/imaging
+metamers,40,different spectra that look the same color,Color spaces as change of basis,Computer Science,Color science/imaging
 method of undetermined coefficients,43,writing the weights as unknowns and solving the conditions they must satisfy,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 minimally constrained vs overconstrained adjustment,24,removing exactly the null space vs also forcing the network to fit fixed points,Geodetic network adjustment,Earth Science,Geodesy/surveying
 minimum distance,7,the smallest weight of a nonzero codeword,Linear error-correcting codes,Engineering,Communications/information theory
@@ -237,7 +237,7 @@ perfect (information-theoretic) secrecy,48,every candidate secret is consistent 
 period and fundamental,44,"the length after which the signal repeats (2π here), and the sine or cosine that repeats exactly once in it",Fourier series as orthogonal projection,Mathematics,Applied analysis
 perspective division,37,"dividing by w, the step that makes distant objects smaller",3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 perspective-correct interpolation,39,blending attributes using the 3D weights rather than the screen weights,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
-pixel centre,39,the point in the middle of a pixel; a pixel is drawn when its centre is covered,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
+pixel center,39,the point in the middle of a pixel; a pixel is drawn when its center is covered,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
 point differential,29,a team's total points scored minus points allowed,Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
 "pose (frame, transform)",38,"a rotation and a translation together, a 4 × 4 matrix in SE(3)",3D rotations and rigid-body pose,Engineering,Robotics/graphics
 power iteration,6,repeated multiplication by the matrix,PageRank and network centrality,Computer Science,Network science
@@ -255,7 +255,7 @@ quantization,19,dividing each coefficient by a step size and rounding to a whole
 quantization table,19,"the 64 step sizes, larger for higher frequencies",JPEG and video compression,Computer Science,Multimedia
 "query, key, value",23,"the rows of Q = X W_Q, K = X W_K and V = X W_V, three linear images of each token",Attention and low-rank adapters in transformers,Computer Science,Deep learning
 raster image (bitmap),42,"a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension",Bezier curves and font rendering,Computer Science,Typography/vector graphics
-rasterization,39,"deciding which pixel centres a shape covers, turning a vector description into pixels",Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
+rasterization,39,"deciding which pixel centers a shape covers, turning a vector description into pixels",Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
 rasterization,42,"sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height)",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 rating,29,a number per team whose differences predict results,Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
 re-orthonormalization,38,projecting a drifted matrix back onto the orthogonal matrices,3D rotations and rigid-body pose,Engineering,Robotics/graphics
@@ -319,10 +319,10 @@ traffic counts (detector or loop counts),51,"measured coordinates of x, used to 
 transform attribute / CSS transform property,36,a list of elementary transforms whose matrices are multiplied in the order written,2D affine transforms in vector graphics,Computer Science,Computer graphics
 transform-origin,36,"the point about which rotation and scaling happen, a conjugation T(c) M T(−c)",2D affine transforms in vector graphics,Computer Science,Computer graphics
 "translate, rotate, scale, skew",36,the elementary matrices of the stack,2D affine transforms in vector graphics,Computer Science,Computer graphics
-tristimulus values,40,three numbers that determine a colour; CIE XYZ is the standard set,Color spaces as change of basis,Computer Science,Color science/imaging
+tristimulus values,40,three numbers that determine a color; CIE XYZ is the standard set,Color spaces as change of basis,Computer Science,Color science/imaging
 truncation error,43,"the error from cutting off the Taylor series, present even in exact arithmetic",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 twiddle factor ω^(kn),47,an entry of the DFT matrix,The small DFT as a complex unitary matrix,Mathematics,Signal processing
-unitary gate,10,a norm-preserving complex linear map — the complex analogue of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+unitary gate,10,a norm-preserving complex linear map — the complex analog of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 user space vs viewport space,36,two coordinate systems related by the CTM,2D affine transforms in vector graphics,Computer Science,Computer graphics
 vector graphics,42,"shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 vertex,37,"a corner of a triangle; the pipeline moves vertices, and the triangles follow",3D viewing and perspective projection pipeline,Computer Science,Computer graphics
@@ -330,7 +330,7 @@ view frustum,37,the truncated pyramid between the near and far planes that the c
 view matrix,37,re-expresses the world relative to the camera (world to camera coordinates),3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 viewport transform,37,the final scaling from NDC to pixels,3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 weight,24,the inverse of an observation's variance; longer levelling lines get smaller weights,Geodetic network adjustment,Earth Science,Geodesy/surveying
-white point,40,"the colour of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print",Color spaces as change of basis,Computer Science,Color science/imaging
+white point,40,"the color of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print",Color spaces as change of basis,Computer Science,Color science/imaging
 word embedding w_i,22,"row i of U_k Σ_k, the word's coordinates in the latent space",Word embeddings and latent semantic analysis,Computer Science,NLP
 word-context (co-occurrence) matrix,22,the same idea with nearby words as the columns instead of documents,Word embeddings and latent semantic analysis,Computer Science,NLP
 write hole,49,"a crash between writing data and parity, which leaves a stripe that violates its equation",RAID-5 parity and XOR recovery,Computer Science,Storage systems

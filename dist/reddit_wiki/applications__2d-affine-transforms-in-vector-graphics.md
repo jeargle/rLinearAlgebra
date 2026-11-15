@@ -44,7 +44,7 @@ that [SVG](https://en.wikipedia.org/wiki/SVG), [CSS](https://en.wikipedia.org/wi
 | R(θ) | rotation matrix | turns every point by θ about the origin | 3 × 3 | — |
 | S(s_x, s_y) | scaling matrix | stretches by s_x horizontally and s_y vertically | 3 × 3 | — |
 | θ | angle | rotation angle; positive turns the x-axis toward the y-axis | scalar | degrees or radians |
-| c | centre | a point about which to rotate or scale | 2 × 1 | pixels |
+| c | center | a point about which to rotate or scale | 2 × 1 | pixels |
 
 Screen coordinates usually point y downwards, so a positive θ in SVG and CSS turns shapes clockwise on
 the screen, even though the matrix is the same as the textbook rotation.

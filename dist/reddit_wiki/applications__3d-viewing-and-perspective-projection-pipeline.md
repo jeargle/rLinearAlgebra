@@ -25,7 +25,7 @@ linear algebra.
 ### The problem
 
 The scene is made of triangles, and a **vertex** is a corner of a triangle. Three coordinate frames
-matter. **Object coordinates** are the ones a model is built in, such as a cube centred on its own
+matter. **Object coordinates** are the ones a model is built in, such as a cube centered on its own
 origin. **World coordinates** place all the objects in one scene. **Camera coordinates** describe the
 scene as the eye sees it, and by the convention used here ([OpenGL](https://en.wikipedia.org/wiki/OpenGL)'s) the camera sits at the origin,
 looks along the negative z-axis, and has y pointing up. A point in front of the camera therefore has
@@ -223,7 +223,7 @@ floating point, which spreads the precision far more evenly.
 [Orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection), used in CAD and technical drawing, has bottom row (0, 0, 0, 1) and no
 division, so parallel lines stay parallel. The multiple-view geometry entry runs the chain backwards,
 recovering the [camera matrix](https://en.wikipedia.org/wiki/Camera_resectioning#Intrinsic_parameters) K [R | t] from photographs with the SVD (Tier 2). Rational [Bézier curves](https://en.wikipedia.org/wiki/B%C3%A9zier_curve),
-mentioned in the Bézier entry, use the same homogeneous trick to stay exact under perspective. Colours
+mentioned in the Bézier entry, use the same homogeneous trick to stay exact under perspective. Colors
 and textures must be interpolated across a triangle using 1/w, the perspective-correct interpolation
 described in the barycentric-coordinates entry. [Surface normals](https://en.wikipedia.org/wiki/Normal_%28geometry%29) transform by the inverse transpose of
 the model matrix's 3 × 3 block, not by the block itself, so that they stay perpendicular to surfaces

@@ -52,7 +52,7 @@ every game against weak opponents may be worse than one that lost once to a stro
 cannot tell, and for years a national championship depended on how computer rankings settled the
 question.
 
-Kenneth Massey's idea, in his 1997 undergraduate honours thesis, was to give every team a single
+Kenneth Massey's idea, in his 1997 undergraduate honors thesis, was to give every team a single
 rating and ask that the difference of two teams' ratings predict the margin when they meet. With more
 games than teams, no ratings fit every result exactly, so the method chooses the ratings that fit best
 in the least-squares sense. Wesley Colley's method uses only wins and losses. Both were among the
@@ -188,7 +188,7 @@ b = (2, 0.5, 0.5, 1), and
 
 that is, about (0.708, 0.417, 0.417, 0.458). Colley ranks S above Q, the opposite of Massey. Without
 margins, Q's record is one win and two losses, S's is one of each, and S beat Q. With margins, Q's
-narrow loss to the strongest team and its 3-point win over R count in its favour.
+narrow loss to the strongest team and its 3-point win over R count in its favor.
 
 ## Matrix structure
 

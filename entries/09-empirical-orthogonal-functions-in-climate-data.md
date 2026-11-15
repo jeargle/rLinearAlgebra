@@ -36,7 +36,7 @@ terminology:
 ## Start here
 
 Here is a century of monthly sea-surface temperature maps: tens of thousands of grid points, over a
-thousand time steps. Far too much to look at directly, and most of it is redundant — neighbouring points
+thousand time steps. Far too much to look at directly, and most of it is redundant — neighboring points
 in the ocean do not behave independently.
 
 What a climatologist wants is the handful of recurring patterns that account for most of the variation.

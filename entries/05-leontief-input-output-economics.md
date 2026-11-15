@@ -75,7 +75,7 @@ Everything is measured in money at base-year prices, which is why a_ij is dimens
 x_i = Σ_j z_ij + d_i
 ```
 
-**The modelling assumption.** Leontief's assumption is that each industry uses inputs in fixed proportion to its output: z_ij = a_ij x_j. It is a fixed recipe, with no substitution between inputs and constant returns to scale. Substituting it into the identity:
+**The modeling assumption.** Leontief's assumption is that each industry uses inputs in fixed proportion to its output: z_ij = a_ij x_j. It is a fixed recipe, with no substitution between inputs and constant returns to scale. Substituting it into the identity:
 
 ```
 x = A x + d      ⟹      (I − A) x = d      ⟹      x = L d

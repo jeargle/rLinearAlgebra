@@ -213,7 +213,7 @@ In that case it raises the entry's ceiling, as described in the next section.
 <summary><b>Start here — the problem in plain terms</b></summary>
 
 A bridge under load bends a little. Every joint shifts, and how far it shifts depends on how hard the
-neighbouring members pull back. Each member behaves like a stiff spring: stretch it twice as far and it
+neighboring members pull back. Each member behaves like a stiff spring: stretch it twice as far and it
 pulls back twice as hard. That proportionality is the whole reason this problem is linear.
 
 So write one equation per joint saying "the forces here balance". Each equation involves the movement of
@@ -254,7 +254,7 @@ marching feet and wind.
 | ω | natural angular frequency | how fast a mode oscillates; the frequency in hertz is ω / 2π | scalar | rad/s |
 | λ | eigenvalue | λ = ω² | scalar | s⁻² |
 
-In a truss every DOF is a translation, so every entry of u is in metres. Frames and beams add rotational DOFs, and then u mixes metres with radians and f mixes newtons with newton-metres. The equations are unchanged, but entries of K then carry different units, which is one reason raw entry sizes of K should not be compared directly.
+In a truss every DOF is a translation, so every entry of u is in meters. Frames and beams add rotational DOFs, and then u mixes meters with radians and f mixes newtons with newton-meters. The equations are unchanged, but entries of K then carry different units, which is one reason raw entry sizes of K should not be compared directly.
 
 **Formulation.** **Where the equations come from.** The underlying physics is linear elasticity: for small deformations, stress in a solid is proportional to strain, and the motion obeys a partial differential equation in space and time. The finite element method replaces the continuous structure by its n joint displacements, which turns that PDE into a system of n linear second-order ordinary differential equations in time:
 
@@ -357,14 +357,14 @@ uncertainties interact.
 | z_k | measurement vector | what the sensor reports at step k; for GNSS, a measured position | m × 1 (m = 1 here) | m |
 | H | observation matrix | which combination of the state the sensor sees; [1, 0] when it measures position only | m × n | measurement units per state unit |
 | η_k | measurement noise | sensor error at step k | m × 1 | m |
-| R | measurement-noise covariance | spread of the sensor error; a few metres squared for a consumer GNSS fix | m × m | m² |
+| R | measurement-noise covariance | spread of the sensor error; a few meters squared for a consumer GNSS fix | m × m | m² |
 | x̂⁻, x̂⁺ | state estimate | the filter's best estimate before and after using z_k | n × 1 | same as x |
 | P⁻, P⁺ | estimate covariance | uncertainty of the estimate before and after using z_k; diagonal entries are variances (squared standard deviations), off-diagonal entries say how errors in different components move together | n × n | products of state units |
 | ỹ | innovation | measured minus predicted measurement | m × 1 | m |
 | K | Kalman gain | how much to correct each state component per unit of innovation | n × m | state units per measurement unit: dimensionless for p, s⁻¹ for v |
 | N(0, Q) | Gaussian distribution | mean zero, covariance Q | — | — |
 
-**Formulation.** **Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modelled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
+**Formulation.** **Where the equations come from.** The vehicle's motion obeys an ordinary differential equation in continuous time. For the constant-velocity model, dp/dt = v and dv/dt = a(t), where the acceleration a(t) is unknown and is modeled as random noise. In matrix form this is dx/dt = A x + noise. Because the ODE is driven by a random input it is a stochastic differential equation, and its solution is not a single trajectory but a probability distribution over trajectories. That is why the filter carries a covariance and not just an estimate.
 
 Integrating the ODE exactly over one step gives the discrete model. For this A the [matrix exponential](https://en.wikipedia.org/wiki/Matrix_exponential) is simple: F = exp(A Δt) = [[1, Δt], [0, 1]], which just says p_{k+1} = p_k + Δt v_k and v_{k+1} = v_k.
 
@@ -458,8 +458,8 @@ one point to the next, and that assumption is doing real work in the picture a r
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | μ(r) | linear attenuation coefficient | fraction of X-ray photons removed per unit path length at location r; this is what the image shows | function of position | m⁻¹ (clinically often cm⁻¹) |
-| s | path length | distance travelled along a ray | scalar | m |
-| I(s) | beam intensity | photon flux remaining after travelling distance s | scalar | photon counts |
+| s | path length | distance traveled along a ray | scalar | m |
+| I(s) | beam intensity | photon flux remaining after traveling distance s | scalar | photon counts |
 | I₀ | unattenuated intensity | detector reading with nothing in the beam (from calibration) | scalar per ray | photon counts |
 | I_i | measured intensity | detector reading for ray i | scalar | photon counts |
 | N | number of voxels | the image is divided into N small cubes (pixels in 2D) | integer | — |
@@ -467,8 +467,8 @@ one point to the next, and that assumption is doing real work in the picture a r
 | x | image vector | x_j is μ inside voxel j, voxels listed in a fixed order | N × 1 | m⁻¹ |
 | b | measurement vector (sinogram) | b_i = −ln(I_i / I₀), total attenuation along ray i | M × 1 | dimensionless |
 | A | system matrix (forward projector) | a_ij is the length of ray i inside voxel j; zero for the vast majority of pairs | M × N | m |
-| λ | regularization weight | how strongly smoothness is favoured over fitting the data (used in What is computed) | scalar | chosen so the two terms are comparable |
-| L | regularization operator | typically differences between neighbouring voxels, so ‖L x‖ measures roughness | p × N | depends on the choice |
+| λ | regularization weight | how strongly smoothness is favored over fitting the data (used in What is computed) | scalar | chosen so the two terms are comparable |
+| L | regularization operator | typically differences between neighboring voxels, so ‖L x‖ measures roughness | p × N | depends on the choice |
 
 **Formulation.** **Where the equations come from.** As a beam travels a short distance ds through material, the fraction of photons removed is μ ds. The intensity along a ray therefore obeys a first-order linear ordinary differential equation, the Beer–Lambert law:
 
@@ -490,7 +490,7 @@ This is the step that makes CT a linear problem. The raw reading depends exponen
 b_i = Σ_j a_ij x_j      for every ray i,      i.e.   A x = b
 ```
 
-Units check: metres times m⁻¹ is dimensionless, matching b. This models each measurement as the total attenuation met by one ray, and it defines M equations in N unknowns.
+Units check: meters times m⁻¹ is dimensionless, matching b. This models each measurement as the total attenuation met by one ray, and it defines M equations in N unknowns.
 
 **What a solution means.** x is an estimate of μ, one value per voxel. For display it is converted to [Hounsfield units](https://en.wikipedia.org/wiki/Hounsfield_scale), HU = 1000 (μ − μ_water) / μ_water, which puts water at 0 and air at −1000. The system is not solved exactly: photon counts are noisy, M and N differ, and A is badly conditioned, so the reconstruction is posed as regularized least squares (see What is computed).
 
@@ -678,7 +678,7 @@ Everything is measured in money at base-year prices, which is why a_ij is dimens
 x_i = Σ_j z_ij + d_i
 ```
 
-**The modelling assumption.** Leontief's assumption is that each industry uses inputs in fixed proportion to its output: z_ij = a_ij x_j. It is a fixed recipe, with no substitution between inputs and constant returns to scale. Substituting it into the identity:
+**The modeling assumption.** Leontief's assumption is that each industry uses inputs in fixed proportion to its output: z_ij = a_ij x_j. It is a fixed recipe, with no substitution between inputs and constant returns to scale. Substituting it into the identity:
 
 ```
 x = A x + d      ⟹      (I − A) x = d      ⟹      x = L d
@@ -735,7 +735,7 @@ instead. Over a very long time, what fraction of their clicks land on each page?
 
 That fraction is the ranking. Pages with many incoming links get visited often; pages linked from
 frequently-visited pages get visited often too, which is exactly the circular definition, now made
-precise as a statement about long-run behaviour.
+precise as a statement about long-run behavior.
 
 The computation is remarkably simple: guess a distribution, push it through one round of clicking, and
 repeat. It converges quickly, and the boredom-jump is not a detail — without it the process can get
@@ -926,7 +926,7 @@ is the foundation of drone mapping, phone panoramas, and robot navigation.
 
 Start with what is recoverable: matching points. Find a window corner visible in both photos. You do not
 know where it is in 3D, and you do not know how the camera moved — but the two are linked. If you
-hypothesise a camera motion, then a point in the first image is restricted to a single line in the
+hypothesize a camera motion, then a point in the first image is restricted to a single line in the
 second. Each matched pair therefore constrains the possible motions, and with enough pairs only one
 motion survives.
 
@@ -978,7 +978,7 @@ Primes mark the second view: x̂′ is the same scene point seen by the second c
 λ x̃ = K [R | t] X̃
 ```
 
-Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in metres). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. [Homogeneous coordinates](https://en.wikipedia.org/wiki/Homogeneous_coordinates) isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × metres on the right, λ in metres on the left, leaving pixels.
+Read right to left. [R | t] X̃ rotates and translates the world point into camera coordinates (in meters). K converts those coordinates into pixels. The scalar λ is the depth, and dividing by it is the perspective effect that makes distant objects smaller. [Homogeneous coordinates](https://en.wikipedia.org/wiki/Homogeneous_coordinates) isolate that division in one scalar, so everything else is matrix multiplication. Units check: pixels × meters on the right, λ in meters on the left, leaving pixels.
 
 **Two views.** Place the first camera at the world origin (R = I, t = 0) and the second at an unknown R, t. A scene point appears at x̂ in the first image and x̂′ in the second, both in normalized coordinates. The two viewing rays and the baseline t between the cameras lie in one plane, and that coplanarity is the [epipolar](https://en.wikipedia.org/wiki/Epipolar_geometry) constraint:
 
@@ -1026,7 +1026,7 @@ A e = 0
 <summary><b>Start here — the problem in plain terms</b></summary>
 
 Here is a century of monthly [sea-surface temperature](https://en.wikipedia.org/wiki/Sea_surface_temperature) maps: tens of thousands of grid points, over a
-thousand time steps. Far too much to look at directly, and most of it is redundant — neighbouring points
+thousand time steps. Far too much to look at directly, and most of it is redundant — neighboring points
 in the ocean do not behave independently.
 
 What a climatologist wants is the handful of recurring patterns that account for most of the variation.
@@ -1116,7 +1116,7 @@ This models the anomaly field as a sum of rank-one pieces, each a fixed spatial 
 
 In quantum mechanics a system's state is not a position and a velocity — it is a list of complex
 numbers, one for each configuration the system could be found in. Their sizes determine the
-probabilities of each outcome. This is not an approximation or a modelling convenience; the theory is
+probabilities of each outcome. This is not an approximation or a modeling convenience; the theory is
 stated this way.
 
 Two consequences follow immediately. First, adding two valid states gives another valid state — this is
@@ -1153,7 +1153,7 @@ that actually occur in nature occupy a very thin slice of that enormous space.
 | φ | stationary state | eigenvector of H | d × 1 | dimensionless, normalized |
 | U(t) | time-evolution operator | U(t) = exp(−iHt/ħ): maps the initial state to the state at time t; unitary | d × d | dimensionless |
 | α | Coulomb integral | energy of an electron in an isolated carbon p orbital | scalar | eV (negative) |
-| β | resonance integral | energy coupling between p orbitals on bonded neighbours | scalar | eV (negative) |
+| β | resonance integral | energy coupling between p orbitals on bonded neighbors | scalar | eV (negative) |
 | Aᴳ | adjacency matrix | entry 1 if carbons i and j are bonded, else 0; for benzene, a 6-cycle | d × d | dimensionless |
 | n | number of qubits |  | integer | — |
 
@@ -1179,7 +1179,7 @@ That is what the eigenproblem means for the ODE. An eigenvector is a stationary 
 
 U(t) is [unitary](https://en.wikipedia.org/wiki/Unitary_matrix), which is why time evolution preserves ‖ψ‖ = 1, and why [quantum gates](https://en.wikipedia.org/wiki/Quantum_logic_gate) are unitary matrices.
 
-**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The [Hamiltonian](https://en.wikipedia.org/wiki/Hamiltonian_%28quantum_mechanics%29) is then
+**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbor couplings. The [Hamiltonian](https://en.wikipedia.org/wiki/Hamiltonian_%28quantum_mechanics%29) is then
 
 ```
 H = α I + β Aᴳ
@@ -1206,7 +1206,7 @@ so its eigenvectors are exactly those of the ring's [adjacency matrix](https://e
 | expectation value | the quadratic form psi^* A psi |
 | eigenstate / energy level | eigenvector and eigenvalue of the Hamiltonian |
 | Hamiltonian | the Hermitian matrix H in H psi = E psi |
-| unitary gate | a norm-preserving complex linear map — the complex analogue of an orthogonal matrix |
+| unitary gate | a norm-preserving complex linear map — the complex analog of an orthogonal matrix |
 | tensor product | the Kronecker product; why n qubits need dimension 2^n |
 | entangled state | a vector that does not factor as a tensor product |
 | basis set (quantum chemistry) | the chosen basis in which H is expressed |
@@ -1396,9 +1396,9 @@ and conservation at nodes, appears in the traffic-flow and process mass-balance 
 <details>
 <summary><b>Start here — the problem in plain terms</b></summary>
 
-A photograph from a phone has millions of pixels, each with three colour values, yet the [JPEG](https://en.wikipedia.org/wiki/JPEG) file is
+A photograph from a phone has millions of pixels, each with three color values, yet the [JPEG](https://en.wikipedia.org/wiki/JPEG) file is
 usually a tenth of the raw size or less, and the difference is hard to see. The saving comes from a
-simple observation: neighbouring pixels in a photograph are usually close in value. A patch of sky or
+simple observation: neighboring pixels in a photograph are usually close in value. A patch of sky or
 skin changes slowly. Listing every pixel value separately wastes space on information that is nearly
 the same from one pixel to the next.
 
@@ -1421,10 +1421,10 @@ Video compression uses the same idea on the differences between one frame and th
 
 **Underlying equations.** Change of basis: X = C x for a row of samples and F = C B Cᵀ for a block, where C is the orthogonal DCT matrix; [quantization](https://en.wikipedia.org/wiki/Quantization_%28image_processing%29) then rounds each coordinate to a multiple of a step size.
 
-**The problem.** A grey-level image is a grid of numbers from 0 (black) to 255 (white). JPEG splits it into **blocks**
-of 8 × 8 pixels and treats each block as a vector in ℝ⁶⁴. A colour image is first converted to a
-brightness channel and two colour-difference channels (**[YCbCr](https://en.wikipedia.org/wiki/YCbCr)**), and the colour channels are usually
-stored at half resolution in each direction, because the eye is less sensitive to fine colour detail
+**The problem.** A gray-level image is a grid of numbers from 0 (black) to 255 (white). JPEG splits it into **blocks**
+of 8 × 8 pixels and treats each block as a vector in ℝ⁶⁴. A color image is first converted to a
+brightness channel and two color-difference channels (**[YCbCr](https://en.wikipedia.org/wiki/YCbCr)**), and the color channels are usually
+stored at half resolution in each direction, because the eye is less sensitive to fine color detail
 than to fine brightness detail. Each channel is then coded block by block.
 
 The everyday contrast is between **lossless** and **[lossy](https://en.wikipedia.org/wiki/Lossy_compression)** compression. A ZIP file must give back
@@ -1440,13 +1440,13 @@ most become zero, and do it so that the error in the pixels stays small and pred
 | N | transform size | 8 in JPEG, 4 in the toy | integer | — |
 | n | sample index | position of a pixel in a row, 0 to N − 1 | integer | — |
 | k | frequency index | which cosine pattern, 0 to N − 1 | integer | — |
-| x | row of pixels | x_0, …, x_(N−1) | N × 1 | grey levels |
+| x | row of pixels | x_0, …, x_(N−1) | N × 1 | gray levels |
 | w_k | cosine basis vector | the k-th sampled cosine, scaled to length 1 | N × 1 | dimensionless |
 | C | DCT matrix | row k is w_k | N × N, orthogonal | dimensionless |
-| X | coefficients | X = C x, the coordinates of x in the cosine basis | N × 1 | grey levels |
-| B | pixel block | the 8 × 8 block, after subtracting 128 | 8 × 8 | grey levels |
-| F | block coefficients | F = C B Cᵀ | 8 × 8 | grey levels |
-| Δ_k | quantization step | step size for coefficient k | number | grey levels |
+| X | coefficients | X = C x, the coordinates of x in the cosine basis | N × 1 | gray levels |
+| B | pixel block | the 8 × 8 block, after subtracting 128 | 8 × 8 | gray levels |
+| F | block coefficients | F = C B Cᵀ | 8 × 8 | gray levels |
+| Δ_k | quantization step | step size for coefficient k | number | gray levels |
 | q_k | quantized coefficient | round(X_k / Δ_k), the whole number stored in the file | integer | — |
 
 **Formulation.** **Where the equations come from.** There is no physical model. The method is a change of basis
@@ -1521,7 +1521,7 @@ cosine vectors. Multiplied out, this is the formula from the standard.
 a soft vertical edge in the middle (pixel values 100 + 5i + 3j + 40/(1 + e^(−1.5(j − 4.5))) in row i and
 column j, rounded), subtract 128, and transform. Three of the 64 coefficients carry 97.7% of the energy.
 Quantizing all 64 with a step of 16 leaves 6 of them nonzero. The decoded block has a [root-mean-square](https://en.wikipedia.org/wiki/Root_mean_square)
-error of 1.8 grey levels and no pixel off by more than 4.
+error of 1.8 gray levels and no pixel off by more than 4.
 
 **Matrix structure.** C is a dense orthogonal matrix, and like the DFT it has fast factorizations, so an 8-point transform
 takes far fewer than 64 multiplications. Video codecs use integer approximations. The 4 × 4 core
@@ -1530,7 +1530,7 @@ the sign patterns of the rows of the 4-point C above, with the ratio 2 between l
 in place of 0.6533/0.2706 ≈ 2.414. The rows are orthogonal but not of equal length, and the codec folds
 the different lengths into its quantization steps, so the transform runs in exact integer arithmetic.
 
-**What is computed.** A JPEG encoder converts RGB to YCbCr, subsamples the colour channels, cuts each channel into blocks,
+**What is computed.** A JPEG encoder converts RGB to YCbCr, subsamples the color channels, cuts each channel into blocks,
 subtracts 128, applies the 8 × 8 DCT, and divides by a **quantization table** of 64 step sizes. The
 steps are larger for high frequencies, where the eye is less sensitive, and the quality setting scales
 the whole table. The quantized coefficients are listed in zigzag order from low to high frequency, so
@@ -1548,7 +1548,7 @@ coefficients in the proportions 40%, 40% and 20%, while the DCT puts 99.5% of it
 basis corresponds to reflecting the block in a mirror instead, which has no jump, so its coefficients
 fall off faster, for the same reason as in the Gibbs pitfall of the [Fourier series](https://en.wikipedia.org/wiki/Fourier_series) entry.
 
-**Pitfall worth teaching.** Every block is coded on its own, so errors do not match across block boundaries. Take two neighbouring
+**Pitfall worth teaching.** Every block is coded on its own, so errors do not match across block boundaries. Take two neighboring
 4-pixel blocks from a smooth ramp, (100, 110, 120, 130) and (140, 150, 160, 170). Quantize them as JPEG
 tables do, finely for the constant coefficient (step 10) and coarsely for the rest (step 50). The
 coefficients X_1 = −22.30 and X_3 = −1.59 of both blocks round to zero, and the blocks decode as flat
@@ -1572,7 +1572,7 @@ image formats use transforms that overlap from block to block, or [wavelets](htt
 | quantization | dividing each coefficient by a step size and rounding to a whole number |
 | quantization table | the 64 step sizes, larger for higher frequencies |
 | zigzag order and entropy coding | listing coefficients from low to high frequency so the zeros come in long runs, then coding the result compactly |
-| YCbCr and chroma subsampling | brightness and two colour-difference channels, with the colour stored at lower resolution |
+| YCbCr and chroma subsampling | brightness and two color-difference channels, with the color stored at lower resolution |
 | blocking artifact | visible steps at block boundaries at high compression |
 | motion compensation | predicting a video block from the previous frame and coding only the difference |
 
@@ -1581,7 +1581,7 @@ the covariance matrix (the [Karhunen–Loève](https://en.wikipedia.org/wiki/Kos
 was introduced in 1974 as a fixed approximation to it for highly correlated signals. The DCT basis
 vectors are also the eigenvectors of the second-difference matrix of the [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) entry with
 mirror-image boundary conditions (Tier 2). [JPEG 2000](https://en.wikipedia.org/wiki/JPEG_2000) replaces the DCT with wavelets. [MP3](https://en.wikipedia.org/wiki/MP3) and AAC audio
-use the [modified DCT](https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform) on overlapping blocks. The colour conversion to YCbCr is the colour-spaces entry,
+use the [modified DCT](https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform) on overlapping blocks. The color conversion to YCbCr is the color-spaces entry,
 the continuous version of the cosine basis is the Fourier series entry, and choosing a basis to fit
 data is the basis-fitting entry.
 
@@ -1690,7 +1690,7 @@ H = [  0.7   0.4   0.1  −0.2 ]
 ```
 
 Its diagonal, the leverages (0.7, 0.3, 0.3, 0.7), adds up to k = 2. The two end points have more than
-twice the leverage of the middle two, because a line pivots about its centre.
+twice the leverage of the middle two, because a line pivots about its center.
 
 **Matrix structure.** `X` is tall and thin. It is dense for ordinary regression and sparse when most predictors are
 indicator variables (categories, fixed effects). `XᵀX` is k × k, symmetric and positive semidefinite,
@@ -2189,7 +2189,7 @@ approximation is of climate data rather than of a weight update. Word embeddings
 analysis (the word embeddings entry) are where token vectors come from, and population-genetics PCA
 (the population genetics entry) is the same truncated SVD in another vocabulary. The row-stochastic P
 is the same kind of matrix as the PageRank entry's transition matrix. The Eckart–Young best rank-r
-approximation minimizes a sum of squares, the matrix analogue of the projections in the regression
+approximation minimizes a sum of squares, the matrix analog of the projections in the regression
 entry and the basis-fitting entry.
 
 ---
@@ -2210,7 +2210,7 @@ adjusting the network. It is where the method of least squares was invented, aro
 and [Gauss](https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss), and national mapping agencies still do exactly this, with millions of measurements.
 
 There is a subtlety at the heart of it. Every measurement compares two points, so the measurements
-together say nothing about where the whole network sits. Raise every height by a metre and every
+together say nothing about where the whole network sits. Raise every height by a meter and every
 measured difference stays the same. Some outside choice, called the [datum](https://en.wikipedia.org/wiki/Geodetic_datum), has to anchor the network,
 such as declaring one marker to be at a known height above sea level. In linear algebra terms, the
 equations have a null space, and the datum is how it is removed.
@@ -2227,7 +2227,7 @@ equations have a null space, and the datum is how it is removed.
 
 **The problem.** Given redundant measurements between stations of a survey network, estimate the station coordinates
 that best fit all the measurements, quantify the discrepancies, and fix the network's position (its
-datum) so that the coordinates are unique, while recognising which results depend on that choice and
+datum) so that the coordinates are unique, while recognizing which results depend on that choice and
 which do not.
 
 **Variables.**
@@ -2235,11 +2235,11 @@ which do not.
 |---|---|---|---|---|
 | u | number of unknowns | station heights (levelling) or coordinates | integer | — |
 | m | number of observations | measured height differences, distances, directions | integer | — |
-| h | station heights | the unknowns of a levelling network | u × 1 | metres |
-| ℓ | observations | the measured height differences | m × 1 | metres |
+| h | station heights | the unknowns of a levelling network | u × 1 | meters |
+| ℓ | observations | the measured height differences | m × 1 | meters |
 | A | design matrix | row k has −1 for the station a measurement starts from and +1 for the station it ends at | m × u | dimensionless |
-| v | residuals (corrections) | v = A h − ℓ, what each observation must change by to fit the adjusted heights | m × 1 | metres |
-| W | weight matrix | diagonal, with the inverse variance of each observation | m × m | 1/metres² |
+| v | residuals (corrections) | v = A h − ℓ, what each observation must change by to fit the adjusted heights | m × 1 | meters |
+| W | weight matrix | diagonal, with the inverse variance of each observation | m × m | 1/meters² |
 | d | datum defect | dimension of the null space of A | integer | — |
 
 **Formulation.** **Where the equations come from.** The model is a set of observation equations: each measurement is a
@@ -2321,7 +2321,7 @@ the same for every solution of the normal equations.
 case, fixing P or fixing R gives heights that differ by 0.067 m at every benchmark, with identical
 differences. Deformation and subsidence monitoring compares a network's coordinates between surveys
 years apart, and if the two adjustments used different datum points, or a datum point that itself moved,
-the comparison shows apparent motion everywhere that is entirely an artefact of the datum. The test is
+the comparison shows apparent motion everywhere that is entirely an artifact of the datum. The test is
 the one linear algebra suggests: compare only datum-independent quantities, or transform both solutions
 to the same datum first. A second consequence is that a solver handed the unconstrained normal equations
 either fails, because Aᵀ W A is singular, or returns one particular solution chosen silently by its
@@ -2367,7 +2367,7 @@ every game against weak opponents may be worse than one that lost once to a stro
 cannot tell, and for years a national championship depended on how computer rankings settled the
 question.
 
-Kenneth Massey's idea, in his 1997 undergraduate honours thesis, was to give every team a single
+Kenneth Massey's idea, in his 1997 undergraduate honors thesis, was to give every team a single
 rating and ask that the difference of two teams' ratings predict the margin when they meet. With more
 games than teams, no ratings fit every result exactly, so the method chooses the ratings that fit best
 in the least-squares sense. Wesley Colley's method uses only wins and losses. Both were among the
@@ -2508,7 +2508,7 @@ b = (2, 0.5, 0.5, 1), and
 
 that is, about (0.708, 0.417, 0.417, 0.458). Colley ranks S above Q, the opposite of Massey. Without
 margins, Q's record is one win and two losses, S's is one of each, and S beat Q. With margins, Q's
-narrow loss to the strongest team and its 3-point win over R count in its favour.
+narrow loss to the strongest team and its 3-point win over R count in its favor.
 
 **Matrix structure.** A has two nonzeros per row. M is symmetric, positive semidefinite and as sparse as the schedule: one
 off-diagonal entry per pair of teams that met. Its null space has one dimension for each connected
@@ -2757,7 +2757,7 @@ of samples genotyped in one laboratory, or a long stretch of SNPs in [linkage di
 (neighboring SNPs inherited together, so their columns are nearly collinear) can each produce a PC of
 its own. Pruning SNPs in LD before the SVD is standard for that reason.
 
-Sample composition moves the axes. A population sampled 1,000 times pulls PC1 towards its internal
+Sample composition moves the axes. A population sampled 1,000 times pulls PC1 toward its internal
 variation, while one sampled 10 times barely registers. Ascertainment bias has the same effect from the
 SNP side: genotyping chips favor SNPs that were common in the populations used to design them, which
 distorts distances for everyone else.
@@ -2850,7 +2850,7 @@ that [SVG](https://en.wikipedia.org/wiki/SVG), [CSS](https://en.wikipedia.org/wi
 | R(θ) | rotation matrix | turns every point by θ about the origin | 3 × 3 | — |
 | S(s_x, s_y) | scaling matrix | stretches by s_x horizontally and s_y vertically | 3 × 3 | — |
 | θ | angle | rotation angle; positive turns the x-axis toward the y-axis | scalar | degrees or radians |
-| c | centre | a point about which to rotate or scale | 2 × 1 | pixels |
+| c | center | a point about which to rotate or scale | 2 × 1 | pixels |
 
 Screen coordinates usually point y downwards, so a positive θ in SVG and CSS turns shapes clockwise on
 the screen, even though the matrix is the same as the textbook rotation.
@@ -3048,7 +3048,7 @@ linear algebra.
 **Underlying equations.** Pinhole projection: a point at distance d in front of the eye, at height y, appears at height y/d on an image plane at distance 1, written as a linear map in homogeneous coordinates followed by division by w.
 
 **The problem.** The scene is made of triangles, and a **vertex** is a corner of a triangle. Three coordinate frames
-matter. **Object coordinates** are the ones a model is built in, such as a cube centred on its own
+matter. **Object coordinates** are the ones a model is built in, such as a cube centered on its own
 origin. **World coordinates** place all the objects in one scene. **Camera coordinates** describe the
 scene as the eye sees it, and by the convention used here ([OpenGL](https://en.wikipedia.org/wiki/OpenGL)'s) the camera sits at the origin,
 looks along the negative z-axis, and has y pointing up. A point in front of the camera therefore has
@@ -3252,7 +3252,7 @@ floating point, which spreads the precision far more evenly.
 **Extensions.** [Orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection), used in CAD and technical drawing, has bottom row (0, 0, 0, 1) and no
 division, so parallel lines stay parallel. The multiple-view geometry entry runs the chain backwards,
 recovering the camera matrix K [R | t] from photographs with the SVD (Tier 2). Rational Bézier curves,
-mentioned in the Bézier entry, use the same homogeneous trick to stay exact under perspective. Colours
+mentioned in the Bézier entry, use the same homogeneous trick to stay exact under perspective. Colors
 and textures must be interpolated across a triangle using 1/w, the perspective-correct interpolation
 described in the barycentric-coordinates entry. [Surface normals](https://en.wikipedia.org/wiki/Normal_%28geometry%29) transform by the inverse transpose of
 the model matrix's 3 × 3 block, not by the block itself, so that they stay perpendicular to surfaces
@@ -3300,12 +3300,12 @@ together (pose) along a chain of joints, and avoid the failure modes of angle-ba
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | R | rotation matrix | its columns are the body's x, y and z axes, written in reference-frame coordinates | 3 × 3 | dimensionless |
-| v | vector | a direction or displacement | 3 × 1 | metres, or dimensionless for directions |
+| v | vector | a direction or displacement | 3 × 1 | meters, or dimensionless for directions |
 | R_x(φ), R_y(θ), R_z(ψ) | elementary rotations | turns about the x, y or z axis by the given angle | 3 × 3 | dimensionless |
 | φ, θ, ψ | roll, pitch, yaw | Euler angles, here in the z-y-x convention | scalars | radians or degrees |
-| t | position | where the body's origin sits in the reference frame | 3 × 1 | metres |
-| T | pose | the 4 × 4 matrix [R t; 0 0 0 1] | 4 × 4 | mixed: R dimensionless, t in metres |
-| p | homogeneous point | (x, y, z, 1) | 4 × 1 | metres in the first three entries |
+| t | position | where the body's origin sits in the reference frame | 3 × 1 | meters |
+| T | pose | the 4 × 4 matrix [R t; 0 0 0 1] | 4 × 4 | mixed: R dimensionless, t in meters |
+| p | homogeneous point | (x, y, z, 1) | 4 × 1 | meters in the first three entries |
 | I | identity matrix | — | 3 × 3 | — |
 
 **Formulation.** **Where the equations come from.** The model is the geometry of rigid motion: a rotation preserves
@@ -3449,19 +3449,19 @@ before integrating them (the Kalman filtering entry).
 
 ---
 
-## 39. Barycentric coordinates: one 3 × 3 system decides which pixels a triangle covers and what colour they get
+## 39. Barycentric coordinates: one 3 × 3 system decides which pixels a triangle covers and what color they get
 
 <details>
 <summary><b>Start here — the problem in plain terms</b></summary>
 
 Everything a GPU draws is broken into triangles, and the screen is a grid of pixels. For every
 triangle, two questions have to be answered at every pixel nearby. Is this pixel inside the triangle?
-If so, what colour and depth should it get, given the values at the three corners?
+If so, what color and depth should it get, given the values at the three corners?
 
 Both questions have one answer: describe the pixel as a weighted average of the triangle's three
-corners. The three weights are called [barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system), after the barycentre, the centre of
+corners. The three weights are called [barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system), after the barycenter, the center of
 mass that the corners would have if they carried those weights. If all three weights are positive the
-pixel is inside. And to blend colours, depths or anything else from the corners, use the same three
+pixel is inside. And to blend colors, depths or anything else from the corners, use the same three
 weights.
 
 Finding the weights is a 3 × 3 linear system, and because the matrix belongs to the triangle rather
@@ -3472,21 +3472,21 @@ times a second.
 
 **Field:** Computer graphics, GPU hardware, game engines, mesh processing, computational geometry
 
-**Tier:** 1 — a pixel's barycentric coordinates are its coordinates relative to the triangle's corners, the solution of one 3 × 3 linear system. Their signs decide coverage, and the same weights blend colour and depth. The finite element method uses the same coordinates as basis functions for differential equations, which is Tier 3.
+**Tier:** 1 — a pixel's barycentric coordinates are its coordinates relative to the triangle's corners, the solution of one 3 × 3 linear system. Their signs decide coverage, and the same weights blend color and depth. The finite element method uses the same coordinates as basis functions for differential equations, which is Tier 3.
 
 **Scalars and vectors.** Scalar field: R. Vectors: the plane R^2 of screen positions, with each point described by three barycentric coordinates (α, β, γ) relative to the triangle's corners, constrained by α + β + γ = 1. Appending a 1 to each position turns finding them into a 3 × 3 linear system in R^3.
 
-**Underlying equations.** [Affine combination](https://en.wikipedia.org/wiki/Affine_combination): a point X of the plane is X = α P + β Q + γ R with α + β + γ = 1, and each attribute of the triangle, such as colour or depth, is blended with the same weights.
+**Underlying equations.** [Affine combination](https://en.wikipedia.org/wiki/Affine_combination): a point X of the plane is X = α P + β Q + γ R with α + β + γ = 1, and each attribute of the triangle, such as color or depth, is blended with the same weights.
 
 **The problem.** A triangle arrives with its corners P, Q and R already in screen coordinates, measured in pixels, as
-the output of the 3D viewing pipeline. Each corner also carries **attributes**: a colour, a depth, and
+the output of the 3D viewing pipeline. Each corner also carries **attributes**: a color, a depth, and
 often **texture coordinates**, the position in an image that is to be painted onto the triangle. The
-**pixel centre** is the point in the middle of a pixel, and the pixel is drawn when its centre lies
+**pixel center** is the point in the middle of a pixel, and the pixel is drawn when its center lies
 inside the triangle. **[Rasterization](https://en.wikipedia.org/wiki/Rasterisation)** is the job of finding those pixels. It is where a vector
 description, three corners that could be drawn at any resolution, becomes a raster image, a fixed grid
 of samples, the contrast at the heart of the Bézier-curve entry.
 
-For each pixel centre X near the triangle, decide whether X is inside, and if so compute its colour and
+For each pixel center X near the triangle, decide whether X is inside, and if so compute its color and
 depth by blending the corner values. The known quantities are P, Q, R, the corner attributes and X.
 The unknowns are three weights per pixel.
 
@@ -3494,10 +3494,10 @@ The unknowns are three weights per pixel.
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | P, Q, R | corners | screen positions of the triangle's corners | 2 × 1 each | pixels |
-| X | pixel centre | (x, y), the point being tested | 2 × 1 | pixels |
+| X | pixel center | (x, y), the point being tested | 2 × 1 | pixels |
 | α, β, γ | barycentric coordinates | weights on P, Q and R | 3 numbers, α + β + γ = 1 | dimensionless |
 | T | corner matrix | columns (P, 1), (Q, 1), (R, 1) | 3 × 3 | pixels in the first two rows |
-| c_P, c_Q, c_R | corner colours | red, green and blue intensities | 3 × 1 each | 0 to 1 |
+| c_P, c_Q, c_R | corner colors | red, green and blue intensities | 3 × 1 each | 0 to 1 |
 | z_P, z_Q, z_R | corner depths | the depths z_n from the viewing pipeline | numbers | dimensionless |
 | w_P, w_Q, w_R | corner w values | each corner's fourth clip coordinate, its distance from the camera | numbers | scene units |
 | u | texture coordinate | position along the texture image | number | 0 to 1 |
@@ -3543,10 +3543,10 @@ signed area of the triangle, so T is invertible unless the triangle has collapse
 **Blending attributes.** Once the weights are known, every attribute is blended with them:
 
 ```
-colour  =  α c_P + β c_Q + γ c_R,        depth  =  α z_P + β z_Q + γ z_R
+color  =  α c_P + β c_Q + γ c_R,        depth  =  α z_P + β z_Q + γ z_R
 ```
 
-Blending colours this way is called **[Gouraud shading](https://en.wikipedia.org/wiki/Gouraud_shading)**.
+Blending colors this way is called **[Gouraud shading](https://en.wikipedia.org/wiki/Gouraud_shading)**.
 
 **Worked case: one triangle, four pixels.** Take P = (1, 1), Q = (7, 3) and R = (3, 7). The system is
 
@@ -3565,7 +3565,7 @@ T⁻¹  =   [  3/16   −1/16   −1/8 ]
          [ −1/16    3/16   −1/8 ]
 ```
 
-and every pixel is one product with it. For the pixel centre X = (3, 3):
+and every pixel is one product with it. For the pixel center X = (3, 3):
 
 ```
 [ −1/8    −1/8     5/4 ] [ 3 ]   [ 1/2 ]
@@ -3581,8 +3581,8 @@ X = (6, 5):   (α, β, γ) = (−1/8, 11/16, 7/16)   outside: beyond the edge QR
 X = (2, 4):   (α, β, γ) = (1/2, 0, 1/2)         exactly on the edge PR
 ```
 
-Colour the corners pure red, green and blue: c_P = (1, 0, 0), c_Q = (0, 1, 0), c_R = (0, 0, 1). Then a
-pixel's colour is its weights themselves, so (3, 3) is (0.5, 0.25, 0.25), a muted red. With depths
+Color the corners pure red, green and blue: c_P = (1, 0, 0), c_Q = (0, 1, 0), c_R = (0, 0, 1). Then a
+pixel's color is its weights themselves, so (3, 3) is (0.5, 0.25, 0.25), a muted red. With depths
 z_P = 0.2, z_Q = 0.6 and z_R = 0.4, the depth at (3, 3) is 0.5·0.2 + 0.25·0.6 + 0.25·0.4 = 0.35, and at
 (5, 3) it is 0.475.
 
@@ -3599,9 +3599,9 @@ them.
 
 **What is computed.** GPUs evaluate the three edge functions for whole blocks of pixels in parallel, in [fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic)
 so that results are exact and repeatable. This approach goes back to Pineda's 1988 parallel
-rasterization algorithm. A pixel centre exactly on an edge shared by two triangles must be drawn once,
+rasterization algorithm. A pixel center exactly on an edge shared by two triangles must be drawn once,
 not twice or never, and the **top-left rule** used by Direct3D and others breaks the tie by which kind
-of edge it is. The interpolated attributes then reach the program that colours each pixel (the
+of edge it is. The interpolated attributes then reach the program that colors each pixel (the
 fragment shader). In GLSL they are perspective-correct by default, and the noperspective qualifier
 switches to plain screen-space blending.
 
@@ -3644,14 +3644,14 @@ linearly across the screen, so screen weights blend it exactly.
 
 | Domain term | In linear algebra |
 |---|---|
-| pixel centre | the point in the middle of a pixel; a pixel is drawn when its centre is covered |
-| rasterization | deciding which pixel centres a shape covers, turning a vector description into pixels |
+| pixel center | the point in the middle of a pixel; a pixel is drawn when its center is covered |
+| rasterization | deciding which pixel centers a shape covers, turning a vector description into pixels |
 | barycentric coordinates | the weights (α, β, γ) that write a point as a weighted average of the three corners |
 | affine combination | a weighted sum whose weights add up to 1 |
 | convex combination | an affine combination with no negative weights; these fill the triangle |
 | edge function | a barycentric coordinate written as a linear function of the pixel position |
-| attribute | a value stored at each corner (colour, depth, texture coordinate) and blended across the triangle |
-| Gouraud shading | colouring a triangle by blending its corner colours |
+| attribute | a value stored at each corner (color, depth, texture coordinate) and blended across the triangle |
+| Gouraud shading | coloring a triangle by blending its corner colors |
 | texture coordinates | the position in an image (a texture) that each corner is mapped to |
 | perspective-correct interpolation | blending attributes using the 3D weights rather than the screen weights |
 | top-left rule | the tie-break that assigns a pixel exactly on a shared edge to just one triangle |
@@ -3668,58 +3668,58 @@ entry produces the corner positions and the w values used above.
 
 ---
 
-## 40. Colour spaces: three numbers per colour, and every conversion is a change of basis
+## 40. Color spaces: three numbers per color, and every conversion is a change of basis
 
 <details>
 <summary><b>Start here — the problem in plain terms</b></summary>
 
-A screen makes every colour it shows from three small lights: a red, a green and a blue. That this
+A screen makes every color it shows from three small lights: a red, a green and a blue. That this
 works at all is a fact about the eye, not about light. Light carries a whole [spectrum](https://en.wikipedia.org/wiki/Spectral_power_distribution), a different
-amount of power at every wavelength. The eye has only three kinds of colour receptor, [the cones](https://en.wikipedia.org/wiki/Cone_cell), and
+amount of power at every wavelength. The eye has only three kinds of color receptor, [the cones](https://en.wikipedia.org/wiki/Cone_cell), and
 each reports a single number. Two lights with completely different spectra that produce the same
 three numbers look identical.
 
-So a colour, as people see it, is three numbers, and colours behave like vectors in a
+So a color, as people see it, is three numbers, and colors behave like vectors in a
 three-dimensional space: mixing two lights adds their vectors, and dimming a light scales it. Every
-device picks its own three lights, so the same colour gets different coordinates on different devices.
+device picks its own three lights, so the same color gets different coordinates on different devices.
 Converting between them is a change of basis, a 3 × 3 matrix.
 
-The same matrices are behind every colour-managed web page, photo editor and printer. They also
-explain the white-balance setting on a camera, and why a widely used shortcut for blending colours
+The same matrices are behind every color-managed web page, photo editor and printer. They also
+explain the white-balance setting on a camera, and why a widely used shortcut for blending colors
 gives the wrong answer.
 
 </details>
 
-**Field:** Colour science, displays and photography, image processing, colour management for web and print
+**Field:** Color science, displays and photography, image processing, color management for web and print
 
-**Tier:** 1 — the eye reduces a spectrum to three numbers by a linear map, so colours form a three-dimensional vector space, and moving between RGB, XYZ and cone coordinates is a 3 × 3 change of basis. Analysing spectra or camera responses with the SVD is Tier 2.
+**Tier:** 1 — the eye reduces a spectrum to three numbers by a linear map, so colors form a three-dimensional vector space, and moving between RGB, XYZ and cone coordinates is a 3 × 3 change of basis. Analyzing spectra or camera responses with the SVD is Tier 2.
 
-**Scalars and vectors.** Scalar field: R. Vectors: R^3 of [tristimulus values](https://en.wikipedia.org/wiki/CIE_1931_color_space). Light is a spectrum, a function of wavelength in an infinite-dimensional space; colour matching maps it linearly onto R^3, and every RGB, XYZ or cone-response space is a choice of basis for that R^3.
+**Scalars and vectors.** Scalar field: R. Vectors: R^3 of [tristimulus values](https://en.wikipedia.org/wiki/CIE_1931_color_space). Light is a spectrum, a function of wavelength in an infinite-dimensional space; color matching maps it linearly onto R^3, and every RGB, XYZ or cone-response space is a choice of basis for that R^3.
 
-**Underlying equations.** Change of basis: (X, Y, Z) = M (R, G, B) for linear RGB values, where the columns of M are the XYZ values of the display's three [primaries](https://en.wikipedia.org/wiki/Primary_color) at full strength; [Grassmann's laws](https://en.wikipedia.org/wiki/Grassmann's_laws_%28color_science%29) of colour matching make the map linear.
+**Underlying equations.** Change of basis: (X, Y, Z) = M (R, G, B) for linear RGB values, where the columns of M are the XYZ values of the display's three [primaries](https://en.wikipedia.org/wiki/Primary_color) at full strength; [Grassmann's laws](https://en.wikipedia.org/wiki/Grassmann's_laws_%28color_science%29) of color matching make the map linear.
 
 **The problem.** The everyday contrast is between the physics and the perception. Physically, a light is its
 **spectrum**: a function of wavelength across the visible range, so infinitely many numbers.
 Perceptually it is three numbers. The international standard set of three, defined by the CIE in 1931
-from colour-matching experiments, is the **tristimulus values** X, Y and Z, where Y is the
+from color-matching experiments, is the **tristimulus values** X, Y and Z, where Y is the
 **[luminance](https://en.wikipedia.org/wiki/Luminance)**, the perceived brightness. Dividing out the brightness gives the **[chromaticity](https://en.wikipedia.org/wiki/Chromaticity)**
-x = X/(X + Y + Z) and y = Y/(X + Y + Z), which says only what colour a light is.
+x = X/(X + Y + Z) and y = Y/(X + Y + Z), which says only what color a light is.
 
 A display is described by its three **primaries**, given as chromaticities, and its **[white point](https://en.wikipedia.org/wiki/White_point)**,
-the colour it shows when all three are fully on. For the [sRGB](https://en.wikipedia.org/wiki/SRGB) standard used by the web, the red
+the color it shows when all three are fully on. For the [sRGB](https://en.wikipedia.org/wiki/SRGB) standard used by the web, the red
 primary has chromaticity (0.64, 0.33), green (0.30, 0.60), blue (0.15, 0.06), and the white point is
 the daylight white [D65](https://en.wikipedia.org/wiki/Standard_illuminant#Illuminant_series_D) at (0.3127, 0.3290). The [Display P3](https://en.wikipedia.org/wiki/DCI-P3) standard of many recent phones and laptops
 keeps the same blue and white but uses a deeper red (0.680, 0.320) and green (0.265, 0.690).
 
-Given those numbers, find the matrix that turns a display's linear RGB values into XYZ, convert colours
-from one display to another, say which colours a display cannot show, and adjust colours for a change
+Given those numbers, find the matrix that turns a display's linear RGB values into XYZ, convert colors
+from one display to another, say which colors a display cannot show, and adjust colors for a change
 of white.
 
 **Variables.**
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | v | tristimulus vector | (X, Y, Z) | 3 × 1 | relative, with Y = 1 for white |
-| (x, y) | chromaticity | the colour with brightness divided out | 2 numbers | dimensionless |
+| (x, y) | chromaticity | the color with brightness divided out | 2 numbers | dimensionless |
 | (R, G, B) | linear RGB | how strongly each primary is driven | 3 × 1, each from 0 to 1 | dimensionless |
 | p_R, p_G, p_B | primary directions | XYZ of each primary per unit luminance, (x/y, 1, (1 − x − y)/y) | 3 × 1 each | relative |
 | K | direction matrix | columns p_R, p_G, p_B | 3 × 3 | relative |
@@ -3736,14 +3736,14 @@ of white.
 The Bradford matrix is named B by convention. It is unrelated to the blue value B, which always appears
 inside (R, G, B).
 
-**Formulation.** **Where the equations come from.** Colour matching obeys Grassmann's laws: if two lights match two
+**Formulation.** **Where the equations come from.** Color matching obeys Grassmann's laws: if two lights match two
 others, their sums match, and scaling both members of a match keeps the match. So the map from
 spectra to tristimulus values is linear. Each of X, Y and Z is the integral of the spectrum against a
 fixed weighting curve, a [linear functional](https://en.wikipedia.org/wiki/Linear_form) on spectra. The map goes from an infinite-dimensional space
 of spectra onto ℝ³, so it has an enormous null space. Two spectra whose difference lies in that null
-space are **[metamers](https://en.wikipedia.org/wiki/Metamerism_%28color%29)**: different light, the same colour.
+space are **[metamers](https://en.wikipedia.org/wiki/Metamerism_%28color%29)**: different light, the same color.
 
-**The familiar formula.** Image-processing courses teach that the brightness of a linear sRGB colour is
+**The familiar formula.** Image-processing courses teach that the brightness of a linear sRGB color is
 
 ```
 Y  =  0.2126 R  +  0.7152 G  +  0.0722 B
@@ -3791,7 +3791,7 @@ M = [ 0.2126   0.7152   0.0722 ]
 the standard sRGB-to-XYZ matrix; the sRGB specification publishes its inverse, for converting XYZ
 to sRGB.
 
-**From one display to another.** Build M_3 the same way for Display P3. A colour with sRGB
+**From one display to another.** Build M_3 the same way for Display P3. A color with sRGB
 coordinates (R, G, B) has XYZ value M (R, G, B) and Display P3 coordinates M_3⁻¹ M (R, G, B), so the
 conversion is one matrix:
 
@@ -3804,9 +3804,9 @@ C  =  M_3⁻¹ M  =    [ 0.0332   0.9668   0      ]
 Its last column says that sRGB blue is exactly Display P3 blue at 91% strength, because the two
 standards use the same blue chromaticity.
 
-**[Gamut](https://en.wikipedia.org/wiki/Gamut).** The colours a display can make are the combinations with every coordinate between 0 and 1.
+**[Gamut](https://en.wikipedia.org/wiki/Gamut).** The colors a display can make are the combinations with every coordinate between 0 and 1.
 Their directions form a **[convex cone](https://en.wikipedia.org/wiki/Convex_cone)**: the nonnegative combinations of the three primaries. Every
-entry of C is nonnegative, so every sRGB colour has nonnegative Display P3 coordinates, and the sRGB
+entry of C is nonnegative, so every sRGB color has nonnegative Display P3 coordinates, and the sRGB
 gamut lies inside the Display P3 gamut. The reverse fails. Pure Display P3 red, (1, 0, 0), has sRGB
 coordinates C⁻¹ (1, 0, 0) = (1.2249, −0.0421, −0.0196). The negative entries mean that sRGB would have
 to subtract green and blue light to make it, so no sRGB screen can show that red.
@@ -3814,7 +3814,7 @@ to subtract green and blue light to make it, so no sRGB screen can show that red
 **Adapting to a different white.** A white sheet of paper looks white under daylight and under a warm
 lamp, because the eye rescales each cone's response to the light it is adapted to. That is von Kries's
 hypothesis, and it is diagonal in a basis of cone responses. The Bradford transform, the standard
-choice in colour management, uses the cone-like basis given by the matrix
+choice in color management, uses the cone-like basis given by the matrix
 
 ```
     [  0.8951   0.2664  −0.1614 ]
@@ -3842,29 +3842,29 @@ together in chromaticity, and then small errors in RGB become large errors in XY
 entries of inverse matrices are the algebraic sign of gamut limits.
 
 **What is computed.** Display [ICC profiles](https://en.wikipedia.org/wiki/ICC_profile) are often stored as exactly these parts: a 3 × 3 matrix and three tone curves,
-applied by colour-management engines such as Little CMS. CSS Color Level 4 lets web pages write
+applied by color-management engines such as Little CMS. CSS Color Level 4 lets web pages write
 color(display-p3 1 0 0) and specifies the conversion matrices in its sample code. Raw photo formats
-such as [DNG](https://en.wikipedia.org/wiki/Digital_Negative) store colour matrices that relate the camera's own RGB to XYZ. In Python, the
+such as [DNG](https://en.wikipedia.org/wiki/Digital_Negative) store color matrices that relate the camera's own RGB to XYZ. In Python, the
 colour-science package implements these spaces and [chromatic adaptation](https://en.wikipedia.org/wiki/Chromatic_adaptation) transforms, including
 Bradford.
 
-**Why linear algebra is the right tool.** Grassmann's laws make colour linear, and three kinds of cone make it three-dimensional. Any three
+**Why linear algebra is the right tool.** Grassmann's laws make color linear, and three kinds of cone make it three-dimensional. Any three
 independent primaries are then a basis, an RGB value is a coordinate vector, and converting between
 devices is a change of basis. Metamerism is a null space. A gamut is a convex cone cut off by the unit
 cube. White balance is a scaling that is diagonal in one basis and looks complicated in another. Each
-fact that colour science states in its own vocabulary is a standard fact about ℝ³.
+fact that color science states in its own vocabulary is a standard fact about ℝ³.
 
 **Pitfall worth teaching.** The matrices act on linear light, but image files store encoded values. sRGB files store each channel
 after a [transfer function](https://en.wikipedia.org/wiki/Gamma_correction): e = 12.92 ℓ for ℓ up to 0.0031308, and e = 1.055 ℓ^(1/2.4) − 0.055 above
 it, where ℓ is the linear value and e the stored one. The encoding spends more of the available numbers on
-dark tones, where the eye is more sensitive. The colour matrices must be applied after decoding, and
+dark tones, where the eye is more sensitive. The color matrices must be applied after decoding, and
 so must any averaging.
 
 Averaging encoded values is a common mistake. Blend a black pixel and a white pixel half and half, as
 resizing or blurring an image does. Averaging the stored values gives 0.5, which decodes to a linear
 intensity of only 0.214, so the result carries about 21% of white's light instead of 50%. The correct
 average is linear 0.5, which is stored as 0.735. Programs that blend stored values make fine
-light-and-dark detail darker when an image is shrunk, and colour gradients between saturated colours
+light-and-dark detail darker when an image is shrunk, and color gradients between saturated colors
 dip through muddy, darker tones.
 
 **Terminology map.** How this field's vocabulary reads as linear algebra.
@@ -3872,27 +3872,27 @@ dip through muddy, darker tones.
 | Domain term | In linear algebra |
 |---|---|
 | spectrum (spectral power distribution) | how much power a light carries at each wavelength |
-| cones | the three kinds of colour receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) |
-| tristimulus values | three numbers that determine a colour; CIE XYZ is the standard set |
+| cones | the three kinds of color receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) |
+| tristimulus values | three numbers that determine a color; CIE XYZ is the standard set |
 | luminance Y | the brightness coordinate of XYZ |
-| chromaticity (x, y) | x = X/(X + Y + Z) and y = Y/(X + Y + Z), the colour with its brightness divided out |
+| chromaticity (x, y) | x = X/(X + Y + Z) and y = Y/(X + Y + Z), the color with its brightness divided out |
 | primaries | the three lights a display mixes; each RGB space has its own |
-| white point | the colour of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print |
+| white point | the color of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print |
 | linear and encoded RGB | light intensities, versus the values stored in files after the transfer function (often loosely called gamma) |
-| gamut | the set of colours a device can produce |
-| metamers | different spectra that look the same colour |
-| chromatic adaptation | the eye's adjustment to the colour of the illumination, and its modelling by a matrix |
+| gamut | the set of colors a device can produce |
+| metamers | different spectra that look the same color |
+| chromatic adaptation | the eye's adjustment to the color of the illumination, and its modeling by a matrix |
 | Bradford transform | a standard chromatic adaptation matrix built on a cone-like basis |
 
 **Extensions.** Perceptual spaces such as [CIELAB](https://en.wikipedia.org/wiki/CIELAB_color_space) apply cube roots to XYZ, so that distances in them roughly match how
-different colours look. They are nonlinear, and the matrices above are only their first step. Camera
-colour matrices are fitted by least squares to photographs of colour charts, as in the regression and
+different colors look. They are nonlinear, and the matrices above are only their first step. Camera
+color matrices are fitted by least squares to photographs of color charts, as in the regression and
 basis-fitting entries. The reflectance spectra of natural surfaces are well approximated by a few basis
 functions found by principal component analysis (Tier 2), the same idea as the empirical orthogonal
 functions entry. JPEG converts RGB to YCbCr, another 3 × 3 change of basis that separates brightness
-from colour, before its cosine transform (the JPEG entry). People with two types of cone see a
-two-dimensional colour space, and [colour-blindness](https://en.wikipedia.org/wiki/Color_blindness) simulators apply a rank-2 matrix that projects onto
-it. The barycentric-coordinates entry blends colours with the same kind of weights, and for the reason
+from color, before its cosine transform (the JPEG entry). People with two types of cone see a
+two-dimensional color space, and [color-blindness](https://en.wikipedia.org/wiki/Color_blindness) simulators apply a rank-2 matrix that projects onto
+it. The barycentric-coordinates entry blends colors with the same kind of weights, and for the reason
 in the pitfall above, the blend is physically correct only in linear RGB.
 
 ---
@@ -4064,7 +4064,7 @@ thousands of pixels in a letter "S"; the font file stores a few points, and the 
 smooth curve from them at whatever size the letter is printed, from a phone screen to a billboard.
 
 For each curved piece the font stores four points. The curve starts at the first and ends at the fourth.
-The two middle points are not on the curve at all: they act like magnets that pull it towards themselves,
+The two middle points are not on the curve at all: they act like magnets that pull it toward themselves,
 setting the direction in which it leaves the start and arrives at the end. Moving one of them reshapes
 the curve smoothly, which is why the "handles" in a drawing program behave the way they do.
 
@@ -4115,7 +4115,7 @@ approximately otherwise.
 | Q_0, Q_1, Q_2 | quadratic control points | a TrueType segment, in the Bernstein basis of P_2 | each 2 × 1 | font units |
 
 **Formulation.** **Where the equations come from.** A segment is a polynomial curve,
-and the modelling choice is only which basis to write it in.
+and the modeling choice is only which basis to write it in.
 
 **The Bernstein basis.** For cubics the basis polynomials are
 
@@ -4169,7 +4169,7 @@ quadratic segment Q_0 = (0, 0), Q_1 = (3, 3), Q_2 = (6, 0), which the degree-ele
 to exactly these four points. Its midpoint is B(1/2) = (P_0 + 3P_1 + 3P_2 + P_3)/8 = (3, 1.5), and it
 never comes near the middle control points, whose height is 2.
 
-**Evaluation and subdivision by [de Casteljau](https://en.wikipedia.org/wiki/De_Casteljau's_algorithm).** Interpolate linearly between neighbouring control points
+**Evaluation and subdivision by [de Casteljau](https://en.wikipedia.org/wiki/De_Casteljau's_algorithm).** Interpolate linearly between neighboring control points
 at the fraction t, and repeat on the new points until one is left; that point is B(t). At t = 1/2 the
 example gives (1, 1), (3, 2), (5, 1), then (2, 1.5), (4, 1.5), then (3, 1.5). The points produced along
 the way are, read down the left and right edges, the control points of the two halves:
@@ -4241,9 +4241,9 @@ matrices that act on control points.
 
 A computer that knows a function only through its values at evenly spaced points cannot differentiate
 it the way calculus does. It estimates the derivative from the values it has. The estimate everyone
-meets first is the slope between two neighbouring points: the change in height divided by the step.
+meets first is the slope between two neighboring points: the change in height divided by the step.
 
-Every such estimate combines a few neighbouring values with fixed weights. The pattern of weights,
+Every such estimate combines a few neighboring values with fixed weights. The pattern of weights,
 laid over the grid of points like a [stencil](https://en.wikipedia.org/wiki/Stencil_%28numerical_analysis%29) over paper, is called a finite-difference stencil.
 Stencils are the basic tool for turning the laws of physics into arithmetic, in weather and climate
 models, in simulations of heat flow and fluid flow, and in the edge detectors of image processing.
@@ -4273,7 +4273,7 @@ f^(k)(x)  ≈  w_1 f(x + s_1 h) + w_2 f(x + s_2 h) + … + w_n f(x + s_n h)
 ```
 
 For example, the three-point central stencil uses offsets −1, 0, 1: the point x itself and its two
-neighbours. A stencil has **[order of accuracy](https://en.wikipedia.org/wiki/Order_of_accuracy)** p when its error shrinks like h^p as the grid is
+neighbors. A stencil has **[order of accuracy](https://en.wikipedia.org/wiki/Order_of_accuracy)** p when its error shrinks like h^p as the grid is
 refined.
 
 Given the derivative order k and the offsets, find the weights that make the estimate as accurate as
@@ -4285,7 +4285,7 @@ computer.
 |---|---|---|---|---|
 | f | function | the function being differentiated | known only at grid points | units of f |
 | x | evaluation point | where the derivative is wanted | number | units of x |
-| h | grid spacing | distance between neighbouring grid points | number | units of x |
+| h | grid spacing | distance between neighboring grid points | number | units of x |
 | k | derivative order | 1 for a first derivative, 2 for a second | integer | — |
 | n | stencil size | number of grid points used | integer | — |
 | s_j | offsets | position of sample j, in grid steps from x | n numbers | dimensionless |
@@ -4676,7 +4676,7 @@ e^(−π), and the partial sums ring there.
 | harmonic | sin nx or cos nx, oscillating n times per period |
 | Fourier coefficients a_n, b_n | the amounts of cos nx and sin nx in the function |
 | partial sum S_N | the series cut off after the N-th harmonic |
-| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product |
+| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analog of the dot product |
 | orthogonal functions | functions whose inner product is zero |
 | norm and energy | ‖f‖² = ⟨f, f⟩, the integral of the square of f |
 | Gram matrix | the matrix of inner products of the basis functions |
@@ -4806,7 +4806,7 @@ X = [ 1  1  1 ]          [  4   6  14 ] [ c_1 ]   [ 10 ]
 
 Solving the dense 3 × 3 system gives ĉ = (1.2, −0.3, 0.5), so p(t) = 1.2 − 0.3t + 0.5t².
 
-Now centre and scale the positions with u = 2t − 3, which takes the values −3, −1, 1, 3, and use the
+Now center and scale the positions with u = 2t − 3, which takes the values −3, −1, 1, 3, and use the
 basis 1, u, u² − 5. The three columns are (1, 1, 1, 1), (−3, −1, 1, 3) and (4, −4, −4, 4), and every pair
 of them has dot product zero. The normal equations become diagonal:
 
@@ -4865,7 +4865,7 @@ degree-4 polynomial fit, which has a residual of only 1.2 inside the data, gives
 the true value is e^1.5 ≈ 4.48 and the polynomial fit gives 4.47, but the Fourier fit gives 1.66,
 because it repeats with period 1 and so returns to its values near t = 0.5.
 
-Outside the data, the fitted curve is decided entirely by the basis. Polynomials run off towards
+Outside the data, the fitted curve is decided entirely by the basis. Polynomials run off toward
 infinity, Fourier sums repeat, and splines continue their last cubic piece. Choosing a basis is
 choosing an assumption about how the signal behaves where nothing was measured. A related trap is
 that adding basis functions always lowers the residual, because it enlarges the span, so a smaller
@@ -5657,7 +5657,7 @@ once and for all, just as each resistor in the resistor-network entry is given a
 current. The arrow does not mean the street is one-way. The unknown x_j is the net flow along the arrow:
 traffic going the arrow's way minus traffic going the other way. So x_j can be negative, meaning more
 traffic travels against the arrow than with it. Only for a one-way street with its arrow pointing the
-legal way (or when each direction of a two-way street is modelled as its own segment) does x_j ≥ 0
+legal way (or when each direction of a two-way street is modeled as its own segment) does x_j ≥ 0
 become a physical constraint.
 
 **One intersection.** At intersection i, everything arriving equals everything leaving:
@@ -5925,7 +5925,7 @@ is why plants add a purge stream.
 | degrees of freedom | unknowns minus independent equations; it must be zero for a unique answer |
 | purge stream | a small bleed that keeps an inert component from accumulating in the loop |
 
-**Extensions.** Once conversions depend on temperature, or separations on [vapour–liquid equilibrium](https://en.wikipedia.org/wiki/Vapor%E2%80%93liquid_equilibrium), the balances
+**Extensions.** Once conversions depend on temperature, or separations on [vapor–liquid equilibrium](https://en.wikipedia.org/wiki/Vapor%E2%80%93liquid_equilibrium), the balances
 become nonlinear and are solved by [Newton's method](https://en.wikipedia.org/wiki/Newton's_method), a sequence of linear systems with this structure.
 Data reconciliation is a constrained least-squares problem (compare the regression entry). The same
 conservation-at-nodes structure, without reactions, is the traffic-flow entry. With reactions written
@@ -5965,7 +5965,7 @@ Neumann series as the Leontief entry.
 | 45 | Applied modeling | Column space of a design matrix; basis versus span | Householder QR; orthogonal polynomials |
 | 37 | Computer graphics | Homogeneous coordinates in R⁴; composition of frame changes; projective division | Dense 4 × 4 products |
 | 39 | Computer graphics | Coordinates relative to a triangle; convex combinations; determinant as area | 3 × 3 inverse per triangle; edge functions |
-| 40 | Colour science | Change of basis in R³; null space (metamers); diagonal map in another basis | Dense 3 × 3 solves and products |
+| 40 | Color science | Change of basis in R³; null space (metamers); diagonal map in another basis | Dense 3 × 3 solves and products |
 | 19 | Image and video compression | Orthogonal change of basis; energy compaction | 8 × 8 DCT; quantization |
 | 29 | Sports ranking | Rank-deficient least squares on a graph Laplacian; connected components | Constrained normal equations; Colley solve |
 | 50 | Networking and storage | Linear map over GF(2); null space as undetected errors | Shift register; table lookup |

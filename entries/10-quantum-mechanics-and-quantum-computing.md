@@ -32,7 +32,7 @@ terminology:
   expectation value: the quadratic form psi^* A psi
   eigenstate / energy level: eigenvector and eigenvalue of the Hamiltonian
   Hamiltonian: the Hermitian matrix H in H psi = E psi
-  unitary gate: a norm-preserving complex linear map — the complex analogue of an orthogonal matrix
+  unitary gate: a norm-preserving complex linear map — the complex analog of an orthogonal matrix
   tensor product: the Kronecker product; why n qubits need dimension 2^n
   entangled state: a vector that does not factor as a tensor product
   basis set (quantum chemistry): the chosen basis in which H is expressed
@@ -44,7 +44,7 @@ terminology:
 
 In quantum mechanics a system's state is not a position and a velocity — it is a list of complex
 numbers, one for each configuration the system could be found in. Their sizes determine the
-probabilities of each outcome. This is not an approximation or a modelling convenience; the theory is
+probabilities of each outcome. This is not an approximation or a modeling convenience; the theory is
 stated this way.
 
 Two consequences follow immediately. First, adding two valid states gives another valid state — this is
@@ -74,7 +74,7 @@ Two versions. (a) Compute the energy levels and spectra of a molecule. (b) Simul
 | φ | stationary state | eigenvector of H | d × 1 | dimensionless, normalized |
 | U(t) | time-evolution operator | U(t) = exp(−iHt/ħ): maps the initial state to the state at time t; unitary | d × d | dimensionless |
 | α | Coulomb integral | energy of an electron in an isolated carbon p orbital | scalar | eV (negative) |
-| β | resonance integral | energy coupling between p orbitals on bonded neighbours | scalar | eV (negative) |
+| β | resonance integral | energy coupling between p orbitals on bonded neighbors | scalar | eV (negative) |
 | Aᴳ | adjacency matrix | entry 1 if carbons i and j are bonded, else 0; for benzene, a 6-cycle | d × d | dimensionless |
 | n | number of qubits |  | integer | — |
 
@@ -102,7 +102,7 @@ That is what the eigenproblem means for the ODE. An eigenvector is a stationary 
 
 U(t) is unitary, which is why time evolution preserves ‖ψ‖ = 1, and why quantum gates are unitary matrices.
 
-**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbour couplings. The Hamiltonian is then
+**The case posed here: Hückel theory of benzene.** Use one carbon p orbital per atom (d = 6), assume the basis is orthonormal, and keep only nearest-neighbor couplings. The Hamiltonian is then
 
 ```
 H = α I + β Aᴳ

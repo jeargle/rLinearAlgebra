@@ -1,15 +1,15 @@
-# Barycentric coordinates: one 3 × 3 system decides which pixels a triangle covers and what colour they get
+# Barycentric coordinates: one 3 × 3 system decides which pixels a triangle covers and what color they get
 
 ### Start here
 
 Everything a GPU draws is broken into triangles, and the screen is a grid of pixels. For every
 triangle, two questions have to be answered at every pixel nearby. Is this pixel inside the triangle?
-If so, what colour and depth should it get, given the values at the three corners?
+If so, what color and depth should it get, given the values at the three corners?
 
 Both questions have one answer: describe the pixel as a weighted average of the triangle's three
-corners. The three weights are called [barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system), after the barycentre, the centre of
+corners. The three weights are called [barycentric coordinates](https://en.wikipedia.org/wiki/Barycentric_coordinate_system), after the barycenter, the center of
 mass that the corners would have if they carried those weights. If all three weights are positive the
-pixel is inside. And to blend colours, depths or anything else from the corners, use the same three
+pixel is inside. And to blend colors, depths or anything else from the corners, use the same three
 weights.
 
 Finding the weights is a 3 × 3 linear system, and because the matrix belongs to the triangle rather
@@ -17,22 +17,22 @@ than the pixel, it is inverted once per triangle and reused at every pixel. A GP
 times a second.
 
 **Field:** Computer graphics, GPU hardware, game engines, mesh processing, computational geometry  
-**Tier:** 1 — a pixel's barycentric coordinates are its coordinates relative to the triangle's corners, the solution of one 3 × 3 linear system. Their signs decide coverage, and the same weights blend colour and depth. The [finite element](https://en.wikipedia.org/wiki/Finite_element_method) method uses the same coordinates as basis functions for differential equations, which is Tier 3.  
+**Tier:** 1 — a pixel's barycentric coordinates are its coordinates relative to the triangle's corners, the solution of one 3 × 3 linear system. Their signs decide coverage, and the same weights blend color and depth. The [finite element](https://en.wikipedia.org/wiki/Finite_element_method) method uses the same coordinates as basis functions for differential equations, which is Tier 3.  
 **Scalar field:** R  
 **Vectors:** the plane R^2 of screen positions, with each point described by three barycentric coordinates (α, β, γ) relative to the triangle's corners, constrained by α + β + γ = 1. Appending a 1 to each position turns finding them into a 3 × 3 linear system in R^3  
-**Underlying equations:** [Affine combination](https://en.wikipedia.org/wiki/Affine_combination): a point X of the plane is X = α P + β Q + γ R with α + β + γ = 1, and each attribute of the triangle, such as colour or depth, is blended with the same weights
+**Underlying equations:** [Affine combination](https://en.wikipedia.org/wiki/Affine_combination): a point X of the plane is X = α P + β Q + γ R with α + β + γ = 1, and each attribute of the triangle, such as color or depth, is blended with the same weights
 
 ### The problem
 
 A triangle arrives with its corners P, Q and R already in screen coordinates, measured in pixels, as
-the output of the 3D viewing pipeline. Each corner also carries **attributes**: a colour, a depth, and
+the output of the 3D viewing pipeline. Each corner also carries **attributes**: a color, a depth, and
 often **texture coordinates**, the position in an image that is to be painted onto the triangle. The
-**pixel centre** is the point in the middle of a pixel, and the pixel is drawn when its centre lies
+**pixel center** is the point in the middle of a pixel, and the pixel is drawn when its center lies
 inside the triangle. **[Rasterization](https://en.wikipedia.org/wiki/Rasterisation)** is the job of finding those pixels. It is where a vector
 description, three corners that could be drawn at any resolution, becomes a raster image, a fixed grid
 of samples, the contrast at the heart of the Bézier-curve entry.
 
-For each pixel centre X near the triangle, decide whether X is inside, and if so compute its colour and
+For each pixel center X near the triangle, decide whether X is inside, and if so compute its color and
 depth by blending the corner values. The known quantities are P, Q, R, the corner attributes and X.
 The unknowns are three weights per pixel.
 
@@ -41,10 +41,10 @@ The unknowns are three weights per pixel.
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | P, Q, R | corners | screen positions of the triangle's corners | 2 × 1 each | pixels |
-| X | pixel centre | (x, y), the point being tested | 2 × 1 | pixels |
+| X | pixel center | (x, y), the point being tested | 2 × 1 | pixels |
 | α, β, γ | barycentric coordinates | weights on P, Q and R | 3 numbers, α + β + γ = 1 | dimensionless |
 | T | corner matrix | columns (P, 1), (Q, 1), (R, 1) | 3 × 3 | pixels in the first two rows |
-| c_P, c_Q, c_R | corner colours | red, green and blue intensities | 3 × 1 each | 0 to 1 |
+| c_P, c_Q, c_R | corner colors | red, green and blue intensities | 3 × 1 each | 0 to 1 |
 | z_P, z_Q, z_R | corner depths | the depths z_n from the viewing pipeline | numbers | dimensionless |
 | w_P, w_Q, w_R | corner w values | each corner's fourth clip coordinate, its distance from the camera | numbers | scene units |
 | u | texture coordinate | position along the texture image | number | 0 to 1 |
@@ -92,10 +92,10 @@ signed area of the triangle, so T is invertible unless the triangle has collapse
 **Blending attributes.** Once the weights are known, every attribute is blended with them:
 
 ```
-colour  =  α c_P + β c_Q + γ c_R,        depth  =  α z_P + β z_Q + γ z_R
+color  =  α c_P + β c_Q + γ c_R,        depth  =  α z_P + β z_Q + γ z_R
 ```
 
-Blending colours this way is called **[Gouraud shading](https://en.wikipedia.org/wiki/Gouraud_shading)**.
+Blending colors this way is called **[Gouraud shading](https://en.wikipedia.org/wiki/Gouraud_shading)**.
 
 **Worked case: one triangle, four pixels.** Take P = (1, 1), Q = (7, 3) and R = (3, 7). The system is
 
@@ -114,7 +114,7 @@ T⁻¹  =   [  3/16   −1/16   −1/8 ]
          [ −1/16    3/16   −1/8 ]
 ```
 
-and every pixel is one product with it. For the pixel centre X = (3, 3):
+and every pixel is one product with it. For the pixel center X = (3, 3):
 
 ```
 [ −1/8    −1/8     5/4 ] [ 3 ]   [ 1/2 ]
@@ -130,8 +130,8 @@ X = (6, 5):   (α, β, γ) = (−1/8, 11/16, 7/16)   outside: beyond the edge QR
 X = (2, 4):   (α, β, γ) = (1/2, 0, 1/2)         exactly on the edge PR
 ```
 
-Colour the corners pure red, green and blue: c_P = (1, 0, 0), c_Q = (0, 1, 0), c_R = (0, 0, 1). Then a
-pixel's colour is its weights themselves, so (3, 3) is (0.5, 0.25, 0.25), a muted red. With depths
+Color the corners pure red, green and blue: c_P = (1, 0, 0), c_Q = (0, 1, 0), c_R = (0, 0, 1). Then a
+pixel's color is its weights themselves, so (3, 3) is (0.5, 0.25, 0.25), a muted red. With depths
 z_P = 0.2, z_Q = 0.6 and z_R = 0.4, the depth at (3, 3) is 0.5·0.2 + 0.25·0.6 + 0.25·0.4 = 0.35, and at
 (5, 3) it is 0.475.
 
@@ -152,9 +152,9 @@ them.
 
 GPUs evaluate the three edge functions for whole blocks of pixels in parallel, in [fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic)
 so that results are exact and repeatable. This approach goes back to Pineda's 1988 parallel
-rasterization algorithm. A pixel centre exactly on an edge shared by two triangles must be drawn once,
+rasterization algorithm. A pixel center exactly on an edge shared by two triangles must be drawn once,
 not twice or never, and the **top-left rule** used by Direct3D and others breaks the tie by which kind
-of edge it is. The interpolated attributes then reach the program that colours each pixel (the
+of edge it is. The interpolated attributes then reach the program that colors each pixel (the
 [fragment shader](https://en.wikipedia.org/wiki/Shader)). In GLSL they are perspective-correct by default, and the noperspective qualifier
 switches to plain screen-space blending.
 
@@ -215,14 +215,14 @@ How this field's vocabulary reads as linear algebra.
 
 | Domain term | In linear algebra |
 |---|---|
-| pixel centre | the point in the middle of a pixel; a pixel is drawn when its centre is covered |
-| rasterization | deciding which pixel centres a shape covers, turning a vector description into pixels |
+| pixel center | the point in the middle of a pixel; a pixel is drawn when its center is covered |
+| rasterization | deciding which pixel centers a shape covers, turning a vector description into pixels |
 | barycentric coordinates | the weights (α, β, γ) that write a point as a weighted average of the three corners |
 | affine combination | a weighted sum whose weights add up to 1 |
 | convex combination | an affine combination with no negative weights; these fill the triangle |
 | edge function | a barycentric coordinate written as a linear function of the pixel position |
-| attribute | a value stored at each corner (colour, depth, texture coordinate) and blended across the triangle |
-| Gouraud shading | colouring a triangle by blending its corner colours |
+| attribute | a value stored at each corner (color, depth, texture coordinate) and blended across the triangle |
+| Gouraud shading | coloring a triangle by blending its corner colors |
 | texture coordinates | the position in an image (a texture) that each corner is mapped to |
 | perspective-correct interpolation | blending attributes using the 3D weights rather than the screen weights |
 | top-left rule | the tie-break that assigns a pixel exactly on a shared edge to just one triangle |

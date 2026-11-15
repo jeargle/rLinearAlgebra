@@ -33,8 +33,8 @@ An X-ray source and detector rotate around a patient. Each measurement is the to
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | μ(r) | linear attenuation coefficient | fraction of X-ray photons removed per unit path length at location r; this is what the image shows | function of position | m⁻¹ (clinically often cm⁻¹) |
-| s | path length | distance travelled along a ray | scalar | m |
-| I(s) | beam intensity | photon flux remaining after travelling distance s | scalar | photon counts |
+| s | path length | distance traveled along a ray | scalar | m |
+| I(s) | beam intensity | photon flux remaining after traveling distance s | scalar | photon counts |
 | I₀ | unattenuated intensity | detector reading with nothing in the beam (from calibration) | scalar per ray | photon counts |
 | I_i | measured intensity | detector reading for ray i | scalar | photon counts |
 | N | number of voxels | the image is divided into N small cubes (pixels in 2D) | integer | — |
@@ -42,8 +42,8 @@ An X-ray source and detector rotate around a patient. Each measurement is the to
 | x | image vector | x_j is μ inside voxel j, voxels listed in a fixed order | N × 1 | m⁻¹ |
 | b | measurement vector (sinogram) | b_i = −ln(I_i / I₀), total attenuation along ray i | M × 1 | dimensionless |
 | A | system matrix (forward projector) | a_ij is the length of ray i inside voxel j; zero for the vast majority of pairs | M × N | m |
-| λ | regularization weight | how strongly smoothness is favoured over fitting the data (used in What is computed) | scalar | chosen so the two terms are comparable |
-| L | regularization operator | typically differences between neighbouring voxels, so ‖L x‖ measures roughness | p × N | depends on the choice |
+| λ | regularization weight | how strongly smoothness is favored over fitting the data (used in What is computed) | scalar | chosen so the two terms are comparable |
+| L | regularization operator | typically differences between neighboring voxels, so ‖L x‖ measures roughness | p × N | depends on the choice |
 
 ### Formulation
 
@@ -67,7 +67,7 @@ This is the step that makes CT a linear problem. The raw reading depends exponen
 b_i = Σ_j a_ij x_j      for every ray i,      i.e.   A x = b
 ```
 
-Units check: metres times m⁻¹ is dimensionless, matching b. This models each measurement as the total attenuation met by one ray, and it defines M equations in N unknowns.
+Units check: meters times m⁻¹ is dimensionless, matching b. This models each measurement as the total attenuation met by one ray, and it defines M equations in N unknowns.
 
 **What a solution means.** x is an estimate of μ, one value per voxel. For display it is converted to [Hounsfield units](https://en.wikipedia.org/wiki/Hounsfield_scale), HU = 1000 (μ − μ_water) / μ_water, which puts water at 0 and air at −1000. The system is not solved exactly: photon counts are noisy, M and N differ, and A is [badly conditioned](https://en.wikipedia.org/wiki/Condition_number), so the reconstruction is posed as regularized [least squares](https://en.wikipedia.org/wiki/Least_squares) (see What is computed).
 

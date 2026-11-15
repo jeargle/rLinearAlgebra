@@ -70,12 +70,12 @@ together (pose) along a chain of joints, and avoid the failure modes of angle-ba
 | Symbol | Name | What it holds | Shape | Units |
 |---|---|---|---|---|
 | R | rotation matrix | its columns are the body's x, y and z axes, written in reference-frame coordinates | 3 × 3 | dimensionless |
-| v | vector | a direction or displacement | 3 × 1 | metres, or dimensionless for directions |
+| v | vector | a direction or displacement | 3 × 1 | meters, or dimensionless for directions |
 | R_x(φ), R_y(θ), R_z(ψ) | elementary rotations | turns about the x, y or z axis by the given angle | 3 × 3 | dimensionless |
 | φ, θ, ψ | roll, pitch, yaw | Euler angles, here in the z-y-x convention | scalars | radians or degrees |
-| t | position | where the body's origin sits in the reference frame | 3 × 1 | metres |
-| T | pose | the 4 × 4 matrix [R t; 0 0 0 1] | 4 × 4 | mixed: R dimensionless, t in metres |
-| p | homogeneous point | (x, y, z, 1) | 4 × 1 | metres in the first three entries |
+| t | position | where the body's origin sits in the reference frame | 3 × 1 | meters |
+| T | pose | the 4 × 4 matrix [R t; 0 0 0 1] | 4 × 4 | mixed: R dimensionless, t in meters |
+| p | homogeneous point | (x, y, z, 1) | 4 × 1 | meters in the first three entries |
 | I | identity matrix | — | 3 × 3 | — |
 
 ## Formulation

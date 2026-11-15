@@ -26,7 +26,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | attention weights P | the row-stochastic matrix; row i holds the mixing proportions for token i | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | attenuation coefficient | the unknown x, one value per voxel | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | attitude / orientation | a rotation matrix R relating a body frame to a reference frame | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
-| attribute | a value stored at each corner (colour, depth, texture coordinate) and blended across the triangle | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
+| attribute | a value stored at each corner (color, depth, texture coordinate) and blended across the triangle | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | B-splines and knots | piecewise-cubic basis functions joined smoothly at chosen points called knots, each nonzero over only a few intervals | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | backprojection | applying A transpose to the data | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | balancing an equation | finding an integer null vector of the element-by-species matrix | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
@@ -50,8 +50,8 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | centrality | a score defined as an eigenvector, or a function, of the graph matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | Chebyshev polynomials and nodes | a basis and a set of nodes for which the interpolation problem is well conditioned | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | check bits (checksum) | the r bits appended to a message so the receiver can test it | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
-| chromatic adaptation | the eye's adjustment to the colour of the illumination, and its modelling by a matrix | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
-| chromaticity (x, y) | x = X/(X + Y + Z) and y = Y/(X + Y + Z), the colour with its brightness divided out | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| chromatic adaptation | the eye's adjustment to the color of the illumination, and its modeling by a matrix | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| chromaticity (x, y) | x = X/(X + Y + Z) and y = Y/(X + Y + Z), the color with its brightness divided out | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | circulation | traffic going round a closed loop, a vector in the null space of A | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | clip coordinates | the homogeneous 4-vector after the projection matrix, before division | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | code rate | k/n, the subspace dimension over the ambient dimension | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
@@ -59,7 +59,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | codeword | a message with its check bits appended; always a multiple of G(x) | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
 | Colley matrix | 2I plus the Massey matrix | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | component balance | one row of the system, for one component around one unit | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
-| cones | the three kinds of colour receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| cones | the three kinds of color receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | connected schedule | one in which every team is linked to every other by a chain of games | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | conservation of flow (continuity) | A x = b, one equation per intersection | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | conserved moiety | a left null vector y; y^T c is constant for all time | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
@@ -134,14 +134,14 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Fourier coefficients a_n, b_n | the amounts of cos nx and sin nx in the function | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | free network | a minimum-norm solution, with no point held fixed | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | frequency bin k | the coefficient of the k-th complex wave in the Fourier basis | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
-| gamut | the set of colours a device can produce | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| gamut | the set of colors a device can produce | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | generator matrix G | a basis of the code, written as rows | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | generator polynomial G(x) | the fixed divisor of degree r that both ends agree on | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
 | genetic relationship matrix (GRM) K | X Xᵀ / M, the N × N Gram matrix of the individuals' centered genotype rows | [Population genetics PCA](applications/population-genetics-pca) |
 | genotype g_ij | one entry of G, a count 0, 1 or 2 of the counted allele | [Population genetics PCA](applications/population-genetics-pca) |
 | Gibbs phenomenon | the overshoot of partial sums next to a jump, which does not shrink as N grows | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | gimbal lock | Euler angles at which two of the three angles turn about the same axis | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
-| Gouraud shading | colouring a triangle by blending its corner colours | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
+| Gouraud shading | coloring a triangle by blending its corner colors | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | Gram matrix | the matrix of inner products of the basis functions | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | grid and grid spacing h | equally spaced points x + s h at which the function is known | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | gross / total output | the unknown x | [Leontief input-output economics](applications/leontief-input-output-economics) |
@@ -155,7 +155,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | homogeneous transformation | the 4 × 4 matrix [R t; 0 1] | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | identity transform | the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | initial value and final XOR | constants added in standard CRCs, which make the map affine | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
-| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analogue of the dot product | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
+| inner product of functions | ⟨f, g⟩ = ∫ f g dx, the continuous analog of the dot product | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | innovation / residual | z - Hx, the part of the measurement the prediction did not explain | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | interpolant | the unique element of P_d with the prescribed values at the nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | intrinsic matrix K | the camera's internal calibration, an upper-triangular 3x3 | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
@@ -190,7 +190,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | mean-centering | subtracting each column's mean, 2 p_j, to give X | [Population genetics PCA](applications/population-genetics-pca) |
 | mechanism | a nontrivial null space of K — the structure can move with no restoring force | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | message authentication code (MAC) | a keyed check that, unlike a CRC, an attacker cannot recompute | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
-| metamers | different spectra that look the same colour | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| metamers | different spectra that look the same color | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | method of undetermined coefficients | writing the weights as unknowns and solving the conditions they must satisfy | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | minimally constrained vs overconstrained adjustment | removing exactly the null space vs also forcing the network to fit fixed points | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | minimum distance | the smallest weight of a nonzero codeword | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
@@ -241,7 +241,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | period and fundamental | the length after which the signal repeats (2π here), and the sine or cosine that repeats exactly once in it | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | perspective division | dividing by w, the step that makes distant objects smaller | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | perspective-correct interpolation | blending attributes using the 3D weights rather than the screen weights | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
-| pixel centre | the point in the middle of a pixel; a pixel is drawn when its centre is covered | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
+| pixel center | the point in the middle of a pixel; a pixel is drawn when its center is covered | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | point differential | a team's total points scored minus points allowed | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | pose (frame, transform) | a rotation and a translation together, a 4 × 4 matrix in SE(3) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | power iteration | repeated multiplication by the matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
@@ -261,7 +261,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | query, key, value | the rows of Q = X W_Q, K = X W_K and V = X W_V, three linear images of each token | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | RAID-6 | a second, independent equation over GF(2^8), so two erasures can be solved | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | raster image (bitmap) | a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
-| rasterization | deciding which pixel centres a shape covers, turning a vector description into pixels | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
+| rasterization | deciding which pixel centers a shape covers, turning a vector description into pixels | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | rasterization | sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height) | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | rating | a number per team whose differences predict results | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | re-orthonormalization | projecting a drifted matrix back onto the orthogonal matrices | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
@@ -330,10 +330,10 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | transform attribute / CSS transform property | a list of elementary transforms whose matrices are multiplied in the order written | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | transform-origin | the point about which rotation and scaling happen, a conjugation T(c) M T(−c) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | translate, rotate, scale, skew | the elementary matrices of the stack | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
-| tristimulus values | three numbers that determine a colour; CIE XYZ is the standard set | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| tristimulus values | three numbers that determine a color; CIE XYZ is the standard set | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | truncation error | the error from cutting off the Taylor series, present even in exact arithmetic | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | twiddle factor ω^(kn) | an entry of the DFT matrix | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
-| unitary gate | a norm-preserving complex linear map — the complex analogue of an orthogonal matrix | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| unitary gate | a norm-preserving complex linear map — the complex analog of an orthogonal matrix | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | user space vs viewport space | two coordinate systems related by the CTM | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | vector graphics | shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | vertex | a corner of a triangle; the pipeline moves vertices, and the triangles follow | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
@@ -341,12 +341,12 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | view matrix | re-expresses the world relative to the camera (world to camera coordinates) | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | viewport transform | the final scaling from NDC to pixels | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | weight | the inverse of an observation's variance; longer levelling lines get smaller weights | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
-| white point | the colour of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| white point | the color of R = G = B = 1; D65 (daylight, about 6500 K) for sRGB, D50 for print | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | word embedding w_i | row i of U_k Σ_k, the word's coordinates in the latent space | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
 | word-context (co-occurrence) matrix | the same idea with nearby words as the columns instead of documents | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
 | write hole | a crash between writing data and parity, which leaves a stripe that violates its equation | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | XOR | addition in GF(2), applied bit by bit | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | yaw, pitch, roll (Euler angles) | coordinates on the set of rotations, R = R_z(ψ) R_y(θ) R_x(φ) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
-| YCbCr and chroma subsampling | brightness and two colour-difference channels, with the colour stored at lower resolution | [JPEG and video compression](applications/jpeg-and-video-compression) |
+| YCbCr and chroma subsampling | brightness and two color-difference channels, with the color stored at lower resolution | [JPEG and video compression](applications/jpeg-and-video-compression) |
 | z-fighting | flickering between surfaces whose depths the depth buffer cannot tell apart | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | zigzag order and entropy coding | listing coefficients from low to high frequency so the zeros come in long runs, then coding the result compactly | [JPEG and video compression](applications/jpeg-and-video-compression) |
