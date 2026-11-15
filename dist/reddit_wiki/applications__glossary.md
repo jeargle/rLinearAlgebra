@@ -13,12 +13,17 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Domain term | In linear algebra | Entry |
 |---|---|---|
 | (k, n) scheme | a polynomial in a k-dimensional space evaluated at n distinct points | [Shamir secret sharing](applications/shamir-secret-sharing) |
+| action a | a choice available in a state | [Markov decision processes](applications/markov-decision-processes) |
+| action value q(s, a) | r(s, a) + γ (row of P for action a) · v | [Markov decision processes](applications/markov-decision-processes) |
 | adapter merging | forming W_0 + B A once, so inference costs nothing extra | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | adjustment | least-squares estimation of the coordinates from redundant, inconsistent observations | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | affine combination | a weighted sum whose weights add up to 1 | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | affine invariance | transforming the control points transforms the curve, because the basis sums to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| affinity matrix W | the symmetric n × n matrix of weights w_ij, zero diagonal | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
+| algebraic connectivity | λ_2, the second-smallest eigenvalue of L; zero exactly when the graph is disconnected | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | allele frequency p_j | half the mean of column j of G | [Population genetics PCA](applications/population-genetics-pca) |
 | anomaly field | the mean-centered data matrix | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
+| aperiodic | the gcd of the graph's cycle lengths is 1; with strong connectivity, W primitive | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | ART / SIRT | Kaczmarz row-action and related simultaneous iterations | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | assembly | summing small element matrices into the global matrix at shared DOF indices | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | attention head | one triple (W_Q, W_K, W_V); several heads run in parallel and are concatenated | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
@@ -27,6 +32,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | attenuation coefficient | the unknown x, one value per voxel | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | attitude / orientation | a rotation matrix R relating a body frame to a reference frame | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | attribute | a value stored at each corner (color, depth, texture coordinate) and blended across the triangle | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
+| average consensus | W doubly stochastic (columns also sum to 1), so π = 1/n and c is the plain mean | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | B-splines and knots | piecewise-cubic basis functions joined smoothly at chosen points called knots, each nonzero over only a few intervals | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | backprojection | applying A transpose to the data | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | balancing an equation | finding an integer null vector of the element-by-species matrix | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
@@ -36,6 +42,8 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | basis functions | fixed functions of t, chosen before seeing the coefficients, whose combinations are the candidate curves | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | basis image | one of the 64 cosine patterns an 8 × 8 block is built from | [JPEG and video compression](applications/jpeg-and-video-compression) |
 | basis set (quantum chemistry) | the chosen basis in which H is expressed | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| Bellman expectation equation | the fixed-point form v = r_π + γ P_π v of that linear system | [Markov decision processes](applications/markov-decision-processes) |
+| Bellman optimality equation | v∗ = max over actions of the same affine map; a fixed point, not a linear system | [Markov decision processes](applications/markov-decision-processes) |
 | benchmark (station, control point) | a surveyed point; its coordinates are unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | Bernstein polynomials | a basis of P_3 consisting of nonnegative functions that sum to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | block | an 8 × 8 tile of pixels, the unit JPEG transforms and codes separately | [JPEG and video compression](applications/jpeg-and-video-compression) |
@@ -60,11 +68,15 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Colley matrix | 2I plus the Massey matrix | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | component balance | one row of the system, for one component around one unit | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | cones | the three kinds of color receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
+| connected component | a group of nodes reachable from each other; each one adds a zero eigenvalue of L | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | connected schedule | one in which every team is linked to every other by a chain of games | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
+| consensus | x(t) → c 1, every entry of the opinion vector equal | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
+| consensus value c | πᵀ x(0), the π-weighted average of the starting opinions | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | conservation of flow (continuity) | A x = b, one equation per intersection | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | conserved moiety | a left null vector y; y^T c is constant for all time | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
 | control points | coordinates of the curve in the Bernstein basis, one point in the plane per basis polynomial | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | control polygon | the broken line through the control points; the curve lies in its convex hull | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| convergence rate | the second-largest eigenvalue modulus \|λ_2\| of W | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | convex combination | an affine combination with no negative weights; these fill the triangle | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | corrupted share | an error in a Reed-Solomon codeword | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | cosine similarity | the cosine of the angle between two vectors, x·y / (‖x‖ ‖y‖) | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
@@ -72,6 +84,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | CRC-r | a cyclic redundancy check with r check bits, such as CRC-8 or CRC-32 | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
 | cubic vs quadratic outlines (CFF/PostScript vs TrueType) | curves in P_3 vs curves in P_2 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | current transformation matrix (CTM) | the product of every transform in effect for an element | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| cut | total weight of the edges crossing a split into two groups, cut = xᵀ L x / 4 for a ±1 vector x | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | damping factor (alpha) | the weight on P versus the uniform teleportation term | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | dangling node | a zero column, which breaks stochasticity | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | datum | the choice that fixes the null space, such as a benchmark held at a known height | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
@@ -82,17 +95,20 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | dealer | whoever chooses the polynomial and hands out the shares | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | degenerate configuration | point placement that makes A rank-deficient, so the solution is not unique | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | degraded mode | one block of each stripe unknown, recovered on every read by solving the equation | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
+| degree d_i | row sum of W; D = diag(d_1, …, d_n) | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | degree elevation | the inclusion P_2 → P_3, written in Bernstein coordinates | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | degree of freedom (DOF) | one scalar unknown — one component of the displacement vector | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | degrees of freedom | dimensions; k for the model (the trace of H) and n − k for the residuals | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | degrees of freedom | unknowns minus independent equations; it must be zero for a unique answer | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | degrees of freedom of the network | the nullity of S | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| DeGroot model | the difference equation x(t+1) = W x(t) with W row-stochastic | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | density matrix | a positive semidefinite matrix with trace 1 | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | depth buffer (z-buffer) | the per-pixel record of the nearest depth drawn so far | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | design matrix | the matrix whose column j is basis function j evaluated at every data point | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | design matrix (model matrix) X | the n × k matrix whose columns are the predictors, including a column of 1s for the intercept | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | direct vs indirect requirements | the successive terms A, A^2, A^3 of the Neumann series | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | direction cosine matrix (DCM) | the rotation matrix; its entries are cosines of angles between axes | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| discount factor γ | the weight on the next step's value; it scales P_π and sets the spectral radius | [Markov decision processes](applications/markov-decision-processes) |
 | discrete cosine transform (DCT) | the change of basis from pixel values to amounts of sampled cosine waves | [JPEG and video compression](applications/jpeg-and-video-compression) |
 | DLT (direct linear transform) | stacking constraints into A and taking the smallest right singular vector | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | document vector | row j of V_k Σ_k, the document's coordinates in the same space | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
@@ -119,6 +135,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | extrapolation | using a fitted curve outside the range of the data | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | extrinsic parameters [R\|t] | the rigid transform from world to camera frame | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | FFT | a factorization of the DFT matrix into sparse factors, not a different transform | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
+| Fiedler vector | v_2, the eigenvector of λ_2; its signs give the two-way split | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | field of view | the angle the camera sees, top to bottom | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | filter divergence | P losing positive definiteness in finite precision, or an unobservable direction growing without bound | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | filtered backprojection (FBP) | an analytic spectral inverse of the forward operator | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
@@ -143,6 +160,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | gimbal lock | Euler angles at which two of the three angles turn about the same axis | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | Gouraud shading | coloring a triangle by blending its corner colors | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | Gram matrix | the matrix of inner products of the basis functions | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
+| graph Laplacian L | L = D − W, symmetric positive semidefinite, rows summing to 0 | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | grid and grid spacing h | equally spaced points x + s h at which the function is known | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | gross / total output | the unknown x | [Leontief input-output economics](applications/leontief-input-output-economics) |
 | ground (reference node) | the node whose potential is fixed at 0, removing the null space spanned by the all-ones vector | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
@@ -214,7 +232,9 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | nodes (interpolation points) | the d + 1 distinct x-values where the polynomial must match the data | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | norm and energy | ‖f‖² = ⟨f, f⟩, the integral of the square of f | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | normal equations | Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
+| normalized cut (Ncut) | cut weighted by the total degree of each side, relaxed to L x = λ D x | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | normalized device coordinates (NDC) | the cube −1 ≤ x, y, z ≤ 1 that the visible region lands in | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
+| normalized Laplacian L_sym | D^(−1/2) L D^(−1/2), with the same zero pattern as L | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | North's rule of thumb | a test for whether two singular values are too close to separate the modes | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | Nyquist bin | bin N/2, the fastest wave a block of N samples can represent | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | object, world and camera coordinates | the frames attached to a model, to the scene, and to the eye | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
@@ -243,6 +263,9 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | perspective-correct interpolation | blending attributes using the 3D weights rather than the screen weights | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | pixel center | the point in the middle of a pixel; a pixel is drawn when its center is covered | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | point differential | a team's total points scored minus points allowed | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
+| policy evaluation | solving the linear system, directly or by iteration | [Markov decision processes](applications/markov-decision-processes) |
+| policy improvement | the argmax over actions, row by row; the one nonlinear step | [Markov decision processes](applications/markov-decision-processes) |
+| policy π | a choice of one action per state, which picks one row of P and r for each state | [Markov decision processes](applications/markov-decision-processes) |
 | pose (frame, transform) | a rotation and a translation together, a 4 × 4 matrix in SE(3) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | power iteration | repeated multiplication by the matrix | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | PPMI | positive pointwise mutual information, a log-ratio reweighting of co-occurrence counts | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
@@ -277,6 +300,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | residual (correction) v | the change to each observation that makes the set consistent | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | residuals | the component of y in the orthogonal complement of the column space | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | restraint / boundary condition | deleting the corresponding rows and columns, or adding constraint rows | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
+| reward r(s, a) | the immediate payoff, one entry of the vector r_π once a policy is fixed | [Markov decision processes](applications/markov-decision-processes) |
 | rotated EOF (varimax) | a deliberately non-orthogonal re-basis of the leading subspace | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | rounding (cancellation) error | the loss of digits when nearly equal sample values are subtracted | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | Runge phenomenon | large oscillations of high-degree interpolants at equally spaced nodes | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
@@ -285,20 +309,25 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | scaled dot-product attention | softmax(Q Kᵀ / √d_k) V, a row-stochastic matrix times V | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | SCF iteration | fixed-point iteration on an eigenproblem whose matrix depends on its own solution | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | schedule graph | teams as nodes and games as edges | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
+| self-weight w_ii | how much person i keeps of their own opinion; a diagonal entry of W | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | sequential modular vs equation-oriented simulation | fixed-point iteration around loops vs solving the whole linear system at once | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | share | a point (x_i, f(x_i)), one coordinate of the evaluation map's output | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | share refresh (proactive sharing) | adding a sharing of 0, a polynomial from the subspace with f(0) = 0 | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | shift register (LFSR) | the hardware that computes a CRC one bit per clock | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
+| similarity graph | nodes for data points, edge weights w_ij for how alike points i and j are | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | single-pass conversion | the fraction of the reactant entering the reactor that reacts, a fixed coefficient | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | sinogram | the measurement vector b, arranged by angle and detector position | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | SNP (single-nucleotide polymorphism) | one column of G; a coordinate of R^M | [Population genetics PCA](applications/population-genetics-pca) |
 | SNP loadings | the entries of v_k, one weight per SNP | [Population genetics PCA](applications/population-genetics-pca) |
+| social power (influence weight) π_i | entry i of the left Perron eigenvector, πᵀ W = πᵀ, 1ᵀ π = 1 | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | softmax | the row-by-row map e^(z_j) / Σ_l e^(z_l), the one nonlinear step | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
+| spectral embedding | row i of [v_2 … v_k], the coordinates of point i passed to k-means | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | spectral leakage | energy of a wave that is not one of the N basis waves, spread across many coordinates | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | spectrum | the coordinate vector in the Fourier basis; its magnitudes are what a spectrum analyzer shows | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | spectrum (spectral power distribution) | how much power a light carries at each wavelength | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | split fraction | the fraction of a component a separator sends to a given outlet, a fixed coefficient | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | square-root filter | propagating a Cholesky factor of P instead of P | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
+| state s | one of the n situations the system can be in, an index into R^n | [Markov decision processes](applications/markov-decision-processes) |
 | state vector | the unknown x being estimated | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | stationary distribution | the dominant eigenvector, normalized | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | steady state | Sv = 0 — v lies in the right null space | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
@@ -310,6 +339,8 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | strength of schedule | how good a team's opponents were; built into both methods | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | stripe | one block from each disk at the same position, the unknowns of one parity equation | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | stripe unit (chunk) | one block of a stripe, a vector in GF(2)^w | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
+| strongly connected trust graph | W irreducible | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
+| stubborn agent | a row of W equal to a standard basis vector, w_ii = 1 | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | subdivision (splitting a curve) | change of basis to the Bernstein basis of a subinterval | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | superposition | linearity of the solution map s -> φ | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | syndrome | H y^T — depends only on the error, not the message | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
@@ -329,12 +360,17 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | traffic counts (detector or loop counts) | measured coordinates of x, used to pin down the free variables | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | transform attribute / CSS transform property | a list of elementary transforms whose matrices are multiplied in the order written | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | transform-origin | the point about which rotation and scaling happen, a conjugation T(c) M T(−c) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| transition matrix P_π | the n × n row-stochastic matrix of the Markov chain the policy induces | [Markov decision processes](applications/markov-decision-processes) |
+| transition probability p(s'\|s, a) | entry of the stochastic matrix for action a | [Markov decision processes](applications/markov-decision-processes) |
 | translate, rotate, scale, skew | the elementary matrices of the stack | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | tristimulus values | three numbers that determine a color; CIE XYZ is the standard set | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | truncation error | the error from cutting off the Taylor series, present even in exact arithmetic | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
+| trust (influence) matrix W | row i holds the weights person i gives to each opinion; nonnegative, rows sum to 1 | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | twiddle factor ω^(kn) | an entry of the DFT matrix | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | unitary gate | a norm-preserving complex linear map — the complex analog of an orthogonal matrix | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | user space vs viewport space | two coordinate systems related by the CTM | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
+| value function v_π | the solution of (I − γ P_π) v = r_π | [Markov decision processes](applications/markov-decision-processes) |
+| value iteration | repeated multiplication by γ P with a max per row, like power iteration | [Markov decision processes](applications/markov-decision-processes) |
 | vector graphics | shapes stored as coordinates in a polynomial space, evaluated at whatever resolution the output needs | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | vertex | a corner of a triangle; the pipeline moves vertices, and the triangles follow | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | view frustum | the truncated pyramid between the near and far planes that the camera sees | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |

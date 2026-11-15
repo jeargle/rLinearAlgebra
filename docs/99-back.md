@@ -5,7 +5,7 @@
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
-**Not yet represented:** graph Laplacians and spectral methods, Krylov subspace methods on their own terms, optimization duality and linear programming, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
+**Not yet represented:** Krylov subspace methods on their own terms, optimization duality and linear programming, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
 
 ---
 
@@ -27,11 +27,7 @@ the one exception marked below.
   written, is the Tier 1 complex-scalar entry.
 
 ### Would add: graph Laplacians and spectral methods
-- **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
 - **Laplacian eigenmaps and diffusion maps** — nonlinear dimensionality reduction with a linear core
-- **Consensus and opinion dynamics (DeGroot models)** — convergence rate set by the algebraic connectivity
-  (Tier 2 in its discrete-time DeGroot form, a difference equation; the continuous-time version,
-  dx/dt = −L x, is an ODE and would be Tier 3)
 
 ### Would add: large-scale iterative methods as the subject
 - **Poisson/Navier–Stokes discretization** — finite differences or finite volumes, conjugate gradient, multigrid, preconditioner design
@@ -56,7 +52,6 @@ the one exception marked below.
 - **X-ray crystallography** — the phase problem; Patterson maps; structure factors as Fourier coefficients
 
 ### Would add: discrete and algebraic applications
-- **Markov decision processes** — policy evaluation as a linear solve, value iteration as a fixed point
 - **Cryptanalysis: sparse GF(2) nullspace in the number field sieve** — block Lanczos/Wiedemann at 10⁸ scale
 - **Combinatorial design and coding bounds** — rank arguments proving combinatorial impossibility results
 

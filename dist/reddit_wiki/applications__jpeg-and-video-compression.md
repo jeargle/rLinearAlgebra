@@ -178,7 +178,7 @@ image formats use transforms that overlap from block to block, or [wavelets](htt
 ### Extensions
 
 For data with known correlations, the best possible basis for compaction comes from the eigenvectors of
-the [covariance](https://en.wikipedia.org/wiki/Covariance_matrix) matrix (the [Karhunen–Loève](https://en.wikipedia.org/wiki/Kosambi%E2%80%93Karhunen%E2%80%93Lo%C3%A8ve_theorem) transform, or [principal component](https://en.wikipedia.org/wiki/Principal_component_analysis) analysis, Tier 2). The DCT
+the [covariance](https://en.wikipedia.org/wiki/Covariance_matrix) matrix (the [Karhunen–Loève](https://en.wikipedia.org/wiki/Kosambi%E2%80%93Karhunen%E2%80%93Lo%C3%A8ve_theorem) transform, or [principal component analysis](https://en.wikipedia.org/wiki/Principal_component_analysis), Tier 2). The DCT
 was introduced in 1974 as a fixed approximation to it for highly correlated signals. The DCT basis
 vectors are also the eigenvectors of the second-difference matrix of the [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) entry with
 mirror-image boundary conditions (Tier 2). [JPEG 2000](https://en.wikipedia.org/wiki/JPEG_2000) replaces the DCT with wavelets. [MP3](https://en.wikipedia.org/wiki/MP3) and AAC audio

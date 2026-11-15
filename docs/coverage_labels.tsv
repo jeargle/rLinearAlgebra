@@ -32,3 +32,6 @@
 | 22 | Natural language processing | Truncated SVD; Eckart–Young low-rank approximation | Truncated or randomized SVD |
 | 23 | Large language models | Bilinear forms and the rank of a product; low-rank updates | Dense matrix products; LoRA adapters |
 | 33 | Population genetics | SVD of a centered genotype matrix | Randomized SVD |
+| 11 | Spectral clustering | Graph Laplacian; Fiedler vector | Sparse symmetric eigensolve |
+| 35 | Opinion dynamics | Left Perron eigenvector of a row-stochastic matrix | Power iteration |
+| 28 | Reinforcement learning | Linear system (I − γ P_π) v = r_π; Neumann series | Policy iteration; value iteration |

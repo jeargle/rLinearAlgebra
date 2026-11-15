@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 24 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 27 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,8 +200,8 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 34 written entries, 23 are Tier 1,
-6 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
+**Current distribution.** Of the 37 written entries, 23 are Tier 1,
+9 are Tier 2, and 5 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
 
@@ -1217,6 +1217,227 @@ so its eigenvectors are exactly those of the ring's [adjacency matrix](https://e
 
 ---
 
+## 11. Spectral clustering: cutting a similarity graph with the eigenvectors of its Laplacian
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+Sorting points into groups is easy when each group is a compact blob: pick a center for each group
+and give every point to the nearest center. It fails when a group has a shape, such as a ring around
+another ring, or a winding road in a photograph, because points on opposite sides of a ring are far
+apart but still belong together.
+
+[Spectral clustering](https://en.wikipedia.org/wiki/Spectral_clustering) looks at a different thing: who is close to whom. Join each point to its near
+neighbors with a link whose strength says how alike they are. A good split cuts the network where it
+is weakest, through a few weak links rather than many strong ones.
+
+Finding the weakest cut exactly is a hopeless search over all possible splits. A relaxed version is
+an eigenvalue problem, and the signs of a single eigenvector give the split. In a photograph the
+points are pixels, linked to nearby pixels of similar color, and the split separates an object from
+its background.
+
+</details>
+
+**Field:** Machine learning, data clustering, computer vision, [image segmentation](https://en.wikipedia.org/wiki/Image_segmentation), network community detection
+
+**Tier:** 2 — the clusters are read off the signs of an eigenvector of the graph [Laplacian](https://en.wikipedia.org/wiki/Laplacian_matrix), a symmetric positive semidefinite matrix, so the entry needs the [spectral theorem](https://en.wikipedia.org/wiki/Spectral_theorem). Why that eigenvector approximates the best cut, the [Cheeger](https://en.wikipedia.org/wiki/Cheeger_constant_%28graph_theory%29) inequality, is named in Extensions.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^n over graph nodes: a vector x assigns one real number to every data point or pixel. A two-way split is a vector of ±1 entries, which is not a subspace; the relaxation drops that constraint and keeps only x ⊥ 1 and a fixed length.
+
+**Underlying equations.** A graph model: data points joined by edges with similarity weights w_ij, and the [quadratic form](https://en.wikipedia.org/wiki/Quadratic_form) xᵀ L x = Σ over edges w_ij (x_i − x_j)², minimized over unit vectors orthogonal to 1.
+
+**The problem.** Some vocabulary first. A **data point** is one item to be grouped: for example a customer, a gene, or
+a pixel in an image. A **similarity** w_ij ≥ 0 says how alike points i and j are; 0 means unrelated.
+The points and the nonzero similarities form a **similarity graph**: points are nodes, and each pair
+with w_ij > 0 is an edge of weight w_ij. Splitting the nodes into two groups, a **cut**, costs the total
+weight of the edges that cross between the groups. In **image segmentation** the points are pixels,
+for example a 640 × 480 photograph gives 307,200 nodes, and edges join pixels that are near each other
+and similar in brightness or color.
+
+The motivating contrast is between distance to a center and connectedness. [k-means](https://en.wikipedia.org/wiki/K-means_clustering) clustering, the
+standard method, alternates two steps: assign every point to the nearest of k centers, then move each
+center to the mean of its points. It can only produce groups separated by straight boundaries, so it
+cuts a ring in half. Spectral clustering instead asks which groups are connected internally by strong
+edges and to each other only by weak ones.
+
+Given the weights w_ij, find a split of the nodes into two groups with a small cut and neither group
+trivially small.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of nodes | data points or pixels | integer | — |
+| w_ij | similarity (edge weight) | how alike nodes i and j are; w_ij = w_ji, w_ii = 0 | scalar ≥ 0 | dimensionless |
+| W | affinity matrix | the weights w_ij | n × n | dimensionless |
+| d_i | degree | d_i = Σ_j w_ij, total weight at node i | scalar | dimensionless |
+| D | degree matrix | diag(d_1, …, d_n) | n × n | dimensionless |
+| L | graph Laplacian | L = D − W | n × n | dimensionless |
+| x | node labeling | one number x_i per node; ±1 for a split, real after relaxation | n × 1 | dimensionless |
+| 1 | all-ones vector | (1, 1, …, 1) | n × 1 | dimensionless |
+| λ_k, v_k | eigenpairs of L | L v_k = λ_k v_k, with 0 = λ_1 ≤ λ_2 ≤ … ≤ λ_n | scalar, n × 1 | dimensionless |
+| T_1, T_2 | the two groups | a split of the nodes | sets | — |
+| k | number of clusters | groups wanted | integer | — |
+| I_i, X_i | pixel data | intensity (gray level) and position of pixel i | scalar, 2 × 1 | gray level, pixels |
+| σ_I, σ_X, r | scale parameters | intensity and distance scales; neighborhood radius | scalars | gray level, pixels, pixels |
+
+**Formulation.** **Where the equations come from.** The model is a graph: the weights are chosen from the data, and the
+question is posed as minimizing a quadratic form over node labelings. No dynamics are involved.
+
+**The familiar formula.** Every practitioner knows the cut: with the groups labeled x_i = +1 in T_1 and
+x_i = −1 in T_2, an edge crossing the cut has (x_i − x_j)² = 4 and any other edge has 0, so
+
+```
+cut(T_1, T_2) = Σ over edges w_ij  =  (1/4) Σ over edges w_ij (x_i − x_j)²
+```
+
+**One node's row.** Expand the sum. Node i appears in the edges to all its neighbors, so the terms with
+x_i² add up to d_i x_i², and each edge contributes a cross term −2 w_ij x_i x_j. That is row i of a
+matrix: (L x)_i = d_i x_i − Σ_j w_ij x_j. The diagonal of L holds the degrees, the off-diagonal entries
+are −w_ij, and every row sums to 0.
+
+**All nodes at once.** Stacking the rows gives the graph Laplacian and its quadratic form:
+
+```
+L = D − W
+xᵀ L x = Σ over edges w_ij (x_i − x_j)²  ≥  0
+```
+
+So L is symmetric positive semidefinite. Since L 1 = 0, the smallest eigenvalue is λ_1 = 0 with
+eigenvector 1, the labeling that puts every node in one group. If the graph falls into separate
+[connected components](https://en.wikipedia.org/wiki/Component_%28graph_theory%29), the indicator vector of each component is also in the null space, so the
+number of zero eigenvalues equals the number of components.
+
+Minimizing the cut over ±1 vectors is a combinatorial search. The relaxation allows any real x, but
+requires x ⊥ 1, so that x cannot be the constant labeling, and fixes xᵀx so that x cannot shrink to 0.
+The symbol ⊥ means "is orthogonal to": x ⊥ 1 says xᵀ1 = x_1 + x_2 + … + x_n = 0, so the entries of x
+sum to zero and x must give some nodes positive values and others negative ones. By the spectral theorem the minimum of xᵀ L x / xᵀ x over x ⊥ 1 is λ_2, reached at v_2. λ_2 is called
+the [algebraic connectivity](https://en.wikipedia.org/wiki/Algebraic_connectivity) because it is zero exactly when the graph is disconnected and small when
+the graph is nearly so. Its eigenvector v_2 is called the Fiedler vector after Miroslav Fiedler, who
+studied it, and the split puts node i in T_1 when the i-th entry of v_2 is positive and in T_2
+otherwise.
+
+What is known is W, built from the data. What is solved for is v_2, and from its signs the groups.
+
+**Worked case: a strip of four pixels.** Pixels P, Q, R, S sit in a row; P and Q are dark, R and S are
+light. Similar neighbors get weight 12 and the dark-light pair Q, R gets weight 5, so the scalar
+equations for (L x) are
+
+```
+(L x)_P = 12 x_P − 12 x_Q
+(L x)_Q = −12 x_P + 17 x_Q − 5 x_R
+(L x)_R = −5 x_Q + 17 x_R − 12 x_S
+(L x)_S = −12 x_R + 12 x_S
+```
+
+and row by row:
+
+```
+      P   Q   R   S
+W = [ 0   12  0   0  ]   P
+    [ 12  0   5   0  ]   Q
+    [ 0   5   0   12 ]   R
+    [ 0   0   12  0  ]   S
+
+D = diag(12, 17, 17, 12)
+
+      P    Q    R    S
+L = [ 12   −12  0    0   ]   P
+    [ −12  17   −5   0   ]   Q
+    [ 0    −5   17   −12 ]   R
+    [ 0    0    −12  12  ]   S
+```
+
+The eigenvalues are 0, 4, 24 and 30, with eigenvectors (1, 1, 1, 1), (3, 2, −2, −3), (1, −1, −1, 1)
+and (2, −3, 3, −2). Checking the Fiedler vector:
+
+```
+[ 12   −12  0    0   ]   [ 3  ]   [ 12  ]       [ 3  ]
+[ −12  17   −5   0   ]   [ 2  ]   [ 8   ]       [ 2  ]
+[ 0    −5   17   −12 ] × [ −2 ] = [ −8  ] = 4 × [ −2 ]
+[ 0    0    −12  12  ]   [ −3 ]   [ −12 ]       [ −3 ]
+```
+
+The quadratic form agrees: 12 (3 − 2)² + 5 (2 + 2)² + 12 (−2 + 3)² = 104, and xᵀx = 26, so the ratio
+is 104 / 26 = 4 = λ_2. The signs put P, Q in T_1 and R, S in T_2: the cut runs through the weak edge.
+The exact split (1, 1, −1, −1) has quadratic form 4 × 5 = 20 and ratio 20 / 4 = 5, a little above λ_2,
+as it must be because the relaxation searches a larger set. The magnitudes say more than the signs:
+Q and R, next to the cut, get 2 and −2, less committed than P and S. If the weak edge is removed,
+L splits into two blocks and its eigenvalues become 0, 0, 24, 24, one zero per component.
+
+**Matrix structure.** L is sparse, symmetric, positive semidefinite, with nonpositive off-diagonal entries and zero row sums.
+For an image, each pixel is joined only to pixels within radius r, so a row has a few dozen nonzeros
+whatever the image size. For other data, a [k-nearest-neighbor graph](https://en.wikipedia.org/wiki/Nearest_neighbor_graph) (each point joined to its, for
+example, 10 closest points) keeps W sparse; a fully connected W is dense and limited to a few
+thousand points.
+
+**What is computed.** Only the few smallest eigenpairs are needed, from a sparse symmetric eigensolver: Lanczos (ARPACK
+through SciPy's eigsh, usually in shift-invert mode near 0), [LOBPCG](https://en.wikipedia.org/wiki/LOBPCG) (locally optimal block
+preconditioned conjugate gradient), or algebraic [multigrid](https://en.wikipedia.org/wiki/Multigrid_method)
+preconditioning for images with millions of pixels. scikit-learn's SpectralClustering builds the
+graph, takes the eigenvectors and runs k-means on them. For images, the weight of Shi and Malik's
+[normalized cuts](https://en.wikipedia.org/wiki/Segmentation-based_object_categorization) paper is
+
+```
+w_ij = exp(−(I_i − I_j)² / σ_I²) · exp(−‖X_i − X_j‖² / σ_X²)   if ‖X_i − X_j‖ < r, else 0
+```
+
+The Gaussian factor exp(−t²) turns a difference into a similarity between 0 and 1. For example, with
+σ_I = 0.1 on a 0-to-1 gray scale, gray levels 0.1 and 0.2 give exp(−1) ≈ 0.37, while 0.1 and 0.9 give
+exp(−64) ≈ 1.6 × 10⁻²⁸, effectively no edge.
+
+**Why linear algebra is the right tool.** The cut is a quadratic form, and the spectral theorem turns minimizing a quadratic form over a sphere
+into an eigenvalue problem. The search over 2^n splits becomes one sparse eigensolve, and the price is
+only the rounding step at the end, reading signs. Connectivity itself is linear-algebraic: the
+null space of L is spanned by the indicators of the connected components, and nearly separate groups
+show up as nearly zero eigenvalues.
+
+**Pitfall worth teaching.** Minimizing the plain cut favors slicing off a few outlying nodes, since a single node with weak edges
+is cheap to cut off. In the worked case the cut around P alone costs 12, and a stray pixel with one
+edge of weight 0.5 would cost 0.5. The unnormalized relaxation is really that of the ratio cut,
+cut × (1/|T_1| + 1/|T_2|), where |T| counts nodes, which charges small groups, but on real data it still
+often isolates outliers. That is why practice uses the normalized
+versions in Extensions, which charge each side for its own total degree. A second trap: the
+eigenvalues near 0 can be nearly equal, and then the eigensolver may return any mixture of their
+eigenvectors, so the signs of v_2 alone are unreliable. Taking several eigenvectors and clustering
+their rows is more stable. Finally, everything depends on W: the scales σ_I, σ_X and the number of
+neighbors decide what counts as connected, and no eigensolver can recover from a poor graph.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| similarity graph | nodes for data points, edge weights w_ij for how alike points i and j are |
+| affinity matrix W | the symmetric n × n matrix of weights w_ij, zero diagonal |
+| degree d_i | row sum of W; D = diag(d_1, …, d_n) |
+| graph Laplacian L | L = D − W, symmetric positive semidefinite, rows summing to 0 |
+| cut | total weight of the edges crossing a split into two groups, cut = xᵀ L x / 4 for a ±1 vector x |
+| algebraic connectivity | λ_2, the second-smallest eigenvalue of L; zero exactly when the graph is disconnected |
+| Fiedler vector | v_2, the eigenvector of λ_2; its signs give the two-way split |
+| connected component | a group of nodes reachable from each other; each one adds a zero eigenvalue of L |
+| normalized cut (Ncut) | cut weighted by the total degree of each side, relaxed to L x = λ D x |
+| normalized Laplacian L_sym | D^(−1/2) L D^(−1/2), with the same zero pattern as L |
+| spectral embedding | row i of [v_2 … v_k], the coordinates of point i passed to k-means |
+
+**Extensions.** The normalized cut of Shi and Malik divides each side's cut by that side's total degree. Its
+relaxation is the generalized eigenproblem L x = λ D x, equivalently the normalized Laplacian L_sym =
+D^(−1/2) L D^(−1/2). In the worked case it gives λ_2 = 5/17 ≈ 0.294 with eigenvector (17, 12, −12,
+−17), the same split. Rewritten, L x = λ D x is D^(−1) W x = (1 − λ) x, and D^(−1) W is the
+row-stochastic transition matrix of a [random walk](https://en.wikipedia.org/wiki/Random_walk) on the graph, the object of the PageRank entry:
+spectral clustering looks at its second eigenvector, where PageRank looks at its first. For k > 2
+clusters, the rows of [v_1 … v_k] (or [v_2 … v_k]) give each point k coordinates, and k-means on those
+rows finds the groups (Ng, Jordan and Weiss normalize the rows first). The same coordinates without
+the clustering step are Laplacian eigenmaps, a nonlinear dimension reduction. The guarantee that the
+relaxation is not far from the best cut is the Cheeger inequality, which bounds the graph's
+conductance h, the smallest ratio of a cut to the total degree of its smaller side, by λ_2 / 2 ≤ h ≤
+√(2 λ_2) for L_sym; proving it needs spectral graph theory (Tier 3). The same L appears elsewhere in
+the collection: in the consensus and opinion dynamics entry, where λ_2 sets how fast agents agree; in
+the Massey and Colley ranking entry, as the matrix of the schedule graph; and in the resistor-network
+entry, with conductances as weights. The population-genetics entry plays the opposite role: its
+singular value decomposition (SVD), used there for principal component analysis (PCA), keeps the
+largest eigenvalues of a similarity-like matrix rather than the smallest of a Laplacian.
+
+---
+
 ## 12. Resistor networks: Kirchhoff's laws as a graph Laplacian
 
 <details>
@@ -1302,7 +1523,7 @@ L φ = s,     L = Aᵀ C A
 ```
 
 Entry L_ii is the total conductance of the resistors touching node i, and L_ij is minus the conductance
-of the resistor joining i and j (0 if there is none). This is the weighted [Laplacian](https://en.wikipedia.org/wiki/Laplacian_matrix) of the network
+of the resistor joining i and j (0 if there is none). This is the weighted Laplacian of the network
 graph, and in circuit theory it is called the nodal conductance or admittance matrix.
 
 **The null space, and grounding.** Every row of L sums to zero, so L 1 = 0: adding the same constant to
@@ -1342,7 +1563,7 @@ kind of large linear system there is.
 **What is computed.** Ground a node (or eliminate every node held at a known voltage), then solve the remaining symmetric
 positive definite system. Circuit-sized problems use a sparse Cholesky factorization. The power grids
 that deliver current across a modern chip have tens of millions of nodes, and checking them for voltage
-droop is done with preconditioned conjugate gradient or [multigrid](https://en.wikipedia.org/wiki/Multigrid_method). Graph theory has its own fast
+droop is done with preconditioned conjugate gradient or multigrid. Graph theory has its own fast
 Laplacian solvers, which run in nearly linear time in the number of edges.
 
 **Why linear algebra is the right tool.** Each of the circuit-theory rules is a statement about the four fundamental subspaces of the incidence
@@ -2355,6 +2576,247 @@ filtering entry.
 
 ---
 
+## 28. Markov decision processes: valuing a policy with one linear solve
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A machine earns money while it runs, sometimes breaks down, and costs money to repair. Is a repair
+worth paying for? The answer depends on what the machine will earn afterward, and that depends on
+how it will be handled later, including what happens the next time it breaks.
+
+Problems of this shape, where each choice changes what can happen next, are planned
+with [Markov decision processes](https://en.wikipedia.org/wiki/Markov_decision_process). They describe a robot moving through a building, a game-playing program, an
+inventory manager or a medical treatment plan, and they are the setting of [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning).
+
+The central question is how much a fixed rule for choosing ("always repair") is worth from each
+starting situation. Money now counts for more than money later, and with that one assumption the
+question has an exact answer: one system of linear equations. Finding the best rule then alternates
+two steps: work out what the current rule is worth, then switch, wherever it helps, to a better choice.
+
+</details>
+
+**Field:** Reinforcement learning, operations research, sequential decision-making
+
+**Tier:** 2 — the value of a fixed policy solves (I − γ P_π) v = r_π, whose matrix is invertible because γ P_π has spectral radius γ < 1. That is a statement about the eigenvalues of a stochastic matrix, so the entry is Tier 2. [Contraction](https://en.wikipedia.org/wiki/Contraction_mapping)-mapping proofs, stochastic-process theory and the convergence of [Q-learning](https://en.wikipedia.org/wiki/Q-learning) are Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^n, one coordinate per state: a value function v is a vector in R^n. A policy is not a vector but a choice of action in each state, so the deterministic policies form a finite set, not a subspace. Each row of P_π is a probability distribution over next states and lies in the probability simplex, which is not a subspace either.
+
+**Underlying equations.** A linear recurrence on expected rewards for a controlled discrete-time Markov chain: the [Bellman expectation equation](https://en.wikipedia.org/wiki/Bellman_equation) v_π = r_π + γ P_π v_π for a fixed policy, and the Bellman optimality equation v∗(s) = max_a [ r(s, a) + γ Σ_s' p(s'|s, a) v∗(s') ], which has a max and is not linear.
+
+**The problem.** A Markov decision process (MDP) is a model of repeated decisions under uncertainty. At each time step
+the system is in one of n states, for example "working" or "broken". The decision-maker, called the
+agent, picks an action available in that state, for example "repair" or "wait". The action earns an
+immediate reward, possibly negative (a cost), and the system moves to a random next state with
+probabilities that depend only on the current state and action. That last property is
+the [Markov property](https://en.wikipedia.org/wiki/Markov_property): the past matters only through the present state.
+
+A policy is a rule giving one action for each state. The motivating contrast is between immediate and
+long-run reward: a greedy agent picks the largest reward now, while a planning agent accepts a cost now
+(a repair) for larger rewards later. Two problems follow. Policy evaluation: given a policy, compute
+its value in each state, the expected total of discounted future rewards. Policy optimization: find the
+policy whose value is largest in every state. The rewards, probabilities and discount factor are
+known; the values are the unknowns.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of states | how many situations the system can be in | integer | — |
+| s, s' | state, next state | indices 1, …, n | integer | — |
+| a | action | a choice available in state s | label | — |
+| p(s'\|s, a) | transition probability | probability of moving to s' after action a in state s | scalar in [0, 1] | dimensionless |
+| r(s, a) | reward | immediate payoff of action a in state s | scalar | reward units (e.g. dollars per step) |
+| γ | discount factor | weight on the next step's value, 0 < γ < 1 | scalar | dimensionless |
+| π | policy | the action π(s) chosen in each state | list of n actions | — |
+| P_π | transition matrix of π | entry (s, s') is p(s'\|s, π(s)); each row sums to 1 | n × n | dimensionless |
+| r_π | reward vector of π | entry s is r(s, π(s)) | n × 1 | reward units |
+| v_π | value function of π | entry s is the expected discounted total reward starting from s | n × 1 | reward units |
+| I | identity matrix | | n × n | — |
+| t | time step | steps since the start | integer | — |
+| q(s, a) | action value | value of taking a in s once, then following the current policy | scalar | reward units |
+| v∗ | optimal value function | the largest achievable value in each state | n × 1 | reward units |
+| v_k | value-iteration iterate | estimate of v∗ after k sweeps, with v_0 = 0 | n × 1 | reward units |
+
+**Formulation.** **Where the equations come from.** The model is a Markov chain whose transitions the agent controls.
+Fixing a policy removes the choices and leaves an ordinary Markov chain with stochastic matrix P_π,
+the row-stochastic version of the matrix in the PageRank entry. The equations are accounting
+identities for expected rewards.
+
+**The familiar formula.** Anyone who has compared loans knows [present value](https://en.wikipedia.org/wiki/Present_value): a payment c_t received t
+years from now, at interest rate i per year, is worth c_t / (1 + i)^t today. Writing γ = 1 / (1 + i),
+the present value of a stream of payments is Σ_t γ^t c_t. The discount factor γ plays exactly this
+role, with rewards in place of payments: γ = 0.9 corresponds to i ≈ 11% per step. An equivalent
+reading is that the process ends after each step with probability 1 − γ.
+
+**One state.** In state s, the policy takes action π(s), earns r(s, π(s)) now, and moves to state s'
+with probability p(s'|s, π(s)). Everything after that is worth v_π(s') from the next step on, discounted
+once by γ:
+
+```
+v_π(s) = r(s, π(s)) + γ Σ_s' p(s'|s, π(s)) v_π(s')
+```
+
+This is the Bellman expectation equation for one state: value now equals reward now plus the
+discounted expected value of where the system goes.
+
+**All states at once.** Stacking the n equations gives one linear system:
+
+```
+v_π = r_π + γ P_π v_π,    or    (I − γ P_π) v_π = r_π
+```
+
+The known quantities are P_π and r_π, read off the model once the policy is fixed; v_π is solved for.
+The matrix is always invertible. Every row of P_π is a probability distribution, so P_π has eigenvalue
+1 (with the all-ones vector) and, because no eigenvalue can exceed the largest row sum, none larger
+than 1 in absolute value. The spectral radius of γ P_π is therefore γ < 1, so 1 is not an
+eigenvalue of γ P_π, and the Neumann series converges:
+
+```
+v_π = (I − γ P_π)⁻¹ r_π = r_π + γ P_π r_π + γ² P_π² r_π + …
+```
+
+Row s of P_π^t is the distribution of the state t steps after starting in s, so term t is the expected
+reward at step t, discounted t times. The series restates the definition of value: the expected
+discounted sum of rewards.
+
+**Improvement, the one nonlinear step.** Given v_π, the action value of each action a in state s is
+
+```
+q(s, a) = r(s, a) + γ Σ_s' p(s'|s, a) v_π(s')
+```
+
+The improved policy picks, in each state, the action with the largest q(s, a). The max of a list is its
+largest entry, and the argmax is the position where it occurs: for the list (repair: 1/3, wait: 0) the
+max is 1/3 and the argmax is repair. Policy iteration alternates evaluation (a linear solve) and
+improvement (an argmax per state) until the policy stops changing. Each improved policy is at least as
+good in every state, and with finitely many policies the loop ends.
+
+**The optimal value.** At that point v∗ satisfies the Bellman optimality equation, stated here but
+not solved as a linear system, because the max makes it nonlinear:
+
+```
+v∗(s) = max_a [ r(s, a) + γ Σ_s' p(s'|s, a) v∗(s') ]
+```
+
+**Worked case: a machine.** Let state 1 be working and state 2 be broken, with γ = 1/2. A working
+machine has one action, run: reward 2, and next step it is working or broken with probability 1/2 each.
+A broken machine has two actions: repair, reward −1 (a cost), after which it is working; or wait,
+reward 0, after which it is still broken. There are two policies, "wait" and "repair", named by the
+choice in the broken state.
+
+For the repair policy, the two Bellman equations in v_1 and v_2 are
+
+```
+v_1 = 2 + (1/2)(1/2 v_1 + 1/2 v_2)
+v_2 = −1 + (1/2)(v_1)
+```
+
+with the transition matrix and reward vector
+
+```
+                 working  broken
+P_repair     = [ 1/2      1/2 ]    working
+               [ 1        0   ]    broken
+
+r_repair     = [ 2  ]
+               [ −1 ]
+```
+
+so (I − γ P_π) v = r_π reads
+
+```
+[ 3/4    −1/4 ]   [ v_1 ]   [ 2  ]
+[ −1/2   1    ] × [ v_2 ] = [ −1 ]
+```
+
+The [determinant](https://en.wikipedia.org/wiki/Determinant) is 3/4 − 1/8 = 5/8, and v_repair = (14/5, 2/5) = (2.8, 0.4). The eigenvalues of
+γ P_repair are 1/2 and −1/4, so the spectral radius is γ, as promised. The first Neumann partial sums
+are (2, −1), then (2.25, 0), then (2.5625, 0.125), approaching (2.8, 0.4).
+
+For the wait policy, P_wait has rows (1/2, 1/2) and (0, 1), and r_wait = (2, 0). The system is
+
+```
+[ 3/4   −1/4 ]   [ v_1 ]   [ 2 ]
+[ 0     1/2  ] × [ v_2 ] = [ 0 ]
+```
+
+so v_2 = 0 and v_wait = (8/3, 0) ≈ (2.667, 0). Starting policy iteration from wait, the improvement
+step compares the two actions in the broken state using v_wait:
+
+```
+q(broken, repair) = −1 + (1/2)(8/3) = 1/3
+q(broken, wait)   =  0 + (1/2)(0)   = 0
+```
+
+The argmax is repair. Evaluating repair gives (2.8, 0.4), larger in both states. Improving again
+gives q(broken, repair) = −1 + (1/2)(2.8) = 0.4 against q(broken, wait) = (1/2)(0.4) = 0.2, so repair
+stays and policy iteration stops: v∗ = (2.8, 0.4).
+
+**Value iteration.** Instead of solving, repeat
+v_(k+1)(s) = max_a [ r(s, a) + γ Σ_s' p(s'|s, a) v_k(s') ] from v_0 = 0. Each sweep is a multiplication
+by γ times a stochastic matrix plus a max per row, like the power iteration of the PageRank entry.
+For the machine, v_1 = (2, 0), v_2 = (2.5, 0), v_3 = (2.625, 0.25)
+and v_8 ≈ (2.795, 0.395). The largest error at least halves each sweep, a factor of γ.
+
+**Matrix structure.** P_π is row-stochastic and sparse: from any state only a few next states are possible. I − γ P_π is
+strictly diagonally dominant by rows (its diagonal entry 1 − γ p(s|s, π(s)) exceeds the sum of the
+other entries' sizes), so [Jacobi](https://en.wikipedia.org/wiki/Jacobi_method) and [Gauss–Seidel](https://en.wikipedia.org/wiki/Gauss%E2%80%93Seidel_method) iterations converge on it. Its inverse is entrywise
+nonnegative, so larger rewards never lower any value.
+
+**What is computed.** For up to about 10⁴ states, policy evaluation is a sparse direct solve. For more, it is iterative:
+repeated application of v ← r_π + γ P_π v, a few sweeps per evaluation (modified policy iteration),
+or value iteration throughout. Policy iteration typically stops after a handful of improvements;
+value iteration needs about log(10) / log(1/γ) sweeps per extra decimal digit of accuracy, about 22
+at γ = 0.9, so γ near 1 is slow, just as a damping factor near 1 slows PageRank.
+
+**Why linear algebra is the right tool.** Once a policy is fixed, value is a linear function of the rewards: v_π = (I − γ P_π)⁻¹ r_π. Its
+existence, uniqueness and series form all come from one spectral fact, that γ P_π has spectral radius
+γ < 1. The only nonlinearity in planning is the per-state argmax, and policy iteration isolates it
+between exact linear solves.
+
+**Pitfall worth teaching.** The discount factor is a modeling choice, not a numerical detail, and it can change the decision. In
+the machine example with γ = 1/4, v_wait = (16/7, 0) and q(broken, repair) = −1 + (1/4)(16/7) = −3/7,
+which is less than 0, so waiting, that is abandoning the machine, is optimal. At γ = 9/10, repair wins
+by a wide margin, with v_repair = (310/29, 250/29) ≈ (10.69, 8.62). A second trap is setting γ = 1 for
+a task that never ends: I − P_π is then singular, since P_π has eigenvalue 1, and the value is
+infinite or undefined.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| state s | one of the n situations the system can be in, an index into R^n |
+| action a | a choice available in a state |
+| transition probability p(s'\|s, a) | entry of the stochastic matrix for action a |
+| reward r(s, a) | the immediate payoff, one entry of the vector r_π once a policy is fixed |
+| discount factor γ | the weight on the next step's value; it scales P_π and sets the spectral radius |
+| policy π | a choice of one action per state, which picks one row of P and r for each state |
+| transition matrix P_π | the n × n row-stochastic matrix of the Markov chain the policy induces |
+| value function v_π | the solution of (I − γ P_π) v = r_π |
+| Bellman expectation equation | the fixed-point form v = r_π + γ P_π v of that linear system |
+| policy evaluation | solving the linear system, directly or by iteration |
+| policy improvement | the argmax over actions, row by row; the one nonlinear step |
+| action value q(s, a) | r(s, a) + γ (row of P for action a) · v |
+| value iteration | repeated multiplication by γ P with a max per row, like power iteration |
+| Bellman optimality equation | v∗ = max over actions of the same affine map; a fixed point, not a linear system |
+
+**Extensions.** Q-learning estimates the action values q(s, a) from observed transitions without knowing p or r; it is
+the basic method of reinforcement learning, and its convergence proof uses stochastic approximation,
+which is Tier 3. Value iteration converges because the Bellman optimality map is a contraction mapping
+in the max norm with constant γ, which the [Banach fixed-point theorem](https://en.wikipedia.org/wiki/Banach_fixed-point_theorem) turns into existence and
+uniqueness of v∗. The optimal value is also the solution of a [linear program](https://en.wikipedia.org/wiki/Linear_programming): minimize Σ_s v(s)
+subject to v(s) ≥ r(s, a) + γ Σ_s' p(s'|s, a) v(s') for every state and action, and the dual
+variables are discounted state-action visit frequencies. For huge state spaces, v is approximated by
+a weighted sum of a few chosen features of the state; least-squares [temporal-difference learning](https://en.wikipedia.org/wiki/Temporal_difference_learning)
+(LSTD) then solves a small linear system for the weights, and deep reinforcement learning replaces
+the weighted sum by a neural network.
+Average-reward MDPs drop the discount and use the [stationary distribution](https://en.wikipedia.org/wiki/Stationary_distribution) of P_π, the Perron vector
+of the PageRank entry. The consensus and opinion dynamics entry iterates a row-stochastic matrix with
+no rewards, and the spectral clustering entry reads structure from the eigenvectors of a related
+graph matrix.
+
+---
+
 ## 29. Massey and Colley ratings: ranking teams by least squares on the schedule
 
 <details>
@@ -2524,7 +2986,7 @@ larger weights through weighted least squares.
 **Why linear algebra is the right tool.** The method turns a schedule into a matrix, and every question about fairness becomes a question about
 that matrix. Strength of schedule is the off-diagonal part of M. The overall level of the ratings is
 the null space, and the sum constraint is the choice of datum. Whether two teams can be compared is
-whether they are in the same [connected piece](https://en.wikipedia.org/wiki/Component_%28graph_theory%29), which is the rank of M. The same least-squares
+whether they are in the same connected piece, which is the rank of M. The same least-squares
 projection appears in the regression and geodetic entries, so their tools, such as residuals and
 leverage, apply here too.
 
@@ -2540,7 +3002,7 @@ M = [ −1   1   0   0 ]
 ```
 
 has rank 2, and its null space contains both (1, 1, 0, 0) and (0, 0, 1, 1). Replacing one equation by
-the sum constraint removes only one of those directions, and the matrix stays singular: its [determinant](https://en.wikipedia.org/wiki/Determinant)
+the sum constraint removes only one of those directions, and the matrix stays singular: its determinant
 is 0. The results say how P compares with Q and how R compares with S, but nothing about P against R.
 Any software that returns an answer has broken the tie arbitrarily. Colley's 2I makes the matrix
 invertible, but only by falling back on its prior: the comparison between the two groups is then the
@@ -2799,6 +3261,220 @@ subspace with a few steps of the power iteration from the PageRank entry. Admixt
 STRUCTURE and ADMIXTURE replace the SVD with a [nonnegative factorization](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization), G / 2 ≈ Q F, where row i of Q
 holds individual i's ancestry proportions (nonnegative, summing to 1) and F holds each ancestral
 population's allele frequencies (between 0 and 1).
+
+---
+
+## 35. Consensus and opinion dynamics: repeated averaging with a row-stochastic matrix
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A group of people each hold an opinion that can be written as a number: an estimate of a price or the
+probability that it will rain tomorrow. They talk. After each round of
+conversation, everyone revises their estimate toward the estimates of the people they listen to, giving
+more weight to some voices than to others.
+
+Two questions follow. Does the group ever agree? And if it does, on what number? It is tempting to guess
+the plain average of where everyone started, but that is usually wrong. People who are listened to by
+people who are themselves listened to pull the final answer toward their own starting view.
+
+The same arithmetic runs inside machines. Sensors in a field, drones in a swarm or computers in a data
+center can each hold a reading and repeatedly average with their neighbors, with no central computer,
+until all of them hold the same value.
+
+</details>
+
+**Field:** Network science, social network analysis, distributed computing, sensor networks, multi-agent control
+
+**Tier:** 2 — the agreed value is set by the left Perron eigenvector of the trust matrix and the speed of agreement by its second-largest eigenvalue modulus, so the entry needs eigenvalues and Perron–Frobenius. The continuous-time model, named in Extensions, is an ordinary differential equation and raises the ceiling to Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^n over agents: x(t) holds one opinion per person. The influence weights π live in the probability simplex (nonnegative, summing to 1), which is not a subspace.
+
+**Underlying equations.** A linear difference equation x(t+1) = W x(t), with W row-stochastic, so that each new opinion is a [weighted average](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) of current opinions.
+
+**The problem.** The setting has three core nouns. An agent is one participant: a person, a sensor or a computer. An
+opinion is the single real number an agent holds at a given time, for example an estimated price in
+dollars. The trust graph records who listens to whom: an arrow from agent i to agent j means that i
+gives j's opinion some weight, and every agent may also give weight to their own opinion. For example,
+in a committee of three, P may listen only to their own opinion and Q's, while Q listens to everyone.
+
+Time is counted in rounds t = 0, 1, 2, …, and in each round every agent replaces their opinion by a
+fixed weighted average of the current opinions they listen to. The weights are given; the starting
+opinions are given. The unknowns are the long-run behavior: whether all opinions converge to one
+common value (consensus), what that value is, and how many rounds it takes to get close.
+
+The motivating contrast is between the plain average of the starting opinions and the value the group
+actually reaches. The two coincide only in special networks. In general the group lands on a
+weighted average whose weights measure each agent's influence in the network, and that weighting, not the
+individual trust weights, is what the field means by social power.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of agents | people, sensors or computers in the network | integer | — |
+| i, j | agent indices | i is the listener, j the agent listened to | integers 1 … n | — |
+| t | round | number of averaging rounds so far | integer | — |
+| x_i(t) | opinion | agent i's opinion after t rounds | scalar | units of the opinion (for example dollars) |
+| x(t) | opinion vector | the opinions x_i(t) stacked | n × 1 | units of the opinion |
+| w_ij | trust weight | weight agent i gives to agent j's opinion; w_ij ≥ 0 and Σ_j w_ij = 1 | scalar | dimensionless |
+| W | trust (influence) matrix | the weights w_ij; row i is agent i's averaging rule | n × n | dimensionless |
+| 1 | all-ones vector | | n × 1 | — |
+| π | influence weights (social power) | left eigenvector of W for eigenvalue 1, scaled so 1ᵀ π = 1 | n × 1 | dimensionless |
+| c | consensus value | the common limit of every x_i(t) | scalar | units of the opinion |
+| λ_k | eigenvalues of W | ordered so 1 = λ_1 ≥ |λ_2| ≥ … ≥ |λ_n| | scalar, possibly complex | dimensionless |
+
+**Formulation.** **Where the equations come from.** The model is a linear difference equation: opinions at round t+1
+are computed from opinions at round t by a fixed rule, with nothing happening between rounds.
+
+**The familiar formula.** A weighted average of numbers y_1, …, y_m with weights a_1, …, a_m that are
+nonnegative and sum to 1 is a_1 y_1 + … + a_m y_m. A course grade that counts homework at 0.4 and
+exams at 0.6 is one example: homework 80 and exams 90 give 0.4 × 80 + 0.6 × 90 = 86. A weighted average
+always lies between the smallest and the largest of the y's.
+
+**One agent.** Agent i's update is that weighted average, with the trust weights w_ij as the a's and
+the current opinions x_j(t) as the y's:
+
+```
+x_i(t+1) = w_i1 x_1(t) + w_i2 x_2(t) + … + w_in x_n(t)
+```
+
+**All agents at once.** Stacking the n updates gives the [DeGroot model](https://en.wikipedia.org/wiki/DeGroot_learning):
+
+```
+x(t+1) = W x(t),   so   x(t) = W^t x(0)
+```
+
+W is nonnegative and every row sums to 1, W 1 = 1, which is what row-stochastic means. So 1 is a right
+eigenvector with eigenvalue 1: if everyone already agrees, nobody moves.
+
+**The limit.** Suppose the trust graph is [strongly connected](https://en.wikipedia.org/wiki/Strongly_connected_component) (every agent's opinion reaches every other
+agent through some chain of arrows) and [aperiodic](https://en.wikipedia.org/wiki/Aperiodic_graph). Aperiodic means that the [greatest common divisor](https://en.wikipedia.org/wiki/Greatest_common_divisor)
+(gcd) of the lengths of the graph's cycles is 1; the gcd is the largest whole number dividing all of
+them, so cycles of lengths 2 and 3 have gcd 1. A single positive self-weight w_ii gives a cycle of
+length 1 and is enough. Under these conditions the Perron–Frobenius theorem says that 1 is a simple
+eigenvalue, every other eigenvalue has |λ_k| < 1, and the matching left eigenvector π, with πᵀ W = πᵀ,
+can be taken with every entry positive. Then
+
+```
+W^t → 1 πᵀ,   so   x(t) → 1 (πᵀ x(0)),   c = πᵀ x(0) = π_1 x_1(0) + … + π_n x_n(0)
+```
+
+Everyone agrees, and the consensus value is the π-weighted average of the starting opinions. The
+quantity πᵀ x(t) is the same at every round, because πᵀ x(t+1) = πᵀ W x(t) = πᵀ x(t); it is the one
+thing averaging never changes. The distance to consensus shrinks roughly like |λ_2|^t, where |λ_2| is
+the modulus, or absolute value, of the second-largest eigenvalue. Eigenvalues of a nonsymmetric W can
+be complex, and the modulus of a + bi is √(a² + b²); for example, 0.3 + 0.4i has modulus 0.5.
+
+**Known and unknown.** W and x(0) are given. The unknowns are π (a linear system: πᵀ (W − I) = 0
+together with 1ᵀ π = 1), then c, and |λ_2| for the speed.
+
+**Worked case: three people.** P keeps half their own opinion and takes half from Q. Q keeps half and
+takes a quarter each from P and R. R keeps half and takes half from Q. As scalar equations:
+
+```
+x_P(t+1) = 1/2 x_P(t) + 1/2 x_Q(t)
+x_Q(t+1) = 1/4 x_P(t) + 1/2 x_Q(t) + 1/4 x_R(t)
+x_R(t+1) =              1/2 x_Q(t) + 1/2 x_R(t)
+```
+
+Row by row, with the columns labeled by whose opinion is being weighted:
+
+```
+      P    Q    R
+W = [ 1/2  1/2  0   ]    P
+    [ 1/4  1/2  1/4 ]    Q
+    [ 0    1/2  1/2 ]    R
+```
+
+The starting opinions are x(0) = (8, 0, 4), with plain average 4. Iterating by hand:
+
+```
+x(0) = (8,    0, 4   )
+x(1) = (4,    3, 2   )
+x(2) = (3.5,  3, 2.5 )
+x(3) = (3.25, 3, 2.75)
+x(4) = (3.125, 3, 2.875)
+```
+
+The opinions close in on 3, not on 4. To predict the 3, solve πᵀ W = πᵀ. Its first entry reads
+π_P = 1/2 π_P + 1/4 π_Q, so π_Q = 2 π_P; its third reads π_R = 1/4 π_Q + 1/2 π_R, so π_Q = 2 π_R.
+With π_P + π_Q + π_R = 1 this gives π = (1/4, 1/2, 1/4). Q has the most social power, because both
+other people listen to Q. The consensus value is
+
+```
+c = πᵀ x(0) = 1/4 × 8 + 1/2 × 0 + 1/4 × 4 = 3
+```
+
+which matches the iteration. Every row of W^t tends to πᵀ = (1/4, 1/2, 1/4). The eigenvalues of W are
+1, 1/2 and 0, with right eigenvectors 1, (1, 0, −1) and (1, −1, 1). Writing x(0) in that basis,
+
+```
+x(0) = 3 (1, 1, 1) + 2 (1, 0, −1) + 3 (1, −1, 1)
+```
+
+so for t ≥ 1 the third term is gone and x(t) = 3 1 + 2 (1/2)^t (1, 0, −1): the disagreement halves
+every round, exactly |λ_2| = 1/2, as the table shows.
+
+**Matrix structure.** W is nonnegative, row-stochastic and sparse: each agent listens to a handful of others. It is usually
+not symmetric, because trust need not be mutual, so its eigenvalues can be complex and its left and
+right eigenvectors differ.
+
+**What is computed.** Running the model is power iteration in the row-stochastic convention: one sparse matrix–vector product
+per round.
+The influence weights π are computed as the dominant left eigenvector, by power iteration on Wᵀ or a
+sparse eigensolver, for example scipy.sparse.linalg.eigs, and |λ_2| by the same solver.
+
+**Why linear algebra is the right tool.** Each round is a linear map, so t rounds are the matrix power W^t, and its long-run behavior is read off
+the eigenvalues. Perron–Frobenius turns "does the group agree?" into a condition on the graph, and the
+left eigenvector gives the agreed value without running a single round.
+
+**Pitfall worth teaching.** Strong connectivity alone is not enough. Two people who each listen only to the other swap opinions
+forever:
+
+```
+W = [ 0  1 ]
+    [ 1  0 ]
+```
+
+The graph has only cycles of length 2, and W has eigenvalue −1 with modulus 1. Any positive self-weight
+removes the oscillation.
+
+A stubborn agent changes the answer completely. If P stops listening, with row P of W set to (1, 0, 0)
+and w_PP = 1, then π = (1, 0, 0) and the group converges to P's starting opinion 8, whatever Q and R
+think: x(4) = (8, 5.125, 3.9375). It is also slower, because |λ_2| rises to (2 + √2)/4 ≈ 0.854.
+Finally, if the trust graph splits into groups that never listen outside themselves, eigenvalue 1 is
+repeated, and each group reaches its own consensus.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| DeGroot model | the difference equation x(t+1) = W x(t) with W row-stochastic |
+| trust (influence) matrix W | row i holds the weights person i gives to each opinion; nonnegative, rows sum to 1 |
+| self-weight w_ii | how much person i keeps of their own opinion; a diagonal entry of W |
+| consensus | x(t) → c 1, every entry of the opinion vector equal |
+| social power (influence weight) π_i | entry i of the left Perron eigenvector, πᵀ W = πᵀ, 1ᵀ π = 1 |
+| consensus value c | πᵀ x(0), the π-weighted average of the starting opinions |
+| strongly connected trust graph | W irreducible |
+| aperiodic | the gcd of the graph's cycle lengths is 1; with strong connectivity, W primitive |
+| convergence rate | the second-largest eigenvalue modulus \|λ_2\| of W |
+| stubborn agent | a row of W equal to a standard basis vector, w_ii = 1 |
+| average consensus | W doubly stochastic (columns also sum to 1), so π = 1/n and c is the plain mean |
+
+**Extensions.** The PageRank entry uses the same Perron vector with the convention transposed: there the matrix is
+column-stochastic and the stationary distribution is a right eigenvector, G r = r. Here W is
+row-stochastic, and π is a left eigenvector. Read as the transition matrix of a Markov chain, W
+moves a walker from agent i to agent j with probability w_ij, and π is its stationary distribution.
+The Markov decision processes entry builds on the same row-stochastic transition matrices. When W is also [doubly stochastic](https://en.wikipedia.org/wiki/Doubly_stochastic_matrix), with
+columns summing to 1, π = (1/n) 1 and the group reaches the plain mean; this is average consensus, used
+in sensor networks. For a symmetric network with graph Laplacian L (degree matrix minus adjacency
+matrix), W = I − ε L with a small enough step ε > 0 is such a matrix, and its |λ_2| is 1 − ε times the
+second-smallest eigenvalue of L, the algebraic connectivity met in the spectral clustering entry. The
+Laplacian also ranks teams in the Massey and Colley entry. Letting the step size shrink to zero gives
+continuous-time consensus, the linear ordinary differential equation dx/dt = −L x, which is Tier 3. The
+Friedkin–Johnsen model, x(t+1) = Λ W x(t) + (I − Λ) x(0) with Λ a diagonal matrix of susceptibilities
+between 0 and 1, keeps each agent partly anchored to their initial view, so disagreement can persist at
+equilibrium.
 
 ---
 
@@ -5621,7 +6297,7 @@ lies. Measuring one street inside the loop removes the uncertainty entirely.
 
 **Field:** Transportation engineering, traffic monitoring, [network flow](https://en.wikipedia.org/wiki/Flow_network)
 
-**Tier:** 1 — conservation at each intersection is a linear system with more unknowns than independent equations, solved by elimination into a particular solution plus the null space. Choosing among the admissible flows by optimization (network flow, [linear programming](https://en.wikipedia.org/wiki/Linear_programming)) is Tier 2.
+**Tier:** 1 — conservation at each intersection is a linear system with more unknowns than independent equations, solved by elimination into a particular solution plus the null space. Choosing among the admissible flows by optimization (network flow, linear programming) is Tier 2.
 
 **Scalars and vectors.** Scalar field: R; flows on one-way streets are further restricted to nonnegative values. Vectors: R^m, one coordinate per internal road segment (m = 4 in the worked case), each the net flow along a chosen reference direction. The equations are indexed by intersections, so the incidence matrix maps R^m to R^n with n intersections. On one-way streets the physically possible flows are the nonnegative solutions, which form a [convex set](https://en.wikipedia.org/wiki/Convex_set) (here a ray), not a subspace.
 
@@ -5972,10 +6648,13 @@ Neumann series as the Leontief entry.
 | 22 | Natural language processing | Truncated SVD; Eckart–Young low-rank approximation | Truncated or randomized SVD |
 | 23 | Large language models | Bilinear forms and the rank of a product; low-rank updates | Dense matrix products; LoRA adapters |
 | 33 | Population genetics | SVD of a centered genotype matrix | Randomized SVD |
+| 11 | Spectral clustering | Graph Laplacian; Fiedler vector | Sparse symmetric eigensolve |
+| 35 | Opinion dynamics | Left Perron eigenvector of a row-stochastic matrix | Power iteration |
+| 28 | Reinforcement learning | Linear system (I − γ P_π) v = r_π; Neumann series | Policy iteration; value iteration |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
-**Not yet represented:** graph Laplacians and spectral methods, Krylov subspace methods on their own terms, optimization duality and linear programming, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
+**Not yet represented:** Krylov subspace methods on their own terms, optimization duality and linear programming, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
 
 ---
 
@@ -5997,11 +6676,7 @@ the one exception marked below.
   written, is the Tier 1 complex-scalar entry.
 
 ### Would add: graph Laplacians and spectral methods
-- **Spectral clustering and image segmentation** — Fiedler vector, normalized cuts, Cheeger inequality
 - **Laplacian eigenmaps and diffusion maps** — nonlinear dimensionality reduction with a linear core
-- **Consensus and opinion dynamics (DeGroot models)** — convergence rate set by the algebraic connectivity
-  (Tier 2 in its discrete-time DeGroot form, a difference equation; the continuous-time version,
-  dx/dt = −L x, is an ODE and would be Tier 3)
 
 ### Would add: large-scale iterative methods as the subject
 - **Poisson/Navier–Stokes discretization** — finite differences or finite volumes, conjugate gradient, multigrid, preconditioner design
@@ -6026,7 +6701,6 @@ the one exception marked below.
 - **X-ray crystallography** — the phase problem; Patterson maps; structure factors as Fourier coefficients
 
 ### Would add: discrete and algebraic applications
-- **Markov decision processes** — policy evaluation as a linear solve, value iteration as a fixed point
 - **Cryptanalysis: sparse GF(2) nullspace in the number field sieve** — block Lanczos/Wiedemann at 10⁸ scale
 - **Combinatorial design and coding bounds** — rank arguments proving combinatorial impossibility results
 
@@ -6044,10 +6718,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 23 of the 34 written entries are now Tier 1.
+   backlog, which is under way: 23 of the 37 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 338 terms across the 34 written entries, and the backlog entries most likely to generate
+   currently covers 374 terms across the 37 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

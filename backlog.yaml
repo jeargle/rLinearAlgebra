@@ -1,22 +1,4 @@
 backlog:
-- id: 11
-  slug: spectral-clustering-and-image-segmentation
-  status: backlog
-  short_title: Spectral clustering and image segmentation
-  nav_field: Machine Learning & Data
-  field: Computer Science
-  subfield: Machine learning/vision
-  tier: 2
-  tier_ceiling: 3
-  prereq_beyond_la: spectral graph theory; Cheeger inequality
-  scalar_field: R
-  vector_space: R^n over graph nodes
-  core_la_object: Graph Laplacian eigenvectors
-  la_concepts: Laplacian; Fiedler vector; normalized cuts
-  primary_method: Sparse symmetric eigensolve
-  matrix_structure: sparse symmetric PSD
-  typical_size: 1e4-1e7
-  worked_example_size: ''
 - id: 13
   slug: poisson-and-navier-stokes-discretization
   status: backlog
@@ -197,24 +179,6 @@ backlog:
   matrix_structure: dense complex Fourier operator
   typical_size: 1e4-1e6 reflections
   worked_example_size: ''
-- id: 28
-  slug: markov-decision-processes
-  status: backlog
-  short_title: Markov decision processes
-  nav_field: Machine Learning & Data
-  field: Computer Science
-  subfield: Reinforcement learning
-  tier: 2
-  tier_ceiling: 3
-  prereq_beyond_la: probability; contraction mappings
-  scalar_field: R
-  vector_space: R^|S| over states
-  core_la_object: Linear system for policy evaluation
-  la_concepts: fixed point; stochastic matrices; contraction mapping
-  primary_method: Policy/value iteration; linear solve
-  matrix_structure: sparse stochastic
-  typical_size: 1e3-1e9 states
-  worked_example_size: ''
 - id: 30
   slug: sparse-gf-2-nullspace-in-the-number-field-sieve
   status: backlog
@@ -287,25 +251,6 @@ backlog:
   primary_method: Grobner bases; tensor methods
   matrix_structure: tensors of site-pattern frequencies
   typical_size: 4^n patterns
-  worked_example_size: ''
-- id: 35
-  slug: consensus-and-opinion-dynamics
-  status: backlog
-  short_title: Consensus and opinion dynamics
-  nav_field: Computer Science & Networks
-  field: Mathematics
-  subfield: Network dynamics
-  tier: 2
-  tier_ceiling: 3
-  prereq_beyond_la: none for the discrete-time DeGroot model; continuous-time consensus, dx/dt = −L x,
-    is an ODE (Tier 3)
-  scalar_field: R
-  vector_space: R^n over agents
-  core_la_object: Averaging with a stochastic matrix
-  la_concepts: convergence rate from algebraic connectivity; Perron-Frobenius
-  primary_method: Power iteration; ODE integration
-  matrix_structure: sparse row-stochastic
-  typical_size: 1e2-1e6
   worked_example_size: ''
 - id: 46
   slug: ac-circuit-analysis-with-complex-impedance

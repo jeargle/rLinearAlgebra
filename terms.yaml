@@ -106,19 +106,22 @@ terms:
   - 6
   - 9
   - 10
+  - 11
   - 12
   - 19
   - 20
   - 22
   - 24
+  - 28
   - 29
   - 33
+  - 35
   - 42
   - 43
   - 44
   - 47
   lowest_tier: 1
-  uses: 48
+  uses: 98
   match:
   - eigenvalues?
   - eigenvectors?
@@ -148,8 +151,9 @@ terms:
   entries:
   - 1
   - 10
-  lowest_tier: 3
-  uses: 2
+  - 11
+  lowest_tier: 2
+  uses: 3
   match:
   - generalized (symmetric )?eigenproblem
   - generalized eigenvalue
@@ -230,6 +234,7 @@ terms:
   - 20
   - 22
   - 24
+  - 28
   - 29
   - 33
   - 40
@@ -241,7 +246,7 @@ terms:
   - 51
   - 52
   lowest_tier: 1
-  uses: 41
+  uses: 42
   match:
   - least[- ]squares
 - term: low-rank approximation (Eckart–Young)
@@ -300,9 +305,10 @@ terms:
   note: ''
   entries:
   - 5
+  - 28
   - 52
   lowest_tier: 1
-  uses: 2
+  uses: 3
   match:
   - Neumann series
 - term: null space (kernel)
@@ -318,6 +324,7 @@ terms:
   - 3
   - 4
   - 7
+  - 11
   - 12
   - 20
   - 23
@@ -328,7 +335,7 @@ terms:
   - 50
   - 51
   lowest_tier: 1
-  uses: 42
+  uses: 44
   match:
   - null ?space
   - nullity
@@ -385,13 +392,14 @@ terms:
   - 2
   - 7
   - 10
+  - 11
   - 12
   - 20
   - 23
   - 29
   - 33
   lowest_tier: 1
-  uses: 15
+  uses: 18
   match:
   - positive[- ]definite
   - positive semidefinite
@@ -484,6 +492,7 @@ terms:
   - 3
   - 8
   - 9
+  - 11
   - 20
   - 22
   - 23
@@ -493,7 +502,7 @@ terms:
   - 40
   - 45
   lowest_tier: 1
-  uses: 60
+  uses: 63
   match:
   - singular value decomposition
   - \bSVD\b
@@ -529,18 +538,21 @@ terms:
   - 7
   - 8
   - 10
+  - 11
   - 12
   - 20
   - 22
   - 24
+  - 28
   - 29
   - 33
+  - 35
   - 43
   - 47
   - 51
   - 52
   lowest_tier: 1
-  uses: 31
+  uses: 41
   match:
   - \bsparse\b
   - sparsity
@@ -554,8 +566,9 @@ terms:
   entries:
   - 5
   - 6
+  - 28
   lowest_tier: 1
-  uses: 3
+  uses: 6
   match:
   - spectral radius
 - term: stochastic matrix
@@ -567,9 +580,12 @@ terms:
   note: ''
   entries:
   - 6
+  - 11
   - 23
+  - 28
+  - 35
   lowest_tier: 2
-  uses: 4
+  uses: 18
   match:
   - stochastic matri
   - column-stochastic
@@ -587,14 +603,16 @@ terms:
   - 2
   - 9
   - 10
+  - 11
   - 12
   - 20
   - 23
   - 29
   - 33
+  - 35
   - 47
   lowest_tier: 1
-  uses: 22
+  uses: 28
   match:
   - symmetric matri
   - \bsymmetric\b
@@ -668,8 +686,9 @@ terms:
   - 5
   - 6
   - 8
+  - 35
   lowest_tier: 1
-  uses: 5
+  uses: 7
   match:
   - 'Perron[–-]Frobenius(?: theorem)?'
 - term: Arnoldi iteration
@@ -778,9 +797,10 @@ terms:
   note: ''
   entries:
   - 3
+  - 11
   - 12
   lowest_tier: 1
-  uses: 2
+  uses: 3
   match:
   - conjugate gradient
 - term: Davidson method
@@ -879,10 +899,11 @@ terms:
   - 7
   - 9
   - 10
+  - 11
   - 22
   - 33
   lowest_tier: 1
-  uses: 6
+  uses: 7
   match:
   - Lanczos
 - term: Levenberg–Marquardt algorithm
@@ -934,9 +955,11 @@ terms:
   note: ''
   entries:
   - 6
+  - 28
   - 33
+  - 35
   lowest_tier: 2
-  uses: 2
+  uses: 5
   match:
   - power iteration
 - term: randomized SVD
@@ -1630,8 +1653,10 @@ terms:
   entries:
   - 5
   - 6
+  - 28
+  - 35
   lowest_tier: 1
-  uses: 4
+  uses: 16
   match:
   - Markov chain
   - Markov
@@ -1733,8 +1758,9 @@ terms:
   - 9
   - 10
   - 12
+  - 35
   lowest_tier: 1
-  uses: 32
+  uses: 31
   match:
   - ordinary differential equation
   - \bODEs?\b
@@ -1747,12 +1773,15 @@ terms:
   note: ''
   entries:
   - 6
+  - 11
   - 22
   - 23
+  - 28
   - 29
   - 33
+  - 35
   lowest_tier: 1
-  uses: 7
+  uses: 14
   match:
   - PageRank
 - term: parity-check matrix
@@ -1863,14 +1892,16 @@ terms:
   note: ''
   entries:
   - 9
+  - 11
   - 19
   - 22
   - 23
   - 33
   - 40
   lowest_tier: 1
-  uses: 14
+  uses: 21
   match:
+  - principal[- ]component analysis
   - principal[- ]component
   - \bPCA\b
 - term: proper orthogonal decomposition
@@ -2009,8 +2040,9 @@ terms:
   note: ''
   entries:
   - 6
+  - 35
   lowest_tier: 2
-  uses: 3
+  uses: 5
   match:
   - difference equation
 - term: Reed–Solomon code
@@ -2300,11 +2332,13 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 11
   - 12
   - 24
   - 29
+  - 35
   lowest_tier: 1
-  uses: 6
+  uses: 13
   match:
   - Laplacian
 - term: Kirchhoff's circuit laws
@@ -2445,9 +2479,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 11
   - 12
   lowest_tier: 1
-  uses: 1
+  uses: 2
   match:
   - multigrid
 - term: diagonally dominant matrix
@@ -2459,9 +2494,10 @@ terms:
   note: ''
   entries:
   - 12
+  - 28
   - 29
   lowest_tier: 1
-  uses: 2
+  uses: 3
   match:
   - diagonally dominant
 - term: Lagrange interpolation
@@ -3296,9 +3332,10 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 28
   - 51
   lowest_tier: 1
-  uses: 4
+  uses: 5
   match:
   - linear program
 - term: totally unimodular matrix
@@ -3772,13 +3809,14 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 28
   - 29
   - 37
   - 38
   - 39
   - 43
   lowest_tier: 1
-  uses: 10
+  uses: 11
   match:
   - \bdeterminant\b
 - term: finite difference
@@ -5002,11 +5040,13 @@ terms:
   recommend: link
   note: ''
   entries:
+  - 11
   - 29
   lowest_tier: 1
-  uses: 1
+  uses: 3
   match:
   - connected piece
+  - connected component
 - term: polynomial long division
   aliases: []
   kind: numerical method
@@ -5519,3 +5559,387 @@ terms:
   uses: 1
   match:
   - non-?negative (matrix )?factorization
+- term: spectral clustering
+  aliases: []
+  kind: numerical method
+  wikipedia: Spectral clustering
+  url: https://en.wikipedia.org/wiki/Spectral_clustering
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 3
+  match:
+  - spectral clustering
+- term: algebraic connectivity
+  aliases: []
+  kind: linear algebra
+  wikipedia: Algebraic connectivity
+  url: https://en.wikipedia.org/wiki/Algebraic_connectivity
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  - 35
+  lowest_tier: 2
+  uses: 4
+  match:
+  - algebraic connectivity
+  - Fiedler vector
+- term: image segmentation
+  aliases: []
+  kind: domain concept
+  wikipedia: Image segmentation
+  url: https://en.wikipedia.org/wiki/Image_segmentation
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 2
+  match:
+  - image segmentation
+- term: k-means clustering
+  aliases: []
+  kind: numerical method
+  wikipedia: K-means clustering
+  url: https://en.wikipedia.org/wiki/K-means_clustering
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 3
+  match:
+  - k-means
+- term: quadratic form
+  aliases: []
+  kind: linear algebra
+  wikipedia: Quadratic form
+  url: https://en.wikipedia.org/wiki/Quadratic_form
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 7
+  match:
+  - quadratic form
+- term: normalized cut
+  aliases: []
+  kind: numerical method
+  wikipedia: Segmentation-based object categorization
+  url: https://en.wikipedia.org/wiki/Segmentation-based_object_categorization
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 2
+  match:
+  - normalized cut
+- term: nearest neighbor graph
+  aliases: []
+  kind: domain concept
+  wikipedia: Nearest neighbor graph
+  url: https://en.wikipedia.org/wiki/Nearest_neighbor_graph
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 1
+  match:
+  - k-nearest-neighbor graph
+- term: random walk
+  aliases: []
+  kind: domain concept
+  wikipedia: Random walk
+  url: https://en.wikipedia.org/wiki/Random_walk
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 1
+  match:
+  - random walk
+- term: Cheeger constant
+  aliases: []
+  kind: domain concept
+  wikipedia: Cheeger constant (graph theory)
+  url: https://en.wikipedia.org/wiki/Cheeger_constant_%28graph_theory%29
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 2
+  match:
+  - Cheeger
+- term: spectral theorem
+  aliases: []
+  kind: linear algebra
+  wikipedia: Spectral theorem
+  url: https://en.wikipedia.org/wiki/Spectral_theorem
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 3
+  match:
+  - spectral theorem
+- term: LOBPCG
+  aliases: []
+  kind: numerical method
+  wikipedia: LOBPCG
+  url: https://en.wikipedia.org/wiki/LOBPCG
+  recommend: link
+  note: ''
+  entries:
+  - 11
+  lowest_tier: 2
+  uses: 1
+  match:
+  - LOBPCG
+- term: Markov decision process
+  aliases: []
+  kind: domain concept
+  wikipedia: Markov decision process
+  url: https://en.wikipedia.org/wiki/Markov_decision_process
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 2
+  match:
+  - Markov decision process
+- term: reinforcement learning
+  aliases: []
+  kind: domain concept
+  wikipedia: Reinforcement learning
+  url: https://en.wikipedia.org/wiki/Reinforcement_learning
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 4
+  match:
+  - reinforcement learning
+- term: present value
+  aliases: []
+  kind: domain concept
+  wikipedia: Present value
+  url: https://en.wikipedia.org/wiki/Present_value
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 2
+  match:
+  - present value
+- term: Markov property
+  aliases: []
+  kind: domain concept
+  wikipedia: Markov property
+  url: https://en.wikipedia.org/wiki/Markov_property
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Markov property
+- term: Bellman equation
+  aliases: []
+  kind: domain concept
+  wikipedia: Bellman equation
+  url: https://en.wikipedia.org/wiki/Bellman_equation
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 5
+  match:
+  - Bellman expectation equation
+  - Bellman optimality equation
+  - Bellman equation
+- term: Q-learning
+  aliases: []
+  kind: numerical method
+  wikipedia: Q-learning
+  url: https://en.wikipedia.org/wiki/Q-learning
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 2
+  match:
+  - Q-learning
+- term: contraction mapping
+  aliases: []
+  kind: domain concept
+  wikipedia: Contraction mapping
+  url: https://en.wikipedia.org/wiki/Contraction_mapping
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 3
+  match:
+  - contraction mapping
+  - contraction
+- term: Banach fixed-point theorem
+  aliases: []
+  kind: domain concept
+  wikipedia: Banach fixed-point theorem
+  url: https://en.wikipedia.org/wiki/Banach_fixed-point_theorem
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Banach fixed-point theorem
+- term: temporal difference learning
+  aliases: []
+  kind: numerical method
+  wikipedia: Temporal difference learning
+  url: https://en.wikipedia.org/wiki/Temporal_difference_learning
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 1
+  match:
+  - temporal-difference learning
+  - temporal difference learning
+- term: stationary distribution
+  aliases: []
+  kind: domain concept
+  wikipedia: Stationary distribution
+  url: https://en.wikipedia.org/wiki/Stationary_distribution
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  - 35
+  lowest_tier: 2
+  uses: 3
+  match:
+  - stationary distribution
+- term: Gauss–Seidel method
+  aliases: []
+  kind: numerical method
+  wikipedia: Gauss–Seidel method
+  url: https://en.wikipedia.org/wiki/Gauss%E2%80%93Seidel_method
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Gauss–Seidel
+- term: Jacobi method
+  aliases: []
+  kind: numerical method
+  wikipedia: Jacobi method
+  url: https://en.wikipedia.org/wiki/Jacobi_method
+  recommend: link
+  note: ''
+  entries:
+  - 28
+  lowest_tier: 2
+  uses: 1
+  match:
+  - Jacobi
+- term: DeGroot model
+  aliases: []
+  kind: domain concept
+  wikipedia: DeGroot learning
+  url: https://en.wikipedia.org/wiki/DeGroot_learning
+  recommend: link
+  note: ''
+  entries:
+  - 35
+  lowest_tier: 2
+  uses: 1
+  match:
+  - DeGroot model
+- term: strongly connected graph
+  aliases: []
+  kind: domain concept
+  wikipedia: Strongly connected component
+  url: https://en.wikipedia.org/wiki/Strongly_connected_component
+  recommend: link
+  note: ''
+  entries:
+  - 35
+  lowest_tier: 2
+  uses: 1
+  match:
+  - strongly connected
+- term: aperiodic graph
+  aliases: []
+  kind: domain concept
+  wikipedia: Aperiodic graph
+  url: https://en.wikipedia.org/wiki/Aperiodic_graph
+  recommend: link
+  note: ''
+  entries:
+  - 35
+  lowest_tier: 2
+  uses: 2
+  match:
+  - aperiodic
+- term: weighted arithmetic mean
+  aliases: []
+  kind: domain concept
+  wikipedia: Weighted arithmetic mean
+  url: https://en.wikipedia.org/wiki/Weighted_arithmetic_mean
+  recommend: link
+  note: ''
+  entries:
+  - 35
+  lowest_tier: 2
+  uses: 6
+  match:
+  - weighted average
+- term: doubly stochastic matrix
+  aliases: []
+  kind: linear algebra
+  wikipedia: Doubly stochastic matrix
+  url: https://en.wikipedia.org/wiki/Doubly_stochastic_matrix
+  recommend: link
+  note: ''
+  entries:
+  - 35
+  lowest_tier: 2
+  uses: 1
+  match:
+  - doubly stochastic
+- term: greatest common divisor
+  aliases: []
+  kind: domain concept
+  wikipedia: Greatest common divisor
+  url: https://en.wikipedia.org/wiki/Greatest_common_divisor
+  recommend: link
+  note: ''
+  entries:
+  - 35
+  lowest_tier: 2
+  uses: 1
+  match:
+  - greatest common divisor

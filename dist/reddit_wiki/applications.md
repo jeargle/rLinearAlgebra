@@ -30,7 +30,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Computer Science & Networks
 
 * [PageRank and network centrality](applications/pagerank-and-network-centrality) — Tier 2
-* Consensus and opinion dynamics — Tier 2 *(planned)*
+* [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) — Tier 2
 * [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) — Tier 1
 
 ## Control & Robotics
@@ -71,11 +71,11 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Machine Learning & Data
 
-* Spectral clustering and image segmentation — Tier 2 *(planned)*
+* [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) — Tier 2
 * Matrix completion and recommender systems — Tier 3 *(planned)*
 * [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) — Tier 2
 * [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) — Tier 2
-* Markov decision processes — Tier 2 *(planned)*
+* [Markov decision processes](applications/markov-decision-processes) — Tier 2
 
 ## Mathematics & Numerical Analysis
 

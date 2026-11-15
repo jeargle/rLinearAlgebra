@@ -13,7 +13,7 @@ ancestors lived in the same place for many generations share many small differen
 frequency, so their dots land near each other. In the best-known example, Europeans plotted this way
 form a picture that looks like a map of Europe.
 
-The method is [principal component](https://en.wikipedia.org/wiki/Principal_component_analysis) analysis, which finds the directions along which people differ
+The method is [principal component analysis](https://en.wikipedia.org/wiki/Principal_component_analysis), which finds the directions along which people differ
 most. It needs no labels: nobody tells it which person came from where. That is its strength, and
 it is also why its pictures are easy to over-read. The axes are whatever directions explain the most
 variation in this particular sample, and they need not correspond to populations, migrations or

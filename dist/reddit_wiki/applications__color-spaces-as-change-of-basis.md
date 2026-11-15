@@ -211,7 +211,7 @@ Perceptual spaces such as [CIELAB](https://en.wikipedia.org/wiki/CIELAB_color_sp
 different colors look. They are nonlinear, and the matrices above are only their first step. Camera
 color matrices are fitted by [least squares](https://en.wikipedia.org/wiki/Least_squares) to photographs of color charts, as in the regression and
 basis-fitting entries. The reflectance spectra of natural surfaces are well approximated by a few basis
-functions found by [principal component](https://en.wikipedia.org/wiki/Principal_component_analysis) analysis (Tier 2), the same idea as the [empirical orthogonal](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions)
+functions found by [principal component analysis](https://en.wikipedia.org/wiki/Principal_component_analysis) (Tier 2), the same idea as the [empirical orthogonal](https://en.wikipedia.org/wiki/Empirical_orthogonal_functions)
 functions entry. JPEG converts RGB to [YCbCr](https://en.wikipedia.org/wiki/YCbCr), another 3 × 3 change of basis that separates brightness
 from color, before its cosine transform (the JPEG entry). People with two types of cone see a
 two-dimensional color space, and [color-blindness](https://en.wikipedia.org/wiki/Color_blindness) simulators apply a rank-2 matrix that projects onto
