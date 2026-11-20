@@ -1,4 +1,4 @@
-"""Generate dist/index.csv from entries/*.md frontmatter and backlog.yaml.
+"""Generate dist/index.csv from entries/*.md frontmatter and backlog.csv.
 
 Usage:  python build/build_index.py
 """

@@ -2,17 +2,19 @@
 
 Single source of truth:
   entries/*.md   one written entry each: YAML frontmatter + markdown body
-  backlog.yaml   candidate entries, metadata only (no prose yet)
+  backlog.csv    candidate entries, metadata only (no prose yet), one row per candidate
 
 Everything under dist/ is generated. Do not hand-edit it.
 """
 from pathlib import Path
+import csv
+import json
 import re
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 ENTRIES_DIR = ROOT / "entries"
-BACKLOG = ROOT / "backlog.yaml"
+BACKLOG = ROOT / "backlog.csv"
 DOCS = ROOT / "docs"
 DIST = ROOT / "dist"
 NOTEBOOKS_DIR = ROOT / "notebooks"
@@ -146,10 +148,16 @@ def notebook_page(meta):
     return None
 
 
+BACKLOG_INT_FIELDS = ("id", "tier", "tier_ceiling")
+
+
 def load_backlog():
     """Candidate entries, ordered by id."""
-    data = yaml.safe_load(BACKLOG.read_text()) or {}
-    rows = data.get("backlog", [])
+    with BACKLOG.open(encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    for row in rows:
+        for key in BACKLOG_INT_FIELDS:
+            row[key] = int(row[key])
     rows.sort(key=lambda m: m["id"])
     return rows
 
@@ -191,9 +199,9 @@ GF2_DEF = (
 GF2_SHORT = "GF(2) is the number system {0, 1} with arithmetic modulo 2, so 1 + 1 = 0"
 
 # ---------------------------------------------------------------------------
-# Wikipedia links at first use (terms.yaml)
+# Wikipedia links at first use (terms.jsonl, one JSON object per term per line)
 
-TERMS = ROOT / "terms.yaml"
+TERMS = ROOT / "terms.jsonl"
 
 # Regions of markdown that must never receive a link: fenced and inline code, headings,
 # table rows, existing links, and bare URLs.
@@ -216,13 +224,18 @@ def _compile_pattern(pattern):
     return re.compile(r"(?<![\w-])(?:" + pattern + r")\w*", flags)
 
 
+def read_terms():
+    """Every registry record, in file order (blank lines skipped)."""
+    with TERMS.open(encoding="utf-8") as f:
+        return [json.loads(line) for line in f if line.strip()]
+
+
 def load_terms():
     """Terms that have a Wikipedia URL, with compiled match patterns."""
     if not TERMS.exists():
         return []
-    data = yaml.safe_load(TERMS.read_text()) or {}
     out = []
-    for term in data.get("terms", []):
+    for term in read_terms():
         if not term.get("url"):
             continue
         out.append({

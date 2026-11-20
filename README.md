@@ -14,7 +14,7 @@ Two places, and only two:
 | Path | Holds |
 |---|---|
 | `entries/*.md` | One written entry each: YAML frontmatter (all metadata) + markdown body (all prose) |
-| `backlog.yaml` | Catalogued but unwritten candidates — metadata only |
+| `backlog.csv` | Catalogued but unwritten candidates — metadata only, one row per candidate |
 
 `docs/00-front.md` and `docs/99-back.md` hold the surrounding editorial prose, with `{{PLACEHOLDER}}`
 slots wherever a number or table is computed from the entries.
@@ -23,7 +23,7 @@ slots wherever a number or table is computed from the entries.
 appears in an entry's frontmatter.** Field tallies, tier counts, the index, and the glossary all derive
 from the entry files, so the prose cannot drift away from the metadata.
 
-An entry graduates from `backlog.yaml` into `entries/` when someone writes it up.
+An entry graduates from `backlog.csv` into `entries/` when someone writes it up.
 
 ## Building
 
@@ -125,7 +125,7 @@ does not show snippets.
 
 1. installs with `uv sync --locked --group notebooks`, runs the linker tests, runs each notebook
    as a plain script, installs Julia, and runs every Python and Julia snippet file;
-2. regenerates `dist/` from `entries/` and `backlog.yaml`, and the Julia blocks in `notebooks/`
+2. regenerates `dist/` from `entries/` and `backlog.csv`, and the Julia blocks in `notebooks/`
    from `snippets/`;
 3. **fails if the committed `dist/` or `notebooks/` differs from what the sources produce** — this
    is what makes "generated files are generated" an enforced rule rather than a convention. If it
@@ -173,7 +173,8 @@ Pipes inside table cells are escaped at render time, so terminology entries like
 
 ## Wikipedia links
 
-`terms.yaml` lists terms used in the entries, each with the Wikipedia article that explains it.
+`terms.jsonl` lists terms used in the entries, each with the Wikipedia article that explains it.
+It holds one JSON object per line, one line per term.
 Every term with a `url` is linked **once per page, at its first use**. The same rules apply to the
 catalog, the wiki, and the site:
 
@@ -186,8 +187,29 @@ catalog, the wiki, and the site:
 - Nothing inside code, display equations, headings, table rows (including the Variables and terminology
   tables), existing links, or URLs is ever linked.
 
-Each term's `match` field holds the regular expressions for its link text. See the comment at the top of
-`terms.yaml` for the rules. When adding a term, check that its article exists and is not a
+Fields of each record:
+
+- `term`, `aliases`, `kind`: the term's name, other names, and kind (linear algebra, numerical method,
+  domain concept or named theorem).
+- `wikipedia`, `url`: the article title and its URL. Each URL is verified against the Wikipedia API when
+  the term is added: the article exists, redirects are resolved to their final target, and no target is
+  a disambiguation page. Section anchors (`#...`) are checked against the article's section list. URLs
+  percent-encode parentheses, so they survive inside markdown links, including on Reddit.
+- `recommend`: `link` (a dedicated article that matches the sense used in the entry), `optional` (the
+  article exists, but the word is familiar or the article is broader or more advanced than the entry
+  needs) or `none` (no suitable article; define the term inline instead). Terms with no `url` are never
+  linked.
+- `note`: free-text remarks.
+- `entries`: ids of the written entries where the term appears, in the sense given.
+- `lowest_tier`: lowest tier among those entries, the first reader to meet the term. `uses`:
+  occurrences across those entries.
+- `match`: regular expressions for the term's link text. A pattern containing a capital letter is
+  case-sensitive; an all-lowercase pattern is not. A match is extended to the end of its word, so
+  `stoichiometr` links "stoichiometric". The first match on a page is linked. Patterns are applied only
+  on pages for the term's own entries, so the same abbreviation can mean different things in different
+  entries.
+
+When adding a term, check that its article exists and is not a
 disambiguation page, and record where it is used in `entries`. A pattern that is too general links the
 wrong sense of a word: `observab` once linked "observables" in the quantum entry to control-theory
 observability. The fix is to narrow the pattern or the entry list, not to delete the term.
@@ -196,7 +218,7 @@ observability. The fix is to narrow the pattern or the entry list, not to delete
 
 ## Adding an entry
 
-1. Move its row out of `backlog.yaml` and create `entries/NN-slug.md`.
+1. Move its row out of `backlog.csv` and create `entries/NN-slug.md`.
 2. Frontmatter needs at minimum: `id`, `slug`, `status`, `title`, `short_title`, `field_label`,
    `tier`, `tier_note`, `tier_ceiling`, `nav_field`, `field`, `subfield`, `scalar_field`,
    `vector_space`, `underlying_equations`, and the remaining index columns.
