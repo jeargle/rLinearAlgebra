@@ -64,8 +64,8 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Life Sciences
 
 * Distance geometry for NMR structures — Tier 2 *(planned)*
-* Normal mode analysis and elastic network models — Tier 3 *(planned)*
-* Flux balance analysis at genome scale — Tier 3 *(planned)*
+* [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) — Tier 3
+* [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) — Tier 3
 * [Population genetics PCA](applications/population-genetics-pca) — Tier 2
 * Phylogenetic invariants — Tier 3 *(planned)*
 

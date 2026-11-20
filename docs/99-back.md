@@ -56,8 +56,6 @@ the one exception marked below.
 - **Combinatorial design and coding bounds** — rank arguments proving combinatorial impossibility results
 
 ### Would add: molecular and biological (matched to your background)
-- **Normal mode analysis and elastic network models** — the Hessian of a coarse-grained potential; low-frequency modes predicting functional motions
-- **Flux balance analysis at genome scale** — the LP built on entry 4's null space
 - **Phylogenetic invariants** — polynomial relations among expected site-pattern frequencies; linear algebra that shades into algebraic geometry
 
 ---

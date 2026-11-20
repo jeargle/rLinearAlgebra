@@ -35,3 +35,5 @@
 | 11 | Spectral clustering | Graph Laplacian; Fiedler vector | Sparse symmetric eigensolve |
 | 35 | Opinion dynamics | Left Perron eigenvector of a row-stochastic matrix | Power iteration |
 | 28 | Reinforcement learning | Linear system (I − γ P_π) v = r_π; Neumann series | Policy iteration; value iteration |
+| 31 | Protein dynamics | Hessian eigenproblem; graph Laplacian pseudoinverse | Sparse eigensolve (Lanczos, shift-invert) |
+| 32 | Systems biology | Null space of the stoichiometric matrix; linear program over a polytope | Simplex or interior point; flux variability analysis |

@@ -22,6 +22,8 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | affinity matrix W | the symmetric n × n matrix of weights w_ij, zero diagonal | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | algebraic connectivity | λ_2, the second-smallest eigenvalue of L; zero exactly when the graph is disconnected | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | allele frequency p_j | half the mean of column j of G | [Population genetics PCA](applications/population-genetics-pca) |
+| alternative optima | an optimal face of the polytope rather than a single vertex | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
+| ANM Hessian | 3N × 3N, with the 3 × 3 block −γ e_ij e_ijᵀ for each contact i, j | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | anomaly field | the mean-centered data matrix | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | aperiodic | the gcd of the graph's cycle lengths is 1; with strong connectivity, W primitive | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | ART / SIRT | Kaczmarz row-action and related simultaneous iterations | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
@@ -33,6 +35,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | attitude / orientation | a rotation matrix R relating a body frame to a reference frame | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | attribute | a value stored at each corner (color, depth, texture coordinate) and blended across the triangle | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | average consensus | W doubly stochastic (columns also sum to 1), so π = 1/n and c is the plain mean | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
+| B-factor (temperature factor) B_i | (8π²/3) ⟨‖ΔR_i‖²⟩, proportional to [Γ⁺]_ii in the GNM | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | B-splines and knots | piecewise-cubic basis functions joined smoothly at chosen points called knots, each nonzero over only a few intervals | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | backprojection | applying A transpose to the data | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | balancing an equation | finding an integer null vector of the element-by-species matrix | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
@@ -46,6 +49,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | Bellman optimality equation | v∗ = max over actions of the same affine map; a fixed point, not a linear system | [Markov decision processes](applications/markov-decision-processes) |
 | benchmark (station, control point) | a surveyed point; its coordinates are unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
 | Bernstein polynomials | a basis of P_3 consisting of nonnegative functions that sum to 1 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
+| biomass reaction | the column that drains precursors and ATP in cell proportions; its flux is μ | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | block | an 8 × 8 tile of pixels, the unit JPEG transforms and codes separately | [JPEG and video compression](applications/jpeg-and-video-compression) |
 | blocking artifact | visible steps at block boundaries at high compression | [JPEG and video compression](applications/jpeg-and-video-compression) |
 | body frame vs world frame | two orthonormal bases; R changes coordinates from one to the other | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
@@ -65,6 +69,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | code rate | k/n, the subspace dimension over the ambient dimension | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | codeword | an element of the k-dimensional subspace of GF(2)^n | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | codeword | a message with its check bits appended; always a multiple of G(x) | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
+| collectivity κ | exp(−Σ u_i ln u_i) / N, how evenly a mode's motion is spread over the residues | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | Colley matrix | 2I plus the Massey matrix | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | component balance | one row of the system, for one component around one unit | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | cones | the three kinds of color receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S) | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
@@ -82,6 +87,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | cosine similarity | the cosine of the angle between two vectors, x·y / (‖x‖ ‖y‖) | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
 | covariance matrix P | the uncertainty ellipsoid; symmetric positive semidefinite | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | CRC-r | a cyclic redundancy check with r check bits, such as CRC-8 or CRC-32 | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
+| cross-correlation map | the entries of H⁺ (or Γ⁺) normalized by their diagonals | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | cubic vs quadratic outlines (CFF/PostScript vs TrueType) | curves in P_3 vs curves in P_2 | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | current transformation matrix (CTM) | the product of every transform in effect for an element | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | cut | total weight of the edges crossing a split into two groups, cut = xᵀ L x / 4 for a ±1 vector x | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
@@ -117,7 +123,9 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | edge function | a barycentric coordinate written as a linear function of the pixel position | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | effective (Thevenin) resistance | (e_a - e_b)^T L^+ (e_a - e_b), a quadratic form in the pseudoinverse | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | eigenstate / energy level | eigenvector and eigenvalue of the Hamiltonian | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| elastic network model (ENM) | identical Hookean springs of constant γ between nodes closer than r_c | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | elementary flux mode | an extreme ray of the nonnegative part of the null space | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| elementary flux mode | an extreme ray of the cone {v : S v = 0, v_j ≥ 0 for irreversible j} | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | embedding dimension | k, the rank of the truncation | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
 | embedding dimension d | the length of each token vector | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | embodied / Scope 3 emissions | an appended satellite row multiplied through the same inverse | [Leontief input-output economics](applications/leontief-input-output-economics) |
@@ -130,6 +138,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | error detection vs error correction | noticing that bits changed, versus also knowing which ones | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
 | essential / fundamental matrix | the rank-2 bilinear form satisfying x'^T E x = 0 | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | estimable quantity | a function of the coordinates that does not depend on the datum, such as a height difference | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
+| exchange reaction | a column with a single nonzero entry, moving one metabolite across the boundary | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | expectation value | the quadratic form psi^* A psi | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | explained variance | sigma_i^2 as a fraction of the total | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | extrapolation | using a fitted curve outside the range of the data | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
@@ -144,6 +153,10 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | fitted values ŷ | the orthogonal projection of y onto the column space of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | flow (volume) | cars per hour on a segment, an entry of x | [Traffic flow conservation at intersections](applications/traffic-flow-conservation-at-intersections) |
 | flux | v, the vector of reaction rates | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| flux | v_j, the rate of reaction j in mmol gDW⁻¹ h⁻¹ | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
+| flux bounds | lb ≤ v ≤ ub entrywise; lb_j = 0 for an irreversible reaction | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
+| flux distribution / flux map | one feasible or optimal vector v | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
+| flux variability analysis (FVA) | min and max of each v_j over the optimal (or near-optimal) set | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | folding-in | mapping a new document or query into the latent space, q̂ = Σ_k⁻¹ U_kᵀ q | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
 | Fornberg's algorithm | a recursion that produces the weights for any offsets and derivative orders without forming the matrix | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | forward kinematics | the product of the joint transforms along a robot arm | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
@@ -169,6 +182,8 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | harmonic | sin nx or cos nx, oscillating n times per period | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | hat matrix H | the projection matrix X (XᵀX)⁻¹ Xᵀ, so ŷ = H y | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
 | head dimension d_k | the inner dimension of W_Q W_Kᵀ, so the rank cap of the score form | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
+| Hessian H | second derivatives of the potential energy V; the molecule's stiffness matrix | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
+| hinge site | a residue where a slow mode changes sign | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | homogeneous coordinates | an added coordinate that turns perspective division into a linear map plus a normalization | [Multiple-view geometry and structure from motion](applications/multiple-view-geometry-and-structure-from-motion) |
 | homogeneous transformation | the 4 × 4 matrix [R t; 0 1] | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | identity transform | the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
@@ -180,6 +195,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | inverse DFT | the change of basis back, using the conjugate transpose | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | Kalman gain | the projection weight matrix that blends prediction and measurement | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | ket / state vector | a unit vector in a complex inner-product space | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
+| Kirchhoff matrix Γ (GNM) | the graph Laplacian of the contact graph, N × N | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | Kirchhoff's current law (KCL) | A^T I = s, a statement about the left null space of A | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Kirchhoff's voltage law (KVL) | voltage drops lie in the column space of A, so they sum to zero around every loop | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
 | Lagrange coefficients | the weights λ_i, which depend only on which parties are present | [Shamir secret sharing](applications/shamir-secret-sharing) |
@@ -203,11 +219,13 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | LoRA rank r | the inner dimension of ΔW = B A, an upper bound on rank(ΔW) | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | luminance Y | the brightness coordinate of XYZ | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | margin of victory | the winner's points minus the loser's points in one game | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
+| mass-weighted Hessian | M^(−1/2) H M^(−1/2), symmetric, with eigenvalues ω² | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | Massey matrix | the T × T normal-equations matrix, games played on the diagonal and minus the number of meetings off it | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | matrix(a, b, c, d, e, f) | the SVG/CSS notation for the 3 × 3 matrix with columns (a, b, 0), (c, d, 0), (e, f, 1) | [2D affine transforms in vector graphics](applications/2d-affine-transforms-in-vector-graphics) |
 | mean-centering | subtracting each column's mean, 2 p_j, to give X | [Population genetics PCA](applications/population-genetics-pca) |
 | mechanism | a nontrivial null space of K — the structure can move with no restoring force | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | message authentication code (MAC) | a keyed check that, unlike a CRC, an attacker cannot recompute | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
+| metabolite | a row of S; one coordinate of the concentration vector c | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | metamers | different spectra that look the same color | [Color spaces as change of basis](applications/color-spaces-as-change-of-basis) |
 | method of undetermined coefficients | writing the weights as unknowns and solving the conditions they must satisfy | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | minimally constrained vs overconstrained adjustment | removing exactly the null space vs also forcing the network to fit fixed points | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
@@ -232,12 +250,15 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | nodes (interpolation points) | the d + 1 distinct x-values where the polynomial must match the data | [Polynomial interpolation and change of basis](applications/polynomial-interpolation-and-change-of-basis) |
 | norm and energy | ‖f‖² = ⟨f, f⟩, the integral of the square of f | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
 | normal equations | Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X | [Least squares regression and the hat matrix](applications/least-squares-regression-and-the-hat-matrix) |
+| normal mode analysis (NMA) | the eigenpairs of the Hessian at an energy minimum | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
+| normal mode v_k | an eigenvector of H v = ω² M v; every coordinate oscillates in step at frequency ω_k | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | normalized cut (Ncut) | cut weighted by the total degree of each side, relaxed to L x = λ D x | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | normalized device coordinates (NDC) | the cube −1 ≤ x, y, z ≤ 1 that the visible region lands in | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
 | normalized Laplacian L_sym | D^(−1/2) L D^(−1/2), with the same zero pattern as L | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | North's rule of thumb | a test for whether two singular values are too close to separate the modes | [Empirical orthogonal functions in climate data](applications/empirical-orthogonal-functions-in-climate-data) |
 | Nyquist bin | bin N/2, the fastest wave a block of N samples can represent | [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) |
 | object, world and camera coordinates | the frames attached to a model, to the scene, and to the eye | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
+| objective function | z = wᵀ v, usually w picks out the biomass flux | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | observability | rank of the stacked matrix [H; HF; HF^2; ...] | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | observable | a Hermitian operator; its eigenvalues are the measurable values | [Quantum mechanics and quantum computing](applications/quantum-mechanics-and-quantum-computing) |
 | observation equation | one row of the system, an observation written in terms of the unknowns | [Geodetic network adjustment](applications/geodetic-network-adjustment) |
@@ -250,6 +271,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | orthogonal polynomials (for a set of points) | polynomials whose sampled values are orthogonal, so that the design matrix has orthogonal columns | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
 | overall (total) balance | the sum of the component balances, a linearly dependent row | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | overfitting | fitting the noise in the data by using too many basis functions | [Least-squares fitting in a chosen function basis](applications/least-squares-fitting-in-a-chosen-function-basis) |
+| overlap O_k | cosine of the angle between v_k and an observed conformational change d | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | parity block | the block chosen so that every stripe satisfies d_1 + ⋯ + d_(n−1) + p = 0 | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | parity-check matrix H | a basis of the code's orthogonal complement; codewords are its null space | [Linear error-correcting codes](applications/linear-error-correcting-codes) |
 | Parseval's identity | the energy of f is the sum of the energies of its components | [Fourier series as orthogonal projection](applications/fourier-series-as-orthogonal-projection) |
@@ -288,6 +310,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | rasterization | sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height) | [Bezier curves and font rendering](applications/bezier-curves-and-font-rendering) |
 | rating | a number per team whose differences predict results | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | re-orthonormalization | projecting a drifted matrix back onto the orthogonal matrices | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
+| reaction | a column of S; one coordinate of the flux vector v | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | read-modify-write (small write) | updating parity by p_new = p_old + d_old + d_new, which uses linearity | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | rebuild (resilvering) | solving the equation for the failed disk's block in every stripe | [RAID-5 parity and XOR recovery](applications/raid-5-parity-and-xor-recovery) |
 | reciprocity | symmetry of L, so the potential at b due to a source at a equals the potential at a due to the same source at b | [Resistor networks and Kirchhoff's laws](applications/resistor-networks-and-kirchhoff-s-laws) |
@@ -311,12 +334,14 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | schedule graph | teams as nodes and games as edges | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
 | self-weight w_ii | how much person i keeps of their own opinion; a diagonal entry of W | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
 | sequential modular vs equation-oriented simulation | fixed-point iteration around loops vs solving the whole linear system at once | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
+| shadow price | π_i, the dual variable on row i of S v = 0 | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | share | a point (x_i, f(x_i)), one coordinate of the evaluation map's output | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | share refresh (proactive sharing) | adding a sharing of 0, a polynomial from the subspace with f(0) = 0 | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | shift register (LFSR) | the hardware that computes a CRC one bit per clock | [CRC checksums as polynomial arithmetic modulo 2](applications/crc-checksums-as-polynomial-arithmetic-over-gf-2) |
 | similarity graph | nodes for data points, edge weights w_ij for how alike points i and j are | [Spectral clustering and image segmentation](applications/spectral-clustering-and-image-segmentation) |
 | single-pass conversion | the fraction of the reactant entering the reactor that reacts, a fixed coefficient | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | sinogram | the measurement vector b, arranged by angle and detector position | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
+| slow (low-frequency) modes | eigenvectors of the smallest nonzero eigenvalues; largest thermal amplitude | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | SNP (single-nucleotide polymorphism) | one column of G; a coordinate of R^M | [Population genetics PCA](applications/population-genetics-pca) |
 | SNP loadings | the entries of v_k, one weight per SNP | [Population genetics PCA](applications/population-genetics-pca) |
 | social power (influence weight) π_i | entry i of the left Perron eigenvector, πᵀ W = πᵀ, 1ᵀ π = 1 | [Consensus and opinion dynamics](applications/consensus-and-opinion-dynamics) |
@@ -331,9 +356,11 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | state vector | the unknown x being estimated | [Kalman filtering for navigation](applications/kalman-filtering-for-navigation) |
 | stationary distribution | the dominant eigenvector, normalized | [PageRank and network centrality](applications/pagerank-and-network-centrality) |
 | steady state | Sv = 0 — v lies in the right null space | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| steady state (mass balance) | S v = 0, v in the null space of S | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | stencil | a list of offsets and weights; the estimate is the weighted sum of the samples | [Finite-difference stencils by undetermined coefficients](applications/finite-difference-stencils-by-undetermined-coefficients) |
 | stiffness matrix | the coefficient matrix K; symmetric positive definite once restraints are applied | [Structural analysis of frames and trusses](applications/structural-analysis-of-frames-and-trusses) |
 | stoichiometric matrix S | species by reactions, signed integer coefficients | [Stoichiometric matrices of reaction networks](applications/stoichiometric-matrices-of-reaction-networks) |
+| stoichiometric matrix S | metabolites by reactions, s_ij molecules of metabolite i made (+) or used (−) per reaction event | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | streak artifact | the visible signature of undersampling — energy in the near-null space | [Computed tomography reconstruction](applications/computed-tomography-reconstruction) |
 | stream | a pipe between units; contributes one unknown per component it carries | [Mass balance in a chemical process flowsheet](applications/mass-balance-in-a-chemical-process-flowsheet) |
 | strength of schedule | how good a team's opponents were; built into both methods | [Sports and citation ranking (Massey/Colley)](applications/sports-and-citation-ranking-massey-colley) |
@@ -353,6 +380,7 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | term-document matrix A | the m × n count matrix, one row per word and one column per document | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
 | texture coordinates | the position in an image (a texture) that each corner is mapped to | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
 | tf-idf weighting | rescaling the counts before the SVD so that common words count less | [Word embeddings and latent semantic analysis](applications/word-embeddings-and-latent-semantic-analysis) |
+| thermodynamically infeasible loop | a nonzero null vector using only internal reactions | [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) |
 | threshold k | the dimension of the polynomial space, deg f + 1 | [Shamir secret sharing](applications/shamir-secret-sharing) |
 | token | one row x_i of X, the vector representing one word or word-piece | [Attention and low-rank adapters in transformers](applications/attention-and-low-rank-adapters-in-transformers) |
 | top-left rule | the tie-break that assigns a pixel exactly on a shared edge to just one triangle | [Barycentric coordinates and triangle rasterization](applications/barycentric-coordinates-and-triangle-rasterization) |
@@ -385,4 +413,5 @@ A **field** is a number system in which addition, subtraction, multiplication, a
 | yaw, pitch, roll (Euler angles) | coordinates on the set of rotations, R = R_z(ψ) R_y(θ) R_x(φ) | [3D rotations and rigid-body pose](applications/3d-rotations-and-rigid-body-pose) |
 | YCbCr and chroma subsampling | brightness and two color-difference channels, with the color stored at lower resolution | [JPEG and video compression](applications/jpeg-and-video-compression) |
 | z-fighting | flickering between surfaces whose depths the depth buffer cannot tell apart | [3D viewing and perspective projection pipeline](applications/3d-viewing-and-perspective-projection-pipeline) |
+| zero modes | the null space of H; three rigid translations and three rigid rotations | [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) |
 | zigzag order and entropy coding | listing coefficients from low to high frequency so the zeros come in long runs, then coding the result compactly | [JPEG and video compression](applications/jpeg-and-video-compression) |
