@@ -94,8 +94,8 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Signal Processing
 
-* The FFT as a matrix factorization — Tier 2 *(planned)*
-* Beamforming and MUSIC direction finding — Tier 2 *(planned)*
+* [The FFT as a matrix factorization](applications/the-fft-as-a-matrix-factorization) — Tier 2
+* [Beamforming and MUSIC direction finding](applications/beamforming-and-music-direction-finding) — Tier 2
 * [JPEG and video compression](applications/jpeg-and-video-compression) — Tier 1
 * [The small DFT as a complex unitary matrix](applications/the-small-dft-as-a-complex-unitary-matrix) — Tier 1
 

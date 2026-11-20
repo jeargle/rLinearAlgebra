@@ -37,3 +37,5 @@
 | 28 | Reinforcement learning | Linear system (I − γ P_π) v = r_π; Neumann series | Policy iteration; value iteration |
 | 31 | Protein dynamics | Hessian eigenproblem; graph Laplacian pseudoinverse | Sparse eigensolve (Lanczos, shift-invert) |
 | 32 | Systems biology | Null space of the stoichiometric matrix; linear program over a polytope | Simplex or interior point; flux variability analysis |
+| 17 | Signal processing | Factorization of the DFT matrix into sparse unitary stages | Cooley–Tukey radix-2 FFT |
+| 18 | Array signal processing | Signal and noise subspaces of a Hermitian covariance | Eigendecomposition (MUSIC) |

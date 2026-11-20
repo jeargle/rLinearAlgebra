@@ -11,8 +11,10 @@ Bradford transform,40,a standard chromatic adaptation matrix built on a cone-lik
 CRC-r,50,"a cyclic redundancy check with r check bits, such as CRC-8 or CRC-32",CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
 Chebyshev polynomials and nodes,41,a basis and a set of nodes for which the interpolation problem is well conditioned,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 Colley matrix,29,2I plus the Massey matrix,Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
+Cooley–Tukey algorithm,17,"the split F_N = B_N (F_(N/2) ⊕ F_(N/2)) P_N, applied recursively",The FFT as a matrix factorization,Mathematics,Signal processing
 DC and AC coefficients,19,"the coefficient of the constant pattern, and those of the oscillating ones",JPEG and video compression,Computer Science,Multimedia
 DC component,47,"bin 0, the coefficient of the constant vector, N times the mean",The small DFT as a complex unitary matrix,Mathematics,Signal processing
+DFT matrix F_N,17,the dense matrix with entries ω_N^(kn) that the FFT factors,The FFT as a matrix factorization,Mathematics,Signal processing
 DLT (direct linear transform),8,stacking constraints into A and taking the smallest right singular vector,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 DeGroot model,35,the difference equation x(t+1) = W x(t) with W row-stochastic,Consensus and opinion dynamics,Mathematics,Network dynamics
 EOF,9,a left singular vector — one spatial pattern,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
@@ -36,10 +38,12 @@ Lagrange form,41,"coordinates in the basis that is dual to evaluation at the nod
 Lebesgue constant,41,how much the interpolation map can amplify errors in the data,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 Leontief inverse,5,(I - A)^-1,Leontief input-output economics,Economics,Macroeconomics/EEIO
 LoRA rank r,23,"the inner dimension of ΔW = B A, an upper bound on rank(ΔW)",Attention and low-rank adapters in transformers,Computer Science,Deep learning
+MUSIC pseudospectrum,18,"1 / ‖E_nᴴ a(θ)‖², infinite where a(θ) is orthogonal to the noise subspace",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 Massey matrix,29,"the T × T normal-equations matrix, games played on the diagonal and minus the number of meetings off it",Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
 Newton form and divided differences,41,"coordinates in the basis 1, (x − x_0), (x − x_0)(x − x_1), …, computed by a triangular solve",Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 North's rule of thumb,9,a test for whether two singular values are too close to separate the modes,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 Nyquist bin,47,"bin N/2, the fastest wave a block of N samples can represent",The small DFT as a complex unitary matrix,Mathematics,Signal processing
+O(N log N),17,the operation count M(N) = (N/2) log₂ N multiplications and N log₂ N additions,The FFT as a matrix factorization,Mathematics,Signal processing
 PC plot,33,"the individuals plotted at their coordinates (t_1, t_2)",Population genetics PCA,Biology,Genomics
 PC scores t_k,33,"X v_k = σ_k u_k, each individual's coordinate along axis k",Population genetics PCA,Biology,Genomics
 PPMI,22,"positive pointwise mutual information, a log-ratio reweighting of co-occurrence counts",Word embeddings and latent semantic analysis,Computer Science,NLP
@@ -65,6 +69,8 @@ allele frequency p_j,33,half the mean of column j of G,Population genetics PCA,B
 alternative optima,32,an optimal face of the polytope rather than a single vertex,Flux balance analysis at genome scale,Biology,Systems biology
 anomaly field,9,the mean-centered data matrix,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 aperiodic,35,"the gcd of the graph's cycle lengths is 1; with strong connectivity, W primitive",Consensus and opinion dynamics,Mathematics,Network dynamics
+aperture,18,"the length of the array; it sets the beamwidth, about 2/M in sin θ",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
+array manifold,18,the curve of all steering vectors a(θ) as θ varies,Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 assembly,1,summing small element matrices into the global matrix at shared DOF indices,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 attention head,23,"one triple (W_Q, W_K, W_V); several heads run in parallel and are concatenated",Attention and low-rank adapters in transformers,Computer Science,Deep learning
 attention score s_ij,23,"the bilinear form x_i W_Q W_Kᵀ x_jᵀ, equal to the dot product q_i · k_j",Attention and low-rank adapters in transformers,Computer Science,Deep learning
@@ -81,8 +87,11 @@ barycentric formula,41,a stable way to evaluate the Lagrange form,Polynomial int
 basis functions,45,"fixed functions of t, chosen before seeing the coefficients, whose combinations are the candidate curves",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 basis image,19,one of the 64 cosine patterns an 8 × 8 block is built from,JPEG and video compression,Computer Science,Multimedia
 basis set (quantum chemistry),10,the chosen basis in which H is expressed,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
+beam pattern,18,"the response |a(θ_0)ᴴ a(θ)|² of a beam aimed at θ_0, as θ varies",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
+beamformer weights w,18,a vector in C^M; the output is the inner product wᴴ x,Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 "benchmark (station, control point)",24,a surveyed point; its coordinates are unknowns,Geodetic network adjustment,Earth Science,Geodesy/surveying
 biomass reaction,32,the column that drains precursors and ATP in cell proportions; its flux is μ,Flux balance analysis at genome scale,Biology,Systems biology
+bit-reversal permutation R_N,17,the product of all the even/odd permutations; it moves sample n to the position whose binary digits are those of n reversed,The FFT as a matrix factorization,Mathematics,Signal processing
 block,19,"an 8 × 8 tile of pixels, the unit JPEG transforms and codes separately",JPEG and video compression,Computer Science,Multimedia
 blocking artifact,19,visible steps at block boundaries at high compression,JPEG and video compression,Computer Science,Multimedia
 body frame vs world frame,38,two orthonormal bases; R changes coordinates from one to the other,3D rotations and rigid-body pose,Engineering,Robotics/graphics
@@ -90,6 +99,8 @@ boundary (cordon) counts,51,"known traffic entering and leaving at the district'
 bridge balance,12,a choice of resistances that puts one edge current at zero,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 bundle adjustment,8,sparse nonlinear least squares over all cameras and points at once,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 burst error,50,errors confined to a run of consecutive bits,CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
+butterfly,17,"the 2 × 2 map taking (E_k, O_k) to (E_k + ω_N^k O_k, E_k − ω_N^k O_k)",The FFT as a matrix factorization,Mathematics,Signal processing
+butterfly matrix B_N,17,"[I D; I −D], one stage of N/2 butterflies",The FFT as a matrix factorization,Mathematics,Signal processing
 "central, forward and one-sided differences",43,"stencils whose offsets are symmetric about x, start at x, or lie on one side of it",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 centrality,6,"a score defined as an eigenvector, or a function, of the graph matrix",PageRank and network centrality,Computer Science,Network science
 check bits (checksum),50,the r bits appended to a message so the receiver can test it,CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
@@ -100,6 +111,7 @@ clip coordinates,37,"the homogeneous 4-vector after the projection matrix, befor
 code rate,7,"k/n, the subspace dimension over the ambient dimension",Linear error-correcting codes,Engineering,Communications/information theory
 codeword,7,an element of the k-dimensional subspace of GF(2)^n,Linear error-correcting codes,Engineering,Communications/information theory
 codeword,50,a message with its check bits appended; always a multiple of G(x),CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
+coherent sources,18,delayed copies of one signal (multipath) that make R_ss singular,Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 collectivity κ,31,"exp(−Σ u_i ln u_i) / N, how evenly a mode's motion is spread over the residues",Normal mode analysis and elastic network models,Biology,Biophysics
 component balance,52,"one row of the system, for one component around one unit",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 cones,40,"the three kinds of color receptor in the eye, most sensitive to long, medium and short wavelengths (L, M, S)",Color spaces as change of basis,Computer Science,Color science/imaging
@@ -126,6 +138,8 @@ datum,24,"the choice that fixes the null space, such as a benchmark held at a kn
 datum defect,24,the dimension of the null space of the design matrix,Geodetic network adjustment,Earth Science,Geodesy/surveying
 de Casteljau algorithm,42,evaluation by repeated linear interpolation,Bezier curves and font rendering,Computer Science,Typography/vector graphics
 dealer,48,whoever chooses the polynomial and hands out the shares,Shamir secret sharing,Computer Science,Cryptography
+decimation in frequency,17,"the transposed factorization, with the permutation on the output side",The FFT as a matrix factorization,Mathematics,Signal processing
+decimation in time,17,"splitting the input into even- and odd-indexed samples, the permutation P_N on the right",The FFT as a matrix factorization,Mathematics,Signal processing
 degenerate configuration,8,"point placement that makes A rank-deficient, so the solution is not unique",Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 degraded mode,49,"one block of each stripe unknown, recovered on every read by solving the equation",RAID-5 parity and XOR recovery,Computer Science,Storage systems
 degree d_i,11,"row sum of W; D = diag(d_1, …, d_n)",Spectral clustering and image segmentation,Computer Science,Machine learning/vision
@@ -134,12 +148,14 @@ degree of freedom (DOF),1,one scalar unknown — one component of the displaceme
 degrees of freedom,20,dimensions; k for the model (the trace of H) and n − k for the residuals,Least squares regression and the hat matrix,Statistics,Applied statistics
 degrees of freedom,52,unknowns minus independent equations; it must be zero for a unique answer,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 degrees of freedom of the network,4,the nullity of S,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
+delay-and-sum beamformer,18,weights w = a(θ); output power a(θ)ᴴ R a(θ),Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 density matrix,10,a positive semidefinite matrix with trace 1,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 depth buffer (z-buffer),37,the per-pixel record of the nearest depth drawn so far,3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 design matrix,45,the matrix whose column j is basis function j evaluated at every data point,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 design matrix (model matrix) X,20,"the n × k matrix whose columns are the predictors, including a column of 1s for the intercept",Least squares regression and the hat matrix,Statistics,Applied statistics
 direct vs indirect requirements,5,"the successive terms A, A^2, A^3 of the Neumann series",Leontief input-output economics,Economics,Macroeconomics/EEIO
 direction cosine matrix (DCM),38,the rotation matrix; its entries are cosines of angles between axes,3D rotations and rigid-body pose,Engineering,Robotics/graphics
+direction of arrival θ,18,the angle of a source from broadside (straight ahead of the array),Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 discount factor γ,28,the weight on the next step's value; it scales P_π and sets the spectral radius,Markov decision processes,Computer Science,Reinforcement learning
 discrete cosine transform (DCT),19,the change of basis from pixel values to amounts of sampled cosine waves,JPEG and video compression,Computer Science,Multimedia
 document vector,22,"row j of V_k Σ_k, the document's coordinates in the same space",Word embeddings and latent semantic analysis,Computer Science,NLP
@@ -167,6 +183,7 @@ expectation value,10,the quadratic form psi^* A psi,Quantum mechanics and quantu
 explained variance,9,sigma_i^2 as a fraction of the total,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 extrapolation,45,using a fitted curve outside the range of the data,Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 extrinsic parameters [R|t],8,the rigid transform from world to camera frame,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
+fast Fourier transform (FFT),17,"any algorithm that computes F_N x through a sparse factorization of F_N; the same transform as the DFT, not an approximation",The FFT as a matrix factorization,Mathematics,Signal processing
 field of view,37,"the angle the camera sees, top to bottom",3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 filter divergence,2,"P losing positive definiteness in finite precision, or an unobservable direction growing without bound",Kalman filtering for navigation,Engineering,Aerospace/control
 filtered backprojection (FBP),3,an analytic spectral inverse of the forward operator,Computed tomography reconstruction,Medicine,Medical imaging
@@ -201,6 +218,7 @@ hinge site,31,a residue where a slow mode changes sign,Normal mode analysis and 
 homogeneous coordinates,8,an added coordinate that turns perspective division into a linear map plus a normalization,Multiple-view geometry and structure from motion,Computer Science,Computer vision/photogrammetry
 homogeneous transformation,38,the 4 × 4 matrix [R t; 0 1],3D rotations and rigid-body pose,Engineering,Robotics/graphics
 identity transform,36,"the 3 × 3 identity, matrix(1, 0, 0, 1, 0, 0)",2D affine transforms in vector graphics,Computer Science,Computer graphics
+in-place FFT,17,"each butterfly reads and overwrites the same two array slots, so no second array is needed",The FFT as a matrix factorization,Mathematics,Signal processing
 initial value and final XOR,50,"constants added in standard CRCs, which make the map affine",CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
 inner product of functions,44,"⟨f, g⟩ = ∫ f g dx, the continuous analog of the dot product",Fourier series as orthogonal projection,Mathematics,Applied analysis
 innovation / residual,2,"z - Hx, the part of the measurement the prediction did not explain",Kalman filtering for navigation,Engineering,Aerospace/control
@@ -236,6 +254,7 @@ minimum distance,7,the smallest weight of a nonzero codeword,Linear error-correc
 misclosure,24,the amount by which observations around a loop fail to add up to zero,Geodetic network adjustment,Earth Science,Geodesy/surveying
 mode shape,1,an eigenvector of K phi = lambda M phi,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 model matrix,37,places an object in the world (object to world coordinates),3D viewing and perspective projection pipeline,Computer Science,Computer graphics
+model order d,18,"the number of sources, the number of eigenvalues above the noise floor",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 model space,45,"the span of the basis functions, every curve the fit could produce",Least-squares fitting in a chosen function basis,Statistics,Applied modeling
 monomial (power) form,41,"coordinates in the basis 1, x, x², …, x^d",Polynomial interpolation and change of basis,Mathematics,Numerical analysis
 motion compensation,19,predicting a video block from the previous frame and coding only the difference,JPEG and video compression,Computer Science,Multimedia
@@ -250,6 +269,7 @@ nodal conductance (admittance) matrix,12,the weighted graph Laplacian L = A^T C 
 node (intersection),51,one row of the conservation system,Traffic flow conservation at intersections,Engineering,Transportation
 node voltage (potential),12,one entry of the vector φ in R^n,Resistor networks and Kirchhoff's laws,Physics,Circuit theory
 nodes (interpolation points),41,the d + 1 distinct x-values where the polynomial must match the data,Polynomial interpolation and change of basis,Mathematics,Numerical analysis
+noise subspace E_n,18,"the orthogonal complement, spanned by the M − d eigenvectors with eigenvalue σ²",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 norm and energy,44,"‖f‖² = ⟨f, f⟩, the integral of the square of f",Fourier series as orthogonal projection,Mathematics,Applied analysis
 normal equations,20,"Xᵀ X β = Xᵀ y, the statement that the residual is orthogonal to every column of X",Least squares regression and the hat matrix,Statistics,Applied statistics
 normal mode analysis (NMA),31,the eigenpairs of the Hessian at an energy minimum,Normal mode analysis and elastic network models,Biology,Biophysics
@@ -280,6 +300,7 @@ period and fundamental,44,"the length after which the signal repeats (2π here),
 perspective division,37,"dividing by w, the step that makes distant objects smaller",3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 perspective-correct interpolation,39,blending attributes using the 3D weights rather than the screen weights,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
 pixel center,39,the point in the middle of a pixel; a pixel is drawn when its center is covered,Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
+plan,17,a library's precomputed choice of factorization for one N,The FFT as a matrix factorization,Mathematics,Signal processing
 point differential,29,a team's total points scored minus points allowed,Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
 policy evaluation,28,"solving the linear system, directly or by iteration",Markov decision processes,Computer Science,Reinforcement learning
 policy improvement,28,"the argmax over actions, row by row; the one nonlinear step",Markov decision processes,Computer Science,Reinforcement learning
@@ -299,6 +320,7 @@ purge stream,52,a small bleed that keeps an inert component from accumulating in
 quantization,19,dividing each coefficient by a step size and rounding to a whole number,JPEG and video compression,Computer Science,Multimedia
 quantization table,19,"the 64 step sizes, larger for higher frequencies",JPEG and video compression,Computer Science,Multimedia
 "query, key, value",23,"the rows of Q = X W_Q, K = X W_K and V = X W_V, three linear images of each token",Attention and low-rank adapters in transformers,Computer Science,Deep learning
+radix-2,17,"splitting in two at every level, so N must be a power of 2",The FFT as a matrix factorization,Mathematics,Signal processing
 raster image (bitmap),42,"a vector in R^(width × height), one coordinate per pixel, so its resolution is fixed by the dimension",Bezier curves and font rendering,Computer Science,Typography/vector graphics
 rasterization,39,"deciding which pixel centers a shape covers, turning a vector description into pixels",Barycentric coordinates and triangle rasterization,Computer Science,Computer graphics
 rasterization,42,"sampling the curves onto a pixel grid, a map from the polynomial space into R^(width × height)",Bezier curves and font rendering,Computer Science,Typography/vector graphics
@@ -320,32 +342,40 @@ restraint / boundary condition,1,"deleting the corresponding rows and columns, o
 "reward r(s, a)",28,"the immediate payoff, one entry of the vector r_π once a policy is fixed",Markov decision processes,Computer Science,Reinforcement learning
 rotated EOF (varimax),9,a deliberately non-orthogonal re-basis of the leading subspace,Empirical orthogonal functions in climate data,Earth Science,Climatology/oceanography
 rounding (cancellation) error,43,the loss of digits when nearly equal sample values are subtracted,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
+sample covariance R̂,18,"(1/N) Σ x(t) x(t)ᴴ over N snapshots, the estimate of R actually computed",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 samples,47,the coordinates of the signal in the standard basis (one per time step),The small DFT as a complex unitary matrix,Mathematics,Signal processing
 scaled dot-product attention,23,"softmax(Q Kᵀ / √d_k) V, a row-stochastic matrix times V",Attention and low-rank adapters in transformers,Computer Science,Deep learning
 schedule graph,29,teams as nodes and games as edges,Sports and citation ranking (Massey/Colley),Statistics,Ranking systems
 self-weight w_ii,35,how much person i keeps of their own opinion; a diagonal entry of W,Consensus and opinion dynamics,Mathematics,Network dynamics
+sensor (array element),18,"one antenna, hydrophone or microphone; one coordinate of C^M",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 sequential modular vs equation-oriented simulation,52,fixed-point iteration around loops vs solving the whole linear system at once,Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 shadow price,32,"π_i, the dual variable on row i of S v = 0",Flux balance analysis at genome scale,Biology,Systems biology
 share,48,"a point (x_i, f(x_i)), one coordinate of the evaluation map's output",Shamir secret sharing,Computer Science,Cryptography
 share refresh (proactive sharing),48,"adding a sharing of 0, a polynomial from the subspace with f(0) = 0",Shamir secret sharing,Computer Science,Cryptography
 shift register (LFSR),50,the hardware that computes a CRC one bit per clock,CRC checksums as polynomial arithmetic modulo 2,Engineering,Communications
+signal subspace,18,"span of the d eigenvectors of R with the largest eigenvalues, equal to the column space of A",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 similarity graph,11,"nodes for data points, edge weights w_ij for how alike points i and j are",Spectral clustering and image segmentation,Computer Science,Machine learning/vision
 single-pass conversion,52,"the fraction of the reactant entering the reactor that reacts, a fixed coefficient",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 sinogram,3,"the measurement vector b, arranged by angle and detector position",Computed tomography reconstruction,Medicine,Medical imaging
 slow (low-frequency) modes,31,eigenvectors of the smallest nonzero eigenvalues; largest thermal amplitude,Normal mode analysis and elastic network models,Biology,Biophysics
+snapshot x(t),18,"the M complex sensor samples at one instant, a vector in C^M",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 social power (influence weight) π_i,35,"entry i of the left Perron eigenvector, πᵀ W = πᵀ, 1ᵀ π = 1",Consensus and opinion dynamics,Mathematics,Network dynamics
 softmax,23,"the row-by-row map e^(z_j) / Σ_l e^(z_l), the one nonlinear step",Attention and low-rank adapters in transformers,Computer Science,Deep learning
+spatial covariance matrix R,18,"E[x xᴴ], Hermitian positive semidefinite, M × M",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
+spatial smoothing,18,averaging covariances of overlapping subarrays to restore the rank of R_ss,Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 spectral embedding,11,"row i of [v_2 … v_k], the coordinates of point i passed to k-means",Spectral clustering and image segmentation,Computer Science,Machine learning/vision
 spectral leakage,47,"energy of a wave that is not one of the N basis waves, spread across many coordinates",The small DFT as a complex unitary matrix,Mathematics,Signal processing
 spectrum,47,the coordinate vector in the Fourier basis; its magnitudes are what a spectrum analyzer shows,The small DFT as a complex unitary matrix,Mathematics,Signal processing
 spectrum (spectral power distribution),40,how much power a light carries at each wavelength,Color spaces as change of basis,Computer Science,Color science/imaging
 split fraction,52,"the fraction of a component a separator sends to a given outlet, a fixed coefficient",Mass balance in a chemical process flowsheet,Engineering,Chemical engineering
 square-root filter,2,propagating a Cholesky factor of P instead of P,Kalman filtering for navigation,Engineering,Aerospace/control
+stage S_j,17,"one sparse factor, with 2 nonzeros per row; there are L = log₂ N of them",The FFT as a matrix factorization,Mathematics,Signal processing
 state s,28,"one of the n situations the system can be in, an index into R^n",Markov decision processes,Computer Science,Reinforcement learning
 state vector,2,the unknown x being estimated,Kalman filtering for navigation,Engineering,Aerospace/control
 stationary distribution,6,"the dominant eigenvector, normalized",PageRank and network centrality,Computer Science,Network science
 steady state,4,Sv = 0 — v lies in the right null space,Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
 steady state (mass balance),32,"S v = 0, v in the null space of S",Flux balance analysis at genome scale,Biology,Systems biology
+steering vector a(θ),18,"the snapshot a unit plane wave from angle θ would produce, entries e^(−iπ m sin θ)",Beamforming and MUSIC direction finding,Engineering,Radar/sonar/wireless
 stencil,43,a list of offsets and weights; the estimate is the weighted sum of the samples,Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 stiffness matrix,1,the coefficient matrix K; symmetric positive definite once restraints are applied,Structural analysis of frames and trusses,Engineering,Civil/mechanical FEA
 stoichiometric matrix S,4,"species by reactions, signed integer coefficients",Stoichiometric matrices of reaction networks,Chemistry,Chem-eng/systems biology
@@ -384,6 +414,7 @@ tristimulus values,40,three numbers that determine a color; CIE XYZ is the stand
 truncation error,43,"the error from cutting off the Taylor series, present even in exact arithmetic",Finite-difference stencils by undetermined coefficients,Mathematics,Numerical analysis
 trust (influence) matrix W,35,"row i holds the weights person i gives to each opinion; nonnegative, rows sum to 1",Consensus and opinion dynamics,Mathematics,Network dynamics
 twiddle factor ω^(kn),47,an entry of the DFT matrix,The small DFT as a complex unitary matrix,Mathematics,Signal processing
+twiddle factor ω_N^k,17,"a diagonal entry of D_(N/2), the rotation applied to O_k",The FFT as a matrix factorization,Mathematics,Signal processing
 unitary gate,10,a norm-preserving complex linear map — the complex analog of an orthogonal matrix,Quantum mechanics and quantum computing,Physics,Quantum chemistry/quantum information
 user space vs viewport space,36,two coordinate systems related by the CTM,2D affine transforms in vector graphics,Computer Science,Computer graphics
 value function v_π,28,the solution of (I − γ P_π) v = r_π,Markov decision processes,Computer Science,Reinforcement learning
@@ -401,4 +432,5 @@ write hole,49,"a crash between writing data and parity, which leaves a stripe th
 "yaw, pitch, roll (Euler angles)",38,"coordinates on the set of rotations, R = R_z(ψ) R_y(θ) R_x(φ)",3D rotations and rigid-body pose,Engineering,Robotics/graphics
 z-fighting,37,flickering between surfaces whose depths the depth buffer cannot tell apart,3D viewing and perspective projection pipeline,Computer Science,Computer graphics
 zero modes,31,the null space of H; three rigid translations and three rigid rotations,Normal mode analysis and elastic network models,Biology,Biophysics
+zero padding,17,"appending zeros to reach a convenient N, which computes a different transform",The FFT as a matrix factorization,Mathematics,Signal processing
 zigzag order and entropy coding,19,"listing coefficients from low to high frequency so the zeros come in long runs, then coding the result compactly",JPEG and video compression,Computer Science,Multimedia

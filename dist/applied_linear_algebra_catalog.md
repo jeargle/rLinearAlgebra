@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 29 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 31 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,8 +200,8 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 39 written entries, 23 are Tier 1,
-9 are Tier 2, and 7 are Tier 3. Of the 10 seed entries, 2 are Tier 1
+**Current distribution.** Of the 41 written entries, 23 are Tier 1,
+11 are Tier 2, and 7 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
 
@@ -1612,12 +1612,552 @@ and conservation at nodes, appears in the traffic-flow and process mass-balance 
 
 ---
 
+## 17. The fast Fourier transform: the DFT matrix as a product of sparse factors
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+The [discrete Fourier transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform) turns a block of signal samples into a list of frequency amounts. Done
+the obvious way, each of the amounts needs every sample, so the work grows with the square of the block
+length. A block of a million samples would take about a trillion multiplications.
+
+The [fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) gets exactly the same answer with about ten million. It is not an
+approximation and not a different transform. It is a smarter order of operations: the waves being
+compared against are made of the same few numbers over and over, so most of the products are repeats.
+
+In matrix language, the transform is multiplication by one dense matrix, and the fast algorithm writes
+that matrix as a product of a handful of very sparse ones. This is why audio software, phone networks,
+medical scanners and weather models can afford Fourier analysis at all.
+
+</details>
+
+**Field:** Signal processing, audio, communications, image processing, scientific computing
+
+**Tier:** 2 — the factorization itself is matrix multiplication, but the entry rests on each scaled factor being a unitary matrix, which explains the numerical stability, and its main application, fast convolution, rests on the DFT diagonalizing [circulant](https://en.wikipedia.org/wiki/Circulant_matrix) matrices, an eigenvector statement. That makes it Tier 2. [Rader's algorithm](https://en.wikipedia.org/wiki/Rader's_FFT_algorithm) for prime N uses the group structure of the integers modulo a prime, and the quantum Fourier transform needs quantum mechanics; both are Tier 3.
+
+**Scalars and vectors.** Scalar field: C, the complex numbers: the [twiddle factors](https://en.wikipedia.org/wiki/Twiddle_factor) are complex roots of unity even when the signal is real. Vectors: C^N for a block of N samples, with N a power of 2 in the radix-2 form. Every stage maps C^N to C^N; the two half-length transforms act separately on the even-indexed and the odd-indexed samples, two copies of C^(N/2).
+
+**Underlying equations.** A change of basis on a finite block of samples, X = F_N x, computed through the factorization F_N = B_N (F_(N/2) ⊕ F_(N/2)) P_N applied recursively.
+
+**The problem.** Some vocabulary first. A signal is recorded as samples: its values at equally spaced moments, for
+example 44,100 per second for audio. A block is a run of consecutive samples, stored as one vector. The
+discrete Fourier transform (DFT) of the block is its spectrum: the coordinates of the block in a basis
+of complex waves (the small DFT entry). An operation count is the number of complex multiplications and
+additions an algorithm uses.
+
+The motivating contrast is between a transform and an algorithm. The DFT is one fixed linear map; the
+fast Fourier transform (FFT) is a way of computing it, and returns the same spectrum, up to rounding,
+as the direct product. The difference is cost: for a block of N samples, N squared multiplications
+directly, against about N/2 times log₂ N, where log₂ N is the number of times N can be halved before
+reaching 1.
+
+Given: the block of samples and its length, a power of 2 here. Unknown: the spectrum. The question is
+why the spectrum is so cheap to compute. The answer is that the DFT matrix factors into about log₂ N
+sparse matrices, each with two nonzero entries per row: the speed of the FFT is a statement about
+structure.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| N | block length | number of samples, a power of 2 | integer | — |
+| n, k | time index, frequency index | 0, …, N − 1 | integer | — |
+| m | half-block index | 0, …, N/2 − 1; sample 2m is even, 2m + 1 odd | integer | — |
+| x | signal | samples x_0, …, x_(N−1) | N × 1 complex (often real) | signal units |
+| X | spectrum | X = F_N x | N × 1 complex | signal units |
+| ω_N | root of unity | e^(−2πi/N); ω_4 = −i and ω_2 = −1 | complex scalar | dimensionless |
+| F_N | DFT matrix | entry (k, n) is ω_N^(kn) | N × N complex | dimensionless |
+| E_k, O_k | even and odd half-spectra | entry k of the length-N/2 DFTs of (x_0, x_2, …) and of (x_1, x_3, …) | N/2 × 1 each | signal units |
+| P_N | even/odd permutation | reorders x to (x_0, x_2, …, x_1, x_3, …) | N × N, entries 0 and 1 | dimensionless |
+| I_(N/2) | identity matrix | | N/2 × N/2 | — |
+| D_(N/2) | twiddle matrix | diagonal, entries ω_N^0, ω_N^1, …, ω_N^(N/2−1) | N/2 × N/2 | dimensionless |
+| B_N | butterfly matrix | one stage of N/2 butterflies | N × N, 2 nonzeros per row | dimensionless |
+| L | number of stages | L = log₂ N | integer | — |
+| S_j | stage j | the j-th sparse factor, j = 1, …, L | N × N, 2 nonzeros per row | dimensionless |
+| R_N | bit-reversal permutation | the product of all the even/odd permutations | N × N, entries 0 and 1 | dimensionless |
+| U_N | unitary DFT | F_N / √N | N × N complex | dimensionless |
+| M(N) | multiplication count | complex multiplications the FFT uses | integer | — |
+| C | circulant matrix | each row is the row above shifted one place right, wrapping around | N × N | depends on use |
+| c | generating vector | the first column of C | N × 1 | depends on use |
+
+**Formulation.** **Where the equations come from.** The model is the same change of basis as in the small DFT entry,
+X = F_N x. Nothing new is modeled; the content is a factorization of a known matrix.
+
+**The familiar formula.** Texts usually derive the FFT by the [Cooley–Tukey](https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm) split of the DFT sum
+X_k = Σ_(n=0)^(N−1) x_n ω_N^(kn) into even-indexed samples (n = 2m) and odd-indexed ones (n = 2m + 1):
+
+```
+X_k = Σ_(m=0)^(N/2−1) x_(2m) ω_N^(2mk)  +  ω_N^k · Σ_(m=0)^(N/2−1) x_(2m+1) ω_N^(2mk)
+```
+
+Squaring ω_N = e^(−2πi/N) gives e^(−2πi/(N/2)) = ω_(N/2), so ω_N^(2mk) = ω_(N/2)^(mk), and each sum is
+a DFT of length N/2. The first is E_k, from the even samples; the second is O_k, from the odd ones.
+Both repeat with period N/2 in k, and ω_N^(N/2) = e^(−πi) = −1, so ω_N^(k+N/2) = −ω_N^k. Hence:
+
+```
+X_k       = E_k + ω_N^k O_k
+X_(k+N/2) = E_k − ω_N^k O_k,        k = 0, …, N/2 − 1
+```
+
+**One [butterfly](https://en.wikipedia.org/wiki/Butterfly_diagram).** For one k, the pair (E_k, O_k) becomes the pair (X_k, X_(k+N/2)):
+
+```
+[ X_k       ]   [ 1    ω_N^k ]   [ E_k ]
+[ X_(k+N/2) ] = [ 1   −ω_N^k ] × [ O_k ]
+```
+
+This 2 × 2 map is called a butterfly because, drawn as a signal-flow diagram, its crossing lines look
+like a butterfly's wings. The number ω_N^k is called a twiddle factor because it twiddles, that is
+rotates, O_k around the unit circle before the sum and difference are taken. The product ω_N^k O_k is
+computed once and used twice.
+
+**All butterflies at once.** Stacking the N/2 butterflies, with the twiddle factors on the diagonal of
+D_(N/2), gives the butterfly matrix
+
+```
+B_N = [ I_(N/2)    D_(N/2) ]
+      [ I_(N/2)   −D_(N/2) ]
+```
+
+To get E and O, the permutation P_N lists the even samples, then the odd ones, and the
+[block-diagonal](https://en.wikipedia.org/wiki/Block_matrix) matrix F_(N/2) ⊕ F_(N/2) transforms each half. The symbol ⊕ (direct sum) means the
+matrix with the two blocks on its diagonal and zeros elsewhere: for example, [1] ⊕ [2] is the 2 × 2
+matrix with rows (1, 0) and (0, 2). Together:
+
+```
+F_N = B_N (F_(N/2) ⊕ F_(N/2)) P_N
+```
+
+**Worked case: N = 4.** This extends the small DFT entry's 4-point example. Here ω_4 = −i, ω_2 = −1,
+and the twiddle factors are ω_4^0 = 1 and ω_4^1 = −i. As scalar equations in x_0, …, x_3, the two
+2-point transforms are
+
+```
+E_0 = x_0 + x_2        O_0 = x_1 + x_3
+E_1 = x_0 − x_2        O_1 = x_1 − x_3
+```
+
+and the butterflies combine them:
+
+```
+X_0 = E_0 + O_0        X_2 = E_0 − O_0
+X_1 = E_1 − i O_1      X_3 = E_1 + i O_1
+```
+
+As matrices, row by row: the permutation P_4, the two copies of F_2 = [1 1; 1 −1], and the butterfly
+B_4 with D_2 = diag(1, −i), the diagonal matrix with 1 and −i on its diagonal:
+
+```
+P_4 = [ 1  0  0  0 ]     F_2 ⊕ F_2 = [ 1   1   0   0 ]     B_4 = [ 1  0   1   0 ]
+      [ 0  0  1  0 ]                 [ 1  −1   0   0 ]           [ 0  1   0  −i ]
+      [ 0  1  0  0 ]                 [ 0   0   1   1 ]           [ 1  0  −1   0 ]
+      [ 0  0  0  1 ]                 [ 0   0   1  −1 ]           [ 0  1   0   i ]
+```
+
+The product B_4 (F_2 ⊕ F_2) is F_4 with its middle columns swapped, because the inputs sit in the order
+(x_0, x_2, x_1, x_3); P_4 swaps them back:
+
+```
+B_4 (F_2 ⊕ F_2) = [ 1   1   1   1 ]        B_4 (F_2 ⊕ F_2) P_4 = [ 1   1   1   1 ] = F_4
+                  [ 1  −1  −i   i ]                              [ 1  −i  −1   i ]
+                  [ 1   1  −1  −1 ]                              [ 1  −1   1  −1 ]
+                  [ 1  −1   i  −i ]                              [ 1   i  −1  −i ]
+```
+
+One signal through the factored route: the known input is x = (1, 2, 3, 4), as in the small DFT entry,
+and X is unknown:
+
+```
+P_4 x                     = (1, 3, 2, 4)
+(F_2 ⊕ F_2) P_4 x         = (4, −2, 6, −2)          so E = (4, −2), O = (6, −2)
+twiddled odd half         = (1 · 6, −i · (−2))      = (6, 2i)
+X = B_4 (F_2 ⊕ F_2) P_4 x = (4 + 6, −2 + 2i, 4 − 6, −2 − 2i) = (10, −2 + 2i, −2, −2 − 2i)
+```
+
+This matches the direct product, which used 16 multiplications by entries of F_4 and 12 additions. The
+factored route used 4 twiddle multiplications (one per butterfly, counting the trivial ones by 1) and 8
+additions. Only one of them, by −i, is not by 1, and it only swaps real and imaginary parts and changes
+a sign.
+
+**The general recursion.** Each F_(N/2) splits the same way, down to F_2, itself a butterfly with
+twiddle factor 1. After L = log₂ N levels the DFT matrix is a product of L sparse stages and one
+permutation:
+
+```
+F_N = S_1 S_2 ⋯ S_L R_N
+```
+
+Stage S_1 is B_N, stage S_2 is B_(N/2) ⊕ B_(N/2), and the last stage is N/2 copies of F_2 on the
+diagonal. The permutations from every level combine into R_N, the [bit-reversal permutation](https://en.wikipedia.org/wiki/Bit-reversal_permutation): it puts
+sample n at the position whose binary digits are those of n written backwards. For N = 8 the input
+order is (x_0, x_4, x_2, x_6, x_1, x_5, x_3, x_7); for example,
+position 3 (011 in binary) holds x_6 (110). For N = 4, R_4 is the P_4 above.
+
+**The operation count.** Each stage holds N/2 butterflies, and each butterfly costs one multiplication
+and two additions, so
+
+```
+M(N) = (N/2) log₂ N multiplications,     N log₂ N additions
+```
+
+against N² multiplications for the direct product. In [big-O notation](https://en.wikipedia.org/wiki/Big_O_notation) the FFT is O(N log N) and the
+direct product O(N²). O(f(N)) means growing no faster than a constant times f(N); for example, 3N² + 5N
+is O(N²).
+
+| N | direct product, N² | FFT, (N/2) log₂ N | ratio |
+|---|---|---|---|
+| 4 | 16 | 4 | 4 |
+| 8 | 64 | 12 | 5.3 |
+| 1,024 | 1,048,576 | 5,120 | 205 |
+| 1,048,576 | about 1.1 × 10^12 | 10,485,760 | about 104,858 |
+
+**Unitarity of every stage.** The [conjugate transpose](https://en.wikipedia.org/wiki/Conjugate_transpose) of a matrix, marked with a superscript ᴴ, is its
+transpose with every entry replaced by its complex conjugate; for example, the conjugate transpose of
+the row (1, −i) is the column with entries 1 and i. For the butterfly matrix, writing I and D for
+I_(N/2) and D_(N/2),
+
+```
+B_Nᴴ B_N = [ I + I        D − D     ]  =  2 I
+           [ Dᴴ − Dᴴ      DᴴD + DᴴD ]
+```
+
+because every twiddle factor has absolute value 1, so DᴴD = I. Thus B_N / √2 is unitary, and so is
+F_2 / √2. [Permutation matrices](https://en.wikipedia.org/wiki/Permutation_matrix) are unitary too, and (1/√2)^L = 1/√N, so U_N = F_N / √N is a product of
+L unitary sparse factors and a permutation. A unitary factor preserves length, so a [rounding error](https://en.wikipedia.org/wiki/Round-off_error) made
+at one stage is not amplified by the stages after it, which is why the rounding error of the FFT grows
+only slowly with N, typically more slowly than that of the direct sum.
+
+**Matrix structure.** F_N is dense: all N² entries are nonzero and have absolute value 1. Each stage S_j has exactly two
+nonzeros per row, 2N in all, so the factors hold 2N log₂ N nonzeros against N² for F_N. The sparsity is
+not in the matrix but in its factors. A generic dense matrix has no such factorization; F_N has one
+because its entries are powers of one root of unity, and ω_N² = ω_(N/2) makes its diagonal blocks
+smaller DFT matrices. Because F_N and R_N are both symmetric, transposing gives a second factorization,
+F_N = R_N S_Lᵀ ⋯ S_1ᵀ.
+
+**What is computed.** The spectrum X, in L passes over one array of length N. Each pass applies one stage, and each butterfly
+reads two array slots and overwrites the same two, so the FFT runs in place. Decimation in time is the
+factorization above: reorder the input by bit reversal, then apply the stages. Decimation in frequency
+is the transposed factorization: natural-order input, bit-reversed output. The inverse transform uses
+the same factors conjugated, because F_N⁻¹ = (1/N) F_Nᴴ. Libraries such as FFTW, numpy.fft and Julia's
+FFTW.jl handle any N by mixing radices; FFTW times equivalent factorizations on the machine and keeps
+the fastest as a plan. On graphics processors, NVIDIA's cuFFT plays the same role.
+
+**Why linear algebra is the right tool.** The recursive code and the matrix identity F_N = B_N (F_(N/2) ⊕ F_(N/2)) P_N say the same thing, but
+the identity makes the cost visible: L factors with 2N nonzeros each. Variants that look different in
+code, for example decimation in time or in frequency, or orderings that avoid the bit-reversal pass,
+are different factorizations of the same matrix. Unitarity of the scaled stages explains stability
+without analyzing the code. The speed-up is a property of the matrix, not of clever programming.
+
+**Pitfall worth teaching.** Zero padding a block to a power of 2 does not compute the same transform faster. It computes a
+different one. For x = (1, 2, 3), the 3-point DFT is (6, −1.5 + 0.866i, −1.5 − 0.866i), with frequency
+bins at 1/3 and 2/3 of a cycle per sample. Padding to (1, 2, 3, 0) and using F_4 gives
+(6, −2 − 2i, 2, −2 + 2i), with bins at 1/4, 1/2 and 3/4. Both are correct answers to different
+questions. Padding suits a finer frequency grid or fast convolution (below), not speeding up a
+fixed-length transform. Modern libraries are fast for any N, including primes. A second trap: a
+hand-written radix-2 FFT that skips the reordering returns a plausible-looking but bit-reversed
+spectrum.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| DFT matrix F_N | the dense matrix with entries ω_N^(kn) that the FFT factors |
+| fast Fourier transform (FFT) | any algorithm that computes F_N x through a sparse factorization of F_N; the same transform as the DFT, not an approximation |
+| Cooley–Tukey algorithm | the split F_N = B_N (F_(N/2) ⊕ F_(N/2)) P_N, applied recursively |
+| radix-2 | splitting in two at every level, so N must be a power of 2 |
+| decimation in time | splitting the input into even- and odd-indexed samples, the permutation P_N on the right |
+| decimation in frequency | the transposed factorization, with the permutation on the output side |
+| butterfly | the 2 × 2 map taking (E_k, O_k) to (E_k + ω_N^k O_k, E_k − ω_N^k O_k) |
+| butterfly matrix B_N | [I D; I −D], one stage of N/2 butterflies |
+| twiddle factor ω_N^k | a diagonal entry of D_(N/2), the rotation applied to O_k |
+| stage S_j | one sparse factor, with 2 nonzeros per row; there are L = log₂ N of them |
+| bit-reversal permutation R_N | the product of all the even/odd permutations; it moves sample n to the position whose binary digits are those of n reversed |
+| in-place FFT | each butterfly reads and overwrites the same two array slots, so no second array is needed |
+| O(N log N) | the operation count M(N) = (N/2) log₂ N multiplications and N log₂ N additions |
+| zero padding | appending zeros to reach a convenient N, which computes a different transform |
+| plan | a library's precomputed choice of factorization for one N |
+
+**Extensions.** Splitting by 4 instead of 2 (radix-4), or by 2 and 4 together ([split-radix](https://en.wikipedia.org/wiki/Split-radix_FFT_algorithm)), regroups the stages so
+more twiddle factors are ±1 or ±i. The general Cooley–Tukey algorithm splits any composite N the same
+way. For prime N, [Bluestein](https://en.wikipedia.org/wiki/Chirp_Z-transform)'s chirp-z algorithm rewrites kn = (k² + n² − (k − n)²)/2, turning the DFT
+into a convolution that a power-of-2 FFT computes; Rader's algorithm uses the integers modulo a prime
+instead (Tier 3).
+
+Fast convolution is the main application. A convolution is a sliding weighted sum, the operation every
+linear filter performs, and on a block that wraps around it is multiplication by a circulant matrix C.
+The DFT diagonalizes every circulant matrix: C = F_N⁻¹ diag(F_N c) F_N, where diag(F_N c) is the
+diagonal matrix holding the entries of F_N c. This eigenvector statement is the matrix form of the
+[convolution theorem](https://en.wikipedia.org/wiki/Convolution_theorem), and it makes a length-N convolution cost three FFTs instead of N² multiplications;
+see the small DFT entry. The two-dimensional (2D) FFT of an image applies F_N to every row and then to
+every column. The [discrete cosine transform](https://en.wikipedia.org/wiki/Discrete_cosine_transform) of [JPEG](https://en.wikipedia.org/wiki/JPEG) (Joint Photographic Experts Group) image
+compression has a butterfly factorization of the same kind (the JPEG entry). In the
+beamforming and MUSIC (multiple signal classification) entry, an FFT across a uniform line of sensors
+forms beams in N directions at once.
+
+The quantum Fourier transform is U_N, with the opposite sign in the exponent, acting on L = log₂ N
+qubits (the quantum computing entry). Its circuit of about L²/2 gates is the same factorization written
+with [Kronecker products](https://en.wikipedia.org/wiki/Kronecker_product): Hadamard gates (F_2 / √2), controlled phase rotations (the twiddle factors)
+and final swap gates (the bit reversal). The Kronecker product of two matrices replaces each entry of
+the first by that entry times the whole second matrix; for example, the Kronecker product of the 2 × 2
+identity with F_2 is F_2 ⊕ F_2.
+
+---
+
+## 18. Beamforming and MUSIC: finding directions from the eigenvectors of an array covariance
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A row of antennas, underwater microphones or ordinary microphones listens to a sound or radio wave
+arriving from some direction. The wave reaches the near end of the row a little before the far end,
+so each sensor hears the same signal with a slightly different delay. The pattern of delays across
+the row says which way the wave came from.
+
+The traditional way to read that pattern is to "point" the row electronically: for each candidate
+direction, undo the delays that direction would cause and add the sensor outputs. Waves from that
+direction add up strongly, others partly cancel. Pointing everywhere and listening for the loudest
+direction works, but two sources close together blur into one, because a short row cannot point
+sharply.
+
+A second method, MUSIC, uses linear algebra instead. It collects many recordings, builds a matrix
+that says how the sensors vary together, and splits the space of possible recordings into a part
+the sources can reach and a part only noise reaches. The true directions are exactly those whose
+delay patterns have nothing in the noise-only part, and that test can separate sources that pointing
+cannot.
+
+</details>
+
+**Field:** Radar, sonar, wireless communications, [microphone arrays](https://en.wikipedia.org/wiki/Microphone_array), radio astronomy, seismology
+
+**Tier:** 2 — the directions are read off the eigenvectors of a Hermitian covariance matrix: the ones with the largest eigenvalues span the signal subspace, and the steering vectors of the true directions are orthogonal to the rest. That is the spectral theorem, so the entry is Tier 2. Random-process theory, statistical consistency and the [Cramér–Rao](https://en.wikipedia.org/wiki/Cram%C3%A9r%E2%80%93Rao_bound) bound are Tier 3 and appear only in Extensions.
+
+**Scalars and vectors.** Scalar field: C, the complex numbers: each sensor sample is an amplitude and a phase, recorded as one complex number. Vectors: C^M, one coordinate per sensor: a snapshot x(t) is a vector in C^M. The steering vectors a(θ) form a curve in C^M (the array manifold), not a subspace; the signal subspace is the span of the d steering vectors of the actual sources, and the covariance R is a Hermitian M × M matrix.
+
+**Underlying equations.** A statistical model of [plane waves](https://en.wikipedia.org/wiki/Plane_wave) plus noise: snapshots x(t) = A s(t) + n(t), with spatial covariance R = A R_ss Aᴴ + σ² I.
+
+**The problem.** A **sensor array** is a set of M sensors, for example 8 antennas on a radar mast or 4 microphones in a
+smart speaker. Here the sensors stand in a straight line, equally spaced, half a wavelength apart: a
+uniform linear array. A **source** is a distant emitter, for example an aircraft or a talker, whose
+wave arrives as a plane wave from a **[direction of arrival](https://en.wikipedia.org/wiki/Direction_of_arrival)** θ, measured from broadside (the direction
+straight ahead of the line). A **snapshot** is the set of M complex samples taken at one instant: each
+sample records the amplitude and the phase of the wave at one sensor. Direction finding means: from N
+snapshots, estimate the directions of d sources.
+
+The motivating contrast is between steering and subspace methods. Steering ([beamforming](https://en.wikipedia.org/wiki/Beamforming)) scans a
+beam across all angles and reports where the received power is high; its sharpness is fixed by the
+length of the array, the aperture. A subspace method fits a model of the covariance and reports the
+angles the model says are occupied, which can resolve sources closer than one beamwidth. The subspace
+method in this entry is [multiple signal classification](https://en.wikipedia.org/wiki/MUSIC_%28algorithm%29) (MUSIC).
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| M | number of sensors | array elements, indexed m = 0, …, M − 1 | integer | — |
+| θ | direction of arrival | angle of a source from broadside | scalar | degrees |
+| d | number of sources | the model order; d < M | integer | — |
+| a(θ) | steering vector | entries a_m(θ) = e^(−iπ m sin θ) | M × 1 complex | dimensionless |
+| A | array response matrix | columns a(θ_1), …, a(θ_d) | M × d complex | dimensionless |
+| s(t) | source signals | complex amplitude of each source at time t | d × 1 complex | signal units |
+| n(t) | sensor noise | independent noise at each sensor | M × 1 complex | signal units |
+| x(t) | snapshot | x(t) = A s(t) + n(t) | M × 1 complex | signal units |
+| N | number of snapshots | times t = 1, …, N | integer | — |
+| R_ss | source covariance | E[s sᴴ]; diag(σ_s², …) for uncorrelated sources | d × d | signal units² |
+| σ_s², σ² | source and noise power | variance of one source; of the noise at each sensor | scalars | signal units² |
+| R | spatial covariance | R = E[x xᴴ] | M × M Hermitian | signal units² |
+| R̂ | sample covariance | (1/N) Σ x(t) x(t)ᴴ | M × M Hermitian | signal units² |
+| P(θ) | delay-and-sum power | a(θ)ᴴ R a(θ) | scalar | signal units² |
+| λ_k, u_k | eigenpairs of R | R u_k = λ_k u_k, λ_1 ≥ … ≥ λ_M | scalar, M × 1 | signal units², dimensionless |
+| E_s, E_n | subspace bases | E_s = [u_1 … u_d], E_n = [u_(d+1) … u_M] | M × d, M × (M − d) | dimensionless |
+| P_MU(θ) | MUSIC pseudospectrum | 1 / ‖E_nᴴ a(θ)‖² | scalar | dimensionless |
+
+**Formulation.** **Where the equations come from.** The model is statistical: plane waves plus independent noise,
+summarized by second moments. No equation of motion is solved.
+
+**One sensor.** The familiar formula is the path difference: a plane wave from angle θ travels an
+extra distance (spacing) × sin θ to reach each next sensor. With spacing half a wavelength, that is
+half a cycle times sin θ, a phase lag of π sin θ per sensor. Sensor m therefore sees the source
+amplitude s multiplied by e^(−iπ m sin θ). For example, at θ = 30°, sin θ = 1/2 and the factors for
+m = 0, 1, 2 are e^0 = 1, e^(−iπ/2) = −i and e^(−iπ) = −1.
+
+**All sensors.** Stacking the M factors gives the steering vector a(θ), and stacking one steering
+vector per source gives A. One snapshot is then
+
+```
+x(t) = A s(t) + n(t)
+```
+
+The noisy snapshot is known; A (through the angles θ_k) and s(t) are unknown.
+
+**Covariance.** Two pieces of notation. The conjugate transpose vᴴ transposes v and conjugates every
+entry: for v = (1, −i), vᴴ is the row (1, i), so vᴴ v = 1 + (i)(−i) = 2. The [expected value](https://en.wikipedia.org/wiki/Expected_value) E[·]
+is the average over many repetitions of a random quantity; for example, a fair die has E[roll] = 3.5. The
+spatial covariance R = E[x xᴴ] holds in entry (j, k) the average of x_j conj(x_k), how sensors j and
+k vary together. With sources and noise uncorrelated,
+
+```
+R = A R_ss Aᴴ + σ² I
+```
+
+In practice R is estimated by the [sample covariance](https://en.wikipedia.org/wiki/Sample_mean_and_covariance) R̂. R is Hermitian (Rᴴ = R), so by the spectral
+theorem its eigenvalues are real, here nonnegative, and its eigenvectors can be chosen orthonormal.
+
+**Delay-and-sum beamforming.** Weighting snapshot x by a candidate steering vector and adding,
+a(θ)ᴴ x undoes the phase lags for direction θ, so a source there adds coherently. Its average power
+is
+
+```
+P(θ) = E[ |a(θ)ᴴ x|² ] = a(θ)ᴴ R a(θ)
+```
+
+and the estimate is the set of peaks of P(θ). The peaks have width about 2/M in sin θ, so two
+sources closer than that merge.
+
+**MUSIC.** The name stands for MUltiple SIgnal Classification. A R_ss Aᴴ has rank d, so for any
+vector v orthogonal to the d columns of A, R v = σ² v. Hence R has M − d eigenvalues equal to σ², and
+d larger ones whose eigenvectors span the column space of A, the signal subspace. The remaining
+eigenvectors, collected as columns of E_n, span the noise subspace. The symbol ⊥ means "is orthogonal
+to": a ⊥ E_n says aᴴ u = 0 for every column u of E_n, as for (1, 1) ⊥ (1, −1) in R². Each true
+steering vector lies in the signal subspace, so a(θ_k) ⊥ E_n, and E_nᴴ a(θ), the vector of its inner
+products with the noise eigenvectors, vanishes exactly there. The pseudospectrum
+
+```
+P_MU(θ) = 1 / ‖E_nᴴ a(θ)‖²
+```
+
+where ‖v‖ is the length of a vector, ‖v‖² = vᴴ v. It is infinite at the true angles for the exact R,
+and sharply peaked for R̂. It is called a pseudospectrum because its peaks mark directions but its
+heights are not powers.
+
+**Worked case: three sensors, one source at 30°.** Take σ_s² = 2 and σ² = 1. With
+a(30°) = (1, −i, −1), the scalar equations for one snapshot are
+
+```
+x_0 = s + n_0
+x_1 = −i s + n_1
+x_2 = −s + n_2
+```
+
+and in matrix form
+
+```
+[ x_0 ]   [ 1  ]       [ n_0 ]
+[ x_1 ] = [ −i ] s  +  [ n_1 ]
+[ x_2 ]   [ −1 ]       [ n_2 ]
+```
+
+The covariance is R = 2 a aᴴ + I, with (a aᴴ)_jk = a_j conj(a_k):
+
+```
+         0    1    2
+a aᴴ = [ 1    i    −1  ]   0
+       [ −i   1    i   ]   1
+       [ −1   −i   1   ]   2
+```
+
+so that
+
+```
+      0    1    2
+R = [ 3    2i   −2  ]   0
+    [ −2i  3    2i  ]   1
+    [ −2   −2i  3   ]   2
+```
+
+Since a aᴴ a = 3a, R a = (2 × 3 + 1) a = 7a: the signal eigenvalue is M σ_s² + σ² = 7. Checking
+row by row:
+
+```
+[ 3    2i   −2  ]   [ 1  ]   [ 3 + 2 + 2     ]   [ 7  ]
+[ −2i  3    2i  ] × [ −i ] = [ −2i − 3i − 2i ] = [ −7i ] = 7 × a
+[ −2   −2i  3   ]   [ −1 ]   [ −2 − 2 − 3    ]   [ −7 ]
+```
+
+Every vector orthogonal to a has eigenvalue σ² = 1, twice. An orthonormal basis of that noise
+subspace is
+
+```
+u_2 = (1, 0, 1) / √2,     u_3 = (1, 2i, −1) / √6
+```
+
+At θ = 30°, u_2ᴴ a = (1 − 1)/√2 = 0 and u_3ᴴ a = (1 + (−2i)(−i) + 1)/√6 = (1 − 2 + 1)/√6 = 0, so
+a(30°) ⊥ E_n and P_MU is infinite. At θ = 0°, a(0°) = (1, 1, 1) gives u_2ᴴ a = 2/√2 and
+u_3ᴴ a = −2i/√6, so ‖E_nᴴ a‖² = 2 + 2/3 = 8/3 and P_MU(0°) = 3/8. Delay-and-sum gives
+P(θ) = 2 |a(θ)ᴴ a(30°)|² + 3, so P(30°) = 2 × 9 + 3 = 21 and P(0°) = 2 × 1 + 3 = 5.
+
+**A two-source case.** With M = 8, sources at 0° and 10°, σ_s² = 1, σ² = 0.1 and one simulated set
+of N = 200 snapshots, R̂ has eigenvalues 11.318 and 4.721 followed by six between 0.074 and 0.130.
+The two large ones give d = 2. The beamwidth is 2/M = 0.25 in sin θ, about 14.5°, so delay-and-sum
+shows a single peak near 5.2° (power 87.27). MUSIC peaks at −0.06° and 9.93°, with pseudospectrum
+367.4 and 306.9 against 3.5 at 5° between them.
+
+**Matrix structure.** R is small, dense, Hermitian and positive semidefinite. For a uniform linear array and uncorrelated
+sources it is also [Toeplitz](https://en.wikipedia.org/wiki/Toeplitz_matrix): entry (j, k) depends only on j − k. A steering vector at
+sin θ = −2k/M is column k of Fᴴ, where F is the M-point discrete Fourier transform (DFT) matrix, so
+delay-and-sum at those angles is a spatial DFT of the snapshot. Spacing wider than half a wavelength
+lets two different angles give the same steering vector, and the array cannot tell them apart.
+
+**What is computed.** R̂ is formed from the snapshots, a Hermitian eigensolver (numpy.linalg.eigh, LAPACK zheevd) splits it,
+and P_MU is evaluated on a fine grid of angles. Equivalently, the singular value decomposition (SVD)
+of the M × N snapshot matrix gives the same subspaces without forming R̂.
+
+**Why linear algebra is the right tool.** The geometry is the whole argument. Sources live in a d-dimensional subspace of ℂ^M, noise fills all
+of ℂ^M equally, and the spectral theorem separates the two as orthogonal eigenspaces. Direction
+finding becomes a search along the array manifold for points orthogonal to a subspace. Delay-and-sum
+measures a projection onto one steering vector, which is limited by aperture. MUSIC measures distance
+from the signal subspace, which is limited only by how well R̂ estimates R.
+
+**Pitfall worth teaching.** Coherent sources break MUSIC. [Multipath](https://en.wikipedia.org/wiki/Multipath_propagation), for example a radar echo arriving directly and again off
+the sea, gives two directions carrying the same signal up to a factor, so R_ss is singular and the
+signal part of R has rank 1 instead of 2. Only one large eigenvalue appears, the signal subspace
+holds a mixture of the two steering vectors, and neither is orthogonal to E_n. Spatial smoothing
+averages the covariances of overlapping subarrays, which restores the rank at the cost of aperture.
+A second trap is the model order: d must be estimated, usually from the gap between large
+eigenvalues and the noise floor, or by the [Akaike information criterion](https://en.wikipedia.org/wiki/Akaike_information_criterion) (AIC) or
+[minimum description length](https://en.wikipedia.org/wiki/Minimum_description_length) (MDL). Choosing d too small drops a source; too large puts a signal eigenvector into E_n.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| sensor (array element) | one antenna, hydrophone or microphone; one coordinate of C^M |
+| snapshot x(t) | the M complex sensor samples at one instant, a vector in C^M |
+| direction of arrival θ | the angle of a source from broadside (straight ahead of the array) |
+| steering vector a(θ) | the snapshot a unit plane wave from angle θ would produce, entries e^(−iπ m sin θ) |
+| array manifold | the curve of all steering vectors a(θ) as θ varies |
+| spatial covariance matrix R | E[x xᴴ], Hermitian positive semidefinite, M × M |
+| sample covariance R̂ | (1/N) Σ x(t) x(t)ᴴ over N snapshots, the estimate of R actually computed |
+| beamformer weights w | a vector in C^M; the output is the inner product wᴴ x |
+| delay-and-sum beamformer | weights w = a(θ); output power a(θ)ᴴ R a(θ) |
+| beam pattern | the response \|a(θ_0)ᴴ a(θ)\|² of a beam aimed at θ_0, as θ varies |
+| aperture | the length of the array; it sets the beamwidth, about 2/M in sin θ |
+| signal subspace | span of the d eigenvectors of R with the largest eigenvalues, equal to the column space of A |
+| noise subspace E_n | the orthogonal complement, spanned by the M − d eigenvectors with eigenvalue σ² |
+| MUSIC pseudospectrum | 1 / ‖E_nᴴ a(θ)‖², infinite where a(θ) is orthogonal to the noise subspace |
+| model order d | the number of sources, the number of eigenvalues above the noise floor |
+| coherent sources | delayed copies of one signal (multipath) that make R_ss singular |
+| spatial smoothing | averaging covariances of overlapping subarrays to restore the rank of R_ss |
+
+**Extensions.** The minimum-variance distortionless response (MVDR) or Capon beamformer uses weights
+w = R⁻¹ a / (aᴴ R⁻¹ a), which keep the gain toward θ at 1 and minimize everything else. [ESPRIT](https://en.wikipedia.org/wiki/Estimation_of_signal_parameters_via_rotational_invariance_techniques)
+(estimation of signal parameters via rotational invariance techniques) uses the shift between two
+overlapping subarrays to get the angles from a small eigenproblem with no grid search. Root-MUSIC
+writes ‖E_nᴴ a‖² as a polynomial in z = e^(−iπ sin θ) and reads the angles from its roots. How
+accurately any unbiased method can estimate θ is the Cramér–Rao bound, and showing that MUSIC
+approaches it as N grows needs estimation theory and random processes (Tier 3). The steering vectors are columns of a DFT-like matrix (the small DFT entry), and fast scanning of a
+uniform array uses the fast Fourier transform (FFT), itself a matrix factorization (the FFT entry).
+The split of a covariance into a few large eigenvalues and a flat floor is the same move as
+principal component analysis (PCA) in the population-genetics entry and latent semantic analysis in
+the word-embeddings entry. In 5G (fifth-generation) wireless, [multiple-input multiple-output](https://en.wikipedia.org/wiki/MIMO) (MIMO)
+base stations apply the same beamforming with dozens of antennas, and microphone arrays in smart
+speakers use it to pick out a talker.
+
+---
+
 ## 19. JPEG compression: change to a cosine basis, then keep only a few coordinates
 
 <details>
 <summary><b>Start here — the problem in plain terms</b></summary>
 
-A photograph from a phone has millions of pixels, each with three color values, yet the [JPEG](https://en.wikipedia.org/wiki/JPEG) file is
+A photograph from a phone has millions of pixels, each with three color values, yet the JPEG file is
 usually a tenth of the raw size or less, and the difference is hard to see. The saving comes from a
 simple observation: neighboring pixels in a photograph are usually close in value. A patch of sky or
 skin changes slowly. Listing every pixel value separately wastes space on information that is nearly
@@ -1636,7 +2176,7 @@ Video compression uses the same idea on the differences between one frame and th
 
 **Field:** Image and video compression, digital photography, streaming video, multimedia standards
 
-**Tier:** 1 — the [discrete cosine transform](https://en.wikipedia.org/wiki/Discrete_cosine_transform) is an orthogonal change of basis for each block of pixels, and compression is rounding the new coordinates, most of them to zero. Why cosines are close to the best possible basis is an eigenvector statement, which is Tier 2.
+**Tier:** 1 — the discrete cosine transform is an orthogonal change of basis for each block of pixels, and compression is rounding the new coordinates, most of them to zero. Why cosines are close to the best possible basis is an eigenvector statement, which is Tier 2.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^64 for an 8 × 8 block of pixel values (R^4 for one row of four pixels in the toy). The discrete cosine transform is an orthogonal change of basis in that space, and compression stores the coordinates in the new basis coarsely.
 
@@ -1725,7 +2265,7 @@ compaction**.
 **Quantization.** Divide each coefficient by a step Δ_k and round: q_k = round(X_k / Δ_k). With every
 step equal to 10, the toy row is stored as (23, −2, 0, 0) and decodes to
 Cᵀ (230, −20, 0, 0) = (101.9, 109.6, 120.4, 128.1). Two whole numbers replace four pixel values, and no
-pixel is off by more than 2. Because C is orthogonal, the [rounding error](https://en.wikipedia.org/wiki/Round-off_error) has the same length in pixels
+pixel is off by more than 2. Because C is orthogonal, the rounding error has the same length in pixels
 as in coefficients, so an encoder that controls one controls the other.
 
 **Two dimensions.** A block is transformed along its rows and then along its columns, which is one
@@ -5597,7 +6137,7 @@ give the same weights (1, −2, 1), but now the estimate is of f'' at the left e
 m = 3 is 6 rather than 0, and the formula is only first-order accurate.
 
 Applying one stencil at every grid point gives a matrix with the weights running down its diagonals,
-a banded [Toeplitz](https://en.wikipedia.org/wiki/Toeplitz_matrix) matrix. For the three-point second derivative on four interior grid points, with the
+a banded Toeplitz matrix. For the three-point second derivative on four interior grid points, with the
 function taken to be zero at the two ends, it is
 
 ```
@@ -6105,7 +6645,7 @@ equally spaced moments. For many purposes that list is the wrong description. A 
 which notes are present, an engineer which frequencies carry interference, and a compression program
 which parts can be thrown away without anyone noticing.
 
-The [discrete Fourier transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform) answers by rewriting the list as a combination of pure waves: a
+The discrete Fourier transform answers by rewriting the list as a combination of pure waves: a
 constant, a wave that goes up and down once over the block of samples, one that goes twice, and so on.
 Each wave gets one coefficient, telling how much of it is present and where in its cycle it starts.
 The list of coefficients is the signal's spectrum.
@@ -6120,7 +6660,7 @@ instead of the real ones.
 
 **Field:** Signal processing, audio, communications, image processing, spectroscopy
 
-**Tier:** 1 — the DFT is multiplication by one explicit complex matrix whose columns form an orthogonal basis, so it needs complex numbers but no eigenvalues. That the DFT diagonalizes every [circulant](https://en.wikipedia.org/wiki/Circulant_matrix) matrix, the reason convolution becomes multiplication, is an eigenvector statement and Tier 2.
+**Tier:** 1 — the DFT is multiplication by one explicit complex matrix whose columns form an orthogonal basis, so it needs complex numbers but no eigenvalues. That the DFT diagonalizes every circulant matrix, the reason convolution becomes multiplication, is an eigenvector statement and Tier 2.
 
 **Scalars and vectors.** Scalar field: C, the complex numbers, even when the signal itself is real: the basis vectors are complex waves, so the coordinates are complex. Vectors: C^N for a block of N samples, with the complex inner product ⟨u, v⟩ = Σ conj(u_n) v_n. A real signal lies in the real subset R^N, which is not a complex subspace, and its transform has the conjugate symmetry X_(N−k) = conj(X_k).
 
@@ -6185,7 +6725,7 @@ mutually orthogonal and each has squared length N:
 Fᴴ F = N I
 ```
 
-So the inverse is just the [conjugate transpose](https://en.wikipedia.org/wiki/Conjugate_transpose), scaled: x = (1/N) Fᴴ X, which is the inverse DFT
+So the inverse is just the conjugate transpose, scaled: x = (1/N) Fᴴ X, which is the inverse DFT
 formula x_n = (1/N) Σ X_k e^(2πi kn/N). Scaled to U = F/√N, the matrix is unitary, Uᴴ U = I: the
 complex version of an orthogonal matrix, a rotation of ℂ^N.
 
@@ -6225,7 +6765,7 @@ single number ω, which lie on the unit circle, and that repetition is what lets
 into about log₂ N sparse factors.
 
 **What is computed.** For small N, or a handful of frequencies, the transform is computed directly as a matrix-vector
-product. For anything larger, the [fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) computes exactly the same product in
+product. For anything larger, the fast Fourier transform computes exactly the same product in
 O(N log N) operations instead of O(N²) by factoring F into sparse matrices (the FFT entry). Libraries
 such as FFTW, numpy.fft and Julia's FFTW.jl differ in scaling conventions, which the pitfall
 discusses.
@@ -7172,6 +7712,8 @@ Neumann series as the Leontief entry.
 | 28 | Reinforcement learning | Linear system (I − γ P_π) v = r_π; Neumann series | Policy iteration; value iteration |
 | 31 | Protein dynamics | Hessian eigenproblem; graph Laplacian pseudoinverse | Sparse eigensolve (Lanczos, shift-invert) |
 | 32 | Systems biology | Null space of the stoichiometric matrix; linear program over a polytope | Simplex or interior point; flux variability analysis |
+| 17 | Signal processing | Factorization of the DFT matrix into sparse unitary stages | Cooley–Tukey radix-2 FFT |
+| 18 | Array signal processing | Signal and noise subspaces of a Hermitian covariance | Eigendecomposition (MUSIC) |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
@@ -7209,10 +7751,6 @@ the one exception marked below.
 - **Portfolio optimization (Markowitz)** — covariance matrices, shrinkage estimation, the ill-conditioning that makes the textbook version unusable
 - **Support vector machines / kernel methods** — Gram matrices, positive definiteness, the representer theorem
 
-### Would add: signal processing
-- **The FFT as a matrix factorization** — the DFT matrix factored into sparse blocks; why O(n log n) is a statement about structure
-- **Beamforming and MUSIC direction-finding** — signal and noise subspaces of a spatial covariance matrix; radar, sonar, and 5G MIMO
-
 ### Would add: statistics and machine learning proper
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
 
@@ -7237,10 +7775,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 23 of the 39 written entries are now Tier 1.
+   backlog, which is under way: 23 of the 41 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 403 terms across the 39 written entries, and the backlog entries most likely to generate
+   currently covers 435 terms across the 41 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

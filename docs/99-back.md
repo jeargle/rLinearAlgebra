@@ -39,10 +39,6 @@ the one exception marked below.
 - **Portfolio optimization (Markowitz)** — covariance matrices, shrinkage estimation, the ill-conditioning that makes the textbook version unusable
 - **Support vector machines / kernel methods** — Gram matrices, positive definiteness, the representer theorem
 
-### Would add: signal processing
-- **The FFT as a matrix factorization** — the DFT matrix factored into sparse blocks; why O(n log n) is a statement about structure
-- **Beamforming and MUSIC direction-finding** — signal and noise subspaces of a spatial covariance matrix; radar, sonar, and 5G MIMO
-
 ### Would add: statistics and machine learning proper
 - **Matrix completion and recommender systems** — nuclear-norm minimization, the Netflix Prize
 
