@@ -25,7 +25,7 @@ statistical mechanics, which says how far a molecule strays at a given temperatu
 ### The problem
 
 Some vocabulary first. A **residue** is one amino acid in a protein chain. A **structure** is a list of
-atomic coordinates, determined for example by X-ray crystallography and deposited in the
+atomic coordinates, determined for example by [X-ray crystallography](https://en.wikipedia.org/wiki/X-ray_crystallography) and deposited in the
 [Protein Data Bank](https://en.wikipedia.org/wiki/Protein_Data_Bank). Coordinates are in ångströms (Å, 10⁻¹⁰ m), masses in daltons (Da, grams per mole),
 times in picoseconds (ps, 10⁻¹² s) and energies in kilocalories per mole (kcal/mol). Coarse-grained
 models keep one point per residue, its **C-alpha atom**, the backbone carbon that carries the side

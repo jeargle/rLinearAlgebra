@@ -19,7 +19,7 @@ same bookkeeping is plain arithmetic, and the [stoichiometric](https://en.wikipe
 itself.
 
 **Field:** Systems biology, metabolic engineering, microbiology, biotechnology  
-**Tier:** 3 — S v = 0 is the quasi-steady state of the mass-balance [ordinary differential equation](https://en.wikipedia.org/wiki/Ordinary_differential_equation) dc/dt = S v − μ c, justified by a separation of timescales; picking one flux vector is a linear program, and its shadow prices come from linear programming duality. On-ramps: the null-space view of the stoichiometric matrices entry, and the process [flowsheet](https://en.wikipedia.org/wiki/Process_flow_diagram) entry, where the same balance is an accounting identity with no time derivative.  
+**Tier:** 3 — S v = 0 is the quasi-steady state of the mass-balance [ordinary differential equation](https://en.wikipedia.org/wiki/Ordinary_differential_equation) dc/dt = S v − μ c, justified by a separation of timescales; picking one flux vector is a linear program, and its [shadow prices](https://en.wikipedia.org/wiki/Shadow_price) come from linear programming duality. On-ramps: the null-space view of the stoichiometric matrices entry, and the process [flowsheet](https://en.wikipedia.org/wiki/Process_flow_diagram) entry, where the same balance is an accounting identity with no time derivative.  
 **Scalar field:** R  
 **Vectors:** R^r flux space, one coordinate per reaction (r = 5 in the worked case). The steady-state fluxes form the [null space](https://en.wikipedia.org/wiki/Kernel_%28linear_algebra%29) of S, a subspace; adding the bounds lb ≤ v ≤ ub cuts it down to a convex [polytope](https://en.wikipedia.org/wiki/Convex_polytope), which is not a subspace. Concentrations live in a different space, R^m, one coordinate per metabolite, and shadow prices live in that same metabolite space  
 **Underlying equations:** Mass-balance ordinary differential equation dc/dt = S v(c) − μ c, first order, nonlinear through the enzyme kinetics in v(c); at quasi-steady state it reduces to the linear equations S v = 0, and flux balance analysis then solves the linear program max wᵀ v subject to S v = 0 and lb ≤ v ≤ ub
@@ -112,7 +112,7 @@ subject to  S v = 0,   lb ≤ v ≤ ub
 
 Known: S, lb, ub and w. Unknown: v. Many FBA papers write the objective vector as c, which here is the
 concentration vector. The feasible set, the null space cut by a box, is a convex polytope, and the
-maximum lies at a vertex, where the simplex method of the linear programming entry searches.
+maximum lies at a vertex, where the [simplex method](https://en.wikipedia.org/wiki/Simplex_algorithm) of the linear programming entry searches.
 
 **Worked case: two pathways of different yield.** Three metabolites (glucose, oxygen, ATP) and five
 reactions:
@@ -192,9 +192,9 @@ and human Recon3D is several times larger.
 
 ### What is computed
 
-One linear program per scenario, solved by dual simplex or interior-point methods (GLPK, HiGHS, CPLEX
+One linear program per scenario, solved by dual simplex or [interior-point methods](https://en.wikipedia.org/wiki/Interior-point_method) (GLPK, HiGHS, CPLEX
 or Gurobi) in under a second at genome scale; FVA takes 2r more. Each solve also returns shadow prices
-π and reduced costs, which say which metabolites and bounds limit growth. A gene knockout sets lb_j =
+π and [reduced costs](https://en.wikipedia.org/wiki/Reduced_cost), which say which metabolites and bounds limit growth. A gene knockout sets lb_j =
 ub_j = 0 for every reaction needing the deleted gene.
 
 ### Why linear algebra is the right tool
@@ -218,7 +218,7 @@ concentrations: S v = 0 holds for any constant c, so metabolite levels need kine
 Complementary slackness, from the full duality theory, says that a reaction carrying flux strictly
 between its bounds has zero reduced cost. Parsimonious FBA minimizes total flux Σ |v_j| among the
 optima, a second linear program. Minimization of metabolic adjustment (MOMA) predicts a knockout's
-fluxes as the feasible point closest in Euclidean norm to the wild type, a quadratic program and a
+fluxes as the feasible point closest in Euclidean norm to the wild type, a [quadratic program](https://en.wikipedia.org/wiki/Quadratic_programming) and a
 [least-squares](https://en.wikipedia.org/wiki/Least_squares) projection onto a polytope (see the least squares entries). Loopless FBA removes
 thermodynamically infeasible cycles with integer variables. Dynamic FBA keeps a differential equation
 on the slow scale, for biomass and medium concentrations, with an FBA solve at each time step setting μ

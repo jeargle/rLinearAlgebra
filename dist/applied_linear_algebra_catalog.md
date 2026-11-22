@@ -1,6 +1,6 @@
 # Applied Linear Algebra: An Initial Collection
 
-**Version 0.2 — a seed set of 10 problems, and 31 further written entries**
+**Version 0.2 — a seed set of 10 problems, and 34 further written entries**
 
 Selection criteria for the seed set:
 
@@ -200,8 +200,8 @@ In that case it raises the entry's ceiling, as described in the next section.
 - Difference equations are not differential equations. PageRank's random-surfer recurrence,
   π_{t+1} = G π_t, is a discrete-time linear system and does not by itself raise the tier.
 
-**Current distribution.** Of the 41 written entries, 23 are Tier 1,
-11 are Tier 2, and 7 are Tier 3. Of the 10 seed entries, 2 are Tier 1
+**Current distribution.** Of the 44 written entries, 23 are Tier 1,
+14 are Tier 2, and 7 are Tier 3. Of the 10 seed entries, 2 are Tier 1
 (Leontief input-output economics; Linear error-correcting codes), 3 are Tier 2, and 5 are Tier 3. Across all
 52 catalogued problems the split is 23 / 14 / 15.
 
@@ -1612,6 +1612,554 @@ and conservation at nodes, appears in the traffic-flow and process mass-balance 
 
 ---
 
+## 15. Linear programming: the simplex method as a walk between basis matrices
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A furniture workshop makes two products from limited wood, labor and machine time. Each product earns a
+known profit and uses known amounts of each resource. How many of each should it make? Problems of this
+shape, the best plan within limits when everything scales in proportion, are [linear programs](https://en.wikipedia.org/wiki/Linear_programming). They
+schedule airline crews, blend animal feed and route freight.
+
+In school, a two-variable version is solved by graphing each limit as a line, shading the region that
+obeys all of them, and checking the profit at each corner, where the best plan always lies. With
+thousands of products the corners cannot be drawn or listed, but each is still the solution of a square
+linear system. The [simplex method](https://en.wikipedia.org/wiki/Simplex_algorithm) walks uphill from corner to neighboring corner, changing one column
+of a matrix per step.
+
+</details>
+
+**Field:** Operations research, production planning, scheduling, logistics, economics
+
+**Tier:** 2 — each corner of the feasible region is the solution of one square system B x_B = b, and each simplex step swaps one column of B, a rank-one update. That much is first-course linear algebra; the entry is Tier 2 because whether those solves can be trusted at scale depends on the condition numbers of the basis matrices and on updated factorizations. Duality, complementary slackness, convexity proofs and interior-point theory need convex analysis and are Tier 3, named in Extensions.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^n with n = products + resources, one coordinate per decision variable or [slack variable](https://en.wikipedia.org/wiki/Slack_variable). The feasible set {x : A x = b, x ≥ 0} is a polyhedron, not a subspace: it is closed under neither negation nor scaling by negative numbers. The vectors x_B of basic variables live in R^m, one coordinate per constraint.
+
+**Underlying equations.** A linear production model: resource use is an accounting identity, amount per item times number of items summed over products, giving inequalities G x ≤ b with x ≥ 0 and a linear profit cᵀ x to maximize; slack variables turn them into the equations A x = b with A = [G I].
+
+**The problem.** Linear programming (LP) chooses nonnegative quantities to maximize, or minimize, a linear function of
+them under linear limits. The unknowns are decision variables, for example the numbers of tables and
+bookcases a workshop makes in a week. Each limit is a constraint: the use of one resource must not
+exceed its capacity, for example at most 6 boards of wood a week. The function maximized is the
+objective, here profit. A plan obeying every constraint with no negative quantity is feasible, and all
+feasible plans form the feasible region, a polygon in two variables. A constraint is tight when it
+holds with equality, so the resource is used up. A vertex, or corner, is a feasible plan where enough
+constraints are tight to pin it down: in two variables, two of them.
+
+The motivating contrast is between equations and inequalities. A square linear system pins down its
+solution, as in the Leontief entry. Constraints with ≤ leave a whole region of plans and ask which is
+best. Given: each item's resource use, the capacities and the profits. Solved for: the quantities, and
+which constraints end up tight.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| k | number of products | how many decision variables there are | integer | — |
+| m | number of resources | how many constraints there are | integer | — |
+| n | number of variables | k products plus m slack variables, n = k + m | integer | — |
+| x_j | decision variable | quantity of product j | scalar ≥ 0 | items |
+| s_i | slack variable | unused amount of resource i | scalar ≥ 0 | units of resource i |
+| x | variable vector | (x_1, …, x_k, s_1, …, s_m) | n × 1 | mixed: items and resource units |
+| G | resource-use matrix | entry g_ij is the amount of resource i one item of product j uses | m × k | resource units per item |
+| b | capacity vector | entry b_i is the available amount of resource i | m × 1 | resource units |
+| c | profit vector | profit per item for each product, 0 for each slack | n × 1 | dollars per item |
+| z | objective | total profit cᵀ x | scalar | dollars |
+| A | constraint matrix | [G I]: the resource-use matrix with an identity block for the slacks | m × n | mixed |
+| I | identity matrix |  | m × m | — |
+| a_j | column j of A | resource use of variable j | m × 1 | resource units per item |
+| B | basis matrix | m chosen linearly independent columns of A; B_P, B_Q at corners P and Q | m × m | mixed |
+| N | nonbasic matrix | the other n − m columns of A | m × (n − m) | mixed |
+| x_B, x_N | basic, nonbasic variables | the entries of x for the columns in B, in N | m × 1, (n − m) × 1 | mixed |
+| c_B, c_N | basic, nonbasic profits | the entries of c for the columns in B, in N | m × 1, (n − m) × 1 | dollars per item |
+| y | simplex multipliers | solution of Bᵀ y = c_B | m × 1 | dollars per resource unit |
+| d_j, d_N | reduced cost | profit change per unit increase of nonbasic variable x_j; d_N collects them | scalar, (n − m) × 1 | dollars per item |
+| u | edge direction | u = B⁻¹ a_j: how fast each basic variable falls as x_j rises | m × 1 | mixed |
+| t | step length | how far x_j rises before a basic variable reaches 0 | scalar ≥ 0 | items |
+| e_r | unit vector | 1 in position r, 0 elsewhere | m × 1 | — |
+| E | eta matrix | identity with column r replaced; the new B⁻¹ is E times the old | m × m | mixed |
+| w, v | update vectors | a rank-one change B + w vᵀ; for a pivot, w = a_j − B e_r and v = e_r | m × 1 each | mixed |
+| D | diagonal scaling | weights used by interior-point methods (Extensions) | n × n | mixed |
+
+**Formulation.** **Where the equations come from.** One item of product j uses g_ij units of resource i and earns c_j,
+so total use and total profit are sums over products: accounting identities, which must stay within
+capacity.
+
+**The familiar method.** A table takes 1 board, 1 labor hour and 2 machine hours; a bookcase takes 1
+board, 3 labor hours and 1 machine hour. The week has 6 boards, 12 labor hours and 10 machine hours,
+and profits are 3 and 2 (hundreds of dollars). The scalar problem is
+
+```
+maximize    z = 3 x_1 + 2 x_2
+subject to      x_1 +   x_2 ≤ 6     (wood)
+                x_1 + 3 x_2 ≤ 12    (labor)
+              2 x_1 +   x_2 ≤ 10    (machine)
+                x_1 ≥ 0,  x_2 ≥ 0
+```
+
+The three lines and two axes bound a five-sided region with corners O, P, Q, R and S. Checking the
+profit at each corner is the school method:
+
+```
+corner   tight constraints   (x_1, x_2)   z
+O        x_1 ≥ 0, x_2 ≥ 0    (0, 0)       0
+P        machine, x_2 ≥ 0    (5, 0)       15
+Q        wood, machine       (4, 2)       16
+R        wood, labor         (3, 3)       15
+S        labor, x_1 ≥ 0      (0, 4)       8
+```
+
+The best plan is Q: four tables and two bookcases, profit 16, with 2 labor hours idle.
+
+**One constraint as an equation.** The wood constraint x_1 + x_2 ≤ 6 becomes x_1 + x_2 + s_1 = 6 with
+s_1 ≥ 0, the wood left over. It is called a slack variable because it measures the slack in the
+constraint: s_1 = 0 exactly when the constraint is tight.
+
+**All constraints: standard form.** Adding a slack to each constraint gives three equations in five
+unknowns, all nonnegative:
+
+```
+  x_1 +   x_2 + s_1             = 6
+  x_1 + 3 x_2       + s_2       = 12
+2 x_1 +   x_2             + s_3 = 10
+```
+
+With x = (x_1, x_2, s_1, s_2, s_3) these are A x = b, with known A, b and c:
+
+```
+      x_1  x_2  s_1  s_2  s_3
+A = [ 1    1    1    0    0 ]    wood
+    [ 1    3    0    1    0 ]    labor
+    [ 2    1    0    0    1 ]    machine
+
+b = [ 6  ]
+    [ 12 ]
+    [ 10 ]
+
+c = [ 3  2  0  0  0 ]
+```
+
+In general A = [G I] is m × n, with G the resource-use columns (here the first two columns of A), and
+the standard form is: maximize z = cᵀ x subject to A x = b and x ≥ 0, where cᵀ x is the dot product c_1
+x_1 + … + c_n x_n.
+
+Inequalities between vectors are read entrywise: x ≥ 0 means every entry of x is at least 0, so (3,
+0) ≥ 0 holds but (3, −1) ≥ 0 does not, and one vector is ≤ another when each entry is ≤ the matching
+entry, as in (1, 2) ≤ (2, 2).
+
+**Corners are bases.** Choose m = 3 linearly independent columns of A as a basis, collected into the
+basis matrix B, and set the other two variables to 0. One square system B x_B = b remains. If x_B ≥ 0,
+the point is a [basic feasible solution](https://en.wikipedia.org/wiki/Basic_feasible_solution), the algebraic name for a vertex. For example, Q has
+s_1 = s_3 = 0, so its basis is the columns of x_1, x_2 and s_2:
+
+```
+[ 1  1  0 ]   [ x_1 ]   [ 6  ]
+[ 1  3  1 ] × [ x_2 ] = [ 12 ]
+[ 2  1  0 ]   [ s_2 ]   [ 10 ]
+```
+
+with solution (x_1, x_2, s_2) = (4, 2, 2). Of the 10 ways to choose 3 of the 5 columns, all give
+nonsingular B; 5 give x_B ≥ 0 and are exactly O, P, Q, R and S, and 5 have a negative entry. For
+example, the basis x_1, x_2, s_1 gives the meeting point of the labor and machine lines, (18/5, 14/5),
+with s_1 = −2/5: more wood than exists. In general there can be n choose m bases, so listing corners
+fails beyond toy size.
+
+**One edge: the [reduced cost](https://en.wikipedia.org/wiki/Reduced_cost).** At P = (5, 0) the basic variables, in the order (s_1, s_2, x_1), solve
+
+```
+[ 1  0  1 ]   [ s_1 ]   [ 6  ]
+[ 0  1  1 ] × [ s_2 ] = [ 12 ]
+[ 0  0  2 ]   [ x_1 ]   [ 10 ]
+```
+
+giving (s_1, s_2, x_1) = (1, 7, 5) and z = 15. Raise the nonbasic x_2 from 0 to t while s_3 stays 0,
+moving along the machine line, an edge of the region. The basic variables must solve B x_B = b − t a_2,
+so they change by −t u with u = B⁻¹ a_2 = (1/2, 5/2, 1/2): each bookcase takes half a table's machine
+time. Profit changes by 2t − 3 × (t/2) = t/2. That rate, 1/2 per bookcase, is the reduced cost of x_2:
+its profit c_2 reduced by the value of what the basic variables give up.
+
+For any nonbasic column a_j, d_j = c_j − c_Bᵀ B⁻¹ a_j. One solve serves every column: let y solve Bᵀ
+y = c_B, where Bᵀ is the transpose (so y = B⁻ᵀ c_B), and then d_j = c_j − yᵀ a_j, or d_N = c_N − Nᵀ y.
+At P, y = (0, 0, 3/2), so x_2 has d = 2 − (1, 3, 1) · y = 1/2 and s_3 has d = −3/2. A positive
+reduced cost means the edge goes uphill; if every d_j ≤ 0, the vertex is optimal.
+
+**How far: the ratio test.** Basic variable i hits 0 at t = x_B,i / u_i, so the step is t = min over
+u_i > 0 of x_B,i / u_i, the smallest of those ratios. At P they are 1/(1/2) = 2 for s_1, 7/(5/2) = 2.8
+for s_2 and 5/(1/2) = 10 for x_1, so t = 2 and s_1 leaves the basis: the wood runs out first.
+
+**The whole run.** At O the slacks form the basis: B = I, x_B = (6, 12, 10), y = 0, and the
+reduced costs are the profits 3 and 2. x_1 enters, u = (1, 1, 2), the ratios are 6, 12 and 5, and s_3
+leaves at t = 5, reaching P with z = 15. From P, x_2 enters and s_1 leaves at t = 2, reaching Q = (4,
+2) with z = 15 + 2 × (1/2) = 16. At Q, with basis order (x_2, s_2, x_1), y = (1, 0, 1), and s_1 and s_3
+both have reduced cost −1, so Q is optimal, matching the corner list.
+
+**A pivot is a rank-one update.** The basis matrices at P and Q differ only in position 1, where the
+column of s_1, which is e_1, is replaced by a_2 = (1, 3, 1):
+
+```
+        s_1  s_2  x_1              x_2  s_2  x_1
+B_P = [ 1    0    1 ]      B_Q = [ 1    0    1 ]
+      [ 0    1    1 ]            [ 3    1    1 ]
+      [ 0    0    2 ]            [ 1    0    2 ]
+```
+
+so B_Q = B_P + (a_2 − e_1) e_1ᵀ. A column times the row e_1ᵀ is a matrix whose only nonzero column is
+the first, here (0, 3, 1), so the change has rank one. The [Sherman–Morrison](https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula) formula, (B + w
+vᵀ)⁻¹ = B⁻¹ − B⁻¹ w vᵀ B⁻¹ / (1 + vᵀ B⁻¹ w), updates the inverse; here 1 + vᵀ B⁻¹ w = 1/2, the pivot
+entry u_1. Equivalently B_Q⁻¹ = E B_P⁻¹, with an eta matrix E, the identity with column 1 replaced by
+(1/u_1, −u_2/u_1, −u_3/u_1):
+
+```
+[ 2   0  0 ]   [ 1  0  −1/2 ]   [ 2   0  −1 ]
+[ −5  1  0 ] × [ 0  1  −1/2 ] = [ −5  1  2  ]
+[ −1  0  1 ]   [ 0  0  1/2  ]   [ −1  0  1  ]
+   E              B_P⁻¹            B_Q⁻¹
+```
+
+This is the product form of the inverse: after several pivots, B⁻¹ is a product of eta matrices times
+the starting inverse. The simplex tableau of textbooks performs the same step as [Gaussian elimination](https://en.wikipedia.org/wiki/Gaussian_elimination)
+on the entering column.
+
+**Matrix structure.** A = [G I] is wide (m < n), has full row rank because of its identity block, and is very sparse: for
+example, a crew pairing, a sequence of flights one crew can work, covers only a few of an airline's
+flights. Each basis matrix changes by one column per pivot and can be far worse conditioned than A: in
+the toy, the 2-norm condition number of B is 1 at O, about 3.2 at P and about 24 at Q. In network
+problems G is the incidence matrix of a directed graph, which is [totally unimodular](https://en.wikipedia.org/wiki/Unimodular_matrix): every square
+submatrix has [determinant](https://en.wikipedia.org/wiki/Determinant) 0, 1 or −1. By [Cramer's rule](https://en.wikipedia.org/wiki/Cramer's_rule) every vertex is then an integer vector when b
+is, so integer flows come free.
+
+**What is computed.** The [revised simplex method](https://en.wikipedia.org/wiki/Revised_simplex_method) never forms B⁻¹. It keeps an [LU factorization](https://en.wikipedia.org/wiki/LU_decomposition) (lower and upper triangular
+factors) of B, solves B u = a_j and Bᵀ y = c_B per pivot, updates the factors for each rank-one change,
+and refactorizes every hundred or so pivots to limit [rounding error](https://en.wikipedia.org/wiki/Round-off_error). At scale, airline crew scheduling
+chooses among millions of candidate pairings, each a column of A; the [diet problem](https://en.wikipedia.org/wiki/Stigler_diet) picks the cheapest
+foods meeting nutrient needs; and [minimum-cost network flow](https://en.wikipedia.org/wiki/Minimum-cost_flow_problem) ships goods along graph edges.
+
+**Why linear algebra is the right tool.** A vertex is a nonsingular system B x_B = b, an edge is a one-column exchange, the profit rate along it
+is one solve with Bᵀ, and the step length is a ratio of computed vectors. A search over up to
+n choose m bases becomes a sequence of rank-one updates.
+
+**Pitfall worth teaching.** Degeneracy: when more than m constraints are tight at a vertex, some basic variable is 0, the
+ratio test can give t = 0, and a pivot changes the basis without moving. With 9 machine hours instead
+of 10, R = (3, 3) lies on all three resource lines, and three bases describe that one corner. A
+careless pivoting rule can then cycle among them forever. [Bland's rule](https://en.wikipedia.org/wiki/Bland's_rule) prevents cycling: among
+candidates, always pick the lowest index, to enter and to leave. A second trap is mistaking typical
+speed for a guarantee. The [Klee–Minty](https://en.wikipedia.org/wiki/Klee%E2%80%93Minty_cube) cube, a squashed cube in n dimensions, makes the
+largest-reduced-cost rule visit all 2^n vertices, yet on practical problems the simplex method usually
+needs a small multiple of m pivots.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| linear program (LP) | maximize cᵀ x subject to A x = b and x ≥ 0 entrywise |
+| decision variable | an unknown entry x_j, the level of one activity |
+| constraint | one row of A x = b, or of G x ≤ b before slacks are added |
+| slack variable s_i | the unused amount of resource i, an added unknown that turns ≤ into = |
+| feasible region | the polyhedron {x : A x = b, x ≥ 0} |
+| vertex (corner) | a point of the feasible region that is the solution of B x_B = b for some basis |
+| basis | a choice of m linearly independent columns of A, forming the m × m matrix B |
+| basic variables x_B | the m unknowns solved for by B x_B = b |
+| nonbasic variables x_N | the n − m unknowns held at 0 |
+| basic feasible solution | x_B = B⁻¹ b with x_B ≥ 0 and x_N = 0; the algebraic name for a vertex |
+| reduced cost d_j | c_j − yᵀ a_j, the change in profit per unit of nonbasic variable x_j |
+| simplex multipliers y | the solution of Bᵀ y = c_B |
+| entering variable | the nonbasic variable with d_j > 0 chosen to increase |
+| ratio test | t = min over u_i > 0 of x_B,i / u_i, the step to the next vertex |
+| leaving variable | the basic variable that reaches 0 first in the ratio test |
+| pivot | replacing one column of B, a rank-one update B + (a_j − B e_r) e_rᵀ |
+| eta matrix E | the identity with one column replaced, so that the new B⁻¹ is E times the old one |
+| degenerate vertex | a basic feasible solution with some basic variable equal to 0 |
+| totally unimodular matrix | every square submatrix has determinant 0, 1 or −1, so every vertex is integer for integer b |
+
+**Extensions.** At the optimum the multipliers y are [shadow prices](https://en.wikipedia.org/wiki/Shadow_price), the extra profit per unit of each resource. In the
+toy, y = (1, 0, 1): an extra board or machine hour is worth 1, idle labor 0, and bᵀ y = 6 + 10 = 16
+equals the optimal profit. Making this precise is [LP duality](https://en.wikipedia.org/wiki/Dual_linear_program), with complementary slackness and
+convexity, which are Tier 3. [Interior-point methods](https://en.wikipedia.org/wiki/Interior-point_method) cross the inside of the region, solving a
+positive definite system A D Aᵀ per step with D diagonal. [Integer programming](https://en.wikipedia.org/wiki/Integer_programming) is hard in general but
+free for totally unimodular matrices such as the incidence matrix of the traffic-flow entry. The
+Leontief entry is the equality-only relative, and flux balance analysis applies LP to a
+stoichiometric matrix. Up the optimization ladder, the portfolio optimization entry has a quadratic
+objective, the entry on distance geometry for nuclear magnetic resonance (NMR) structures optimizes
+over positive semidefinite matrices, and the [Markov decision processes](https://en.wikipedia.org/wiki/Markov_decision_process) entry finds its optimal values
+with an LP.
+
+---
+
+## 16. Portfolio optimization: minimum-variance weights from one symmetric linear solve
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+"Don't put all your eggs in one basket." An investor who splits money between two stocks that do not
+always move together gets a smoother ride than one who holds either stock alone: when one falls, the
+other often does not. How much smoother depends on how the two move together, and the best split can
+be calculated.
+
+Portfolio optimization asks the same question for many investments at once: what fraction of the money
+should go into each, so that the swings of the whole are as small as possible, either outright or for
+a required average return?
+
+When the only rule is that the fractions add up to one, the answer is a single system of linear
+equations. The catch is that the inputs are estimated from a limited history, and a naive solve turns
+small estimation errors into wild bets.
+
+</details>
+
+**Field:** Quantitative finance, investment management, risk management
+
+**Tier:** 2 — risk is the quadratic form wᵀ Σ w of a symmetric positive definite covariance matrix, and with equality constraints only the optimal weights solve one linear system. Positive definiteness, eigenvectors and condition numbers make the entry Tier 2. A ban on [short selling](https://en.wikipedia.org/wiki/Short_%28finance%29) turns it into a [quadratic program](https://en.wikipedia.org/wiki/Quadratic_programming) with inequality constraints, whose theory and duality are Tier 3.
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^n, one coordinate per asset: a portfolio is a weight vector w, and the budget constraint 1ᵀ w = 1 makes the portfolios an affine hyperplane, not a subspace (0 is not a portfolio). Without short sales they form the probability simplex, which is not a subspace either. The covariance matrix lives in the space of symmetric n × n matrices, inside the cone of positive semidefinite ones.
+
+**Underlying equations.** A statistical model with linear constraints: returns form a random vector with mean μ and covariance Σ, so a portfolio has expected return μᵀ w and variance wᵀ Σ w. Minimizing the variance subject to 1ᵀ w = 1 and μᵀ w = r gives the linear system 2Σ w + λ_1 1 + λ_2 μ = 0, 1ᵀ w = 1, μᵀ w = r.
+
+**The problem.** Some vocabulary first. An **asset** is anything held for its changing value, for example a stock, a
+bond or a fund. Its **return** over a period is its fractional change in value, for example 0.07 for a
+7% gain in a year. Returns are random, and the **expected return** of an asset is E[x], where E[·]
+denotes the [expected value](https://en.wikipedia.org/wiki/Expected_value), the probability-weighted average: a return of 0.10 or 0 with probability
+1/2 each has E[x] = 0.05. A **portfolio** splits a budget among n assets with **weights**, the
+fractions in each asset, summing to 1; for example (0.5, 0.5) puts half in each of two assets. A
+negative weight is a **short sale**: borrowing an asset and selling it, which gains when its price
+falls.
+
+**Risk** is measured by the variance of the portfolio's return, or by its square root, the
+**[volatility](https://en.wikipedia.org/wiki/Volatility_%28finance%29)**. The **covariance** of two returns measures how they move together: it is the
+expected value of the product of their deviations from their means, so it is positive when, for
+example, both tend to be above average at the same time. Dividing a covariance by the two volatilities
+gives the **[correlation](https://en.wikipedia.org/wiki/Correlation)**, a number between −1 and 1. All the covariances together form the
+**covariance matrix**.
+
+The motivating contrast: a portfolio's return is the [weighted average](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) of the asset returns, but its
+volatility is less than the weighted average of the volatilities unless the assets are perfectly
+correlated. That gap is [diversification](https://en.wikipedia.org/wiki/Diversification_%28finance%29). The mean-variance problem of [modern portfolio theory](https://en.wikipedia.org/wiki/Modern_portfolio_theory), posed
+by [Harry Markowitz](https://en.wikipedia.org/wiki/Harry_Markowitz) in 1952, is to choose the weights with the smallest variance, either under the
+budget rule alone (the **minimum-variance portfolio**) or also at a required expected return r. The
+expected returns, the covariance matrix and r are given; the weights are solved for. In practice the
+covariance matrix is estimated, as the **[sample covariance](https://en.wikipedia.org/wiki/Sample_mean_and_covariance)** of T past observations, and that estimate
+is where the trouble starts.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of assets | how many assets can be held | integer | — |
+| i, j | asset indices | 1, …, n; in the worked case P, Q, R are assets 1, 2, 3 | integer | — |
+| x | return vector | entry i is the random return x_i of asset i over one period | n × 1 | fraction per year |
+| E[·] | expected value | probability-weighted average of a random quantity | operator | units of its argument |
+| μ | expected-return vector | entry i is μ_i = E[x_i] | n × 1 | fraction per year |
+| σ_i | volatility of asset i | standard deviation of x_i | scalar ≥ 0 | fraction per year |
+| ρ_ij | correlation | how x_i and x_j move together, between −1 and 1 | scalar | dimensionless |
+| Σ | covariance matrix | entry Σ_ij = E[(x_i − μ_i)(x_j − μ_j)] = ρ_ij σ_i σ_j; diagonal Σ_ii = σ_i² | n × n | (fraction per year)² |
+| w | weight vector | entry w_i is the fraction of the budget in asset i; negative means short | n × 1 | dimensionless |
+| 1 | all-ones vector | 1ᵀ w = w_1 + … + w_n | n × 1 | — |
+| σ_p² | portfolio variance | variance of the portfolio return wᵀ x | scalar | (fraction per year)² |
+| r | target return | required expected return of the portfolio | scalar | fraction per year |
+| w_mv | minimum-variance weights | the weights with the smallest variance under the budget rule alone | n × 1 | dimensionless |
+| λ_1, λ_2 | Lagrange multipliers | one number per constraint: budget, then target return | scalars | (fraction per year)² per unit of constraint |
+| d | direction of change | a small change in the weights | n × 1 | dimensionless |
+| M | constraint-augmented matrix | the block matrix of the linear system for w, λ_1 and λ_2 | (n + 2) × (n + 2) | mixed |
+| T | number of observations | past periods of return data | integer | — |
+| x_t, m | observed returns, sample mean | return vector in period t, and the average of x_1, …, x_T | n × 1 | fraction per year |
+| S | sample covariance matrix | (1/(T − 1)) × sum over t of (x_t − m)(x_t − m)ᵀ | n × n | (fraction per year)² |
+| δ | shrinkage amount | amount added to every eigenvalue of S | scalar ≥ 0 | (fraction per year)² |
+| κ | condition number | largest eigenvalue divided by smallest, for a symmetric positive definite matrix | scalar ≥ 1 | dimensionless |
+| I | identity matrix | | n × n | — |
+
+**Formulation.** **Where the equations come from.** A statistical model: the returns form a random vector x with mean μ
+and covariance Σ, and nothing else about their distribution is used.
+
+**The familiar formula.** For two assets, every finance course gives the portfolio variance as
+
+```
+σ_p² = w_1² σ_1² + w_2² σ_2² + 2 w_1 w_2 ρ_12 σ_1 σ_2
+```
+
+For example, with σ_1 = σ_2 = 0.20, ρ_12 = 0 and a half-and-half split,
+σ_p² = 0.25 × 0.04 + 0.25 × 0.04 = 0.02, so the volatility falls from 0.20 to about 0.141. With
+ρ_12 = 0.5 the last term adds 0.01 and σ_p ≈ 0.173.
+
+**One entry, then the matrix.** Since σ_i² = Σ_ii and ρ_12 σ_1 σ_2 = Σ_12 = Σ_21, the formula reads
+w_1 Σ_11 w_1 + w_1 Σ_12 w_2 + w_2 Σ_21 w_1 + w_2 Σ_22 w_2: each ordered pair of assets (i, j)
+contributes w_i Σ_ij w_j. For n assets the variance is the sum of those n² terms, the quadratic form
+
+```
+σ_p² = wᵀ Σ w,    expected return = μᵀ w,    budget: 1ᵀ w = 1
+```
+
+**Why Σ is positive semidefinite.** For any vector w, wᵀ Σ w is the variance of the random number
+wᵀ x, and a variance is never negative, so Σ is positive semidefinite. It is positive definite unless
+some nonzero combination of assets has zero variance, for example the same fund listed twice, where
+w = (1, −1) cancels exactly. Assume Σ is positive definite, so it is invertible.
+
+**Minimum variance.** Minimize wᵀ Σ w subject to 1ᵀ w = 1. The gradient of wᵀ Σ w, its vector of
+partial derivatives, is 2Σ w (for one asset, the derivative of σ² w² is 2σ² w). At the best w, no
+small budget-keeping change d (one with 1ᵀ d = 0) can lower the variance to first order, so 2Σ w is
+orthogonal to the null space of 1ᵀ and lies in its row space, the multiples of 1. Hence
+2Σ w + λ_1 1 = 0 for some number λ_1, called a [Lagrange multiplier](https://en.wikipedia.org/wiki/Lagrange_multiplier). Minus λ_1 is how fast the smallest
+achievable variance rises as the constraint's right-hand side rises, so it acts as the constraint's
+price. Solving and scaling w to sum to 1 gives
+
+```
+w_mv = Σ⁻¹ 1 / (1ᵀ Σ⁻¹ 1),    minimum variance = 1 / (1ᵀ Σ⁻¹ 1)
+```
+
+**Adding a target return.** With the second constraint μᵀ w = r, the same argument gives
+2Σ w + λ_1 1 + λ_2 μ = 0. Stacked with the two constraints, this is one square system,
+M × unknowns = knowns:
+
+```
+[ 2Σ   1   μ ]   [ w   ]   [ 0 ]
+[ 1ᵀ   0   0 ] × [ λ_1 ] = [ 1 ]
+[ μᵀ   0   0 ]   [ λ_2 ]   [ r ]
+```
+
+It is called the [Karush–Kuhn–Tucker](https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions) (KKT) system, after the optimality conditions it expresses. Its
+first block row says w = −(λ_1/2) Σ⁻¹ 1 − (λ_2/2) Σ⁻¹ μ, so every optimal portfolio is a combination
+of Σ⁻¹ 1 and Σ⁻¹ μ: the [two-fund theorem](https://en.wikipedia.org/wiki/Mutual_fund_separation_theorem). The minimum variance is a quadratic function of r, and the
+upper half of its curve, plotted as volatility against r, is the [efficient frontier](https://en.wikipedia.org/wiki/Efficient_frontier): no other
+portfolio gives more return for its risk.
+
+**Worked case: three assets.** Assets P and Q each have volatility 0.20 and correlation 0.5, so their
+covariance is 0.5 × 0.20 × 0.20 = 0.02. Asset R has variance 0.02 (volatility ≈ 0.141) and is
+uncorrelated with both. The expected returns are 0.09, 0.06 and 0.05. With weights w_1, w_2, w_3 on P,
+Q, R, the variance is
+
+```
+σ_p² = 0.04 w_1² + 0.04 w_2² + 0.02 w_3² + 2 × 0.02 w_1 w_2
+```
+
+and the given data, in matrix form, are
+
+```
+      P      Q      R
+Σ = [ 0.04   0.02   0    ]   P
+    [ 0.02   0.04   0    ]   Q
+    [ 0      0      0.02 ]   R
+
+μ = [ 0.09 ]
+    [ 0.06 ]
+    [ 0.05 ]
+```
+
+so Σ = 0.02 × [2 1 0; 1 2 0; 0 0 1]. For the minimum-variance portfolio, solve Σ z = 1 for z = Σ⁻¹ 1
+rather than inverting Σ:
+
+```
+0.04 z_1 + 0.02 z_2            = 1
+0.02 z_1 + 0.04 z_2            = 1
+                      0.02 z_3 = 1
+```
+
+so z_1 = z_2 = 50/3 and z_3 = 50. Their sum is 1ᵀ Σ⁻¹ 1 = 250/3, so w_mv = (0.2, 0.2, 0.6), with
+variance 3/250 = 0.012 (check: 0.04 × 0.04 + 0.04 × 0.04 + 0.02 × 0.36 + 2 × 0.02 × 0.04 = 0.012),
+volatility ≈ 0.110, below every single asset's, and expected return 0.06.
+
+To require r = 0.07 instead, the five scalar equations in w_1, w_2, w_3, λ_1, λ_2 are
+
+```
+0.08 w_1 + 0.04 w_2            + λ_1 + 0.09 λ_2 = 0
+0.04 w_1 + 0.08 w_2            + λ_1 + 0.06 λ_2 = 0
+                      0.04 w_3 + λ_1 + 0.05 λ_2 = 0
+     w_1 +      w_2 +      w_3                  = 1
+0.09 w_1 + 0.06 w_2 + 0.05 w_3                  = 0.07
+```
+
+or M × unknowns = knowns:
+
+```
+[ 0.08   0.04   0      1   0.09 ]   [ w_1 ]   [ 0    ]
+[ 0.04   0.08   0      1   0.06 ]   [ w_2 ]   [ 0    ]
+[ 0      0      0.04   1   0.05 ] × [ w_3 ] = [ 0    ]
+[ 1      1      1      0   0    ]   [ λ_1 ]   [ 1    ]
+[ 0.09   0.06   0.05   0   0    ]   [ λ_2 ]   [ 0.07 ]
+```
+
+The solution is w = (17/35, 2/35, 16/35) ≈ (0.486, 0.057, 0.457), λ_1 = 9/875 ≈ 0.0103 and
+λ_2 = −4/7 ≈ −0.571. The weights sum to 1, the return is (9 × 17 + 6 × 2 + 5 × 16)/3500 = 0.07, and
+the variance is 13/875 ≈ 0.0149. With Σ⁻¹ μ = (2, 1/2, 5/2), w = −(9/1750) Σ⁻¹ 1 + (2/7) Σ⁻¹ μ, as the
+two-fund theorem promises. The minimum variance is (200/7) r² − (24/7) r + 201/1750, lowest at
+r = 0.06, with slope 4/7 = −λ_2 at r = 0.07: there each extra 0.01 of return costs about 0.0057 of
+variance.
+
+**Matrix structure.** Σ is dense, symmetric and positive definite: every pair of assets has a covariance. M is symmetric but
+indefinite, with n positive and 2 negative eigenvalues (3 and 2 in the worked case), the pattern of a
+saddle-point matrix. Cholesky factorization therefore applies to Σ but not to M. Estimated covariance
+matrices of many assets are badly conditioned.
+
+**What is computed.** Factor Σ = L Lᵀ by Cholesky (L lower triangular) and get Σ⁻¹ 1 and Σ⁻¹ μ by triangular solves; Σ⁻¹ is
+never formed. The whole frontier then depends on three numbers, 1ᵀ Σ⁻¹ 1, 1ᵀ Σ⁻¹ μ and μᵀ Σ⁻¹ μ
+(250/3, 5 and 67/200 in the worked case). Production problems add inequality constraints and are
+solved by [active-set](https://en.wikipedia.org/wiki/Active-set_method) or interior-point methods, which solve a system like M at every step.
+
+**Why linear algebra is the right tool.** Variance is a quadratic form and the constraints are linear, so the optimality conditions are a linear
+system. The spectral theorem shows what the solution does. Writing Σ through its eigenvectors,
+Σ⁻¹ divides the component of 1 along each eigenvector by that eigenvalue, so the
+minimum-variance portfolio leans hardest on the quietest directions. In the worked case,
+1 = (1, 1, 0) + (0, 0, 1) splits into an eigenvector of Σ with eigenvalue 0.06 and one with eigenvalue
+0.02, so R's weight is 0.06/0.02 = 3 times that of P or Q: 0.6 against 0.2.
+
+**Pitfall worth teaching.** The same division by small eigenvalues goes wrong in practice. Take two assets with volatilities 0.20
+and 0.25. The minimum-variance weight on the first is
+(σ_2² − ρ_12 σ_1 σ_2)/(σ_1² + σ_2² − 2ρ_12 σ_1 σ_2). At ρ_12 = 0.90 the weights are (1.4, −0.4); at
+ρ_12 = 0.95 they are (0.015/0.0075, −1) = (2, −1). A change in correlation too small for a realistic
+sample to resolve moves 60% of the budget. The smallest eigenvalue of Σ at ρ_12 = 0.95 is about
+0.0024, with eigenvector ≈ (−0.78, 0.62), a long-short spread between the two assets, and the
+condition number κ rises from about 20 to 41.
+
+With many assets the sample covariance S is the culprit. It is a sum of T outer products of the
+centered vectors x_t − m, which sum to zero, so its rank is at most T − 1, and for n ≥ T it is
+singular. In one simulation with n = 50 independent assets of volatility 0.20 and T = 60 observations,
+the true optimum is equal weights of 0.02, with variance 0.0008. The eigenvalues of S, all 0.04 in
+truth, ranged from about 0.00022 to 0.147, so κ ≈ 680. The weights computed from S ranged from −0.127
+to 0.169, and the cosine of the angle between them and the eigenvector of the smallest eigenvalue was
+0.84. Their variance was 0.00013 on the sample but 0.0073 on the true Σ, about 9 times the optimum.
+The optimizer seeks out the directions where the estimate is most wrong, so Richard Michaud called
+mean-variance optimization "error maximization".
+
+The fix is shrinkage: replace S by S + δ I, which adds δ to every eigenvalue and leaves the
+eigenvectors alone. With δ = 0.04 in the simulation, κ fell to 4.6, the weights ranged from 0.003 to
+0.037, and the true variance was 0.00093, within 17% of the optimum. The [Ledoit–Wolf](https://en.wikipedia.org/wiki/Estimation_of_covariance_matrices) estimator blends
+S with a multiple of I, choosing the blend weight from the data.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| asset | one coordinate of R^n |
+| weight w_i | fraction of the budget held in asset i, one entry of w |
+| budget constraint | 1ᵀ w = 1, an affine hyperplane in R^n |
+| short sale | a negative entry of w |
+| expected return μ | the mean vector; the portfolio's expected return μᵀ w is a linear function of w |
+| covariance matrix Σ | the symmetric positive semidefinite n × n matrix with entries Σ_ij = E[(x_i − μ_i)(x_j − μ_j)] |
+| portfolio variance | the quadratic form wᵀ Σ w |
+| volatility σ_p | square root of the quadratic form wᵀ Σ w |
+| diversification | off-diagonal terms with ρ_ij < 1 that make wᵀ Σ w smaller than (w_1 σ_1 + … + w_n σ_n)² |
+| minimum-variance portfolio | Σ⁻¹ 1 / (1ᵀ Σ⁻¹ 1) |
+| Lagrange multiplier λ | coefficient of a constraint row in 2Σ w + λ_1 1 + λ_2 μ = 0; minus it is the price of the constraint |
+| KKT system | the symmetric indefinite (n + 2) × (n + 2) block system [2Σ 1 μ; 1ᵀ 0 0; μᵀ 0 0] |
+| two-fund theorem | every optimal w lies in the span of Σ⁻¹ 1 and Σ⁻¹ μ |
+| efficient frontier | minimum variance as a quadratic function of the target return r |
+| sample covariance S | average of outer products of centered return vectors; rank at most T − 1 |
+| error maximization | inverting the small, noisy eigenvalues of S into large long-short weights |
+| shrinkage | S + δ I or a blend with a multiple of I, which raises every eigenvalue |
+
+**Extensions.** Banning short sales adds the constraint w ≥ 0, where ≥ between vectors means entrywise:
+(0.2, 0, 0.8) ≥ 0, but (1.4, −0.4) is not. The problem becomes a quadratic program with
+inequality constraints, whose theory, with duality, is Tier 3. On that optimization ladder the
+linear programming entry is the rung below, and the distance geometry entry, for NMR
+(nuclear magnetic resonance) structures, the rung above, optimizing over positive semidefinite
+matrices. Adding a risk-free asset turns the frontier into a straight line through the portfolio with
+the largest [Sharpe ratio](https://en.wikipedia.org/wiki/Sharpe_ratio), which leads to the [capital asset pricing model](https://en.wikipedia.org/wiki/Capital_asset_pricing_model).
+
+Factor models write Σ as a low-rank matrix plus a diagonal one, which cuts the number of estimated
+entries. The leading eigenvector of a stock covariance matrix is usually close to equal weights, the
+market as a whole, the same covariance eigenstructure read in the population genetics PCA
+(principal component analysis) entry and the latent semantic analysis entry. The minimum-variance
+weights can also be computed by a least-squares regression of one asset's return on its differences
+from the others, which links this entry to the regression entry. Expected returns are even harder to
+estimate than covariances, which motivates the [Black–Litterman](https://en.wikipedia.org/wiki/Black%E2%80%93Litterman_model) model.
+
+---
+
 ## 17. The fast Fourier transform: the DFT matrix as a product of sparse factors
 
 <details>
@@ -1822,7 +2370,7 @@ B_Nᴴ B_N = [ I + I        D − D     ]  =  2 I
 
 because every twiddle factor has absolute value 1, so DᴴD = I. Thus B_N / √2 is unitary, and so is
 F_2 / √2. [Permutation matrices](https://en.wikipedia.org/wiki/Permutation_matrix) are unitary too, and (1/√2)^L = 1/√N, so U_N = F_N / √N is a product of
-L unitary sparse factors and a permutation. A unitary factor preserves length, so a [rounding error](https://en.wikipedia.org/wiki/Round-off_error) made
+L unitary sparse factors and a permutation. A unitary factor preserves length, so a rounding error made
 at one stage is not amplified by the stages after it, which is why the rounding error of the FFT grows
 only slowly with N, typically more slowly than that of the direct sum.
 
@@ -1988,7 +2536,7 @@ x(t) = A s(t) + n(t)
 The noisy snapshot is known; A (through the angles θ_k) and s(t) are unknown.
 
 **Covariance.** Two pieces of notation. The conjugate transpose vᴴ transposes v and conjugates every
-entry: for v = (1, −i), vᴴ is the row (1, i), so vᴴ v = 1 + (i)(−i) = 2. The [expected value](https://en.wikipedia.org/wiki/Expected_value) E[·]
+entry: for v = (1, −i), vᴴ is the row (1, i), so vᴴ v = 1 + (i)(−i) = 2. The expected value E[·]
 is the average over many repetitions of a random quantity; for example, a fair die has E[roll] = 3.5. The
 spatial covariance R = E[x xᴴ] holds in entry (j, k) the average of x_j conj(x_k), how sensors j and
 k vary together. With sources and noise uncorrelated,
@@ -1997,7 +2545,7 @@ k vary together. With sources and noise uncorrelated,
 R = A R_ss Aᴴ + σ² I
 ```
 
-In practice R is estimated by the [sample covariance](https://en.wikipedia.org/wiki/Sample_mean_and_covariance) R̂. R is Hermitian (Rᴴ = R), so by the spectral
+In practice R is estimated by the sample covariance R̂. R is Hermitian (Rᴴ = R), so by the spectral
 theorem its eigenvalues are real, here nonnegative, and its eigenvectors can be chosen orthonormal.
 
 **Delay-and-sum beamforming.** Weighting snapshot x by a candidate steering vector and adding,
@@ -3116,6 +3664,261 @@ filtering entry.
 
 ---
 
+## 26. Distance geometry for NMR structures: coordinates from distances through the Gram matrix
+
+<details>
+<summary><b>Start here — the problem in plain terms</b></summary>
+
+A ruler cannot reach inside a protein, but a magnet can sense which atoms are near which. A protein
+measured this way yields a list of statements such as "these two hydrogen atoms are less than 5 Å
+apart", where 1 Å (ångström) is 10⁻¹⁰ m, about the size of one atom, plus the bond lengths and angles that
+chemistry fixes. The task is to turn that list of distances into a three-dimensional shape.
+
+If every distance were known exactly, one eigenvalue computation would give the shape, up to moving,
+turning and mirroring it. Real data give only some distances, and only as ranges, so practice adds an
+optimization on top.
+
+</details>
+
+**Field:** Structural biology, protein NMR, molecular modeling, sensor network localization, [multidimensional scaling](https://en.wikipedia.org/wiki/Multidimensional_scaling)
+
+**Tier:** 2 — complete distances become coordinates through the eigenvectors of a symmetric positive semidefinite [Gram matrix](https://en.wikipedia.org/wiki/Gram_matrix), so the entry needs the spectral theorem. Fitting incomplete distance bounds as a [semidefinite program](https://en.wikipedia.org/wiki/Semidefinite_programming) needs convex analysis and duality and is named in Extensions (Tier 3).
+
+**Scalars and vectors.** Scalar field: R. Vectors: R^3n coordinates, one point x_i in R^3 per atom; the Gram matrix G lives in Sym_n, the space of symmetric n × n matrices. The matrices that are Gram matrices of real points form the positive semidefinite cone, which is closed under sums and positive scaling but is not a subspace.
+
+**Underlying equations.** Euclidean geometry: d_ij² = ‖x_i − x_j‖², which expands by the [law of cosines](https://en.wikipedia.org/wiki/Law_of_cosines) into inner products, so that the centered Gram matrix is G = −½ J D^(2) J with J = I − (1/n) 1 1ᵀ.
+
+**The problem.** Some vocabulary first. A **conformation** is one three-dimensional arrangement of a molecule's atoms,
+described by the coordinates of every atom. **[Nuclear magnetic resonance](https://en.wikipedia.org/wiki/Nuclear_magnetic_resonance_spectroscopy_of_proteins) (NMR)** spectroscopy places
+the sample in a strong magnetic field and records radio-frequency signals from atomic nuclei, mainly
+the protons of hydrogen atoms. The **[nuclear Overhauser effect](https://en.wikipedia.org/wiki/Nuclear_Overhauser_effect) (NOE)** is a transfer of magnetization
+between two protons through space; its strength falls off as the inverse sixth power of their distance,
+so a peak appears only for proton pairs closer than roughly 5 to 6 Å, where 1 Å (ångström) is 10⁻¹⁰ m.
+For example, an NOE between protons on two residues far apart in sequence says the chain folds back. An
+NOE peak is converted into an **upper bound** on a distance, not a value, because its intensity also
+depends on motion and relaxation. Covalent geometry (bond lengths and bond angles) fixes other
+distances almost exactly, and the sum of two atoms' [van der Waals radii](https://en.wikipedia.org/wiki/Van_der_Waals_radius) gives a **lower bound** for
+every pair, since atoms cannot overlap.
+
+The motivating contrast is between coordinates and distances. [X-ray crystallography](https://en.wikipedia.org/wiki/X-ray_crystallography) produces an
+electron density map in which the atoms can be placed at coordinates. NMR produces relations between
+pairs of atoms, which do not depend on where the molecule is or how it is turned. **[Distance geometry](https://en.wikipedia.org/wiki/Distance_geometry)**
+is the mathematics of going from such pairwise distances to coordinates.
+
+The core of it, posed here, is the exact version: given all pairwise distances among n points, find
+coordinates that reproduce them, and say when no such coordinates exist. The same computation, known
+in statistics as **classical multidimensional scaling (MDS)**, draws maps from tables of dissimilarities.
+
+**Variables.**
+| Symbol | Name | What it holds | Shape | Units |
+|---|---|---|---|---|
+| n | number of points | atoms (or protons) in the model | integer | — |
+| x_i | position of point i | its Cartesian coordinates | 3 × 1 | Å |
+| X | coordinate matrix | row i is x_iᵀ | n × 3 | Å |
+| d_ij | distance | ‖x_i − x_j‖ between points i and j, e.g. d_PQ | scalar ≥ 0 | Å |
+| l_ij, u_ij | distance bounds | lower bound (contact, covalent) and upper bound (NOE, covalent) | scalars | Å |
+| D^(2) | squared-distance matrix | entry (i, j) is d_ij² | n × n | Å² |
+| I | identity matrix | ones on the diagonal | n × n | dimensionless |
+| 1 | all-ones vector | (1, 1, …, 1) | n × 1 | dimensionless |
+| J | centering matrix | I − (1/n) 1 1ᵀ | n × n | dimensionless |
+| G | Gram matrix (metric matrix) | entry g_ij = x_i · x_j, coordinates measured from the centroid | n × n | Å² |
+| λ_k, v_k | eigenpairs of G | G v_k = λ_k v_k, with λ_1 ≥ λ_2 ≥ … ≥ λ_n and ‖v_k‖ = 1 | scalar, n × 1 | Å², dimensionless |
+| Λ_3, V_3 | top three eigenpairs | diag(λ_1, λ_2, λ_3) and the columns [v_1 v_2 v_3] | 3 × 3, n × 3 | Å², dimensionless |
+| U | orthogonal matrix | a rotation (det U = 1) or a rotation with a mirror (det U = −1) | 3 × 3 | dimensionless |
+| t | translation | a shift applied to every point | 3 × 1 | Å |
+
+**Formulation.** **Where the equations come from.** The model is Euclidean geometry: d_ij² = ‖x_i − x_j‖². What is
+known is the matrix of distances d_ij (in the exact case, all of them). What is solved for is X. The
+equation is quadratic in X, and the step that makes it linear algebra is to solve for the inner products
+x_i · x_j first.
+
+**The familiar formula.** The law of cosines says that a triangle with sides a, b and c, and angle θ
+between a and b, has c² = a² + b² − 2ab cos θ. Put point 0 at the origin and take a = d_0i, b = d_0j,
+c = d_ij. Since ab cos θ is the dot product x_i · x_j,
+
+```
+x_i · x_j = (d_0i² + d_0j² − d_ij²) / 2
+```
+
+So distances determine all the inner products of the points measured from point 0, and the inner
+products determine the shape.
+
+**One entry, centered.** Using one atom as the origin favors it. Classical MDS instead puts the origin at
+the centroid, the average of all the points. Expanding d_ij² = ‖x_i‖² + ‖x_j‖² − 2 x_i · x_j and
+averaging over i, over j, and over both gives, when the points are centered and the means are taken
+over the entries of D^(2),
+
+```
+g_ij = x_i · x_j = −½ ( d_ij² − (mean of row i) − (mean of column j) + (mean of all entries) )
+```
+
+Here D^(2) is the entrywise square of the distance matrix: each entry d_ij is squared on its own, so a
+distance √2 becomes 2. It is not the matrix product of the distance matrix with itself.
+
+**All entries at once.** Subtracting row and column means is what J does. J times a vector subtracts the
+vector's mean from every entry: for example, with n = 4, J (1, 2, 3, 6) = (−2, −1, 0, 3), since the mean
+is 3. Multiplying by J on both sides centers rows and columns, so
+
+```
+G = −½ J D^(2) J        and        G = X Xᵀ
+```
+
+The second equation says G is symmetric positive semidefinite (vᵀ G v = ‖Xᵀ v‖² ≥ 0 for every v) with
+rank at most 3. By the spectral theorem G = V Λ Vᵀ, and keeping the three nonzero eigenvalues gives
+
+```
+X = V_3 Λ_3^(1/2)
+```
+
+where Λ_3^(1/2) is diagonal with entries √λ_1, √λ_2, √λ_3. The **embedding dimension**, the
+smallest dimension in which the points fit, is the number of positive eigenvalues. A negative eigenvalue
+proves that no points in any dimension have the given distances.
+
+The answer is unique only up to X U + 1 tᵀ, a rotation or reflection U followed by a shift t, since both
+leave every distance unchanged. Centering removes t. U remains, and it includes det U = −1, the mirror
+image.
+
+**Worked case: a unit square.** Take four points P, Q, R, S at the corners of a square with side 1, in
+that order around the square. The four sides have d² = 1 and the two diagonals have d_PR² = d_QS² = 2.
+Written as scalar facts about unknown positions,
+
+```
+‖x_P − x_Q‖² = 1    ‖x_Q − x_R‖² = 1    ‖x_R − x_S‖² = 1    ‖x_S − x_P‖² = 1
+‖x_P − x_R‖² = 2    ‖x_Q − x_S‖² = 2
+```
+
+The known matrices, row by row:
+
+```
+          P  Q  R  S
+D^(2) = [ 0  1  2  1 ]   P
+        [ 1  0  1  2 ]   Q
+        [ 2  1  0  1 ]   R
+        [ 1  2  1  0 ]   S
+
+      P     Q     R     S
+J = [ 3/4   −1/4  −1/4  −1/4 ]   P
+    [ −1/4  3/4   −1/4  −1/4 ]   Q
+    [ −1/4  −1/4  3/4   −1/4 ]   R
+    [ −1/4  −1/4  −1/4  3/4  ]   S
+```
+
+Every row and column of D^(2) has mean 1, and so does the whole matrix, so the component formula gives
+g_ij = −½ (d_ij² − 1). For example, g_PP = −½ (0 − 1) = 1/2, g_PQ = −½ (1 − 1) = 0 and
+g_PR = −½ (2 − 1) = −1/2:
+
+```
+      P     Q     R     S
+G = [ 1/2   0     −1/2  0    ]   P
+    [ 0     1/2   0     −1/2 ]   Q
+    [ −1/2  0     1/2   0    ]   R
+    [ 0     −1/2  0     1/2  ]   S
+```
+
+The eigenvalues of G are 1, 1, 0 and 0. Two positive eigenvalues say the four points lie in a plane.
+Checking one eigenvector:
+
+```
+[ 1/2   0     −1/2  0    ]   [ 1  ]   [ 1  ]       [ 1  ]
+[ 0     1/2   0     −1/2 ]   [ 0  ]   [ 0  ]       [ 0  ]
+[ −1/2  0     1/2   0    ] × [ −1 ] = [ −1 ] = 1 × [ −1 ]
+[ 0     −1/2  0     1/2  ]   [ 0  ]   [ 0  ]       [ 0  ]
+```
+
+and (0, 1, 0, −1) works the same way. Normalizing each to length 1 (dividing by √2) and multiplying by
+√1 gives the coordinates:
+
+```
+      x       y
+X = [ 0.707   0      ]   P
+    [ 0       0.707  ]   Q
+    [ −0.707  0      ]   R
+    [ 0       −0.707 ]   S
+```
+
+Every distance checks: d_PQ = √(0.5 + 0.5) = 1 and d_PR = 1.414 = √2. This is the original square with
+its center at the origin, turned by 135°. The eigenvalue 1 is repeated, so an eigensolver may return any
+orthonormal pair from its eigenspace, which is the same square at another angle.
+
+**Changing the diagonals.** Keep the four sides at 1 and set both diagonals to d² = c. For c = 1 all six
+distances are 1, and G has eigenvalues 1/2, 1/2, 1/2 and 0: three positive, the regular tetrahedron,
+which needs three dimensions. For c = 3 the computation gives
+
+```
+              P   Q   R   S
+G = 1/8 × [ 5   1   −7  1  ]   P
+            [ 1   5   1   −7 ]   Q
+            [ −7  1   5   1  ]   R
+            [ 1   −7  1   5  ]   S
+```
+
+with eigenvalues 1.5, 1.5, 0 and −0.5; the last belongs to (1, −1, 1, −1). The negative eigenvalue says
+no such points exist in any dimension. A direct check is [Euler's quadrilateral theorem](https://en.wikipedia.org/wiki/Euler's_quadrilateral_theorem): the four squared
+sides of a quadrilateral, flat or not, add up to at least the two squared diagonals, here 4 < 3 + 3.
+Keeping only the positive eigenvalues gives the nearest planar answer, a square with sides 1.225 and
+diagonals 1.732: the diagonals survive and the sides stretch.
+
+**Matrix structure.** G is dense, symmetric and positive semidefinite in the exact case, with every row summing to zero
+(G 1 = 0, because the points are centered) and rank 3 for a molecule. D^(2) is dense too, but in NMR
+most of its entries are unknown: of the roughly n²/2 pairs, only bonded neighbors and protons within
+5 to 6 Å are constrained, a small fraction for a protein of 100 residues.
+
+**What is computed.** Only the three largest eigenpairs of G, from a dense symmetric eigensolver (numpy.linalg.eigh, or
+scipy.linalg.eigh with subset_by_index) or Lanczos for large n. The classical
+NMR pipeline, from Crippen and Havel, works around the missing data: bound smoothing tightens each
+interval [l_ij, u_ij] with the [triangle inequality](https://en.wikipedia.org/wiki/Triangle_inequality), metrization picks one distance from each interval,
+classical MDS embeds the result, and [simulated annealing](https://en.wikipedia.org/wiki/Simulated_annealing) then refines the coordinates against the
+original bounds and the covalent geometry. Programs in use include XPLOR-NIH and CYANA (whose
+predecessor DIANA works in torsion-angle space rather than through G). Each run starts from different
+random choices, and the ensemble of 20 or so structures that satisfy the bounds is deposited together.
+
+**Why linear algebra is the right tool.** Distances are quadratic in the coordinates, but inner products are linear in G, and the law of cosines
+turns one into the other. In terms of G the problem is a symmetric matrix with known rank, and the
+spectral theorem gives both the coordinates and a test of consistency: the dimension is the count of
+positive eigenvalues, and impossible data show up as negative ones.
+
+**Pitfall worth teaching.** Distances cannot tell a molecule from its mirror image. X U with det U = −1 fits every distance, and for a
+protein it is the version built from D-amino acids, with left-handed helices. The hand must be fixed by
+other data. The sign of a determinant does it: for four atoms, det [x_Q − x_P, x_R − x_P, x_S − x_P] is
+six times their signed volume, and a [chirality](https://en.wikipedia.org/wiki/Chirality_%28chemistry%29) restraint on the four atoms around each α-carbon fixes the
+sign. A second trap is filling missing distances with the upper bound or the middle of the interval:
+the matrix is then rarely a [Euclidean distance matrix](https://en.wikipedia.org/wiki/Euclidean_distance_matrix), G gets large negative eigenvalues, and dropping
+them tends to compress or distort the fold.
+
+**Terminology map.** How this field's vocabulary reads as linear algebra.
+
+| Domain term | In linear algebra |
+|---|---|
+| distance geometry | recovering point coordinates from some or all of their pairwise distances |
+| NOE restraint | an upper bound u_ij on the distance between two protons, from a nuclear Overhauser effect peak |
+| distance bounds l_ij, u_ij | lower and upper limits on d_ij; equal when the distance is fixed by covalent geometry |
+| squared-distance matrix D^(2) | the n × n matrix of d_ij², symmetric with zero diagonal |
+| centering matrix J | I − (1/n) 1 1ᵀ, the projection that subtracts the mean |
+| metric matrix (Gram matrix) G | G = X Xᵀ = −½ J D^(2) J, entries g_ij = x_i · x_j about the centroid |
+| embedding | coordinates X = V_3 Λ_3^(1/2) from the three largest eigenpairs of G |
+| embedding dimension | the number of positive eigenvalues of G, rank(G) |
+| classical multidimensional scaling (MDS) | the same eigendecomposition used to draw data from dissimilarities |
+| mirror image (enantiomer) | X U with det U = −1; it fits every distance equally well |
+| chirality restraint | the sign of a determinant (signed volume) of four atoms, which fixes the hand |
+
+**Extensions.** With bounds instead of distances, the question becomes: find a positive semidefinite G, with G 1 = 0,
+whose implied distances g_ii + g_jj − 2 g_ij fall between l_ij² and u_ij². The constraints are linear
+in G, so this is a semidefinite program (SDP), a linear objective over symmetric matrices required to
+be positive semidefinite, and the next rung of the ladder that the linear programming entry and the
+portfolio optimization entry begin: a linear program optimizes over a polyhedron, a quadratic program
+adds a quadratic objective, and an SDP replaces the nonnegative vector by a positive semidefinite
+matrix. Its theory needs convex analysis and duality (Tier 3). The same relaxation is used for
+sensor network localization, where radios estimate distances to neighbors and a few anchors
+have known positions. Classical MDS of Euclidean distances is principal component analysis (PCA) of the centered
+coordinates: G = X Xᵀ and Xᵀ X share their nonzero eigenvalues, and the embedding is the PCA score
+matrix, as in the population genetics entry. The geodetic network adjustment entry also turns distances
+into positions, and its datum defect is the same rotation and translation freedom seen here. The 3D
+rotations entry describes U and the difference between det U = 1 and det U = −1. The older test of
+whether distances fit in a given dimension uses [Cayley–Menger](https://en.wikipedia.org/wiki/Cayley%E2%80%93Menger_determinant) determinants, bordered determinants of
+D^(2) that give squared volumes of triangles and tetrahedra.
+
+---
+
 ## 28. Markov decision processes: valuing a policy with one linear solve
 
 <details>
@@ -3126,7 +3929,7 @@ worth paying for? The answer depends on what the machine will earn afterward, an
 how it will be handled later, including what happens the next time it breaks.
 
 Problems of this shape, where each choice changes what can happen next, are planned
-with [Markov decision processes](https://en.wikipedia.org/wiki/Markov_decision_process). They describe a robot moving through a building, a game-playing program, an
+with Markov decision processes. They describe a robot moving through a building, a game-playing program, an
 inventory manager or a medical treatment plan, and they are the setting of [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning).
 
 The central question is how much a fixed rule for choosing ("always repair") is worth from each
@@ -3269,7 +4072,7 @@ so (I − γ P_π) v = r_π reads
 [ −1/2   1    ] × [ v_2 ] = [ −1 ]
 ```
 
-The [determinant](https://en.wikipedia.org/wiki/Determinant) is 3/4 − 1/8 = 5/8, and v_repair = (14/5, 2/5) = (2.8, 0.4). The eigenvalues of
+The determinant is 3/4 − 1/8 = 5/8, and v_repair = (14/5, 2/5) = (2.8, 0.4). The eigenvalues of
 γ P_repair are 1/2 and −1/4, so the spectral radius is γ, as promised. The first Neumann partial sums
 are (2, −1), then (2.25, 0), then (2.5625, 0.125), approaching (2.8, 0.4).
 
@@ -3344,7 +4147,7 @@ infinite or undefined.
 the basic method of reinforcement learning, and its convergence proof uses stochastic approximation,
 which is Tier 3. Value iteration converges because the Bellman optimality map is a contraction mapping
 in the max norm with constant γ, which the [Banach fixed-point theorem](https://en.wikipedia.org/wiki/Banach_fixed-point_theorem) turns into existence and
-uniqueness of v∗. The optimal value is also the solution of a [linear program](https://en.wikipedia.org/wiki/Linear_programming): minimize Σ_s v(s)
+uniqueness of v∗. The optimal value is also the solution of a linear program: minimize Σ_s v(s)
 subject to v(s) ≥ r(s, a) + γ Σ_s' p(s'|s, a) v(s') for every state and action, and the dual
 variables are discounted state-action visit frequencies. For huge state spaces, v is approximated by
 a weighted sum of a few chosen features of the state; least-squares [temporal-difference learning](https://en.wikipedia.org/wiki/Temporal_difference_learning)
@@ -4349,7 +5152,7 @@ until all of them hold the same value.
 
 **Scalars and vectors.** Scalar field: R. Vectors: R^n over agents: x(t) holds one opinion per person. The influence weights π live in the probability simplex (nonnegative, summing to 1), which is not a subspace.
 
-**Underlying equations.** A linear difference equation x(t+1) = W x(t), with W row-stochastic, so that each new opinion is a [weighted average](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) of current opinions.
+**Underlying equations.** A linear difference equation x(t+1) = W x(t), with W row-stochastic, so that each new opinion is a weighted average of current opinions.
 
 **The problem.** The setting has three core nouns. An agent is one participant: a person, a sensor or a computer. An
 opinion is the single real number an agent holds at a given time, for example an estimated price in
@@ -5272,7 +6075,7 @@ plus the condition on the sum:
 As a matrix product, T (α, β, γ) = (x, y, 1), where T has the corners as columns with a 1 appended to
 each, the homogeneous coordinates of the 2D affine-transform entry. The determinant of T is twice the
 signed area of the triangle, so T is invertible unless the triangle has collapsed onto a line.
-[Cramer's rule](https://en.wikipedia.org/wiki/Cramer's_rule) gives each weight as a ratio of determinants, which is a ratio of areas:
+Cramer's rule gives each weight as a ratio of determinants, which is a ratio of areas:
 α = area(XQR) / area(PQR), and similarly for β and γ.
 
 **Blending attributes.** Once the weights are known, every attribute is blended with them:
@@ -6359,7 +7162,7 @@ first 8 harmonics capture 95.0%, 16 harmonics 97.5% and 64 harmonics 99.4%. As N
 energy goes to zero, and the energy of f is the sum of the energies of its components. That is
 [Parseval](https://en.wikipedia.org/wiki/Parseval's_theorem)'s identity, which for the square wave says that 1 + 1/9 + 1/25 + 1/49 + … = π²/8.
 
-**Matrix structure.** In the sine-and-cosine basis the [Gram matrix](https://en.wikipedia.org/wiki/Gram_matrix) is diagonal, and after dividing each basis function by its
+**Matrix structure.** In the sine-and-cosine basis the Gram matrix is diagonal, and after dividing each basis function by its
 length (√(2π) for the constant, √π for the others) it is the identity. Nothing needs to be solved.
 
 A basis that is not orthogonal gives a dense Gram matrix, and it can be very badly conditioned. Project
@@ -7477,7 +8280,7 @@ in every column. Its rank is n minus the number of connected pieces of the netwo
 is spanned by the loops. These are the same objects, transposed, as the incidence matrix of the
 resistor-network entry, where the null space of Aᵀ was the space of loop currents.
 
-**What is computed.** For a small district: [Gaussian elimination](https://en.wikipedia.org/wiki/Gaussian_elimination) to reduced [echelon form](https://en.wikipedia.org/wiki/Row_echelon_form), which separates pivot variables
+**What is computed.** For a small district: Gaussian elimination to reduced [echelon form](https://en.wikipedia.org/wiki/Row_echelon_form), which separates pivot variables
 from free ones and writes the solution as a particular solution plus null-space vectors. Traffic
 agencies then add constraints and data: detector counts on some segments, capacity limits, and
 nonnegativity. Estimating flows that fit the counts best is a least-squares or linear programming
@@ -7521,7 +8324,7 @@ variable means "not determined by these equations", not "anything goes".
 | network flow problem | choosing among the admissible x by minimizing a cost, a linear program |
 
 **Extensions.** Choosing the cheapest admissible flows is a network flow problem, a linear program whose constraint
-matrix is this incidence matrix. Such matrices are [totally unimodular](https://en.wikipedia.org/wiki/Unimodular_matrix), so whole-number data give
+matrix is this incidence matrix. Such matrices are totally unimodular, so whole-number data give
 whole-number optimal flows automatically (see the linear programming entry). Estimating the
 origin-destination table from a few detector counts is an underdetermined least-squares problem with
 nonnegativity (compare the regression entry). The same conservation-at-nodes structure describes
@@ -7714,10 +8517,13 @@ Neumann series as the Leontief entry.
 | 32 | Systems biology | Null space of the stoichiometric matrix; linear program over a polytope | Simplex or interior point; flux variability analysis |
 | 17 | Signal processing | Factorization of the DFT matrix into sparse unitary stages | Cooley–Tukey radix-2 FFT |
 | 18 | Array signal processing | Signal and noise subspaces of a Hermitian covariance | Eigendecomposition (MUSIC) |
+| 15 | Operations research | Basis exchange; rank-one updates of basis matrices | Revised simplex |
+| 16 | Quantitative finance | Positive definite covariance matrix; conditioning; shrinkage | Constrained linear (KKT) solve |
+| 26 | Structural biology | Gram matrix eigendecomposition (rank-3 positive semidefinite) | Classical multidimensional scaling |
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
-**Not yet represented:** Krylov subspace methods on their own terms, optimization duality and linear programming, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
+**Not yet represented:** Krylov subspace methods on their own terms, optimization duality, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
 
 ---
 
@@ -7747,8 +8553,6 @@ the one exception marked below.
 - **Power-grid load flow and state estimation** — sparse Newton with a Jacobian that changes structure under contingency; Sherman–Morrison for N−1 analysis
 
 ### Would add: optimization and duality
-- **Linear programming and the simplex method** — basis exchange as a sequence of rank-one updates; totally unimodular matrices giving integral solutions for free in network flow
-- **Portfolio optimization (Markowitz)** — covariance matrices, shrinkage estimation, the ill-conditioning that makes the textbook version unusable
 - **Support vector machines / kernel methods** — Gram matrices, positive definiteness, the representer theorem
 
 ### Would add: statistics and machine learning proper
@@ -7756,7 +8560,6 @@ the one exception marked below.
 
 ### Would add: geosciences and geometry
 - **Seismic tomography** — same inverse-problem structure as entry 3 with far worse ray coverage
-- **Distance geometry (NMR structure determination)** — Cayley–Menger determinants, classical multidimensional scaling, low-rank Gram matrix recovery
 - **X-ray crystallography** — the phase problem; Patterson maps; structure factors as Fourier coefficients
 
 ### Would add: discrete and algebraic applications
@@ -7775,10 +8578,10 @@ the one exception marked below.
    entry in the `tier`, `tier_ceiling`, and `prereq_beyond_la` columns of the index. Under the rule that
    any differential equation means Tier 3, only 2 of the 10 seed entries are Tier 1,
    which is the wrong first impression for a general audience. Remaining work is to write up the Tier 1
-   backlog, which is under way: 23 of the 41 written entries are now Tier 1.
+   backlog, which is under way: 23 of the 44 written entries are now Tier 1.
 3. ~~Decide whether the organizing axis is field or concept.~~ **Decided: field**, for the reasons in
    "Audience and organizing principle" above. The concept coverage table remains as the secondary
    cross-reference. Remaining work: extend the terminology map as entries are written — it
-   currently covers 435 terms across the 41 written entries, and the backlog entries most likely to generate
+   currently covers 482 terms across the 44 written entries, and the backlog entries most likely to generate
    domain-specific questions (power systems, portfolio optimization, seismic tomography, MDPs) have no
    terminology coverage yet.

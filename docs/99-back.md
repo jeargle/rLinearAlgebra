@@ -5,7 +5,7 @@
 
 **Concepts deliberately covered across the set:** solving `Ax = b` (sparse, dense, ill-posed, over a finite field), least squares (batch and recursive), eigenvalue problems (standard, generalized, dominant-only), the SVD (as optimal approximation, as homogeneous solver, as manifold projection), null spaces and rank, nonnegative matrices and Perron–Frobenius, stochastic matrices, projections, conditioning and preconditioning, tensor products, and linear algebra over a field other than ℝ.
 
-**Not yet represented:** Krylov subspace methods on their own terms, optimization duality and linear programming, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
+**Not yet represented:** Krylov subspace methods on their own terms, optimization duality, tensor decompositions beyond the matrix case, randomized numerical linear algebra, and anything from pure mathematics.
 
 ---
 
@@ -35,8 +35,6 @@ the one exception marked below.
 - **Power-grid load flow and state estimation** — sparse Newton with a Jacobian that changes structure under contingency; Sherman–Morrison for N−1 analysis
 
 ### Would add: optimization and duality
-- **Linear programming and the simplex method** — basis exchange as a sequence of rank-one updates; totally unimodular matrices giving integral solutions for free in network flow
-- **Portfolio optimization (Markowitz)** — covariance matrices, shrinkage estimation, the ill-conditioning that makes the textbook version unusable
 - **Support vector machines / kernel methods** — Gram matrices, positive definiteness, the representer theorem
 
 ### Would add: statistics and machine learning proper
@@ -44,7 +42,6 @@ the one exception marked below.
 
 ### Would add: geosciences and geometry
 - **Seismic tomography** — same inverse-problem structure as entry 3 with far worse ray coverage
-- **Distance geometry (NMR structure determination)** — Cayley–Menger determinants, classical multidimensional scaling, low-rank Gram matrix recovery
 - **X-ray crystallography** — the phase problem; Patterson maps; structure factors as Fourier coefficients
 
 ### Would add: discrete and algebraic applications

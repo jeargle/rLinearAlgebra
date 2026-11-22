@@ -52,8 +52,8 @@ Real problems from each field, with the domain vocabulary translated into linear
 ## Economics, Finance & Operations Research
 
 * [Leontief input-output economics](applications/leontief-input-output-economics) — Tier 1
-* Linear programming and the simplex method — Tier 2 *(planned)*
-* Portfolio optimization — Tier 2 *(planned)*
+* [Linear programming and the simplex method](applications/linear-programming-and-the-simplex-method) — Tier 2
+* [Portfolio optimization](applications/portfolio-optimization) — Tier 2
 
 ## Electrical Engineering
 
@@ -63,7 +63,7 @@ Real problems from each field, with the domain vocabulary translated into linear
 
 ## Life Sciences
 
-* Distance geometry for NMR structures — Tier 2 *(planned)*
+* [Distance geometry for NMR structures](applications/distance-geometry-for-nmr-structures) — Tier 2
 * [Normal mode analysis and elastic network models](applications/normal-mode-analysis-and-elastic-network-models) — Tier 3
 * [Flux balance analysis at genome scale](applications/flux-balance-analysis-at-genome-scale) — Tier 3
 * [Population genetics PCA](applications/population-genetics-pca) — Tier 2

@@ -39,3 +39,6 @@
 | 32 | Systems biology | Null space of the stoichiometric matrix; linear program over a polytope | Simplex or interior point; flux variability analysis |
 | 17 | Signal processing | Factorization of the DFT matrix into sparse unitary stages | Cooley–Tukey radix-2 FFT |
 | 18 | Array signal processing | Signal and noise subspaces of a Hermitian covariance | Eigendecomposition (MUSIC) |
+| 15 | Operations research | Basis exchange; rank-one updates of basis matrices | Revised simplex |
+| 16 | Quantitative finance | Positive definite covariance matrix; conditioning; shrinkage | Constrained linear (KKT) solve |
+| 26 | Structural biology | Gram matrix eigendecomposition (rank-3 positive semidefinite) | Classical multidimensional scaling |
